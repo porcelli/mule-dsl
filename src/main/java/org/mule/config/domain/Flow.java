@@ -20,6 +20,7 @@ public interface Flow extends Lifecycle, Pipeline {
     void serExceptionHandler(ExceptionHandler handler);
 
     public interface FlowResponse extends Response {
+
         void addOutboundEndpoint(OutboundEndpoint outbound);
 
         void addRouter(Router router);

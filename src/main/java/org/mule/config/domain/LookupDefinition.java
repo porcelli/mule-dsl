@@ -21,6 +21,10 @@ public @interface LookupDefinition {
 
     LookupOptions value();
 
+    String beanRef() default "";
+
+    String beanName() default "";
+
     public enum LookupOptions {
         NEVER, BEFORE_PROTOTYPE
     }

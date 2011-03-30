@@ -9,5 +9,7 @@
  */
 package org.mule.config.domain;
 
-public interface Response extends Pipeline {
+public interface Response {
+
+    Pipeline pipeline();
 }
