@@ -9,5 +9,5 @@
  */
 package org.mule.config.domain;
 
-public interface SecurityFilter extends Interceptor {
+public interface SecurityFilter extends Filter {
 }

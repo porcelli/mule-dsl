@@ -9,6 +9,6 @@
  */
 package org.mule.config.domain;
 
-public interface InboundEndpoint extends Endpoint {
+public interface InboundEndpoint extends Endpoint, Lifecycle {
 
 }

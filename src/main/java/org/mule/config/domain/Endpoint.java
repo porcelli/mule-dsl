@@ -9,12 +9,12 @@
  */
 package org.mule.config.domain;
 
-public interface Endpoint extends Securable, Transactional {
+public interface Endpoint extends Transactional {
 
     Pipeline pipeline();
 
     Connector connector();
 
-    Response response();
+    ResponsePipeline response();
 
 }

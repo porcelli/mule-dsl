@@ -19,6 +19,8 @@ public interface AttachableProcessor {
 
     void addFilter(Filter filter);
 
+    void addSecurityFilter(SecurityFilter filter);
+
     void addSplitter(Splitter splitter);
 
     void addAggregator(Aggregator aggregator);

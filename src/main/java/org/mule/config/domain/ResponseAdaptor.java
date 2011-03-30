@@ -1,5 +1,5 @@
 /*
- * $Id: 20811 2011-03-29 09:56:20Z porcelli $
+ * $Id: 20811 2011-03-30 14:53:20Z porcelli $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSoft, Inc.  All rights reserved.  http://www.mulesoft.com
  *
@@ -9,13 +9,27 @@
  */
 package org.mule.config.domain;
 
-public interface Flow extends Lifecycle, Pipeline {
+public interface ResponseAdaptor extends Interceptor {
 
-    void addInboundEndpoint(InboundEndpoint inbound);
+    void reponseAdaptor(Filter filter);
+
+    void reponseAdaptor(Transformer transformer);
+
+    void reponseAdaptor(Logger logger);
+
+    void reponseAdaptor(Component processor);
+
+    void reponseAdaptor(SecurityFilter filter);
+
+    void reponseAdaptor(Splitter splitter);
+
+    void reponseAdaptor(Aggregator aggregator);
+
+    Pipeline pipeline();
 
     void addOutboundEndpoint(OutboundEndpoint outbound);
 
     void addRouter(Router router);
 
-    void serExceptionHandler(ExceptionHandler handler);
+
 }
