@@ -11,9 +11,20 @@ package org.mule.config.dsl.aproach3;
 
 import com.google.inject.AbstractModule;
 
+import java.io.File;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 
 public abstract class AbstractMethodModule extends AbstractModule {
+
+    public void usePropertyPlaceholder(String fileRef) {
+    }
+
+    public void usePropertyPlaceholder(File s) {
+    }
+
+    public void usePropertyPlaceholder(InputStream resourceAsStream) {
+    }
 
     public FlowBuilder newFlow(String myFlow) {
         return null;
@@ -47,11 +58,15 @@ public abstract class AbstractMethodModule extends AbstractModule {
         return null;
     }
 
+    public ProcessorBuilder transformWith(Transformer obj) {
+        return null;
+    }
+
     public ProcessorBuilder multicast(ProcessorBuilder... processors) {
         return null;
     }
 
-    public ProcessorBuilder send() {
+    public ProcessorBuilder sendOneWay() {
         return null;
     }
 

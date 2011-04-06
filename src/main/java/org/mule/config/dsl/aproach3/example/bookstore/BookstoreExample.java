@@ -9,7 +9,9 @@
  */
 package org.mule.config.dsl.aproach3.example.bookstore;
 
-import org.mule.config.dsl.aproach2.AbstractMethodModule;
+import org.mule.config.dsl.aproach1.AbstractModule;
+import org.mule.config.dsl.aproach3.AbstractMethodModule;
+import org.mule.config.dsl.aproach3.example.bookstore.business.*;
 
 public class BookstoreExample {
 
@@ -17,6 +19,51 @@ public class BookstoreExample {
         @Override
         public void configure() {
             usePropertyPlaceholder("email.properties");
+
+            Transformer setHtmlContentType = null;
+
+            newFlow("CatalogService").in(
+                    //Public interface
+                    from(HTTP.class).listen(host("0.0.0.0").port(8777).path("services/catalog"))
+                            .using(CXF.class).with(CatalogService.class),
+                    //Administration interface
+                    from("servlet://catalog")
+                            .processResponse(transformWith(AddBookResponse.class), transformWith(setHtmlContentType))
+            ).process(
+                    execute(CatalogServiceImpl.class).asSingleton()
+            );
+
+            newFlow("OrderService").in(
+                    from(HTTP.class).listen(host("0.0.0.0").port(8777).path("services/order"))
+                            .using(CXF.class).with(OrderService.class)
+            ).process(
+                    execute(OrderServiceImpl.class).asSingleton(),
+                    sendOneWay(VM.class).path("emailNotification"),
+                    sendOneWay(VM.class).path("dataWarehouse")
+            );
+
+
+            newFlow("EmailNotificationService").in(
+                    from(VM.class).path("emailNotification")
+            ).process(
+                    transformWith(OrderToEmailTransformer.class),
+                    transformWith(StringToEmailTransformer.class),
+                    sendOneWay(SMTPS.class)
+                            .user("${user}")
+                            .password("${password}")
+                            .host("${host}")
+                            .from("${from}")
+                            .subject("Your order has been placed!")
+            );
+
+            newFlow("DataWarehouse").in(
+                    from(VM.class).path("dataWarehouse")
+            ).process(
+                    execute(DataWarehouse.class).asSingleton(),
+                    transformWith(setHtmlContentType),
+                    sendOneWay("stats")
+            );
+
         }
     }
 }

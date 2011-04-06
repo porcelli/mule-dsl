@@ -18,7 +18,6 @@ public class BookstoreExample {
     public static class BookStore extends AbstractModule {
         @Override
         public void configure() {
-
             usePropertyPlaceholder("email.properties");
 
             SMTPConnector mySMTPConn = newConnector()

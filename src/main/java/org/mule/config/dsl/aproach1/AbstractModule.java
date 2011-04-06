@@ -10,15 +10,17 @@
 package org.mule.config.dsl.aproach1;
 
 import java.io.File;
+import java.io.InputStream;
 
 public abstract class AbstractModule extends com.google.inject.AbstractModule {
 
     public void usePropertyPlaceholder(String fileRef) {
-
     }
 
     public void usePropertyPlaceholder(File s) {
+    }
 
+    public void usePropertyPlaceholder(InputStream resourceAsStream) {
     }
 
     public FlowBuilder newFlow() {

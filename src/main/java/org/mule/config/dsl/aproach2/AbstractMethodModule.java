@@ -13,16 +13,18 @@ import com.google.inject.AbstractModule;
 
 import javax.xml.transform.Transformer;
 import java.io.File;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 
 public abstract class AbstractMethodModule extends AbstractModule {
 
     public void usePropertyPlaceholder(String fileRef) {
-
     }
 
     public void usePropertyPlaceholder(File s) {
+    }
 
+    public void usePropertyPlaceholder(InputStream resourceAsStream) {
     }
 
     public FlowBuilder newFlow(String myFlow) {
