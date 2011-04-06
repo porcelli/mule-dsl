@@ -1,5 +1,5 @@
 /*
- * $Id: 20811 2011-04-01 15:13:20Z porcelli $
+ * $Id: 20811 2011-04-01 15:19:20Z porcelli $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSoft, Inc.  All rights reserved.  http://www.mulesoft.com
  *
@@ -7,10 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.config.dsl.aproach3.example.bookstore.business;
+package org.mule.config.dsl.aproach3.example.features.business;
 
-
-import org.mule.config.dsl.aproach3.AbstractMethodModule.Transformer;
-
-public interface MyTransformer extends Transformer {
+public class MyPojo {
 }

@@ -13,11 +13,13 @@ package org.mule.config.dsl.aproach1.example.bookstore;
 import org.mule.config.dsl.aproach1.AbstractModule;
 import org.mule.config.dsl.aproach1.example.bookstore.business.*;
 
-public class BookstoreExampleTestReal {
+public class BookstoreExample {
 
     public static class BookStore extends AbstractModule {
         @Override
         public void configure() {
+
+            usePropertyPlaceholder("email.properties");
 
             SMTPConnector mySMTPConn = newConnector()
                     .extend(SMTPConnector.class)

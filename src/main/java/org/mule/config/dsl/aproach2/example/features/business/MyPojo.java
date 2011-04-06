@@ -7,7 +7,21 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.config.dsl.aproach2.example.bookstore.business;
+package org.mule.config.dsl.aproach2.example.features.business;
+
+import javax.inject.Named;
 
 public class MyPojo {
+
+    public void someMethod(String value) {
+    }
+
+    @Named("myMethodToExecute")
+    public void otherMethod(String value) {
+    }
+
+
+    @MyBusinessMethod2Execute
+    public void myBuzzMethod(String value) {
+    }
 }

@@ -12,9 +12,18 @@ package org.mule.config.dsl.aproach2;
 import com.google.inject.AbstractModule;
 
 import javax.xml.transform.Transformer;
+import java.io.File;
 import java.lang.annotation.Annotation;
 
 public abstract class AbstractMethodModule extends AbstractModule {
+
+    public void usePropertyPlaceholder(String fileRef) {
+
+    }
+
+    public void usePropertyPlaceholder(File s) {
+
+    }
 
     public FlowBuilder newFlow(String myFlow) {
         return null;
@@ -25,6 +34,10 @@ public abstract class AbstractMethodModule extends AbstractModule {
     }
 
     public ProcessorBuilder execute(Class<?> clazz) {
+        return null;
+    }
+
+    public ProcessorBuilder execute(Object myObj) {
         return null;
     }
 
@@ -59,19 +72,38 @@ public abstract class AbstractMethodModule extends AbstractModule {
     }
 
     public interface InboundEndpointBuilder {
-        <T extends InboundEndpointBuilder> T using(T x);
-
-        <T extends InboundEndpointBuilder> T using(Class<T> x);
-
         InboundEndpointBuilder processRequest(ProcessorBuilder... processors);
-
         InboundEndpointBuilder processResponse(ProcessorBuilder... processors);
+        InboundEndpointBuilder connectUsing(Connector connector);
+        InboundEndpointBuilder connectUsing(String connectorRef);
     }
 
     public interface ProcessorBuilder {
         ProcessorBuilder methodAnnotatedWith(Class<? extends Annotation> annotationType);
         ProcessorBuilder methodAnnotatedWith(Annotation annotation);
         ProcessorBuilder asSingleton();
+    }
+
+    public abstract static class HTTP {
+        public static HTTPPoll poll(HostBuilder hostBuilder) {
+            return null;
+        }
+
+        public static HTTPInboundBuilder listen(HostBuilder hostBuilder) {
+            return null;
+        }
+
+        public interface HTTPPoll extends HTTPInboundBuilder {
+            HTTPInboundBuilder every(long time);
+
+            HTTPInboundBuilder every(long time, TimeUnit unit);
+        }
+
+        public interface HTTPInboundBuilder extends InboundEndpointBuilder {
+            <T extends InboundEndpointBuilder> T using(T x);
+
+            <T extends InboundEndpointBuilder> T using(Class<T> x);
+        }
     }
 
     public abstract static class FTP {
@@ -87,26 +119,13 @@ public abstract class AbstractMethodModule extends AbstractModule {
     }
 
     public abstract static class JMS {
-        public static JMSInboundBuilder using(Connector time) {
+        public static InboundEndpointBuilder queue(String queue) {
             return null;
         }
 
-        public static JMSInboundBuilder queue(String queue) {
+        public static InboundEndpointBuilder topic(String topic) {
             return null;
         }
-
-        public static JMSInboundBuilder topic(String topic) {
-            return null;
-        }
-
-        public interface JMSInboundBuilder extends InboundEndpointBuilder {
-            JMSInboundBuilder using(Connector time);
-
-            JMSInboundBuilder queue(String queue);
-
-            JMSInboundBuilder topic(String topic);
-        }
-
     }
 
     public interface Connector {

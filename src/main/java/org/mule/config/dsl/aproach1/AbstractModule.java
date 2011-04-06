@@ -9,7 +9,17 @@
  */
 package org.mule.config.dsl.aproach1;
 
+import java.io.File;
+
 public abstract class AbstractModule extends com.google.inject.AbstractModule {
+
+    public void usePropertyPlaceholder(String fileRef) {
+
+    }
+
+    public void usePropertyPlaceholder(File s) {
+
+    }
 
     public FlowBuilder newFlow() {
         return null;
