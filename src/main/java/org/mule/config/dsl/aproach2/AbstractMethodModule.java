@@ -17,6 +17,16 @@ import java.lang.annotation.Annotation;
 
 public abstract class AbstractMethodModule extends AbstractModule {
 
+
+    public ProcessorBuilder send(EndpointProcessor emailNotification) {
+        return null;  //To change body of created methods use File | Settings | File Templates.
+    }
+
+    public ProcessorBuilder send(String stats) {
+        return null;
+    }
+
+
     public TransformerBuilder newTransformer(String setHtmlContentType) {
         return null;
     }

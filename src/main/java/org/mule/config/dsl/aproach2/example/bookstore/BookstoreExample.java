@@ -86,12 +86,5 @@ public class BookstoreExample {
             );
         }
 
-        private ProcessorBuilder send(EndpointProcessor emailNotification) {
-            return null;  //To change body of created methods use File | Settings | File Templates.
-        }
-
-        private ProcessorBuilder send(String stats) {
-            return null;
-        }
     }
 }
