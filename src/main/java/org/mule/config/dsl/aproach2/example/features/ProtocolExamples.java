@@ -77,16 +77,16 @@ public class ProtocolExamples {
                             .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter())),
 
                     //protocol specific, now with a process request and response
-                    // + extended behavior using CXF as an example of protocol specific extension.
+                    // + extended behavior with WS as an example of protocol specific extension.
                     from(HTTP.listen(host("0.0.0.0").port(8080).path("sss/zzz"))
-                            .using(CXF.class).with(Service.class)
+                            .as(WS.with(Service.class))
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
                             .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter())),
 
                     //protocol specific, now with a process request and response + connector
-                    // + extended behavior using CXF as an example of protocol specific extension.
+                    // + extended behavior with WS as an example of protocol specific extension.
                     from(HTTP.listen(host("0.0.0.0").port(8080).path("sss/zzz"))
-                            .using(CXF.class).with(Service.class)
+                            .as(WS.with(Service.class))
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
                             .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter()))
                             .connectUsing(myConnector),
@@ -94,7 +94,7 @@ public class ProtocolExamples {
                     //specific protocols can expose different methods, here http exposes poll
                     from(HTTP.poll(host("0.0.0.0").port(8080).path("sss/zzz"))
                             .every(2, TimeUnit.MINUTES)
-                            .using(CXF.class).with(Service.class)
+                            .as(WS.with(Service.class))
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
                             .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter()))
                             .connectUsing(myConnector),
@@ -107,9 +107,8 @@ public class ProtocolExamples {
 
                     //jms specific protocol with an explicit connector
                     from(JMS.queue("queueName")
-                            .connectUsing(myConnector)
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter()))
-
+                            .connectUsing(myConnector)
             ).process(
                     execute(MyPojo.class),
                     filter()

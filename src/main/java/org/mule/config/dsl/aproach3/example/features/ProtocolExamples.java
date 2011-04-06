@@ -51,69 +51,69 @@ public class ProtocolExamples {
                             .connectUsing("myConnectorReference"),
 
                     //protocol specific, that exposes just poll method
-                    from(FTP.class).poll(host("0.0.0.0").port(22).path("sss/a.txt")).every(10, SECONDS),
+                    from(FTP_In.class).poll(host("0.0.0.0").port(22).path("sss/a.txt")).every(10, SECONDS),
 
                     //protocol specific, now with a process request + connector
-                    from(FTP.class).poll(host("0.0.0.0").port(22).path("sss")).every(10, SECONDS)
+                    from(FTP_In.class).poll(host("0.0.0.0").port(22).path("sss")).every(10, SECONDS)
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
                             .connectUsing(myConnector),
 
                     //protocol specific, now with a process request + connector reference
-                    from(FTP.class).poll(host("0.0.0.0").port(22).path("sss")).every(10, SECONDS)
+                    from(FTP_In.class).poll(host("0.0.0.0").port(22).path("sss")).every(10, SECONDS)
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
                             .connectUsing("myConnectorReference"),
 
                     //different protocol specific
-                    from(HTTP.class).listen(host("0.0.0.0").port(8080).path("sss/zzz")),
+                    from(HTTP_In.class).listen(host("0.0.0.0").port(8080).path("sss/zzz")),
 
                     //protocol specific, now with a process request and response
-                    from(HTTP.class).listen(host("0.0.0.0").port(8080).path("sss/zzz"))
+                    from(HTTP_In.class).listen(host("0.0.0.0").port(8080).path("sss/zzz"))
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
                             .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter()),
 
                     //protocol specific, now with a process request and response + connector
-                    from(HTTP.class).listen(host("0.0.0.0").port(8080).path("sss/zzz"))
+                    from(HTTP_In.class).listen(host("0.0.0.0").port(8080).path("sss/zzz"))
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
                             .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter()),
 
                     //protocol specific, now with a process request and response
-                    // + extended behavior using CXF as an example of protocol specific extension.
-                    from(HTTP.class).listen(host("0.0.0.0").port(8080).path("sss/zzz"))
-                            .using(CXF.class).with(Service.class)
+                    // + extended behavior with WS as an example of protocol specific extension.
+                    from(HTTP_In.class).listen(host("0.0.0.0").port(8080).path("sss/zzz"))
+                            .as(WS.class).with(Service.class)
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
                             .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter()),
 
                     //protocol specific, now with a process request and response + connector
-                    // + extended behavior using CXF as an example of protocol specific extension.
-                    from(HTTP.class).listen(host("0.0.0.0").port(8080).path("sss/zzz"))
-                            .using(CXF.class).with(Service.class)
+                    // + extended behavior with WS as an example of protocol specific extension.
+                    from(HTTP_In.class).listen(host("0.0.0.0").port(8080).path("sss/zzz"))
+                            .as(WS.class).with(Service.class)
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
                             .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter())
                             .connectUsing(myConnector),
 
                     //specific protocols can expose different methods, here http exposes poll
-                    from(HTTP.class).poll(host("0.0.0.0").port(8080).path("sss/zzz"))
+                    from(HTTP_In.class).poll(host("0.0.0.0").port(8080).path("sss/zzz"))
                             .every(2, TimeUnit.MINUTES)
-                            .using(CXF.class).with(Service.class)
+                            .as(WS.class).with(Service.class)
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
                             .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter())
                             .connectUsing(myConnector),
 
                     //jms specific protocol with an inplicit connector
-                    from(JMS.class).queue("queueName"),
+                    from(JMS_In.class).queue("queueName"),
 
                     //jms specific protocol with an inplicit connector
-                    from(JMS.class).topic("topicName"),
+                    from(JMS_In.class).topic("topicName"),
 
                     //jms specific protocol with an explicit connector
-                    from(JMS.class).queue("queueName")
-                            .connectUsing(myConnector)
+                    from(JMS_In.class).queue("queueName")
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
+                            .connectUsing(myConnector)
 
             ).process(
                     execute(MyPojo.class),
                     filter(),
-                    multicast(send(), send(), send())
+                    multicast(send(VM_In.class), send(VM_In.class), send(VM_In.class))
             );
         }
     }

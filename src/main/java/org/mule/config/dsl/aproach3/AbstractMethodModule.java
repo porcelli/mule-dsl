@@ -17,6 +17,14 @@ import java.lang.annotation.Annotation;
 
 public abstract class AbstractMethodModule extends AbstractModule {
 
+    public TransformerBuilder defineTransformer(String setHtmlContentType) {
+        return null;
+    }
+
+    public EndpointProcessor defineEndpoint(String stats) {
+        return null;
+    }
+
     public void usePropertyPlaceholder(String fileRef) {
     }
 
@@ -62,31 +70,48 @@ public abstract class AbstractMethodModule extends AbstractModule {
         return null;
     }
 
+    public ProcessorBuilder transformWith(TransformerBuilder obj) {
+        return null;
+    }
+
     public ProcessorBuilder multicast(ProcessorBuilder... processors) {
         return null;
     }
 
-    public ProcessorBuilder sendOneWay() {
+    public EndpointProcessor send(String stats) {
+        return null;  //To change body of created methods use File | Settings | File Templates.
+    }
+
+    public <P extends EndpointProcessor> P send(Class<P> clazz) {
         return null;
     }
 
-    public <P extends InboundEndpointProcessor> P from(Class<P> from) {
+    public <P extends EndpointProcessor> P from(Class<P> from) {
         return null;
     }
 
     public interface FlowBuilder {
-        FlowBuilder in(InboundEndpointProcessor inbound);
+        FlowBuilder in(EndpointProcessor inbound);
 
-        FlowBuilder in(InboundEndpointProcessor... inbounds);
+        FlowBuilder in(EndpointProcessor... inbounds);
 
         FlowBuilder process(ProcessorBuilder... processors);
     }
 
-    public interface InboundEndpointProcessor {
+    public interface EndpointProcessor extends ProcessorBuilder {
+        EndpointProcessor connectUsing(Connector connector);
+        EndpointProcessor connectUsing(String connectorRef);
+
+        <P extends EndpointProcessor> P using(Class<P> endpoint);
+    }
+
+    public interface OutboundEndpointProcessor extends EndpointProcessor {
+    }
+
+    public interface InboundEndpointProcessor extends EndpointProcessor {
         InboundEndpointProcessor processRequest(ProcessorBuilder... processors);
+
         InboundEndpointProcessor processResponse(ProcessorBuilder... processors);
-        InboundEndpointProcessor connectUsing(Connector connector);
-        InboundEndpointProcessor connectUsing(String connectorRef);
     }
 
     public interface ProcessorBuilder {
@@ -97,23 +122,25 @@ public abstract class AbstractMethodModule extends AbstractModule {
         ProcessorBuilder asSingleton();
     }
 
-    public interface HTTP extends InboundEndpointProcessor {
+    public interface HTTP_In extends EndpointProcessor {
         HTTPPoll poll(HostBuilder hostBuilder);
 
         HTTPBuilder listen(HostBuilder hostBuilder);
 
         public interface HTTPPoll {
             HTTPBuilder every(long time);
+
             HTTPBuilder every(long time, TimeUnit unit);
         }
 
         public interface HTTPBuilder extends InboundEndpointProcessor {
-            <T extends InboundEndpointProcessor> T using(T x);
-            <T extends InboundEndpointProcessor> T using(Class<T> x);
+            <T extends EndpointProcessor> T as(T x);
+
+            <T extends EndpointProcessor> T as(Class<T> x);
         }
     }
 
-    public interface FTP extends InboundEndpointProcessor {
+    public interface FTP_In extends EndpointProcessor {
         FTPPoll poll(HostBuilder hostBuilder);
 
         public interface FTPPoll {
@@ -123,22 +150,52 @@ public abstract class AbstractMethodModule extends AbstractModule {
         }
     }
 
-    public interface JMS extends InboundEndpointProcessor {
-        JMS using(Connector time);
+    public interface JMS_In extends InboundEndpointProcessor {
+        JMSInner using(Connector time);
 
-        JMSIn queue(String queue);
+        InboundEndpointProcessor queue(String queue);
 
-        JMSIn topic(String topic);
+        InboundEndpointProcessor topic(String topic);
 
-        public interface JMSIn extends InboundEndpointProcessor {
+        public interface JMSInner extends EndpointProcessor {
+            InboundEndpointProcessor queue(String queue);
 
+            InboundEndpointProcessor topic(String topic);
         }
     }
 
-    public interface Connector {
+    public interface VM extends EndpointProcessor {
+        VM name(String name);
+
+        VM path(String path);
     }
 
-    public interface CXF extends InboundEndpointProcessor {
+    public interface VM_In extends VM, InboundEndpointProcessor {
+        VM_In name(String name);
+
+        VM_In path(String path);
+    }
+
+    public interface VM_Out extends VM, OutboundEndpointProcessor {
+        VM_Out name(String name);
+
+        VM_Out path(String path);
+    }
+
+    public interface SMTPS_Out extends OutboundEndpointProcessor {
+        SMTPS_Out user(String s);
+
+        SMTPS_Out password(String s);
+
+        SMTPS_Out host(String s);
+
+        SMTPS_Out from(String s);
+
+        SMTPS_Out subject(String s);
+    }
+
+
+    public interface WS extends InboundEndpointProcessor {
         InboundEndpointProcessor with(Class<?> clazz);
     }
 
@@ -154,4 +211,39 @@ public abstract class AbstractMethodModule extends AbstractModule {
 
     public interface Transformer {
     }
+
+    public interface TransformerBuilder extends Transformer {
+        <P extends TransformerBuilder> P extend(Class<P> transoformer);
+    }
+
+
+    public interface MessagePropertiesTransformer extends TransformerBuilder {
+        MessagePropertiesTransformer addMessageProperty(String key, String value);
+
+        MessagePropertiesTransformer deleteMessageProperty(String key);
+    }
+
+    public ConnectorBuilder newConnector(String connectorRef) {
+        return null;
+    }
+
+    public interface Connector {
+
+    }
+
+    public interface ConnectorBuilder extends Connector {
+        <P extends ConnectorBuilder> P extend(Class<P> transoformer);
+    }
+
+
+    public interface VM_Connector extends ConnectorBuilder {
+    }
+
+    public interface SMTP_Connector extends ConnectorBuilder {
+    }
+
+    public interface GMail_Connector extends SMTP_Connector {
+    }
+
+
 }

@@ -22,7 +22,7 @@ public class ComponentExamples {
             Object myObj = null;
 
             newFlow("MyFlow").in(
-                    from(JMS.class).queue("queueName")
+                    from(JMS_In.class).queue("queueName")
                             .processResponse(transformTo(String.class))
             ).process(
                     //will check if its Callable, otherwise will use reflection for entry point resolver

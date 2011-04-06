@@ -19,15 +19,15 @@ public class PropertyPlaceholderExamples {
     public static class BookStore extends AbstractMethodModule {
         @Override
         public void configure() {
-            //Defines a property placeholder using a string to point a config file
+            //Defines a property placeholder with a string to point a config file
             usePropertyPlaceholder("config.properties");
-            //Defines a property placeholder using a file
+            //Defines a property placeholder with a file
             usePropertyPlaceholder(new File("config2.properties"));
-            //Defines a property placeholder using an input stream
+            //Defines a property placeholder with an input stream
             usePropertyPlaceholder(BookStore.class.getResourceAsStream("config3.properties"));
 
             newFlow("MyFlow").in(
-                    //using a variable that paceholer will update
+                    //with a variable that paceholer will update
                     from(JMS.queue("${queueName}"))
                             .processResponse(transformTo(String.class))
             ).process(

@@ -11,12 +11,15 @@ package org.mule.config.dsl.aproach2;
 
 import com.google.inject.AbstractModule;
 
-import javax.xml.transform.Transformer;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 
 public abstract class AbstractMethodModule extends AbstractModule {
+
+    public TransformerBuilder newTransformer(String setHtmlContentType) {
+        return null;
+    }
 
     public void usePropertyPlaceholder(String fileRef) {
     }
@@ -30,6 +33,11 @@ public abstract class AbstractMethodModule extends AbstractModule {
     public FlowBuilder newFlow(String myFlow) {
         return null;
     }
+
+    public EndpointProcessor defineEndpoint(String stats) {
+        return null;  //To change body of created methods use File | Settings | File Templates.
+    }
+
 
     public InboundEndpointBuilder from(String from) {
         return null;
@@ -59,31 +67,90 @@ public abstract class AbstractMethodModule extends AbstractModule {
         return null;
     }
 
-    public <P extends InboundEndpointBuilder> P from(P from) {
+    public ProcessorBuilder transformWith(Transformer transformer) {
+        return null;
+    }
+
+    public <P extends EndpointProcessor> P from(P from) {
         return null;
     }
 
     public interface FlowBuilder {
-        FlowBuilder in(InboundEndpointBuilder inbound);
+        FlowBuilder in(EndpointProcessor inbound);
 
-        FlowBuilder in(InboundEndpointBuilder... inbounds);
+        FlowBuilder in(EndpointProcessor... inbounds);
 
         FlowBuilder process(ProcessorBuilder processor);
 
         FlowBuilder process(ProcessorBuilder... processors);
     }
 
-    public interface InboundEndpointBuilder {
+    public interface EndpointProcessor {
+        EndpointProcessor connectUsing(Connector connector);
+
+        EndpointProcessor connectUsing(String connectorRef);
+
+        <P extends EndpointProcessor> P using(EndpointProcessor endpoint);
+    }
+
+
+    public interface OutboundEndpointProcessor extends EndpointProcessor {
+    }
+
+    public interface InboundEndpointBuilder extends EndpointProcessor {
         InboundEndpointBuilder processRequest(ProcessorBuilder... processors);
+
         InboundEndpointBuilder processResponse(ProcessorBuilder... processors);
-        InboundEndpointBuilder connectUsing(Connector connector);
-        InboundEndpointBuilder connectUsing(String connectorRef);
     }
 
     public interface ProcessorBuilder {
         ProcessorBuilder methodAnnotatedWith(Class<? extends Annotation> annotationType);
+
         ProcessorBuilder methodAnnotatedWith(Annotation annotation);
+
         ProcessorBuilder asSingleton();
+    }
+
+    public abstract static class VM {
+        public static EndpointProcessor path(String path) {
+            return null;
+        }
+    }
+
+    public abstract static class SMTPS {
+        public static SMTPSBuilder user(String s) {
+            return null;
+        }
+
+        public static SMTPSBuilder password(String s) {
+            return null;
+        }
+
+        public static SMTPSBuilder host(String s) {
+            return null;
+        }
+
+        public static SMTPSBuilder from(String s) {
+            return null;
+        }
+
+        public static SMTPSBuilder subject(String s) {
+            return null;
+        }
+
+
+        public interface SMTPSBuilder extends OutboundEndpointProcessor {
+            SMTPSBuilder user(String s);
+
+            SMTPSBuilder password(String s);
+
+            SMTPSBuilder host(String s);
+
+            SMTPSBuilder from(String s);
+
+            SMTPSBuilder subject(String s);
+        }
+
     }
 
     public abstract static class HTTP {
@@ -102,9 +169,9 @@ public abstract class AbstractMethodModule extends AbstractModule {
         }
 
         public interface HTTPInboundBuilder extends InboundEndpointBuilder {
-            <T extends InboundEndpointBuilder> T using(T x);
+            <T extends InboundEndpointBuilder> T as(T x);
 
-            <T extends InboundEndpointBuilder> T using(Class<T> x);
+            <T extends InboundEndpointBuilder> T as(Class<T> x);
         }
     }
 
@@ -130,11 +197,10 @@ public abstract class AbstractMethodModule extends AbstractModule {
         }
     }
 
-    public interface Connector {
-    }
-
-    public interface CXF extends InboundEndpointBuilder {
-        InboundEndpointBuilder with(Class<?> clazz);
+    public abstract static class WS {
+        public static InboundEndpointBuilder with(Class<?> clazz) {
+            return null;
+        }
     }
 
     public enum TimeUnit {
@@ -148,6 +214,39 @@ public abstract class AbstractMethodModule extends AbstractModule {
     }
 
     public interface Transformer {
+    }
+
+    public interface TransformerBuilder extends Transformer {
+        <P extends TransformerBuilder> P extend(Class<P> transoformer);
+    }
+
+
+    public interface MessagePropertiesTransformer extends TransformerBuilder {
+        MessagePropertiesTransformer addMessageProperty(String key, String value);
+
+        MessagePropertiesTransformer deleteMessageProperty(String key);
+    }
+
+    public ConnectorBuilder newConnector(String connectorRef) {
+        return null;
+    }
+
+    public interface Connector {
+
+    }
+
+    public interface ConnectorBuilder extends Connector {
+        <P extends ConnectorBuilder> P extend(Class<P> transoformer);
+    }
+
+
+    public interface VM_Connector extends ConnectorBuilder {
+    }
+
+    public interface SMTP_Connector extends ConnectorBuilder {
+    }
+
+    public interface GMail_Connector extends SMTP_Connector {
     }
 
 }
