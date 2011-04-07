@@ -9,7 +9,7 @@
  */
 package org.mule.config.dsl.aproach2.example.bookstore.business;
 
-import org.mule.config.dsl.aproach2.AbstractMethodModule;
+import org.mule.config.dsl.aproach2.AbstractModule;
 
-public interface StringToEmailTransformer extends AbstractMethodModule.Transformer {
+public interface StringToEmailTransformer extends AbstractModule.Transformer {
 }

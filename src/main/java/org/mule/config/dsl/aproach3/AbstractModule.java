@@ -9,13 +9,11 @@
  */
 package org.mule.config.dsl.aproach3;
 
-import com.google.inject.AbstractModule;
-
 import java.io.File;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 
-public abstract class AbstractMethodModule extends AbstractModule {
+public abstract class AbstractModule extends com.google.inject.AbstractModule {
 
     public TransformerBuilder defineTransformer(String setHtmlContentType) {
         return null;
@@ -42,11 +40,11 @@ public abstract class AbstractMethodModule extends AbstractModule {
         return null;
     }
 
-    public ProcessorBuilder execute(Class<?> clazz) {
+    public CustomExecutorBuilder execute(Class<?> clazz) {
         return null;
     }
 
-    public ProcessorBuilder execute(Object obj) {
+    public CustomExecutorBuilder execute(Object obj) {
         return null;
     }
 
@@ -86,7 +84,24 @@ public abstract class AbstractMethodModule extends AbstractModule {
         return null;
     }
 
-    public <P extends EndpointProcessor> P from(Class<P> from) {
+    public EndpointProcessor send(EndpointProcessor obj) {
+        return null;
+    }
+
+    public EndpointProcessor sendAndWait(String stats) {
+        return null;  //To change body of created methods use File | Settings | File Templates.
+    }
+
+    public <P extends EndpointProcessor> P sendAndWait(Class<P> clazz) {
+        return null;
+    }
+
+    public EndpointProcessor sendAndWait(EndpointProcessor obj) {
+        return null;
+    }
+
+
+    public <P extends InboundEndpointProcessor> P from(Class<P> from) {
         return null;
     }
 
@@ -100,29 +115,55 @@ public abstract class AbstractMethodModule extends AbstractModule {
 
     public interface EndpointProcessor extends ProcessorBuilder {
         EndpointProcessor connectUsing(Connector connector);
+
         EndpointProcessor connectUsing(String connectorRef);
 
         <P extends EndpointProcessor> P using(Class<P> endpoint);
+
+        EndpointProcessor using(String endpointRef);
+
+        EndpointProcessor extend(EndpointProcessor endpoint);
+
     }
 
     public interface OutboundEndpointProcessor extends EndpointProcessor {
+        OutboundEndpointProcessor connectUsing(Connector connector);
+
+        OutboundEndpointProcessor connectUsing(String connectorRef);
+
+        <P extends OutboundEndpointProcessor> P extend(Class<P> endpoint);
+
+        <P extends OutboundEndpointProcessor> P extend(P endpoint);
+
+        OutboundEndpointProcessor extend(String endpointRef);
     }
 
     public interface InboundEndpointProcessor extends EndpointProcessor {
+        InboundEndpointProcessor connectUsing(Connector connector);
+
+        InboundEndpointProcessor connectUsing(String connectorRef);
+
+        <P extends InboundEndpointProcessor> P extend(Class<P> endpoint);
+
+        InboundEndpointProcessor extend(EndpointProcessor endpoint);
+
         InboundEndpointProcessor processRequest(ProcessorBuilder... processors);
 
         InboundEndpointProcessor processResponse(ProcessorBuilder... processors);
     }
 
     public interface ProcessorBuilder {
-        ProcessorBuilder methodAnnotatedWith(Class<? extends Annotation> annotationType);
-
-        ProcessorBuilder methodAnnotatedWith(Annotation annotation);
-
-        ProcessorBuilder asSingleton();
     }
 
-    public interface HTTP_In extends EndpointProcessor {
+    public interface CustomExecutorBuilder extends ProcessorBuilder {
+        CustomExecutorBuilder methodAnnotatedWith(Class<? extends Annotation> annotationType);
+
+        CustomExecutorBuilder methodAnnotatedWith(Annotation annotation);
+
+        CustomExecutorBuilder asSingleton();
+    }
+
+    public interface HTTP_In extends InboundEndpointProcessor {
         HTTPPoll poll(HostBuilder hostBuilder);
 
         HTTPBuilder listen(HostBuilder hostBuilder);
@@ -140,13 +181,28 @@ public abstract class AbstractMethodModule extends AbstractModule {
         }
     }
 
-    public interface FTP_In extends EndpointProcessor {
+    public interface FTP extends EndpointProcessor {
         FTPPoll poll(HostBuilder hostBuilder);
 
         public interface FTPPoll {
-            InboundEndpointProcessor every(long time);
+            EndpointProcessor every(long time);
 
-            InboundEndpointProcessor every(long time, TimeUnit unit);
+            EndpointProcessor every(long time, TimeUnit unit);
+        }
+    }
+
+    public interface FTP_In extends InboundEndpointProcessor {
+        FTP_InPoll poll(HostBuilder hostBuilder);
+
+        FTP_InPoll extend(String endpointRef);
+
+        FTP_InPoll extend(EndpointProcessor endpoint);
+
+        public interface FTP_InPoll extends InboundEndpointProcessor {
+            FTP_InPoll every(long time);
+            FTP_InPoll every(long time, TimeUnit unit);
+            FTP_InPoll user(String user);
+            FTP_InPoll password(String passw);
         }
     }
 
@@ -166,17 +222,16 @@ public abstract class AbstractMethodModule extends AbstractModule {
 
     public interface VM extends EndpointProcessor {
         VM name(String name);
-
         VM path(String path);
     }
 
-    public interface VM_In extends VM, InboundEndpointProcessor {
+    public interface VM_In extends InboundEndpointProcessor {
         VM_In name(String name);
 
         VM_In path(String path);
     }
 
-    public interface VM_Out extends VM, OutboundEndpointProcessor {
+    public interface VM_Out extends OutboundEndpointProcessor {
         VM_Out name(String name);
 
         VM_Out path(String path);

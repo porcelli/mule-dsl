@@ -9,23 +9,28 @@
  */
 package org.mule.config.dsl.aproach2;
 
-import com.google.inject.AbstractModule;
-
 import java.io.File;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 
-public abstract class AbstractMethodModule extends AbstractModule {
+public abstract class AbstractModule extends com.google.inject.AbstractModule {
 
 
-    public ProcessorBuilder send(EndpointProcessor emailNotification) {
+    public OutboundExecutorBuilder send(EndpointProcessor emailNotification) {
         return null;  //To change body of created methods use File | Settings | File Templates.
     }
 
-    public ProcessorBuilder send(String stats) {
+    public OutboundExecutorBuilder send(String stats) {
         return null;
     }
 
+    public OutboundExecutorBuilder sendAndWait(EndpointProcessor emailNotification) {
+        return null;  //To change body of created methods use File | Settings | File Templates.
+    }
+
+    public OutboundExecutorBuilder sendAndWait(String stats) {
+        return null;
+    }
 
     public TransformerBuilder newTransformer(String setHtmlContentType) {
         return null;
@@ -53,11 +58,11 @@ public abstract class AbstractMethodModule extends AbstractModule {
         return null;
     }
 
-    public ProcessorBuilder execute(Class<?> clazz) {
+    public CustomExecutorBuilder execute(Class<?> clazz) {
         return null;
     }
 
-    public ProcessorBuilder execute(Object myObj) {
+    public CustomExecutorBuilder execute(Object myObj) {
         return null;
     }
 
@@ -114,12 +119,19 @@ public abstract class AbstractMethodModule extends AbstractModule {
     }
 
     public interface ProcessorBuilder {
-        ProcessorBuilder methodAnnotatedWith(Class<? extends Annotation> annotationType);
-
-        ProcessorBuilder methodAnnotatedWith(Annotation annotation);
-
-        ProcessorBuilder asSingleton();
     }
+
+    public interface CustomExecutorBuilder extends ProcessorBuilder {
+        CustomExecutorBuilder methodAnnotatedWith(Class<? extends Annotation> annotationType);
+
+        CustomExecutorBuilder methodAnnotatedWith(Annotation annotation);
+
+        CustomExecutorBuilder asSingleton();
+    }
+
+    public interface OutboundExecutorBuilder extends ProcessorBuilder {
+    }
+
 
     public abstract static class VM {
         public static EndpointProcessor path(String path) {
@@ -186,6 +198,14 @@ public abstract class AbstractMethodModule extends AbstractModule {
     }
 
     public abstract static class FTP {
+        public static FTPInboundBuilder using(String inboundRef) {
+            return null;
+        }
+
+        public static FTPInboundBuilder using(EndpointProcessor endpoint) {
+            return null;
+        }
+
         public static FTPInboundBuilder poll(HostBuilder hostBuilder) {
             return null;
         }

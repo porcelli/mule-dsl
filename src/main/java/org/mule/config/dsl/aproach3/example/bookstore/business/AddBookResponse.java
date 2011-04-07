@@ -9,7 +9,7 @@
  */
 package org.mule.config.dsl.aproach3.example.bookstore.business;
 
-import org.mule.config.dsl.aproach3.AbstractMethodModule.Transformer;
+import org.mule.config.dsl.aproach3.AbstractModule.Transformer;
 
 public interface AddBookResponse extends Transformer {
 }

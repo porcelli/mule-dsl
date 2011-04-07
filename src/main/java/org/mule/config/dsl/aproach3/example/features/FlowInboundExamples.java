@@ -7,23 +7,25 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.config.dsl.aproach2.example.features;
+package org.mule.config.dsl.aproach3.example.features;
 
-import org.mule.config.dsl.aproach2.AbstractMethodModule;
-import org.mule.config.dsl.aproach2.example.features.business.MyPojo;
-import org.mule.config.dsl.aproach2.example.features.business.MyTransformer;
+import org.mule.config.dsl.aproach3.AbstractModule;
+import org.mule.config.dsl.aproach3.example.features.business.MyPojo;
+import org.mule.config.dsl.aproach3.example.features.business.MyTransformer;
 
 import javax.xml.ws.Service;
 import java.util.Map;
 
-import static org.mule.config.dsl.aproach2.AbstractMethodModule.TimeUnit.SECONDS;
+import static org.mule.config.dsl.aproach3.AbstractModule.TimeUnit.SECONDS;
 
-public class ProtocolExamples {
+public class FlowInboundExamples {
 
-    public static class BookStore extends AbstractMethodModule {
+    public static class FlowInbounds extends AbstractModule {
         @Override
         public void configure() {
             Connector myConnector = null;
+
+            EndpointProcessor ftp_base = defineEndpoint("ftp_base").using(FTP.class).poll(host("0.0.0.0").port(22).path("sss")).every(10);
 
             newFlow("MyFlow").in(
                     //generic use
@@ -51,70 +53,81 @@ public class ProtocolExamples {
                             .connectUsing("myConnectorReference"),
 
                     //protocol specific, that exposes just poll method
-                    from(FTP.poll(host("0.0.0.0").port(22).path("sss/a.txt")).every(10, SECONDS)),
+                    from(FTP_In.class).poll(host("0.0.0.0").port(22).path("sss/a.txt")).every(10, SECONDS),
+
+                    //protocol specific, using an already defined endpoint (reference)
+                    from(FTP_In.class).extend("ftp_base"),
+
+                    //protocol specific, using an already defined endpoint
+                    from(FTP_In.class).extend(ftp_base),
 
                     //protocol specific, now with a process request + connector
-                    from(FTP.poll(host("0.0.0.0").port(22).path("sss")).every(10, SECONDS))
+                    from(FTP_In.class).poll(host("0.0.0.0").port(22).path("sss")).every(10, SECONDS)
+                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
+                            .connectUsing(myConnector),
+
+                    //protocol specific, now with a process request + connector
+                    from(FTP_In.class).extend(ftp_base)
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
                             .connectUsing(myConnector),
 
                     //protocol specific, now with a process request + connector reference
-                    from(FTP.poll(host("0.0.0.0").port(22).path("sss")).every(10, SECONDS))
+                    from(FTP_In.class).poll(host("0.0.0.0").port(22).path("sss")).every(10, SECONDS)
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
                             .connectUsing("myConnectorReference"),
 
                     //different protocol specific
-                    from(HTTP.listen(host("0.0.0.0").port(8080).path("sss/zzz"))),
+                    from(HTTP_In.class).listen(host("0.0.0.0").port(8080).path("sss/zzz")),
 
                     //protocol specific, now with a process request and response
-                    from(HTTP.listen(host("0.0.0.0").port(8080).path("sss/zzz"))
+                    from(HTTP_In.class).listen(host("0.0.0.0").port(8080).path("sss/zzz"))
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
-                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter())),
+                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter()),
 
                     //protocol specific, now with a process request and response + connector
-                    from(HTTP.listen(host("0.0.0.0").port(8080).path("sss/zzz"))
+                    from(HTTP_In.class).listen(host("0.0.0.0").port(8080).path("sss/zzz"))
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
-                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter())),
+                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter()),
 
                     //protocol specific, now with a process request and response
                     // + extended behavior with WS as an example of protocol specific extension.
-                    from(HTTP.listen(host("0.0.0.0").port(8080).path("sss/zzz"))
-                            .as(WS.with(Service.class))
+                    from(HTTP_In.class).listen(host("0.0.0.0").port(8080).path("sss/zzz"))
+                            .as(WS.class).with(Service.class)
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
-                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter())),
+                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter()),
 
                     //protocol specific, now with a process request and response + connector
                     // + extended behavior with WS as an example of protocol specific extension.
-                    from(HTTP.listen(host("0.0.0.0").port(8080).path("sss/zzz"))
-                            .as(WS.with(Service.class))
+                    from(HTTP_In.class).listen(host("0.0.0.0").port(8080).path("sss/zzz"))
+                            .as(WS.class).with(Service.class)
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
-                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter()))
+                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter())
                             .connectUsing(myConnector),
 
                     //specific protocols can expose different methods, here http exposes poll
-                    from(HTTP.poll(host("0.0.0.0").port(8080).path("sss/zzz"))
+                    from(HTTP_In.class).poll(host("0.0.0.0").port(8080).path("sss/zzz"))
                             .every(2, TimeUnit.MINUTES)
-                            .as(WS.with(Service.class))
+                            .as(WS.class).with(Service.class)
                             .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
-                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter()))
+                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter())
                             .connectUsing(myConnector),
 
                     //jms specific protocol with an inplicit connector
-                    from(JMS.queue("queueName")),
+                    from(JMS_In.class).queue("queueName"),
 
                     //jms specific protocol with an inplicit connector
-                    from(JMS.topic("topicName")),
+                    from(JMS_In.class).topic("topicName"),
 
                     //jms specific protocol with an explicit connector
-                    from(JMS.queue("queueName")
-                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter()))
+                    from(JMS_In.class).queue("queueName")
+                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
                             .connectUsing(myConnector)
+
             ).process(
                     execute(MyPojo.class),
-                    filter()
+                    filter(),
+                    multicast(send(VM_In.class), send(VM_In.class), send(VM_In.class))
             );
         }
-
-
     }
 }

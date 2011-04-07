@@ -9,15 +9,14 @@
  */
 package org.mule.config.dsl.aproach2.example.features;
 
-import org.mule.config.dsl.aproach2.AbstractMethodModule;
+import org.mule.config.dsl.aproach2.AbstractModule;
 import org.mule.config.dsl.aproach2.example.features.business.MyPojo;
 
 import java.io.File;
-import java.io.InputStream;
 
 public class PropertyPlaceholderExamples {
 
-    public static class BookStore extends AbstractMethodModule {
+    public static class PropertyPlaceholders extends AbstractModule {
         @Override
         public void configure() {
             //Defines a property placeholder with a string to point a config file
@@ -25,7 +24,7 @@ public class PropertyPlaceholderExamples {
             //Defines a property placeholder with a file
             usePropertyPlaceholder(new File("config2.properties"));
             //Defines a property placeholder with an input stream
-            usePropertyPlaceholder(BookStore.class.getResourceAsStream("config3.properties"));
+            usePropertyPlaceholder(PropertyPlaceholders.class.getResourceAsStream("config3.properties"));
 
             newFlow("MyFlow").in(
                     //with a variable that paceholer will update

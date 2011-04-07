@@ -9,12 +9,12 @@
  */
 package org.mule.config.dsl.aproach3.example.bookstore;
 
-import org.mule.config.dsl.aproach3.AbstractMethodModule;
+import org.mule.config.dsl.aproach3.AbstractModule;
 import org.mule.config.dsl.aproach3.example.bookstore.business.*;
 
 public class BookstoreExample {
 
-    public static class BookStore extends AbstractMethodModule {
+    public static class BookStore extends AbstractModule {
         @Override
         public void configure() {
             usePropertyPlaceholder("email.properties");

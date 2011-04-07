@@ -10,7 +10,7 @@
 package org.mule.config.dsl.aproach2.example.features.business;
 
 
-import org.mule.config.dsl.aproach2.AbstractMethodModule.Transformer;
+import org.mule.config.dsl.aproach2.AbstractModule.Transformer;
 
 public interface MyTransformer extends Transformer {
 }

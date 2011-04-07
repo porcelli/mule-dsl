@@ -10,13 +10,13 @@
 package org.mule.config.dsl.aproach2.example.features;
 
 import com.google.inject.name.Names;
-import org.mule.config.dsl.aproach2.AbstractMethodModule;
+import org.mule.config.dsl.aproach2.AbstractModule;
 import org.mule.config.dsl.aproach2.example.features.business.MyBusinessMethod2Execute;
 import org.mule.config.dsl.aproach2.example.features.business.MyPojo;
 
 public class ComponentExamples {
 
-    public static class BookStore extends AbstractMethodModule {
+    public static class Components extends AbstractModule {
         @Override
         public void configure() {
 
