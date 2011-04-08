@@ -26,9 +26,9 @@ public class FlowInboundExamples {
         public void configure() {
             ConnectorBuilder myConnector = null;
 
-            EndpointProcessor ftp_base = endpoint(FTP.ENDPOINT, alias("myName")).poll(host("0.0.0.0").port(22).path("sss")).every(10);
+            EndpointProcessor ftp_base = endpoint(FTP.ENDPOINT, name("myName")).poll(host("0.0.0.0").port(22).path("sss")).every(10);
 
-            flow("MyFlow").in(
+            flow(name("MyFlow")).in(
                     //generic use
                     from("salesforce://login(g1,g2);*query(g3,r1);"),
 

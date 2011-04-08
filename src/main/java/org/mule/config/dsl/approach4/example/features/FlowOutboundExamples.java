@@ -16,9 +16,9 @@ public class FlowOutboundExamples {
     public static class FlowOutbounds extends AbstractModule {
         @Override
         public void configure() {
-            EndpointProcessor out = endpoint(VM.ENDPOINT, alias("ex_outbound")).path("internal");
+            EndpointProcessor out = endpoint(VM.ENDPOINT, name("ex_outbound")).path("internal");
 
-            flow("MyFlow").process(
+            flow(name("MyFlow")).process(
                     //generic
                     send("http://0.0.0.0/service/here"),
                     //referencing an endopoint

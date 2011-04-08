@@ -26,7 +26,7 @@ public class PropertyPlaceholderExamples {
             //Defines a property placeholder with an input stream
             propertyPlaceholder(PropertyPlaceholders.class.getResourceAsStream("config3.properties"));
 
-            flow("MyFlow").in(
+            flow(name("MyFlow")).in(
                     //with a variable that paceholer will update
                     from(JMS.INBOUND).queue("${queueName}")
                             .then()

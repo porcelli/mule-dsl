@@ -15,11 +15,7 @@ import java.lang.annotation.Annotation;
 
 public abstract class AbstractModule extends com.google.inject.AbstractModule {
 
-    public TransformerBuilder transformer(String setHtmlContentType) {
-        return null;
-    }
-
-    public <P extends EndpointExtension<? extends EndpointProcessor>> P endpoint(P from, AliasBuilder alias) {
+    public <P extends EndpointExtension<? extends EndpointProcessor>> P endpoint(P from, NameBuilder name) {
         return null;
     }
 
@@ -36,7 +32,11 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
     public void propertyPlaceholder(InputStream resourceAsStream) {
     }
 
-    public FlowBuilder flow(String myFlow) {
+    public FlowBuilder flow() {
+        return null;
+    }
+
+    public FlowBuilder flow(NameBuilder name) {
         return null;
     }
 
@@ -56,27 +56,11 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
         return null;
     }
 
-    public AliasBuilder alias(String alias) {
+    public NameBuilder name(String alias) {
         return null;
     }
 
     public ProcessorBuilder filter() {
-        return null;
-    }
-
-    public ProcessorBuilder transformTo(Class<?> clazz) {
-        return null;
-    }
-
-    public ProcessorBuilder transformWith(Class<? extends Transformer> clazz) {
-        return null;
-    }
-
-    public ProcessorBuilder transformWith(Transformer obj) {
-        return null;
-    }
-
-    public ProcessorBuilder transformWith(TransformerBuilder obj) {
         return null;
     }
 
@@ -117,7 +101,7 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
         MILISECONDS, SECONDS, MINUTES, HOURS, DAYS
     }
 
-    public interface AliasBuilder {
+    public interface NameBuilder {
     }
 
     public interface HostBuilder {
@@ -126,21 +110,7 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
         HostBuilder path(String path);
     }
 
-    public interface Transformer {
-    }
-
-    public interface TransformerBuilder extends Transformer {
-        <P extends TransformerBuilder> P extend(Class<P> transoformer);
-    }
-
-
-    public interface MessagePropertiesTransformer extends TransformerBuilder {
-        MessagePropertiesTransformer addMessageProperty(String key, String value);
-
-        MessagePropertiesTransformer deleteMessageProperty(String key);
-    }
-
-    public <C extends ConnectorBuilder> C connector(C connector, AliasBuilder alias) {
+    public <C extends ConnectorBuilder> C connector(C connector, NameBuilder name) {
         return null;
     }
 
@@ -293,9 +263,7 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
 
         public interface VMConnector extends ConnectorBuilder {
         }
-
     }
-
 
     public interface SMTP<Z> extends EndpointExtension<Z> {
 
@@ -362,5 +330,46 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
         }
     }
 
+
+    public <T extends TransformerBuilder> T transformer(Class<T> transformer, NameBuilder name) {
+        return null;
+    }
+
+    public <T extends TransformerBuilder> T transformer(Class<T> transformer) {
+        return null;
+    }
+
+    public ProcessorBuilder transformTo(Class<?> clazz) {
+        return null;
+    }
+
+    public ProcessorBuilder transformWith(Class<? extends Transformer> clazz) {
+        return null;
+    }
+
+    public <T extends TransformerBuilder> T transformWith(Class<T> clazz) {
+        return null;
+    }
+
+    public ProcessorBuilder transformWith(Transformer obj) {
+        return null;
+    }
+
+    public <T extends TransformerBuilder> T transformWith(T obj) {
+        return null;
+    }
+
+    public interface Transformer {
+    }
+
+    public interface TransformerBuilder extends ProcessorBuilder {
+    }
+
+
+    public interface MessagePropertiesTransformer extends TransformerBuilder {
+        MessagePropertiesTransformer addMessageProperty(String key, String value);
+
+        MessagePropertiesTransformer deleteMessageProperty(String key);
+    }
 
 }
