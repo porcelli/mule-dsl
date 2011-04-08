@@ -222,11 +222,10 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
         }
 
         public interface HTTPConnector extends ConnectorBuilder {
-            HTTPConnector xxx();
         }
     }
 
-    public interface FTP<Z extends EndpointProcessor> extends EndpointExtension<Z> {
+    public interface FTP<Z> extends EndpointExtension<Z> {
 
         FTP<InboundEndpointProcessor> INBOUND = null;
         FTP<OutboundEndpointProcessor> OUTBOUND = null;
@@ -238,18 +237,18 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
 
         FTPComplement<Z> extend(EndpointProcessor base);
 
-        public interface FTPPoll<Z extends EndpointProcessor> {
+        public interface FTPPoll<Z> {
             FTPComplement<Z> every(long time);
 
             FTPComplement<Z> every(long time, TimeUnit unit);
         }
 
-        public interface FTPComplement<Z extends EndpointProcessor> extends SecurityProperties<FTPComplement<Z>>, EncodingProperties<FTPComplement<Z>>, EndpointProcessor {
+        public interface FTPComplement<Z> extends SecurityProperties<FTPComplement<Z>>, EncodingProperties<FTPComplement<Z>>, EndpointProcessor {
             Z then();
         }
     }
 
-    public interface JMS<Z extends EndpointProcessor> extends EndpointExtension<Z> {
+    public interface JMS<Z> extends EndpointExtension<Z> {
 
         JMS<InboundEndpointProcessor> INBOUND = null;
         JMS<OutboundEndpointProcessor> OUTBOUND = null;
@@ -264,18 +263,19 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
         //Specific to JMS
         JMSComplement<Z> topic(String topic);
 
-        public interface JMSComplement<Z extends EndpointProcessor> extends SecurityProperties<JMSComplement<Z>>, EncodingProperties<JMSComplement<Z>>, EndpointProcessor {
+        public interface JMSComplement<Z> extends SecurityProperties<JMSComplement<Z>>, EncodingProperties<JMSComplement<Z>>, EndpointProcessor {
 
 
             Z then();
         }
     }
 
-    public interface VM<Z extends EndpointProcessor> extends EndpointExtension<Z> {
+    public interface VM<Z> extends EndpointExtension<Z> {
 
         VM<InboundEndpointProcessor> INBOUND = null;
         VM<OutboundEndpointProcessor> OUTBOUND = null;
         VM<EndpointProcessor> ENDPOINT = null;
+        VMConnector CONNECTOR = null;
 
         VMComplement<Z> extend(String base);
 
@@ -287,38 +287,54 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
         //Specific to JMS
         VMComplement<Z> name(String topic);
 
-        public interface VMComplement<Z extends EndpointProcessor> extends SecurityProperties<VMComplement<Z>>, EncodingProperties<VMComplement<Z>>, EndpointProcessor {
+        public interface VMComplement<Z> extends SecurityProperties<VMComplement<Z>>, EncodingProperties<VMComplement<Z>>, EndpointProcessor {
             Z then();
+        }
+
+        public interface VMConnector extends ConnectorBuilder {
+        }
+
+    }
+
+
+    public interface SMTP<Z> extends EndpointExtension<Z> {
+
+        SMTP<OutboundEndpointProcessor> OUTBOUND = null;
+
+        SMTPConnetor CONNECTOR = null;
+
+        SMTP<Z> secure();
+
+        SMTP<Z> extend(EndpointProcessor base);
+
+        SMTP<Z> extend(String base);
+
+        SMTPComplement<Z> user(String s);
+
+        SMTPComplement<Z> password(String s);
+
+        SMTPComplement<Z> host(String s);
+
+        SMTPComplement<Z> from(String s);
+
+        SMTPComplement<Z> subject(String s);
+
+        public interface SMTPComplement<Z> extends SecurityProperties<SMTPComplement<Z>>, EncodingProperties<SMTPComplement<Z>>, EndpointProcessor {
+            SMTPComplement<Z> host(String s);
+
+            SMTPComplement<Z> from(String s);
+
+            SMTPComplement<Z> subject(String s);
+
+            Z then();
+        }
+
+        public interface SMTPConnetor extends ConnectorBuilder {
+            SMTPConnetor secure();
         }
     }
 
-    public interface SMTPS<Z extends EndpointProcessor> extends EndpointExtension<Z> {
-
-        SMTPS<OutboundEndpointProcessor> OUTBOUND = null;
-
-        SMTPS<Z> extend(EndpointProcessor base);
-
-        SMTPS<Z> extend(String base);
-
-        SMTPSComplement<Z> user(String s);
-
-        SMTPSComplement<Z> password(String s);
-
-        SMTPSComplement<Z> host(String s);
-
-        SMTPSComplement<Z> from(String s);
-
-        SMTPSComplement<Z> subject(String s);
-
-        public interface SMTPSComplement<Z extends EndpointProcessor> extends SecurityProperties<SMTPSComplement<Z>>, EncodingProperties<SMTPSComplement<Z>>, EndpointProcessor {
-            SMTPSComplement<Z> host(String s);
-
-            SMTPSComplement<Z> from(String s);
-
-            SMTPSComplement<Z> subject(String s);
-
-            Z then();
-        }
+    public interface GMAIL extends SMTP {
 
     }
 

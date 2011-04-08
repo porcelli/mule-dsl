@@ -26,7 +26,8 @@ public class FlowOutboundExamples {
                     //referencing an endopoint using a local variable
                     send(VM.OUTBOUND).extend(out),
                     //protocol specific
-                    send(SMTPS.OUTBOUND)
+                    send(SMTP.OUTBOUND)
+                            .secure()
                             .user("${user}")
                             .password("${password}")
                             .host("${host}")
@@ -42,7 +43,9 @@ public class FlowOutboundExamples {
                     //referencing an endopoint using a local variable - sync
                     sendAndWait(VM.OUTBOUND).extend(out),
                     //protocol specific - sync
-                    sendAndWait(SMTPS.OUTBOUND).user("${user}")
+                    sendAndWait(SMTP.OUTBOUND)
+                            .secure()
+                            .user("${user}")
                             .password("${password}")
                             .host("${host}")
                             .from("${from}")
