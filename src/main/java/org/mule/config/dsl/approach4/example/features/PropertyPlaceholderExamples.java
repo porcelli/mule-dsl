@@ -20,13 +20,13 @@ public class PropertyPlaceholderExamples {
         @Override
         public void configure() {
             //Defines a property placeholder with a string to point a config file
-            usePropertyPlaceholder("config.properties");
+            propertyPlaceholder("config.properties");
             //Defines a property placeholder with a file
-            usePropertyPlaceholder(new File("config2.properties"));
+            propertyPlaceholder(new File("config2.properties"));
             //Defines a property placeholder with an input stream
-            usePropertyPlaceholder(PropertyPlaceholders.class.getResourceAsStream("config3.properties"));
+            propertyPlaceholder(PropertyPlaceholders.class.getResourceAsStream("config3.properties"));
 
-            newFlow("MyFlow").in(
+            flow("MyFlow").in(
                     //with a variable that paceholer will update
                     from(JMS.INBOUND).queue("${queueName}")
                             .then()

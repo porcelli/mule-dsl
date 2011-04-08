@@ -24,11 +24,11 @@ public class FlowInboundExamples {
     public static class FlowInbounds extends AbstractModule {
         @Override
         public void configure() {
-            Connector myConnector = null;
+            ConnectorBuilder myConnector = null;
 
-            EndpointProcessor ftp_base = defineEndpoint(FTP.ENDPOINT, alias("myName")).poll(host("0.0.0.0").port(22).path("sss")).every(10);
+            EndpointProcessor ftp_base = endpoint(FTP.ENDPOINT, alias("myName")).poll(host("0.0.0.0").port(22).path("sss")).every(10);
 
-            newFlow("MyFlow").in(
+            flow("MyFlow").in(
                     //generic use
                     from("salesforce://login(g1,g2);*query(g3,r1);"),
 

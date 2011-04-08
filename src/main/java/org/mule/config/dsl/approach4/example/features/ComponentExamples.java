@@ -21,7 +21,7 @@ public class ComponentExamples {
         public void configure() {
             Object myObj = null;
 
-            newFlow("MyFlow").in(
+            flow("MyFlow").in(
                     from(JMS.INBOUND).queue("queueName")
                             .then()
                             .processResponse(transformTo(String.class))

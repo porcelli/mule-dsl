@@ -15,28 +15,28 @@ import java.lang.annotation.Annotation;
 
 public abstract class AbstractModule extends com.google.inject.AbstractModule {
 
-    public TransformerBuilder defineTransformer(String setHtmlContentType) {
+    public TransformerBuilder transformer(String setHtmlContentType) {
         return null;
     }
 
-    public <P extends EndpointExtension<? extends EndpointProcessor>> P defineEndpoint(P from, AliasBuilder alias) {
+    public <P extends EndpointExtension<? extends EndpointProcessor>> P endpoint(P from, AliasBuilder alias) {
         return null;
     }
 
-    public <P extends EndpointExtension<? extends EndpointProcessor>> P defineEndpoint(P from) {
+    public <P extends EndpointExtension<? extends EndpointProcessor>> P endpoint(P from) {
         return null;
     }
 
-    public void usePropertyPlaceholder(String fileRef) {
+    public void propertyPlaceholder(String fileRef) {
     }
 
-    public void usePropertyPlaceholder(File s) {
+    public void propertyPlaceholder(File s) {
     }
 
-    public void usePropertyPlaceholder(InputStream resourceAsStream) {
+    public void propertyPlaceholder(InputStream resourceAsStream) {
     }
 
-    public FlowBuilder newFlow(String myFlow) {
+    public FlowBuilder flow(String myFlow) {
         return null;
     }
 
@@ -140,28 +140,17 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
         MessagePropertiesTransformer deleteMessageProperty(String key);
     }
 
-    public ConnectorBuilder newConnector(String connectorRef) {
+    public <C extends ConnectorBuilder> C connector(C connector, AliasBuilder alias) {
         return null;
     }
 
-    public interface Connector {
-
+    public <C extends ConnectorBuilder> C connector(C connector) {
+        return null;
     }
 
-    public interface ConnectorBuilder extends Connector {
-        <P extends ConnectorBuilder> P extend(Class<P> transoformer);
+    public ConnectorBuilder connector(String connector) {
+        return null;
     }
-
-
-    public interface VM_Connector extends ConnectorBuilder {
-    }
-
-    public interface SMTP_Connector extends ConnectorBuilder {
-    }
-
-    public interface GMail_Connector extends SMTP_Connector {
-    }
-
 
     public interface ProcessorBuilder {
     }
@@ -177,7 +166,7 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
 
 
     public interface EndpointProcessor extends ProcessorBuilder {
-        EndpointProcessor connectWith(Connector connector);
+        EndpointProcessor connectWith(ConnectorBuilder connector);
 
         EndpointProcessor connectWith(String connector);
     }
@@ -191,13 +180,21 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
         InboundEndpointProcessor processResponse(ProcessorBuilder... processors);
     }
 
-    public interface EndpointExtension<Z extends EndpointProcessor> {
+
+    public interface ConnectionExtension<Z> {
     }
 
-    public interface HTTP<Z extends EndpointProcessor> extends EndpointExtension<Z> {
+    public interface ConnectorBuilder {
+    }
+
+    public interface EndpointExtension<Z> {
+    }
+
+    public interface HTTP<Z> extends EndpointExtension<Z>, ConnectionExtension {
 
         HTTP<InboundEndpointProcessor> INBOUND = null;
         HTTP<OutboundEndpointProcessor> OUTBOUND = null;
+        HTTPConnector CONNECTOR = null;
 
         HTTPPoll<Z> poll(HostBuilder hostBuilder);
 
@@ -207,13 +204,13 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
 
         HTTPComplement<Z> listen(HostBuilder hostBuilder);
 
-        public interface HTTPPoll<Z extends EndpointProcessor> {
+        public interface HTTPPoll<Z> {
             HTTPComplement<Z> every(long time);
 
             HTTPComplement<Z> every(long time, TimeUnit unit);
         }
 
-        public interface HTTPComplement<Z extends EndpointProcessor> extends SecurityProperties<HTTPComplement<Z>>, EncodingProperties<HTTPComplement<Z>>, EndpointProcessor {
+        public interface HTTPComplement<Z> extends SecurityProperties<HTTPComplement<Z>>, EncodingProperties<HTTPComplement<Z>>, EndpointProcessor {
 
             //Specific to HTTP
             <T extends ExecWrapper<Z>> T using(T x);
@@ -222,6 +219,10 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
             HTTPComplement<Z> proxy(String proxy);
 
             Z then();
+        }
+
+        public interface HTTPConnector extends ConnectorBuilder {
+            HTTPConnector xxx();
         }
     }
 
@@ -332,15 +333,15 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
     }
 
 
-    public interface ExecWrapper<Z extends EndpointProcessor> {
+    public interface ExecWrapper<Z> {
     }
 
-    public interface WS<Z extends EndpointProcessor> extends ExecWrapper<Z> {
+    public interface WS<Z> extends ExecWrapper<Z> {
         WS<InboundEndpointProcessor> INBOUND = null;
 
         WSComplement<Z> with(Class<?> clazz);
 
-        public interface WSComplement<Z extends EndpointProcessor> extends EndpointProcessor {
+        public interface WSComplement<Z> extends EndpointProcessor {
             Z then();
         }
     }
