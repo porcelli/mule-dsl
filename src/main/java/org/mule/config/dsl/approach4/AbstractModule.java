@@ -23,6 +23,10 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
         return null;
     }
 
+    public EndpointProcessor endpoint(String from) {
+        return null;
+    }
+
     public void propertyPlaceholder(String fileRef) {
     }
 
@@ -57,10 +61,6 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
     }
 
     public NameBuilder name(String alias) {
-        return null;
-    }
-
-    public ProcessorBuilder filter() {
         return null;
     }
 
@@ -131,7 +131,19 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
 
         CustomExecutorBuilder methodAnnotatedWith(Annotation annotation);
 
+        CustomBindingExecutorBuilder bind(Class<?> clazz);
+
         CustomExecutorBuilder asSingleton();
+
+        public interface CustomBindingExecutorBuilder extends ProcessorBuilder {
+            CustomBindingExecutorBuilder methodAnnotatedWith(Class<? extends Annotation> annotationType);
+
+            CustomBindingExecutorBuilder methodAnnotatedWith(Annotation annotation);
+
+            <P extends EndpointExtension<? extends EndpointProcessor>> P redirectTo(P to);
+
+            EndpointProcessor redirectTo(String to);
+        }
     }
 
 
@@ -164,6 +176,7 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
 
         HTTP<InboundEndpointProcessor> INBOUND = null;
         HTTP<OutboundEndpointProcessor> OUTBOUND = null;
+        HTTP<EndpointProcessor> ENDPOINT = null;
         HTTPConnector CONNECTOR = null;
 
         HTTPPoll<Z> poll(HostBuilder hostBuilder);
@@ -322,6 +335,8 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
 
     public interface WS<Z> extends ExecWrapper<Z> {
         WS<InboundEndpointProcessor> INBOUND = null;
+        WS<OutboundEndpointProcessor> OUTBOUND = null;
+        WS<EndpointProcessor> ENDPOINT = null;
 
         WSComplement<Z> with(Class<?> clazz);
 
@@ -355,6 +370,10 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
         return null;
     }
 
+    public ProcessorBuilder transformWith(String ref) {
+        return null;
+    }
+
     public <T extends TransformerBuilder> T transformWith(T obj) {
         return null;
     }
@@ -372,4 +391,106 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
         MessagePropertiesTransformer deleteMessageProperty(String key);
     }
 
+
+    public <T extends FilterBuilder> T filterWith(Class<T> obj) {
+        return null;
+    }
+
+    public ProcessorBuilder filterWith(Class<? extends Filter> clazz) {
+        return null;
+    }
+
+    public <T extends FilterBuilder> T filterWith(T obj) {
+        return null;
+    }
+
+    public ProcessorBuilder filterWith(String ref) {
+        return null;
+    }
+
+    public interface Filter {
+
+    }
+
+    public interface FilterBuilder extends ProcessorBuilder {
+    }
+
+    public interface PayloadTypeFilter extends FilterBuilder, LogicFilter<PayloadTypeFilter> {
+        PayloadTypeFilter typeToFilter(Class<?> type);
+    }
+
+    public interface LogicFilter<T extends FilterBuilder> extends FilterBuilder {
+        T or(FilterBuilder builderA, FilterBuilder builderB);
+
+        T and(FilterBuilder builderA, FilterBuilder builderB);
+
+        T not(FilterBuilder builder);
+    }
+
+
+    public ChoiceRouterBuilder choice() {
+        return null;
+    }
+
+    public MulticastRouterBuilder multicast(OutboundEndpointProcessor... out) {
+        return null;
+    }
+
+    public RouterBuilder roundRobin(OutboundEndpointProcessor... out) {
+        return null;
+    }
+
+    public AsyncMulticastRouterBuilder asyncMulticast(ProcessorBuilder... processorBuilders) {
+        return null;
+    }
+
+    public interface MulticastRouterBuilder extends RouterBuilder {
+        RouterBuilder onFirstSuccessful();
+
+        RouterBuilder onFirstSuccessful(ExpressionBuilder ex);
+    }
+
+    public interface AsyncMulticastRouterBuilder extends RouterBuilder {
+        RouterBuilder with(ThreadProfileBuilder threadProfile);
+    }
+
+    public interface ThreadProfileBuilder {
+    }
+
+    public interface RouterBuilder extends ProcessorBuilder {
+    }
+
+    public interface ChoiceRouterBuilder extends RouterBuilder {
+        WhenChoiceBuilder when(ExpressionBuilder x);
+
+        OtherwiseChoiceBuilder otherwise();
+
+        public interface WhenChoiceBuilder {
+            ChoiceRouterBuilder then(ProcessorBuilder... processorBuilders);
+        }
+
+        public interface OtherwiseChoiceBuilder {
+            ProcessorBuilder then(ProcessorBuilder... processorBuilders);
+        }
+    }
+
+    public ProcessorBuilder log() {
+        return null;
+    }
+
+    public ProcessorBuilder echo() {
+        return null;
+    }
+
+    public ProcessorBuilder nil() {
+        return null;
+    }
+
+    public ProcessorBuilder passThrough() {
+        return null;
+    }
+
+
+    public interface ExpressionBuilder {
+    }
 }

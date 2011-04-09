@@ -54,7 +54,5 @@ public class FlowOutboundExamples {
                     sendAndWait(VM.OUTBOUND).path("outQueue")
             );
         }
-
-
     }
 }

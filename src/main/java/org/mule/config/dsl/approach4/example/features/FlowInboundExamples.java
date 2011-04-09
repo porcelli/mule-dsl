@@ -34,23 +34,23 @@ public class FlowInboundExamples {
 
                     //generic use with process request
                     from("salesforce://login(g1,g2);*query(g3,r1);")
-                            .processRequest(transformTo(String.class), filter()),
+                            .processRequest(transformTo(String.class)),
 
                     //generic use with process request and response
                     from("salesforce://login(g1,g2);*query(g3,r1);")
-                            .processRequest(transformTo(String.class), filter())
-                            .processResponse(transformTo(String.class), filter()),
+                            .processRequest(transformTo(String.class))
+                            .processResponse(transformTo(String.class)),
 
                     //generic use with process request and response + connector
                     from("salesforce://login(g1,g2);*query(g3,r1);")
-                            .processRequest(transformTo(String.class), filter())
-                            .processResponse(transformTo(String.class), filter())
+                            .processRequest(transformTo(String.class))
+                            .processResponse(transformTo(String.class))
                             .connectWith(myConnector),
 
                     //generic use with process request and response + connector reference
                     from("salesforce://login(g1,g2);*query(g3,r1);")
-                            .processRequest(transformTo(String.class), filter())
-                            .processResponse(transformTo(String.class), filter())
+                            .processRequest(transformTo(String.class))
+                            .processResponse(transformTo(String.class))
                             .connectWith("myConnectorReference"),
 
                     //protocol specific, that exposes just poll method
@@ -68,19 +68,19 @@ public class FlowInboundExamples {
                     //protocol specific, now with a process request + connector
                     from(FTP.INBOUND).poll(host("0.0.0.0").port(22).path("sss")).every(10, SECONDS)
                             .then()
-                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
+                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class))
                             .connectWith(myConnector),
 
                     //protocol specific, now with a process request + connector
                     from(FTP.INBOUND).extend(ftp_base)
                             .then()
-                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
+                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class))
                             .connectWith(myConnector),
 
                     //protocol specific, now with a process request + connector reference
                     from(FTP.INBOUND).poll(host("0.0.0.0").port(22).path("sss")).every(10, SECONDS)
                             .then()
-                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
+                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class))
                             .connectWith("myConnectorReference"),
 
                     //different protocol specific
@@ -89,30 +89,30 @@ public class FlowInboundExamples {
                     //protocol specific, now with a process request and response
                     from(HTTP.INBOUND).listen(host("0.0.0.0").port(8080).path("sss/zzz"))
                             .then()
-                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
-                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter()),
+                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class))
+                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class)),
 
                     //protocol specific, now with a process request and response + connector
                     from(HTTP.INBOUND).listen(host("0.0.0.0").port(8080).path("sss/zzz"))
                             .then()
-                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
-                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter()),
+                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class))
+                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class)),
 
                     //protocol specific, now with a process request and response
                     // + extended behavior with WS as an example of protocol specific extension.
                     from(HTTP.INBOUND).listen(host("0.0.0.0").port(8080).path("sss/zzz"))
                             .using(WS.INBOUND).with(Service.class)
                             .then()
-                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
-                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter()),
+                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class))
+                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class)),
 
                     //protocol specific, now with a process request and response + connector
                     // + extended behavior with WS as an example of protocol specific extension.
                     from(HTTP.INBOUND).listen(host("0.0.0.0").port(8080).path("sss/zzz"))
                             .using(WS.INBOUND).with(Service.class)
                             .then()
-                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
-                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter())
+                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class))
+                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class))
                             .connectWith(myConnector),
 
                     //specific protocols can expose different methods, here http exposes poll
@@ -120,8 +120,8 @@ public class FlowInboundExamples {
                             .every(2, TimeUnit.MINUTES)
                             .using(WS.INBOUND).with(Service.class)
                             .then()
-                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
-                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class), filter())
+                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class))
+                            .processResponse(transformWith(MyTransformer.class), transformTo(Map.class))
                             .connectWith(myConnector),
 
                     //jms specific protocol with an inplicit connector
@@ -133,12 +133,11 @@ public class FlowInboundExamples {
                     //jms specific protocol with an explicit connector
                     from(JMS.INBOUND).queue("queueName")
                             .then()
-                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class), filter())
+                            .processRequest(transformWith(MyTransformer.class), transformTo(Map.class))
                             .connectWith(myConnector)
 
             ).process(
-                    execute(MyPojo.class),
-                    filter()
+                    execute(MyPojo.class)
             );
         }
     }
