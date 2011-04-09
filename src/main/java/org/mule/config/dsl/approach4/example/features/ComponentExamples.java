@@ -11,6 +11,7 @@ package org.mule.config.dsl.approach4.example.features;
 
 import com.google.inject.name.Names;
 import org.mule.config.dsl.approach4.AbstractModule;
+import org.mule.config.dsl.approach4.TempModel.*;
 import org.mule.config.dsl.approach4.example.features.business.MyBusinessMethod2Execute;
 import org.mule.config.dsl.approach4.example.features.business.MyPojo;
 

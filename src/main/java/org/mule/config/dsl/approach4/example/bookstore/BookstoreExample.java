@@ -10,6 +10,7 @@
 package org.mule.config.dsl.approach4.example.bookstore;
 
 import org.mule.config.dsl.approach4.AbstractModule;
+import org.mule.config.dsl.approach4.TempModel.*;
 import org.mule.config.dsl.approach4.example.bookstore.business.*;
 
 public class BookstoreExample {

@@ -9,7 +9,7 @@
  */
 package org.mule.config.dsl.approach4.example.bookstore.business;
 
-import org.mule.config.dsl.approach4.AbstractModule;
+import org.mule.config.dsl.approach4.TempModel.Transformer;
 
-public interface StringToEmailTransformer extends AbstractModule.Transformer {
+public interface StringToEmailTransformer extends Transformer {
 }

@@ -10,6 +10,7 @@
 package org.mule.config.dsl.approach4.example.features;
 
 import org.mule.config.dsl.approach4.AbstractModule;
+import org.mule.config.dsl.approach4.TempModel.*;
 import org.mule.config.dsl.approach4.example.bookstore.business.CatalogService;
 import org.mule.config.dsl.approach4.example.features.business.MyPojo;
 import org.mule.config.dsl.approach4.example.features.business.MyTransformer;
@@ -17,7 +18,7 @@ import org.mule.config.dsl.approach4.example.features.business.MyTransformer;
 import javax.xml.ws.Service;
 import java.util.Map;
 
-import static org.mule.config.dsl.approach4.AbstractModule.TimeUnit.SECONDS;
+import static org.mule.config.dsl.approach4.TempModel.TimeUnit.SECONDS;
 
 public class FlowInboundExamples {
 
