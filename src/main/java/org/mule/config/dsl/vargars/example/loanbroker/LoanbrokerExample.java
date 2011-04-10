@@ -15,12 +15,20 @@ import org.mule.config.dsl.vargars.example.loanbroker.business.*;
 
 public class LoanbrokerExample {
 
+    //This Synchronous variant of loan broker example is modeled on the Enterprise integration Patterns book sample.
+    //See: http://www.eaipatterns.com/ComposedMessagingExample.html
     public static class LoanBroker extends AbstractModule {
         @Override
         public void configure() {
-
+            //The main loan broker flow that:
+            //  i) Receives a customer request
+            //  ii) Performs a lookup of the customer credit profile using a component binding
+            //  iii) Determines the bank that should be used to request quotes using 'DefaultLender'
+            //  iv) Uses an recipient list router to send quote requests to the selected banks and aggregates responses
+            //  v) Selects the lowest quote from the list of quotes returned using the 'LowestQuoteProcessor'
             flow(name("loan-broker-sync")).in(
                     from(ref("HttpUrlCustomerRequests")),
+                    //This endpoint is used by a test case to post java objects directly
                     from(ref("CustomerRequests"))
             ).process(
                     execute(DefaultLoanBroker.class).bind(CreditAgencyService.class)
@@ -29,11 +37,14 @@ public class LoanbrokerExample {
                     execute(LowestQuoteProcessor.class)
             );
 
+            //The credit agency service will get the credit profile for a customer
             flow(name("TheCreditAgencyService")).in(
                     from(HTTP.INBOUND).listen(host("localhost").port(18080).path("/mule/TheCreditAgencyService"))
                             .using(WS.INBOUND).with(DefaultCreditAgency.class)
             );
 
+            //These are mock bank services that represent remote bank loan services. One or more of these are
+            //invoked synchronously by the loan broker.
             flow(name("bank1")).in(
                     from(HTTP.INBOUND).listen(host("localhost").port(10080).path("/mule/TheBank1"))
                             .using(WS.INBOUND).with(Bank.class)
@@ -69,6 +80,7 @@ public class LoanbrokerExample {
                             .setProperty("bankName", "Bank #5")
             );
 
+            //Global Endpoints
             endpoint(HTTP.INBOUND, name("CustomerRequests")).listen(host("localhost").port(11080))
                     .then()
                     .processRequest(transformWith(ByteArrayToObject.class));
@@ -77,9 +89,11 @@ public class LoanbrokerExample {
                     .listen(host("0.0.0.0").port(11081))
                     .then()
                     .processRequest(
+                            //Translate request params into properties map
                             transformWith(BodyToParameterMapTransformer.class)/*,
                            TODO transformWith(SCRIPT)*/)
                     .processResponse(
+                            //If there's an exception payload, return a short message to the requestor, otherwise original payload
                             //TODO transformerWith(SCRIPT),
                             transformWith(ObjectToStringTransformer.class));
 

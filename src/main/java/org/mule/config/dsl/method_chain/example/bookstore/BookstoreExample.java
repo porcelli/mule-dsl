@@ -59,7 +59,6 @@ public class BookstoreExample {
                         .from("${from}")
                         .subject("Your order has been placed!");
 
-
         }
 
     }
