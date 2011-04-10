@@ -11,6 +11,7 @@ package org.mule.config.dsl.method_chain.example.bookstore;
 
 
 import org.mule.config.dsl.method_chain.AbstractModule;
+import org.mule.config.dsl.method_chain.TempModel.*;
 import org.mule.config.dsl.method_chain.example.bookstore.business.*;
 
 public class BookstoreExample {
@@ -18,15 +19,15 @@ public class BookstoreExample {
     public static class BookStore extends AbstractModule {
         @Override
         public void configure() {
-            usePropertyPlaceholder("email.properties");
+            propertyPlaceholder("email.properties");
 
-            SMTPConnector mySMTPConn = newConnector()
+            SMTPConnector mySMTPConn = connector()
                     .extend(SMTPConnector.class)
                     .user("${user}")
                     .password("${password}")
                     .host("${host}");
 
-            newFlow("CatalogService")
+            flow("CatalogService")
                     .from(listen(Protocol.HTTP, "0.0.0.0")
                                 .onPort(8777)
                                 .onPath("/services/order")
@@ -35,7 +36,7 @@ public class BookstoreExample {
                           listen("servlet://catalog"))
                     .execute(CatalogServiceImpl.class).asSingleton();
 
-            newFlow("OrderService")
+            flow("OrderService")
                     .listen(Protocol.HTTP, "0.0.0.0")
                         .onPort(8777)
                         .onPath("/services/order")
@@ -45,13 +46,13 @@ public class BookstoreExample {
                     .send(Protocol.VM, "emailNotification")
                     .send(Protocol.VM, "dataWarehouse");
 
-            newFlow("DataWarehouse")
+            flow("DataWarehouse")
                     .listen(Protocol.VM, "dataWarehouse")
                     .execute(DataWarehouse.class)
-                    .transformWith(ref(Transformer.class, "HtmlContentTypeTransformer"))
+                    .transformWith(ref("HtmlContentTypeTransformer"))
                     .send("stats");
 
-            newFlow("EmailNotificationService")
+            flow("EmailNotificationService")
                     .listen(Protocol.VM, "emailNotification")
                     .transformWith(OrderToEmailTransformer.class)
                     .transformWith(StringToEmailTransformer.class)

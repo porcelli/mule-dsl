@@ -9,39 +9,51 @@
  */
 package org.mule.config.dsl.method_chain;
 
+import org.mule.config.dsl.method_chain.TempModel.*;
+
 import java.io.File;
 import java.io.InputStream;
 
-public abstract class AbstractModule extends com.google.inject.AbstractModule {
+public abstract class AbstractModule {
 
-    public void usePropertyPlaceholder(String fileRef) {
+    public abstract void configure();
+
+    /* elements definition/declaration */
+
+    /* property placeholder usage */
+
+    public void propertyPlaceholder(String fileRef) {
     }
 
-    public void usePropertyPlaceholder(File s) {
+    public void propertyPlaceholder(File s) {
     }
 
-    public void usePropertyPlaceholder(InputStream resourceAsStream) {
+    public void propertyPlaceholder(InputStream resourceAsStream) {
     }
 
-    public FlowBuilder newFlow() {
+    /* transformer */
+
+    public TransformerBuilder transformer() {
         return null;
     }
 
-    public FlowBuilder newFlow(String name) {
+    public TransformerBuilder transformer(String name) {
         return null;
     }
 
-    public TransformerBuilder defineTransformer() {
+    /* connection */
+
+    /* connector */
+
+    public ConnectorBuilder connector(String name) {
         return null;
     }
 
-    public TransformerBuilder defineTransformer(String name) {
+    public ConnectorBuilder connector() {
         return null;
     }
 
-    public <T extends Object> Class<T> ref(Class<T> clazz, String ref) {
-        return null;
-    }
+    /* endpoint */
 
     public FlowInboundListenBuilder listen(String s) {
         return null;  //To change body of created methods use File | Settings | File Templates.
@@ -51,114 +63,36 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
         return null;  //To change body of created methods use File | Settings | File Templates.
     }
 
-    public ConnectorBuilder newConnector(String name) {
+
+    /* flow */
+
+    public FlowBuilder flow() {
         return null;
     }
 
-    public ConnectorBuilder newConnector() {
+    public FlowBuilder flow(String name) {
         return null;
     }
 
-    public interface ConnectorBuilder {
-        <T extends SMTPConnector> T extend(Class<T> smtpClass);
+
+    /* util methods */
+
+    /* util methods: named params  */
+
+    public RefBuilder ref(String ref) {
+        return null;
     }
 
-    public interface SMTPConnector extends ConnectorBuilder {
-        SMTPConnector user(String s);
-
-        SMTPConnector password(String s);
-
-        SMTPConnector host(String s);
-
-        SMTPConnector from(String s);
-
-        SMTPConnector subject(String s);
+    public HostBuilder host(String host) {
+        return null;
     }
 
-    public interface TransformerBuilder {
-        <T extends TransformerBuilder> T extend(Class<T> clazz);
+    public NameBuilder name(String alias) {
+        return null;
     }
 
-    public interface MessageProcessorTransformer extends TransformerBuilder {
-
-        MessageProcessorTransformer addProperty(String s, String s1);
-
-        MessageProcessorTransformer removeProperty(String s);
+    public URIBuilder uri(String uri) {
+        return null;
     }
 
-    public interface FlowBuilder {
-
-        FlowInboundBuilder from(String stringEndpoint);
-
-        ExtendedFlowInboundListenBuilder listen(Protocol protocol, String stringEndpoint);
-
-        ExtendedFlowInboundListenBuilder listen(String stringEndpoint);
-
-        ExtendedFlowInboundPollBuilder poll(Protocol protocol, String stringEndpoint);
-
-        ExtendedFlowInboundPollBuilder poll(String stringEndpoint);
-
-        PipelineBuilder from(FlowInboundBuilder... list);
-
-    }
-
-    public enum Protocol {
-        VM, HTTP
-    }
-
-    public interface HTTP extends FlowInboundBuilder {
-
-    }
-
-    public interface ExtendedFlowInboundListenBuilder extends FlowInboundListenBuilder, PipelineBuilder {
-    }
-
-    public interface ExtendedFlowInboundPollBuilder extends FlowInboundPollBuilder, PipelineBuilder {
-    }
-
-    public interface FlowInboundBuilder {
-        <T extends ListenerBuilderType> T using(Class<T> builer);
-    }
-
-    public interface PipelineBuilder {
-        ExecutorBuilder execute(Class<?> clazz);
-
-        PipelineBuilder transformWith(Class<? extends Transformer> clazz);
-
-        PipelineBuilder send(Protocol protocol, String xx);
-
-        PipelineBuilder send(String xx);
-
-        <T extends ConnectorBuilder> T send(T x);
-    }
-
-    public interface ExecutorBuilder extends PipelineBuilder {
-        PipelineBuilder asSingleton();
-    }
-
-    public interface ListenerBuilderType extends PipelineBuilder {
-
-    }
-
-    public interface CXF extends ListenerBuilderType, FlowInboundListenBuilder {
-        ExtendedFlowInboundListenBuilder withClass(Class<?> clazz);
-    }
-
-
-    public interface FlowInboundListenBuilder extends FlowInboundBuilder {
-        FlowInboundListenBuilder onPort(int port);
-
-        FlowInboundListenBuilder onPath(String path);
-
-        <T extends ConnectorBuilder> T send(T x);
-
-        PipelineBuilder transformWith(Class<? extends Transformer> clazz);
-    }
-
-    public interface FlowInboundPollBuilder extends FlowInboundBuilder {
-        FlowInboundListenBuilder onInterval();
-    }
-
-    public interface Transformer {
-    }
 }

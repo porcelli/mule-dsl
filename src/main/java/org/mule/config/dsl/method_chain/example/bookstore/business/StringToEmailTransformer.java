@@ -9,7 +9,7 @@
  */
 package org.mule.config.dsl.method_chain.example.bookstore.business;
 
-import org.mule.config.dsl.method_chain.AbstractModule.Transformer;
+import org.mule.config.dsl.method_chain.TempModel.Transformer;
 
 public class StringToEmailTransformer implements Transformer {
 }
