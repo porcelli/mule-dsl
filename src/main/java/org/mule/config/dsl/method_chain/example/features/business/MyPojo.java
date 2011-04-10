@@ -1,5 +1,5 @@
 /*
- * $Id: 20811 2011-04-06 13:00:20Z porcelli $
+ * $Id: 20811 2011-04-01 15:19:20Z porcelli $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSoft, Inc.  All rights reserved.  http://www.mulesoft.com
  *
@@ -7,9 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.config.dsl.method_chain.example.bookstore.business;
+package org.mule.config.dsl.method_chain.example.features.business;
 
-import org.mule.config.dsl.method_chain.TempModel.Transformer;
-
-public interface OrderToEmailTransformer extends Transformer {
+public class MyPojo {
 }

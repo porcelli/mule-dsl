@@ -1,5 +1,5 @@
 /*
- * $Id: 20811 2011-03-31 23:16:20Z porcelli $
+ * $Id: 20811 2011-04-06 12:46:20Z porcelli $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSoft, Inc.  All rights reserved.  http://www.mulesoft.com
  *
@@ -9,5 +9,5 @@
  */
 package org.mule.config.dsl.method_chain.example.bookstore.business;
 
-public interface OrderService {
+public class OrderService {
 }

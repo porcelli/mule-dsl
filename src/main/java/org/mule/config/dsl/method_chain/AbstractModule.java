@@ -1,5 +1,5 @@
 /*
- * $Id: 20811 2011-03-30 15:49:20Z porcelli $
+ * $Id: 20811 2011-04-01 14:45:20Z porcelli $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSoft, Inc.  All rights reserved.  http://www.mulesoft.com
  *
@@ -33,11 +33,11 @@ public abstract class AbstractModule {
 
     /* transformer */
 
-    public TransformerBuilder transformer() {
+    public <T extends TransformerBuilder> T transformer(Class<T> transformer) {
         return null;
     }
 
-    public TransformerBuilder transformer(String name) {
+    public <T extends TransformerBuilder> T transformer(Class<T> transformer, NameBuilder name) {
         return null;
     }
 
@@ -45,24 +45,31 @@ public abstract class AbstractModule {
 
     /* connector */
 
-    public ConnectorBuilder connector(String name) {
+    public ConnectorBuilder connector(String connector) {
         return null;
     }
 
-    public ConnectorBuilder connector() {
+    public <C extends ConnectorBuilder> C connector(C connector) {
+        return null;
+    }
+
+    public <C extends ConnectorBuilder> C connector(C connector, NameBuilder name) {
         return null;
     }
 
     /* endpoint */
 
-    public FlowInboundListenBuilder listen(String s) {
-        return null;  //To change body of created methods use File | Settings | File Templates.
+    public EndpointProcessor endpoint(String from) {
+        return null;
     }
 
-    public FlowInboundListenBuilder listen(Protocol http, String s) {
-        return null;  //To change body of created methods use File | Settings | File Templates.
+    public <P extends EndpointExtension<? extends EndpointProcessor>> P endpoint(P from) {
+        return null;
     }
 
+    public <P extends EndpointExtension<? extends EndpointProcessor>> P endpoint(P from, NameBuilder name) {
+        return null;
+    }
 
     /* flow */
 
@@ -70,12 +77,16 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public FlowBuilder flow(String name) {
+    public FlowBuilder flow(NameBuilder name) {
         return null;
     }
 
-
     /* util methods */
+
+    public FlowProcessBuilder pipeline() {
+        return null;
+    }
+
 
     /* util methods: named params  */
 
@@ -94,5 +105,6 @@ public abstract class AbstractModule {
     public URIBuilder uri(String uri) {
         return null;
     }
+
 
 }

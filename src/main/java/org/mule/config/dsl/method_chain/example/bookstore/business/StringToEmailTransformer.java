@@ -1,5 +1,5 @@
 /*
- * $Id: 20811 2011-04-06 08:18:20Z porcelli $
+ * $Id: 20811 2011-04-06 13:00:20Z porcelli $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSoft, Inc.  All rights reserved.  http://www.mulesoft.com
  *
@@ -11,5 +11,5 @@ package org.mule.config.dsl.method_chain.example.bookstore.business;
 
 import org.mule.config.dsl.method_chain.TempModel.Transformer;
 
-public class StringToEmailTransformer implements Transformer {
+public interface StringToEmailTransformer extends Transformer {
 }
