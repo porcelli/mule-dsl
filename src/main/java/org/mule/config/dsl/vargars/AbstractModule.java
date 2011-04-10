@@ -111,10 +111,6 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public <T extends FilterBuilder> T filterWith(Class<T> obj) {
-        return null;
-    }
-
     public <T extends FilterBuilder> T filterWith(T obj) {
         return null;
     }
@@ -138,10 +134,6 @@ public abstract class AbstractModule {
     }
 
     public <T extends TransformerBuilder> T transformWith(T obj) {
-        return null;
-    }
-
-    public <T extends TransformerBuilder> T transformWith(Class<T> clazz) {
         return null;
     }
 

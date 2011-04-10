@@ -99,7 +99,7 @@ public interface TempModel {
         InboundEndpointProcessor processResponse(ProcessorBuilder... processors);
     }
 
-    public interface ConnectionExtension<Z> {
+    public interface ConnectionExtension {
     }
 
     public interface ConnectorBuilder {
@@ -268,7 +268,7 @@ public interface TempModel {
         }
     }
 
-    public interface GMAIL extends SMTP {
+    public interface GMAIL<Z> extends SMTP<Z> {
 
     }
 

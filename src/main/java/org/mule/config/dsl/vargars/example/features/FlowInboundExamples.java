@@ -14,8 +14,8 @@ import org.mule.config.dsl.vargars.TempModel.*;
 import org.mule.config.dsl.vargars.example.bookstore.business.CatalogService;
 import org.mule.config.dsl.vargars.example.features.business.MyPojo;
 import org.mule.config.dsl.vargars.example.features.business.MyTransformer;
+import org.mule.config.dsl.vargars.example.features.business.Service;
 
-import javax.xml.ws.Service;
 import java.util.Map;
 
 import static org.mule.config.dsl.vargars.TempModel.TimeUnit.SECONDS;

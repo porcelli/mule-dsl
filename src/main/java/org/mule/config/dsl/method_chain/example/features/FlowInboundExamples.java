@@ -14,8 +14,8 @@ import org.mule.config.dsl.method_chain.TempModel.*;
 import org.mule.config.dsl.method_chain.example.bookstore.business.CatalogService;
 import org.mule.config.dsl.method_chain.example.features.business.MyPojo;
 import org.mule.config.dsl.method_chain.example.features.business.MyTransformer;
+import org.mule.config.dsl.method_chain.example.features.business.Service;
 
-import javax.xml.ws.Service;
 import java.util.Map;
 
 import static org.mule.config.dsl.method_chain.TempModel.TimeUnit.SECONDS;

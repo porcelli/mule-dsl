@@ -53,8 +53,6 @@ public interface TempModel {
         FlowProcessBuilder transformWith(Class<? extends Transformer> clazz);
 
         <T extends TransformerBuilder> T transformWith(T obj);
-
-        <T extends TransformerBuilder> T transformWith(Class<T> clazz);
     }
 
     public interface FlowBuilder extends FlowProcessBuilder {
@@ -131,7 +129,7 @@ public interface TempModel {
         InboundEndpointProcessor processResponse(FlowProcessBuilder pipeline);
     }
 
-    public interface ConnectionExtension<Z> {
+    public interface ConnectionExtension {
     }
 
     public interface ConnectorBuilder {
@@ -300,7 +298,7 @@ public interface TempModel {
         }
     }
 
-    public interface GMAIL extends SMTP {
+    public interface GMAIL<Z> extends SMTP<Z> {
 
     }
 
