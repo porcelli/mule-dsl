@@ -83,10 +83,11 @@ public abstract class AbstractModule {
 
     /* util methods */
 
+    /* util methods: pipeline */
+
     public FlowProcessBuilder pipeline() {
         return null;
     }
-
 
     /* util methods: named params  */
 
