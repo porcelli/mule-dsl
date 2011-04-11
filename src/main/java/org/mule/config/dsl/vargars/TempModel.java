@@ -234,7 +234,6 @@ public interface TempModel {
     public interface SMTP<Z> extends EndpointExtension<Z> {
 
         SMTP<OutboundEndpointProcessor> OUTBOUND = null;
-
         SMTPConnetor CONNECTOR = null;
 
         SMTP<Z> secure();

@@ -8,9 +8,9 @@ By making an internal DSL available we cater for those that prefer programmatic 
 
 # Mule DSL Goals
 
-To implement an internal Domain Specific Language (DSL) (also know as a fluent API) in Java that allows users to configure Mule ESB programmatically. The following characteristics are expected from the DSL:
+To implement an internal Domain Specific Language (DSL) in Java (also know as a fluent API) that allows users to configure Mule ESB programmatically. The following characteristics are expected from the DSL:
 
- - Easy to use and learn
+ - Easy to write, read and learn
  - Hard to misuse
  - Extensible
  - Take advantage of IDE auto-complete
@@ -37,19 +37,133 @@ Its also clear that its out of the this initial scope the following:
 
 # Current Status
 
-This is the first preview version of the Mule DSL. This project goals
+This is the first preview of the Mule DSL syntax *and is still a working in progress*.
+
+**Important:** Feedbacks are welcomed ;)
+
+# Preview
+
+
+## Commons
+
+Here are the commons that both approaches shares:
+
+ - Hide complexity from users
+ - Configuration based on modules
+ - Extensive use of generics for type inference
+ - Specializations publish it's available extensions
+ - Named args (artificial)
+
+### Hide complexity from users
+
+
+This topic helps to enforce the following elements:
+
+ - Easy to write, read and learn
+ - Hard to misuse
+
+
+### Configuration based on modules
+
+
+This topic helps to enforce the following elements:
+
+- Extensible
+- Avoid the use of Strings to reference domain objects
+- Use the most modern techniques to build its structure
+
+
+### Extensive use of generics for type inference
+
+This topic helps to enforce the following elements:
+
+- Easy to write, read and learn
+- Hard to misuse
+- Extensible
+- Take advantage of IDE auto-complete
+- Use the most modern techniques to build its structure
+
+
+### Specializations publish it's available extensions
+
+
+This topic helps to enforce the following elements:
+
+- Extensible
+- Take advantage of IDE auto-complete
+
+
+### Named args (artificial)
+
+This topic helps to enforce the following elements:
+
+- Easy to write, read and learn
+- Hard to misuse
+- Avoid the use of Strings to reference domain objects
+- Use the most modern techniques to build its structure
 
 
 ## Method Chain
 
+Method chain is one of the most popular
+
+    StringBuilder b = new StringBuilder();
+      b.append("Hello, ")
+       .append(" cruel ")
+       .append("World !");
+
 ### Advantages
 
 ### Disadvantages
+
+### Known issues
 
 ## Varargs
 
-
 ### Advantages
 
 ### Disadvantages
+
+### Known issues
+
+## Features
+
+ - Flows
+ - Protocols
+ - Components
+ - Connectors
+ - Endpoints: Global, Inbound & Outbound
+ - Transformers
+ - Filters
+ - Routers
+ - Loggers
+ - Request and Response Processing
+ - Interceptors
+ - Splitters
+ - Aggregators
+ - *Expression* Filters & Transformers
+ - Application Definition/Configuration
+ - Security Filter
+ - Exception Handler
+ - Transaction Behavior
+ - Thread Profile
+ - Default Behavior
+ - Agent
+
+**Note:** those features that are already implemented are just samples/mocks. Most of them still need improvements.
+
+# References
+
+## Libs
+
+ - [mockito](http://mockito.org)
+ - [fest-assert](http://docs.codehaus.org/display/FEST/Fluent+Assertions+Module)
+ - [query dsl](http://www.querydsl.com)
+ - <del>[camel](http://camel.apache.org)</del> - oops! i did it again ;)
+
+## Books
+
+  - [DSL in Action](http://www.manning.com/ghosh/)
+  - [Domain Specific Languages](http://martinfowler.com/books.html#dsl)
+
 
