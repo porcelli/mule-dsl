@@ -9,5 +9,16 @@
  */
 package org.mule.config.dsl.vargars.example.features.business;
 
+import javax.inject.Named;
+
 public class MyPojo {
+
+    @Named("myMethodToExecute")
+    public void method1() {
+    }
+
+    @MyBusinessMethod2Execute
+    public void method2() {
+    }
+
 }

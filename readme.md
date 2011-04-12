@@ -41,39 +41,112 @@ This is the first preview of the Mule DSL syntax *and is still a working in prog
 
 **Important:** Feedbacks are welcomed ;)
 
-# Preview
+# Design Decisions
 
-
-## Commons
-
-Here are the commons that both approaches shares:
+Although this is a preview version, it has some strong design decisions that influenced its construction. Here are the most prominent:
 
  - Hide complexity from users
  - Configuration based on modules
  - Extensive use of generics for type inference
  - Specializations publish it's available extensions
- - Named args (artificial)
+ - Named args
 
-### Hide complexity from users
+## Hide complexity from users
+
+Hide complexity from user is almost a common sense in API design, but in DSLs sometimes it's necessary to go to extreme on this. To achieve readability sometimes it's necessary to cut (or hide) some options from users and consider convention over configuration.
+The real chalange here is identify what is possible to cut (or hide) and what is not.
+
+An example of this simplification on this preview version can be seen on custom components configuration, that for now is supressing the explicit definition of entry point resolvers. On mule internal DSL users can define a custom compoenent execution using the execute method, like this:
+
+	[...]
+	execute(MyPojo.class)
+	[...]
+
+If the user specify just it, the default behavior will be: check if MyPojo is an instance of a Callable, if not, it will use (behind the scenes) the reflection based entry point resolver. 
+But what about if user whant define a specific method to be executed? Simple... just need to use an annotation to define wich method to execute like this:
+
+	//using a specific annotation
+	execute(MyPojo.class).methodAnnotatedWith(MyBusinessMethod2Execute.class)
+
+	public class MyPojo {
+	    public void method1() {
+	    }
+	    @MyBusinessMethod2Execute
+	    public void method2() {
+	    }
+	}
+
+or
+
+	//using the javax.inject.Named annotation
+	execute(My2ndPojo.class).methodAnnotatedWith(Names.named("myMethodToExecute"))
+
+	public class My2ndPojo {
+	    public void methodA() {
+	    }
+	    @Named("myMethodToExecute")
+	    public void methodB() {
+	    }
+	}
+
+[this approach was inspired by [google-guice binding annotations](http://code.google.com/p/google-guice/wiki/BindingAnnotations)]
+
+*This topic helps to enforce the following elements:*
+
+ - *Easy to write, read and learn*
+ - *Hard to misuse*
+
+**Note:** This is the most abstract concept descrived in this documentation, the next sections are more practical and hand-on based concepts.
+
+## Configuration based on modules
+
+This is another funcionality inspired by [Google Guice](http://code.google.com/p/google-guice). Besides the fact that mule internal dsl will use a well know idiom inspired from a popular java library, the module concept will bring to mule internal dsl portability.
+
+The module is an aggragator that is used to declare all the building blocks necessary to build flows and other mule related condifugations. In practive a module is just an abstract class that exposes a series of util methods that has an abstract method called **condigure** that must be overriden. This is a simple example of it:
+
+	public class MyModule extends AbstractModule {
+	    @Override
+	    public void configure() {
+			//build blocks defined here
+	    }
+	}
+
+*This topic helps to enforce the following elements:*
+
+ - *Extensible*
+ - *Avoid the use of Strings to reference domain objects*
+ - *Use the most modern techniques to build its structure*
 
 
-This topic helps to enforce the following elements:
+### How to use modules
 
- - Easy to write, read and learn
- - Hard to misuse
+This is still not defined, but here are some ideas of how to use it:
 
-
-### Configuration based on modules
-
-
-This topic helps to enforce the following elements:
-
-- Extensible
-- Avoid the use of Strings to reference domain objects
-- Use the most modern techniques to build its structure
+	//as parameter on mule context constructor
+	MuleContext context = new DSLMuleContext(new ModuleA(), new ModuleB(), ...)
 
 
-### Extensive use of generics for type inference
+	The module concept  is 
+
+	just simple abstract class that defines a set of util method and 
+
+	it's abstract method
+
+	to constuct flows and other configurations that has the configure method that 
+
+
+
+	One of the biggest advantages of this approach is that it'll enable applications that started to use mule embedded to run it easily on Mule Server.
+
+
+## Extensive use of generics for type inference
+
+Although generics in java are erasure based, it's still possible to do impressive things with that. When building a nice to use internal DSL, one goal is to drive user's thru the API give to them just the options based on a context.
+
+Using generics it's possible to give user's a set of possible actions based on his previous choices. An example of this is when you try to configure an endpoint. If you're configuring a generic endpoint, you have few choices as show here:
+
+But if you're configuring a specific endpoint, based on HTTP for instance, you'll have several http specific options:
+
 
 This topic helps to enforce the following elements:
 
@@ -84,7 +157,7 @@ This topic helps to enforce the following elements:
 - Use the most modern techniques to build its structure
 
 
-### Specializations publish it's available extensions
+## Specializations publish it's available extensions
 
 
 This topic helps to enforce the following elements:
@@ -93,7 +166,12 @@ This topic helps to enforce the following elements:
 - Take advantage of IDE auto-complete
 
 
-### Named args (artificial)
+## Named args (artificial)
+
+Its well know that java syntax does not allow named parameters wich is an important resource to source code readability.
+
+This is just a simple code convention used on this preview dsl. One goal of a 
+
 
 This topic helps to enforce the following elements:
 
@@ -102,6 +180,9 @@ This topic helps to enforce the following elements:
 - Avoid the use of Strings to reference domain objects
 - Use the most modern techniques to build its structure
 
+# Approaches
+
+This first preview version comes in two different flavors: method chain and vargars. Each approach has its advantages and disagvantages that are briefly explored here.
 
 ## Method Chain
 
@@ -163,7 +244,7 @@ Method chain is one of the most popular
 
 ## Books
 
-  - [DSL in Action](http://www.manning.com/ghosh/)
-  - [Domain Specific Languages](http://martinfowler.com/books.html#dsl)
+ - [DSL in Action](http://www.manning.com/ghosh/)
+ - [Domain Specific Languages](http://martinfowler.com/books.html#dsl)
 
-
+# Glossary
