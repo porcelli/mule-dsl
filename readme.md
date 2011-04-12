@@ -56,8 +56,7 @@ Hide complexity from users is almost a common sense in API design, but in DSLs s
 
 An example of this simplification on this preview can be seen on custom components configuration, that is suppressing the explicit use of entry point resolvers (at least for now). Users can define a custom component execution using mule internal dsl thru execute method, like this:
 
-	//flow definition supressed	
-	[...]
+	[...]// <-- flow definition supressed	
 	execute(MyPojo.class)
 
 If a custom component is declared like above, the default behavior will be: check if MyPojo is an instance of a Callable, if not use use reflection entry point resolver.
@@ -99,9 +98,9 @@ or
 
 *[this funcionality is also inspired by [Google Guice](http://code.google.com/p/google-guice)]*
 
-Besides the fact that mule internal dsl will use a well know idiom inspired from a popular java library, the module concept will bring to mule internal dsl portability in deployment scenario.
+Besides the fact that mule internal dsl will use a well know idiom inspired from a popular java library, the module concept will bring to mule internal dsl portability on deployment scenarios.
 
-The module is an aggragator that should be used to declare all the building blocks necessary to construct flows and any other mule configuration. In practice a module is just an abstract class that exposes a series of util methods and has an abstract void method called **configure()** that must be overriden. This is a simple example:
+A module is an aggragator that must be used to declare all necessary building blocks to define flows, endpoint, connector or any other configurable element. In practice a module is an abstract class that exposes a series of util methods and has an abstract method called **configure()** that must be overriden by users. This is a simple example:
 
 	public class MyModule extends AbstractModule {
 	    @Override
@@ -110,7 +109,7 @@ The module is an aggragator that should be used to declare all the building bloc
 	    }
 	}
 
-The biggest advatge on modules usage is the deployment portability of the user's application that can start using mule embedded but later can deploy the same configuration into mule server without touch any code. Of course its necessary to adapt the actual deployer to understand those modules.
+As already mentioned modules will enable deployment portability of the user's application that can start using mule embedded and later can deploy it into mule server without touch any code at all. Of course its necessary to adapt the actual deployer to understand those modules.
 
 #### *This topic helps to enforce the following goals:*
 
@@ -120,14 +119,14 @@ The biggest advatge on modules usage is the deployment portability of the user's
 
 ## Extensive use of generics for type inference
 
-Although generics in java are erasure based, it's still possible to do impressive things with that. When building a nice to use internal DSL, one important goal is to drive user's thru the API givem to them just the right options based on it's context - and generics helps a lot here.
-In this preview version, a good example of this goodies of generics are on endpoint configuration. If you're configuring a generic endpoint like this:
+Although generics in java are erasure based, it's still possible to do impressive things with that. When building a fancy internal DSL it's important to drive users in a assertive path to avoid misuses - and extensice use of generics helps a lot. In this preview version, a good example of generics goodies is present on endpoint configuration. If you're configuring a generic endpoint like this:
 
 	from(uri("salesforce://login(g1,g2);*query(g3,r1);"))
 
+You will have just a few options to complement it like define a connector (connectWith method) or define a process request or response (processRequest or processResponse methods). 
+But if you're configuring an endpoint using a specific protocol like HTTP, you'll have more options - all of them related to HTTP:
 
-Your next options are just a few like define a connector (connectWith method) or define a process request or response (processRequest or processResponse methods). But if you're configuring an endpoint using a specific protocol like HTTP, you have more options (all of them just related to http protocol):
-
+    //the listen associated with WS usage is specific to HTTP protocol
 	from(HTTP.INBOUND).listen(host("0.0.0.0").port(8777).path("services/catalog")).using(WS.INBOUND).with(CatalogService.class)
 
 #### *This topic helps to enforce the following goals:*
@@ -140,23 +139,23 @@ Your next options are just a few like define a connector (connectWith method) or
 
 ## Named args (artificial)
 
-Its well know that java syntax does not allow named parameters wich is an important resource to source code readability. This 
+Its well know that java syntax does not allow named parameters wich is an important resource to source code readability.
 
 	//this is a definition of a transformer that references
 	//an already defined transformer named transfRef
 	transformeWith(ref: "transfRef")
 
-But there's an alternative that we can do in java, using a bit of creativity and static methods ;), here is how:
+But, using a bit of creativity and static methods, its possible to create something with almost the same effect:
 
 	//now using the ref method that is a simple method
 	transformeWith(ref("transfRef"))
 
-Of course that there's always the risk that user's aren't aware of this "ref" method and create something like this:
+Of course that there's always the risk that users aren't aware of this "ref" method and create something like this:
 
-	//wrong usage of named arg
+	//"wrong" usage of named arg
 	transformeWith(new RefBuilder("transfRef"))
 
-Note that, even using a bad idiom to define a reference, it's much more clear than use a simple string.
+And note that, even using a this bad idiom to define a reference, it's much more clear than use a simple string.
 
 Readability is not the unique advantage of this named args, it's also help on disambiguites on string parameters (ie. ref and uri).
 
@@ -179,12 +178,93 @@ This first preview version comes in two different flavors: method chain and varg
 
 ## Method Chain
 
-Method chain is one of the most popular
+The method chain technique is kind of popular in java, some core java classes like StringBuilder uses this as we can see here:
 
-    StringBuilder b = new StringBuilder();
-      b.append("Hello, ")
-       .append(" cruel ")
-       .append("World !");
+	StringBuilder b = new StringBuilder();
+	  b.append("Hello, ")
+	   .append(" cruel ")
+	   .append("World !");
+
+Most internal DSLs use this approach that has the biggest advantage to give the user's, while typing (using a modern IDE that has an auto-complete feature) all the next options available.
+
+Here is an example of the BookStore application written using the method chain approach.
+
+	public static class BookStore extends AbstractModule {
+	    @Override
+	    public void configure() {
+	        propertyPlaceholder("email.properties");
+
+	        //Configure some properties to work with GMail's SMTP
+	        connector(GMAIL.CONNECTOR, name("emailConnector"));
+
+	        //Use this as a poor man's message queue, in the real world we would use JMS
+	        connector(VM.CONNECTOR, name("vmQueues"));
+
+	        //This queue contains a feed of the latest statistics generated by
+	        // the Data Warehouse (it should really be a LIFO queue)
+	        endpoint(VM.ENDPOINT, name("stats")).path("statistics");
+
+	        TransformerBuilder setHtmlContentType = transformer(MessagePropertiesTransformer.class, name("setHtmlContentType"))
+	                .addMessageProperty("Content-Type", "text/html")
+	                        //Tomcat lowercases headers, need to drop this old one too
+	                .deleteMessageProperty("content-type");
+
+	        flow(name("CatalogService"))
+	                //Public interface
+	               .from(HTTP.INBOUND).listen(host("0.0.0.0").port(8777).path("services/catalog"))
+	                        .using(WS.INBOUND).with(CatalogService.class)
+	                //Administration interface
+	               .from(uri("servlet://catalog"))
+	                        .processRequest(
+	                                //Convert request parameters to Book object
+	                                pipeline().transformWith(HttpRequestToBook.class))
+	                        .processResponse(
+	                                //Format response to be a nice HTML page
+	                                pipeline().transformWith(AddBookResponse.class)
+	                                //Force text/html, otherwise it falls back to request
+	                                // props, which have form-encoded one
+	                                .transformWith(setHtmlContentType))
+	        .execute(CatalogServiceImpl.class).asSingleton();
+
+	        flow(name("OrderService"))
+	                //Public interface
+	                .from(HTTP.INBOUND).listen(host("0.0.0.0").port(8777).path("services/order"))
+	                        .using(WS.INBOUND).with(OrderService.class)
+	         .execute(OrderServiceImpl.class).asSingleton()
+	         .send(VM.OUTBOUND).path("emailNotification")
+	         .send(VM.OUTBOUND).path("dataWarehouse");
+
+	        flow(name("EmailNotificationService"))
+	               .from(VM.INBOUND).path("emailNotification")
+	         .transformWith(OrderToEmailTransformer.class)
+	         .transformWith(StringToEmailTransformer.class)
+	         .send(SMTP.OUTBOUND)
+	                        .secure()
+	                        .user("${user}")
+	                        .password("${password}")
+	                        .host("${host}")
+	                        .from("${from}")
+	                        .subject("Your order has been placed!");
+
+	        flow(name("DataWarehouse"))
+	               .from(VM.INBOUND).path("dataWarehouse")
+	         .execute(DataWarehouse.class).asSingleton()
+	         .transformWith(setHtmlContentType)
+	         .send(ref("stats"));
+	    }
+	}
+
+**Important to note**: reading the code is just a small part of the API evaluation, you should try it using in your own IDE. To experiment this syntax all that you need is extend the org.mule.config.dsl.method\_chain.AbstractModule class and import all elements defined into  org.mule.config.dsl.method_chain.TempModel class. Just like this:
+
+	import org.mule.config.dsl.method_chain.AbstractModule;
+	import org.mule.config.dsl.method_chain.TempModel.*;
+
+	public class MyModuleExample extends AbstractModule {
+		@Override
+        public void configure() {
+            //insert your code here
+        }
+	}
 
 ### Advantages
 
@@ -200,6 +280,104 @@ Method chain is one of the most popular
  4. Furure new features can impact the method chain
 
 ## Varargs
+
+Vargars, or variable arguments, was introduced in Java 5 (back in 2004) and enables users declare that a method can take a variable number of parameters for a given argument.
+In this preview version of mule internal DSL, we can take advantage of this variable number of parameters to create pipelines or define inbound endpoints of a flow. But to avoid the verbosity of java type declaration for each element defined that uses the varagars, it's necessary provide some util methods that internally creates those elements for us. Check this example:
+
+	//convetional that uses varargs
+	.process(new MyTransformer(), new FilterX(), ...)
+
+	//vargars + util methods
+	.process(transformWith(MyTransformer.class), filterBy(String.class), ...)
+
+Here is the bookstore example that uses the varargs approach:
+
+	public class BookStore extends AbstractModule {
+	    @Override
+	    public void configure() {
+	        propertyPlaceholder("email.properties");
+
+	        //Configure some properties to work with GMail's SMTP
+	        connector(GMAIL.CONNECTOR, name("emailConnector"));
+
+	        //Use this as a poor man's message queue, in the real world we would use JMS
+	        connector(VM.CONNECTOR, name("vmQueues"));
+
+	        //This queue contains a feed of the latest statistics generated by
+	        // the Data Warehouse (it should really be a LIFO queue)
+	        endpoint(VM.ENDPOINT, name("stats")).path("statistics");
+
+	        TransformerBuilder setHtmlContentType = transformer(MessagePropertiesTransformer.class, name("setHtmlContentType"))
+	                .addMessageProperty("Content-Type", "text/html")
+	                        //Tomcat lowercases headers, need to drop this old one too
+	                .deleteMessageProperty("content-type");
+
+	        flow(name("CatalogService")).in(
+	                //Public interface
+	                from(HTTP.INBOUND).listen(host("0.0.0.0").port(8777).path("services/catalog"))
+	                        .using(WS.INBOUND).with(CatalogService.class),
+
+	                //Administration interface
+	                from(uri("servlet://catalog"))
+	                        .processRequest(
+	                                //Convert request parameters to Book object
+	                                transformWith(HttpRequestToBook.class))
+	                        .processResponse(
+	                                //Format response to be a nice HTML page
+	                                transformWith(AddBookResponse.class),
+	                                //Force text/html, otherwise it falls back to request
+	                                // props, which have form-encoded one
+	                                transformWith(setHtmlContentType))
+	        ).process(
+	                execute(CatalogServiceImpl.class).asSingleton()
+	        );
+
+	        flow(name("OrderService")).in(
+	                //Public interface
+	                from(HTTP.INBOUND).listen(host("0.0.0.0").port(8777).path("services/order"))
+	                        .using(WS.INBOUND).with(OrderService.class)
+	        ).process(
+	                execute(OrderServiceImpl.class).asSingleton(),
+	                send(VM.OUTBOUND).path("emailNotification"),
+	                send(VM.OUTBOUND).path("dataWarehouse")
+	        );
+
+
+	        flow(name("EmailNotificationService")).in(
+	                from(VM.INBOUND).path("emailNotification")
+	        ).process(
+	                transformWith(OrderToEmailTransformer.class),
+	                transformWith(StringToEmailTransformer.class),
+	                send(SMTP.OUTBOUND)
+	                        .secure()
+	                        .user("${user}")
+	                        .password("${password}")
+	                        .host("${host}")
+	                        .from("${from}")
+	                        .subject("Your order has been placed!")
+	        );
+
+	        flow(name("DataWarehouse")).in(
+	                from(VM.INBOUND).path("dataWarehouse")
+	        ).process(
+	                execute(DataWarehouse.class).asSingleton(),
+	                transformWith(setHtmlContentType),
+	                send(ref("stats"))
+	        );
+	    }
+	}
+
+**Important to note**: as already mentioned on previous approach, it's important to try the api by yourself using in your preferred IDE. To experiment this syntax all that you need is extend the org.mule.config.dsl.vargars.AbstractModule class and import all elements defined into  org.mule.config.dsl.method_chain.TempModel class. Just like this:
+
+		import org.mule.config.dsl.vargars.AbstractModule;
+		import org.mule.config.dsl.vargars.TempModel.*;
+
+		public class MyModuleExample extends AbstractModule {
+			@Override
+	        public void configure() {
+	            //insert your code here
+	        }
+		}
 
 ### Advantages
 
