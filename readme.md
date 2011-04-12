@@ -419,8 +419,8 @@ Here is the bookstore example that uses the varargs approach:
 
 ## Articles & Blogs
 
- - [Video] [An Approach to Internal Domain-Specific Languages in Java @ InfoQ](http://www.infoq.com/articles/internal-dsls-java) by Alex Ruiz and Jeff Bay
  - [Video] [Introduction to Domain Specific Languages @ InfoQ](http://www.infoq.com/presentations/domain-specific-languages) by Martin Fowler
+ - [An Approach to Internal Domain-Specific Languages in Java @ InfoQ](http://www.infoq.com/articles/internal-dsls-java) by Alex Ruiz and Jeff Bay
  - [Dsl Boundary](http://martinfowler.com/bliki/DslBoundary.html) by Martin Fowler
  - [Domain Specific Language](http://martinfowler.com/bliki/DomainSpecificLanguage.html) by Martin Fowler
  - [Fluent Interface](http://martinfowler.com/bliki/FluentInterface.html) by Martin Fowler
