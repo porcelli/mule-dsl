@@ -37,7 +37,7 @@ Its also clear that its out of the this initial scope the following:
 
 # Current Status
 
-This is the first preview of the Mule DSL syntax *and is still a working in progress*.
+This is the first preview of the Mule DSL syntax ***and is still a working in progress***.
 
 **Important:** Feedbacks are welcomed ;)
 
@@ -48,7 +48,6 @@ Although this is a preview version, it has some strong design decisions that inf
  - Hide complexity from users
  - Configuration based on modules
  - Extensive use of generics for type inference
- - Specializations publish it's available extensions
  - Named args
 
 ## Hide complexity from users
@@ -102,7 +101,7 @@ or
 
 This is another funcionality inspired by [Google Guice](http://code.google.com/p/google-guice). Besides the fact that mule internal dsl will use a well know idiom inspired from a popular java library, the module concept will bring to mule internal dsl portability.
 
-The module is an aggragator that is used to declare all the building blocks necessary to build flows and other mule related condifugations. In practive a module is just an abstract class that exposes a series of util methods that has an abstract method called **condigure** that must be overriden. This is a simple example of it:
+The module is an aggragator that is used to declare all the building blocks necessary to build flows and other mule related condifugations. In practive a module is just an abstract class that exposes a series of util methods that has an abstract void method called **configure()** that must be overriden. This is a simple example:
 
 	public class MyModule extends AbstractModule {
 	    @Override
@@ -111,74 +110,70 @@ The module is an aggragator that is used to declare all the building blocks nece
 	    }
 	}
 
+The biggest advantage of modules is that it'll enable the same configuration that uses mule embedded into an application, can deploy it to a mule server without touch any code. Of course its necessary to adapt the actual deployer to understand those modules and configure automatically the application (without xml).
+
 *This topic helps to enforce the following elements:*
 
  - *Extensible*
  - *Avoid the use of Strings to reference domain objects*
  - *Use the most modern techniques to build its structure*
 
-
-### How to use modules
-
-This is still not defined, but here are some ideas of how to use it:
-
-	//as parameter on mule context constructor
-	MuleContext context = new DSLMuleContext(new ModuleA(), new ModuleB(), ...)
-
-
-	The module concept  is 
-
-	just simple abstract class that defines a set of util method and 
-
-	it's abstract method
-
-	to constuct flows and other configurations that has the configure method that 
-
-
-
-	One of the biggest advantages of this approach is that it'll enable applications that started to use mule embedded to run it easily on Mule Server.
-
-
 ## Extensive use of generics for type inference
 
 Although generics in java are erasure based, it's still possible to do impressive things with that. When building a nice to use internal DSL, one goal is to drive user's thru the API give to them just the options based on a context.
 
-Using generics it's possible to give user's a set of possible actions based on his previous choices. An example of this is when you try to configure an endpoint. If you're configuring a generic endpoint, you have few choices as show here:
+Using generics it's possible to give user's a set of possible actions based on his previous choices. An example of this is when you try to configure an endpoint. If you're configuring a generic endpoint like this:
 
-But if you're configuring a specific endpoint, based on HTTP for instance, you'll have several http specific options:
+	[...]
+	from(uri("salesforce://login(g1,g2);*query(g3,r1);"))
 
+Your next options are just a few like define a connector (connectWith method) or define a process request or response (processRequest or processResponse methods). But if you're configuring an endpoint using a specific protocol like HTTP, you have more options (all of them just related to http protocol):
 
-This topic helps to enforce the following elements:
+	[...]
+	from(HTTP.INBOUND).listen(host("0.0.0.0").port(8777).path("services/catalog")).using(WS.INBOUND).with(CatalogService.class)
 
-- Easy to write, read and learn
-- Hard to misuse
-- Extensible
-- Take advantage of IDE auto-complete
-- Use the most modern techniques to build its structure
+*This topic helps to enforce the following elements:*
 
-
-## Specializations publish it's available extensions
-
-
-This topic helps to enforce the following elements:
-
-- Extensible
-- Take advantage of IDE auto-complete
-
+- *Easy to write, read and learn*
+- *Hard to misuse*
+- *Extensible*
+- *Take advantage of IDE auto-complete*
+- *Use the most modern techniques to build its structure*
 
 ## Named args (artificial)
 
-Its well know that java syntax does not allow named parameters wich is an important resource to source code readability.
+Its well know that java syntax does not allow named parameters wich is an important resource to source code readability. This 
 
-This is just a simple code convention used on this preview dsl. One goal of a 
+	//this is a definition of a transformer that references
+	//an already defined transformer named transfRef
+	transformeWith(ref: "transfRef")
 
+But there's an alternative that we can do in java, using a bit of creativity and static methods ;), here is how:
 
-This topic helps to enforce the following elements:
+	//now using the ref method that is a simple method
+	transformeWith(ref("transfRef"))
 
-- Easy to write, read and learn
-- Hard to misuse
-- Avoid the use of Strings to reference domain objects
-- Use the most modern techniques to build its structure
+Of course that there's always the risk that user's aren't aware of this "ref" method and create something like this:
+
+	//wrong usage of named arg
+	transformeWith(new RefBuilder("transfRef"))
+
+Note that, even using a bad idiom to define a reference, it's much more clear than use a simple string.
+
+Readability is not the unique advantage of this named args, it's also help on disambiguites on string parameters (ie. ref and uri).
+
+	//defining an inbound endpoit based on uri
+	from(uri("salesforce://someservice.here/xxx?"))
+
+	//defining an inbound endpoit that references an already defined endpoint
+	from(ref("mySalesForceEndpoint"))
+
+*This topic helps to enforce the following elements:*
+
+- *Easy to write, read and learn*
+- *Hard to misuse*
+- *Avoid the use of Strings to reference domain objects*
+- *Use the most modern techniques to build its structure*
 
 # Approaches
 
