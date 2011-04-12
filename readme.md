@@ -8,7 +8,7 @@ By making an internal DSL available we cater for those that prefer programmatic 
 
 # Mule DSL Goals
 
-To implement an internal Domain Specific Language (DSL) in Java (also know as a fluent API) that allows users to configure Mule ESB programmatically. The following characteristics are expected from the DSL:
+To implement an internal Domain Specific Language (DSL) in Java that allows users to configure Mule ESB programmatically. The following characteristics are expected from the DSL:
 
  - Easy to write, read and learn
  - Hard to misuse
@@ -52,17 +52,16 @@ Although this is a preview version, it has some strong design decisions that inf
 
 ## Hide complexity from users
 
-Hide complexity from user is almost a common sense in API design, but in DSLs sometimes it's necessary to go to extreme on this. To achieve readability sometimes it's necessary to cut (or hide) some options from users and consider convention over configuration.
-The real chalange here is identify what is possible to cut (or hide) and what is not.
+Hide complexity from users is almost a common sense in API design, but in DSLs sometimes it's necessary to go extreme on this. To achieve readability sometimes it's necessary to cut (or hide) some options from users and consider convention over configuration. The real challenge here is identify what is possible to cut (or hide) and what is not.
 
-An example of this simplification on this preview version can be seen on custom components configuration, that for now is supressing the explicit definition of entry point resolvers. On mule internal DSL users can define a custom compoenent execution using the execute method, like this:
+An example of this simplification on this preview can be seen on custom components configuration, that is suppressing the explicit use of entry point resolvers (at least for now). Users can define a custom component execution using mule internal dsl thru execute method, like this:
 
+	//flow definition supressed	
 	[...]
 	execute(MyPojo.class)
-	[...]
 
-If the user specify just it, the default behavior will be: check if MyPojo is an instance of a Callable, if not, it will use (behind the scenes) the reflection based entry point resolver. 
-But what about if user whant define a specific method to be executed? Simple... just need to use an annotation to define wich method to execute like this:
+If a custom component is declared like above, the default behavior will be: check if MyPojo is an instance of a Callable, if not use use reflection entry point resolver.
+But what about users that whant to define a specific method to be executed? Simple... just annotate the method and point wich annotation mule should looking for, something like this:
 
 	//using a specific annotation
 	execute(MyPojo.class).methodAnnotatedWith(MyBusinessMethod2Execute.class)
@@ -88,31 +87,32 @@ or
 	    }
 	}
 
-[this approach was inspired by [google-guice binding annotations](http://code.google.com/p/google-guice/wiki/BindingAnnotations)]
+*[this approach was inspired by [google-guice binding annotations](http://code.google.com/p/google-guice/wiki/BindingAnnotations)]*
 
-*This topic helps to enforce the following elements:*
+#### *This topic helps to enforce the following goals:*
 
  - *Easy to write, read and learn*
  - *Hard to misuse*
-
-**Note:** This is the most abstract concept descrived in this documentation, the next sections are more practical and hand-on based concepts.
+ - *Use the most modern techniques to build its structure*
 
 ## Configuration based on modules
 
-This is another funcionality inspired by [Google Guice](http://code.google.com/p/google-guice). Besides the fact that mule internal dsl will use a well know idiom inspired from a popular java library, the module concept will bring to mule internal dsl portability.
+*[this funcionality is also inspired by [Google Guice](http://code.google.com/p/google-guice)]*
 
-The module is an aggragator that is used to declare all the building blocks necessary to build flows and other mule related condifugations. In practive a module is just an abstract class that exposes a series of util methods that has an abstract void method called **configure()** that must be overriden. This is a simple example:
+Besides the fact that mule internal dsl will use a well know idiom inspired from a popular java library, the module concept will bring to mule internal dsl portability in deployment scenario.
+
+The module is an aggragator that should be used to declare all the building blocks necessary to construct flows and any other mule configuration. In practice a module is just an abstract class that exposes a series of util methods and has an abstract void method called **configure()** that must be overriden. This is a simple example:
 
 	public class MyModule extends AbstractModule {
 	    @Override
 	    public void configure() {
-			//build blocks defined here
+			//connections, endpoints, flows are defined here
 	    }
 	}
 
-The biggest advantage of modules is that it'll enable the same configuration that uses mule embedded into an application, can deploy it to a mule server without touch any code. Of course its necessary to adapt the actual deployer to understand those modules and configure automatically the application (without xml).
+The biggest advatge on modules usage is the deployment portability of the user's application that can start using mule embedded but later can deploy the same configuration into mule server without touch any code. Of course its necessary to adapt the actual deployer to understand those modules.
 
-*This topic helps to enforce the following elements:*
+#### *This topic helps to enforce the following goals:*
 
  - *Extensible*
  - *Avoid the use of Strings to reference domain objects*
@@ -120,19 +120,17 @@ The biggest advantage of modules is that it'll enable the same configuration tha
 
 ## Extensive use of generics for type inference
 
-Although generics in java are erasure based, it's still possible to do impressive things with that. When building a nice to use internal DSL, one goal is to drive user's thru the API give to them just the options based on a context.
+Although generics in java are erasure based, it's still possible to do impressive things with that. When building a nice to use internal DSL, one important goal is to drive user's thru the API givem to them just the right options based on it's context - and generics helps a lot here.
+In this preview version, a good example of this goodies of generics are on endpoint configuration. If you're configuring a generic endpoint like this:
 
-Using generics it's possible to give user's a set of possible actions based on his previous choices. An example of this is when you try to configure an endpoint. If you're configuring a generic endpoint like this:
-
-	[...]
 	from(uri("salesforce://login(g1,g2);*query(g3,r1);"))
+
 
 Your next options are just a few like define a connector (connectWith method) or define a process request or response (processRequest or processResponse methods). But if you're configuring an endpoint using a specific protocol like HTTP, you have more options (all of them just related to http protocol):
 
-	[...]
 	from(HTTP.INBOUND).listen(host("0.0.0.0").port(8777).path("services/catalog")).using(WS.INBOUND).with(CatalogService.class)
 
-*This topic helps to enforce the following elements:*
+#### *This topic helps to enforce the following goals:*
 
 - *Easy to write, read and learn*
 - *Hard to misuse*
@@ -168,7 +166,7 @@ Readability is not the unique advantage of this named args, it's also help on di
 	//defining an inbound endpoit that references an already defined endpoint
 	from(ref("mySalesForceEndpoint"))
 
-*This topic helps to enforce the following elements:*
+#### *This topic helps to enforce the following goals:*
 
 - *Easy to write, read and learn*
 - *Hard to misuse*
@@ -190,30 +188,41 @@ Method chain is one of the most popular
 
 ### Advantages
 
+ 1. Well know idiom, most java developers are familiar with
+ 2. All the options that users can take are displayed on every method invocation (in IDE)
+ 3. Most commons internal DSL format
+
 ### Disadvantages
 
-### Known issues
+ 1. A bad consequence of display to user all possible paths, is that you show a huge list of options that can confuse users.
+ 2. Hard to read
+ 3. Hard to implement
+ 4. Furure new features can impact the method chain
 
 ## Varargs
 
 ### Advantages
 
+ 1. Better reading expirience
+ 2. Easier to implement and extend
+ 3. Easy to configure the building blocks, the options are focused on that configuration piece
+
 ### Disadvantages
 
-### Known issues
+ 1. Static imports or internal methods aren't the most intuitive way to expose the building blocks
 
-## Features
+## Missing Features
 
- - Flows
- - Protocols
- - Components
- - Connectors
- - Endpoints: Global, Inbound & Outbound
- - Transformers
- - Filters
- - Routers
- - Loggers
- - Request and Response Processing
+ - <del>Flows</del>
+ - <del>Protocols</del>
+ - <del>Components</del>
+ - <del>Connectors</del>
+ - <del>Endpoints: Global, Inbound & Outbound</del>
+ - <del>Transformers</del>
+ - <del>Filters</del>
+ - <del>Routers</del>
+ - <del>Loggers</del>
+ - <del>Request and Response Processing</del>
  - Interceptors
  - Splitters
  - Aggregators
@@ -230,6 +239,15 @@ Method chain is one of the most popular
 
 # References
 
+## Articles & Blogs
+
+ - [Video] [An Approach to Internal Domain-Specific Languages in Java @ InfoQ](http://www.infoq.com/articles/internal-dsls-java) by Alex Ruiz and Jeff Bay
+ - [Video] [Introduction to Domain Specific Languages @ InfoQ](http://www.infoq.com/presentations/domain-specific-languages) by Martin Fowler
+ - [Dsl Boundary](http://martinfowler.com/bliki/DslBoundary.html) by Martin Fowler
+ - [Domain Specific Language](http://martinfowler.com/bliki/DomainSpecificLanguage.html) by Martin Fowler
+ - [Fluent Interface](http://martinfowler.com/bliki/FluentInterface.html) by Martin Fowler
+ - [Simulating named parameters in Java](http://www.jroller.com/alexRuiz/entry/simulating_named_parameters_in_java) by Alex Ruiz
+
 ## Libs
 
  - [mockito](http://mockito.org)
@@ -241,5 +259,3 @@ Method chain is one of the most popular
 
  - [DSL in Action](http://www.manning.com/ghosh/)
  - [Domain Specific Languages](http://martinfowler.com/books.html#dsl)
-
-# Glossary
