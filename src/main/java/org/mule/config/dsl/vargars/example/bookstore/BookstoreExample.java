@@ -42,6 +42,7 @@ public class BookstoreExample {
 
                     //Administration interface
                     from(uri("servlet://catalog"))
+                            .then()
                             .processRequest(
                                     //Convert request parameters to Book object
                                     transformWith(HttpRequestToBook.class))

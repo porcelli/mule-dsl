@@ -35,21 +35,25 @@ public class FlowInboundExamples {
 
                     //generic use with process request
                     from(uri("salesforce://login(g1,g2);*query(g3,r1);"))
+                            .then()
                             .processRequest(transformTo(String.class)),
 
                     //generic use with process request and response
                     from(uri("salesforce://login(g1,g2);*query(g3,r1);"))
+                            .then()
                             .processRequest(transformTo(String.class))
                             .processResponse(transformTo(String.class)),
 
                     //generic use with process request and response + connector
                     from(uri("salesforce://login(g1,g2);*query(g3,r1);"))
+                            .then()
                             .processRequest(transformTo(String.class))
                             .processResponse(transformTo(String.class))
                             .connectWith(myConnector),
 
                     //generic use with process request and response + connector reference
                     from(uri("salesforce://login(g1,g2);*query(g3,r1);"))
+                            .then()
                             .processRequest(transformTo(String.class))
                             .processResponse(transformTo(String.class))
                             .connectWith("myConnectorReference"),

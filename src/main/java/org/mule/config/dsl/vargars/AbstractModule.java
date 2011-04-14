@@ -167,11 +167,11 @@ public abstract class AbstractModule {
 
     /* inbound */
 
-    public InboundEndpointProcessor from(URIBuilder uri) {
+    public ThenToInboundEndpointProcessor from(URIBuilder uri) {
         return null;
     }
 
-    public InboundEndpointProcessor from(RefBuilder ref) {
+    public ThenToInboundEndpointProcessor from(RefBuilder ref) {
         return null;
     }
 

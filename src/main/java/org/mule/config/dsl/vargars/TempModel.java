@@ -93,6 +93,12 @@ public interface TempModel {
     public interface OutboundEndpointProcessor extends EndpointProcessor {
     }
 
+    public interface ThenToInboundEndpointProcessor extends EndpointProcessor {
+
+        InboundEndpointProcessor then();
+
+    }
+
     public interface InboundEndpointProcessor extends EndpointProcessor {
         InboundEndpointProcessor processRequest(ProcessorBuilder... processors);
 
