@@ -401,17 +401,20 @@ Here is the bookstore example that uses the varargs approach:
  - <del>Routers</del>
  - <del>Loggers</del>
  - <del>Request and Response Processing</del>
- - Interceptors
- - Splitters
- - Aggregators
+ - <del>Splitters</del>
+ - <del>Aggregators</del>
  - *Expression* Filters & Transformers
- - Application Definition/Configuration
  - Security Filter
  - Exception Handler
  - Transaction Behavior
  - Thread Profile
- - Default Behavior
  - Agent
+ - Application Definition/Configuration/Default Behavior
+
+The following features are out of scope, but can be provided (for free!) by Guice:
+
+ - [Interceptors](http://code.google.com/p/google-guice/wiki/AOP)
+ - [Bindings](http://code.google.com/p/google-guice/wiki/Bindings)
 
 **Note:** those features that are already implemented are just samples/mocks. Most of them still need improvements.
 
@@ -419,8 +422,8 @@ Here is the bookstore example that uses the varargs approach:
 
 ## Articles & Blogs
 
- - [Video] [Introduction to Domain Specific Languages @ InfoQ](http://www.infoq.com/presentations/domain-specific-languages) by Martin Fowler
- - [An Approach to Internal Domain-Specific Languages in Java @ InfoQ](http://www.infoq.com/articles/internal-dsls-java) by Alex Ruiz and Jeff Bay
+ - [Video] [Introduction to Domain Specific Languages @ JAOO](http://www.infoq.com/presentations/domain-specific-languages) by Martin Fowler
+ - [An Approach to Internal Domain-Specific Languages in Java](http://www.infoq.com/articles/internal-dsls-java) by Alex Ruiz and Jeff Bay
  - [Dsl Boundary](http://martinfowler.com/bliki/DslBoundary.html) by Martin Fowler
  - [Domain Specific Language](http://martinfowler.com/bliki/DomainSpecificLanguage.html) by Martin Fowler
  - [Fluent Interface](http://martinfowler.com/bliki/FluentInterface.html) by Martin Fowler

@@ -24,6 +24,40 @@ public interface TempModel {
     public interface ProcessorBuilder {
     }
 
+    public interface Aggregator {
+
+    }
+
+    public interface AggregatorBuilder extends ProcessorBuilder {
+        AggregatorTimoutBuilder timeout(int timeout);
+
+        public interface AggregatorTimoutBuilder{
+            AggregatorBuilder failOnTimeout();
+        }
+    }
+
+    public interface CollectionAggregatorBuilder extends AggregatorBuilder, Correlational<CollectionAggregatorBuilder> {
+    }
+
+    public interface MessageChunkAggregatorBuilder extends AggregatorBuilder, Correlational<MessageChunkAggregatorBuilder> {
+        MessageChunkAggregatorBuilder size(int size);
+    }
+
+
+    public interface Splitter {
+
+    }
+
+    public interface SplitterBuilder extends ProcessorBuilder {
+    }
+
+    public interface CollectionSplitterBuilder extends SplitterBuilder, Correlational<CollectionSplitterBuilder> {
+    }
+
+    public interface MessageChunkSplitterBuilder extends SplitterBuilder, Correlational<CollectionSplitterBuilder> {
+        MessageChunkSplitterBuilder size(int size);
+    }
+
     public interface Filter {
 
     }
@@ -32,15 +66,20 @@ public interface TempModel {
     }
 
     public interface PayloadTypeFilter extends FilterBuilder, LogicFilter<PayloadTypeFilter> {
+        public final PayloadTypeFilter PAYLOAD_TYPE_FILTER = null;
+
         PayloadTypeFilter typeToFilter(Class<?> type);
     }
 
-    public interface LogicFilter<T extends FilterBuilder> extends FilterBuilder {
-        T or(FilterBuilder builderA, FilterBuilder builderB);
+    public interface LogicFilter<F extends FilterBuilder> extends FilterBuilder {
 
-        T and(FilterBuilder builderA, FilterBuilder builderB);
+        public final LogicFilter LOGIC_FILTER = null;
 
-        T not(FilterBuilder builder);
+        F or(FilterBuilder builderA, FilterBuilder builderB);
+
+        F and(FilterBuilder builderA, FilterBuilder builderB);
+
+        F not(FilterBuilder builder);
     }
 
     public interface Transformer {
@@ -78,7 +117,7 @@ public interface TempModel {
 
             CustomBindingExecutorBuilder methodAnnotatedWith(Annotation annotation);
 
-            <P extends EndpointExtension<? extends EndpointProcessor>> P redirectTo(P to);
+            <E extends EndpointExtension<? extends EndpointProcessor>> E redirectTo(E to);
 
             EndpointProcessor redirectTo(String to);
         }
@@ -138,7 +177,7 @@ public interface TempModel {
         public interface HTTPComplement<Z> extends SecurityProperties<HTTPComplement<Z>>, EncodingProperties<HTTPComplement<Z>>, EndpointProcessor {
 
             //Specific to HTTP
-            <T extends ExecWrapper<Z>> T using(T x);
+            <W extends ExecWrapper<Z>> W using(W x);
 
             //Specific to HTTP
             HTTPComplement<Z> proxy(String proxy);
@@ -290,7 +329,6 @@ public interface TempModel {
         RouterBuilder with(ThreadProfileBuilder threadProfile);
     }
 
-
     public interface ChoiceRouterBuilder extends RouterBuilder {
         WhenChoiceBuilder when(ExpressionBuilder x);
 
@@ -308,6 +346,11 @@ public interface TempModel {
 
     public enum TimeUnit {
         MILISECONDS, SECONDS, MINUTES, HOURS, DAYS
+    }
+
+    public interface Correlational<T> {
+        T correlationID(String id);
+        T correlationID(ExpressionBuilder id);
     }
 
     public interface SecurityProperties<T> {

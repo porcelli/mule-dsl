@@ -33,11 +33,11 @@ public abstract class AbstractModule {
 
     /* transformer */
 
-    public <T extends TransformerBuilder> T transformer(Class<T> transformer) {
+    public <TB extends TransformerBuilder> TB transformer(Class<TB> transformer) {
         return null;
     }
 
-    public <T extends TransformerBuilder> T transformer(Class<T> transformer, NameBuilder name) {
+    public <TB extends TransformerBuilder> TB transformer(Class<TB> transformer, NameBuilder name) {
         return null;
     }
 
@@ -49,11 +49,11 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public <C extends ConnectorBuilder> C connector(C connector) {
+    public <CB extends ConnectorBuilder> CB connector(CB connector) {
         return null;
     }
 
-    public <C extends ConnectorBuilder> C connector(C connector, NameBuilder name) {
+    public <CB extends ConnectorBuilder> CB connector(CB connector, NameBuilder name) {
         return null;
     }
 
@@ -63,11 +63,11 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public <P extends EndpointExtension<? extends EndpointProcessor>> P endpoint(P from) {
+    public <E extends EndpointExtension<? extends EndpointProcessor>> E endpoint(E from) {
         return null;
     }
 
-    public <P extends EndpointExtension<? extends EndpointProcessor>> P endpoint(P from, NameBuilder name) {
+    public <E extends EndpointExtension<? extends EndpointProcessor>> E endpoint(E from, NameBuilder name) {
         return null;
     }
 
@@ -101,19 +101,60 @@ public abstract class AbstractModule {
         return null;
     }
 
+    /* util methods: splitter */
+
+    public ProcessorBuilder splitWith(RefBuilder ref) {
+        return null;
+    }
+
+    public <SB extends SplitterBuilder> SB splitWith(SB splitter) {
+        return null;
+    }
+
+    public <S extends Splitter> ProcessorBuilder splitWith(S splitter) {
+        return null;
+    }
+
+    public <S extends Splitter> ProcessorBuilder splitWith(Class<S> splitter) {
+        return null;
+    }
+
+    /* util methods: aggregator */
+
+    public ProcessorBuilder aggregateWith(RefBuilder ref) {
+        return null;
+    }
+
+    public <AB extends AggregatorBuilder> AB aggregateWith(AB aggregator) {
+        return null;
+    }
+
+    public <A extends Aggregator> ProcessorBuilder aggregateWith(A aggregator) {
+        return null;
+    }
+
+    public <A extends Aggregator> ProcessorBuilder aggregateWith(Class<A> aggregator) {
+        return null;
+    }
+
     /* util methods: filters */
 
     public ProcessorBuilder filterWith(RefBuilder ref) {
         return null;
     }
 
-    public ProcessorBuilder filterWith(Class<? extends Filter> clazz) {
+    public <FB extends FilterBuilder> FB filterWith(FB filter) {
         return null;
     }
 
-    public <T extends FilterBuilder> T filterWith(T obj) {
+    public <F extends Filter> ProcessorBuilder filterWith(F clazz) {
         return null;
     }
+
+    public <F extends Filter> ProcessorBuilder filterWith(Class<F> clazz) {
+        return null;
+    }
+
 
     /* util methods: transformers */
 
@@ -125,15 +166,15 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public ProcessorBuilder transformWith(Transformer obj) {
+    public <TB extends TransformerBuilder> TB transformWith(TB obj) {
         return null;
     }
 
-    public ProcessorBuilder transformWith(Class<? extends Transformer> clazz) {
+    public <T extends Transformer> ProcessorBuilder transformWith(T obj) {
         return null;
     }
 
-    public <T extends TransformerBuilder> T transformWith(T obj) {
+    public <T extends Transformer> ProcessorBuilder transformWith(Class<T> clazz) {
         return null;
     }
 
@@ -175,7 +216,7 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public <P extends EndpointExtension<InboundEndpointProcessor>> P from(P from) {
+    public <E extends EndpointExtension<InboundEndpointProcessor>> E from(E from) {
         return null;
     }
 
@@ -197,11 +238,11 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public <P extends EndpointExtension<OutboundEndpointProcessor>> P send(P from) {
+    public <E extends EndpointExtension<OutboundEndpointProcessor>> E send(E from) {
         return null;
     }
 
-    public <P extends EndpointExtension<OutboundEndpointProcessor>> P sendAndWait(P from) {
+    public <E extends EndpointExtension<OutboundEndpointProcessor>> E sendAndWait(E from) {
         return null;
     }
 

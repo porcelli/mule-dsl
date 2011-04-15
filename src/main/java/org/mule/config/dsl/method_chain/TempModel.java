@@ -42,17 +42,49 @@ public interface TempModel {
 
         <P extends EndpointExtension<OutboundEndpointProcessor>> P sendAndWait(P from);
 
+        /* filter */
+
+        FlowProcessBuilder filterWith(RefBuilder ref);
+
+        <FB extends FilterBuilder> FB filterWith(FB filter);
+
+        <F extends Filter> FlowProcessBuilder filterWith(Class<F> clazz);
+
+        <F extends Filter> FlowProcessBuilder filterWith(F clazz);
+
+
         /* transform */
 
         FlowProcessBuilder transformTo(Class<?> clazz);
 
         FlowProcessBuilder transformWith(RefBuilder ref);
 
-        FlowProcessBuilder transformWith(Transformer obj);
+        <T extends Transformer> FlowProcessBuilder transformWith(T obj);
 
-        FlowProcessBuilder transformWith(Class<? extends Transformer> clazz);
+        <T extends Transformer> FlowProcessBuilder transformWith(Class<T> clazz);
 
-        <T extends TransformerBuilder> T transformWith(T obj);
+        <TB extends TransformerBuilder> TB transformWith(TB obj);
+
+        /* aggregate */
+
+        FlowProcessBuilder aggregateWith(RefBuilder ref);
+
+        <AB extends AggregatorBuilder> AB aggregateWith(AB aggregator);
+
+        <A extends Aggregator> FlowProcessBuilder aggregateWith(A aggregator);
+
+        <A extends Aggregator> FlowProcessBuilder aggregateWith(Class<A> aggregator);
+
+        /* split */
+
+        FlowProcessBuilder splitWith(RefBuilder ref);
+
+        <SB extends SplitterBuilder> SB splitWith(SB splitter);
+
+        <S extends Splitter> FlowProcessBuilder splitWith(S splitter);
+
+        <S extends Splitter> FlowProcessBuilder splitWith(Class<S> splitter);
+
     }
 
     public interface FlowBuilder extends FlowProcessBuilder {
@@ -65,6 +97,40 @@ public interface TempModel {
 
     public interface ProcessorBuilder {
     }
+
+    public interface Aggregator {
+
+    }
+
+    public interface AggregatorBuilder extends ProcessorBuilder {
+        AggregatorTimoutBuilder timeout(int timeout);
+
+        public interface AggregatorTimoutBuilder {
+            AggregatorBuilder failOnTimeout();
+        }
+    }
+
+    public interface CollectionAggregatorBuilder extends AggregatorBuilder, Correlational<CollectionAggregatorBuilder> {
+    }
+
+    public interface MessageChunkAggregatorBuilder extends AggregatorBuilder, Correlational<MessageChunkAggregatorBuilder> {
+        MessageChunkAggregatorBuilder size(int size);
+    }
+
+    public interface Splitter {
+
+    }
+
+    public interface SplitterBuilder extends ProcessorBuilder {
+    }
+
+    public interface CollectionSplitterBuilder extends SplitterBuilder, Correlational<CollectionSplitterBuilder> {
+    }
+
+    public interface MessageChunkSplitterBuilder extends SplitterBuilder, Correlational<CollectionSplitterBuilder> {
+        MessageChunkSplitterBuilder size(int size);
+    }
+
 
     public interface Filter {
 
@@ -333,6 +399,12 @@ public interface TempModel {
 
     public enum TimeUnit {
         MILISECONDS, SECONDS, MINUTES, HOURS, DAYS
+    }
+
+    public interface Correlational<T> {
+        T correlationID(String id);
+
+        T correlationID(ExpressionBuilder id);
     }
 
     public interface SecurityProperties<T> {
