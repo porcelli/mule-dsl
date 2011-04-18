@@ -35,6 +35,10 @@ public interface TempModel {
         CustomExecutorBuilder asSingleton();
     }
 
+    public interface PayloadTypeTransformToBuilder {
+        ProcessorBuilder to(Class<?> clzz);
+    }
+
     public interface EndpointProcessor extends ProcessorBuilder {
     }
 

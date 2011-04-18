@@ -66,7 +66,11 @@ public abstract class AbstractModule {
 
     /* util methods: transformers */
 
-    public ProcessorBuilder transform(Class<?> clazz) {
+    public PayloadTypeTransformToBuilder transform(Class<?> clazz) {
+        return null;
+    }
+
+    public PayloadTypeTransformToBuilder transform(ExpressionBuilder expression) {
         return null;
     }
 
