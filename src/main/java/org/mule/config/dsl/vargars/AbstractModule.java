@@ -20,57 +20,6 @@ public abstract class AbstractModule {
 
     /* elements definition/declaration */
 
-    /* property placeholder usage */
-
-    public void propertyPlaceholder(String fileRef) {
-    }
-
-    public void propertyPlaceholder(File s) {
-    }
-
-    public void propertyPlaceholder(InputStream resourceAsStream) {
-    }
-
-    /* transformer */
-
-    public <TB extends TransformerBuilder> TB transformer(Class<TB> transformer) {
-        return null;
-    }
-
-    public <TB extends TransformerBuilder> TB transformer(Class<TB> transformer, NameBuilder name) {
-        return null;
-    }
-
-    /* connection */
-
-    /* connector */
-
-    public ConnectorBuilder connector(String connector) {
-        return null;
-    }
-
-    public <CB extends ConnectorBuilder> CB connector(CB connector) {
-        return null;
-    }
-
-    public <CB extends ConnectorBuilder> CB connector(CB connector, NameBuilder name) {
-        return null;
-    }
-
-    /* endpoint */
-
-    public EndpointProcessor endpoint(String from) {
-        return null;
-    }
-
-    public <E extends EndpointExtension<? extends EndpointProcessor>> E endpoint(E from) {
-        return null;
-    }
-
-    public <E extends EndpointExtension<? extends EndpointProcessor>> E endpoint(E from, NameBuilder name) {
-        return null;
-    }
-
     /* flow */
 
     public FlowBuilder flow() {
@@ -85,10 +34,6 @@ public abstract class AbstractModule {
 
     /* util methods: named params  */
 
-    public RefBuilder ref(String ref) {
-        return null;
-    }
-
     public HostBuilder host(String host) {
         return null;
     }
@@ -101,80 +46,27 @@ public abstract class AbstractModule {
         return null;
     }
 
-    /* util methods: splitter */
-
-    public ProcessorBuilder splitWith(RefBuilder ref) {
+    public ExpressionBuilder expression(String expression, ExpressionEvaluator eval) {
         return null;
     }
 
-    public <SB extends SplitterBuilder> SB splitWith(SB splitter) {
+    public ExpressionEvaluator evaluator(String evaluator) {
         return null;
     }
 
-    public <S extends Splitter> ProcessorBuilder splitWith(S splitter) {
-        return null;
-    }
-
-    public <S extends Splitter> ProcessorBuilder splitWith(Class<S> splitter) {
-        return null;
-    }
-
-    /* util methods: aggregator */
-
-    public ProcessorBuilder aggregateWith(RefBuilder ref) {
-        return null;
-    }
-
-    public <AB extends AggregatorBuilder> AB aggregateWith(AB aggregator) {
-        return null;
-    }
-
-    public <A extends Aggregator> ProcessorBuilder aggregateWith(A aggregator) {
-        return null;
-    }
-
-    public <A extends Aggregator> ProcessorBuilder aggregateWith(Class<A> aggregator) {
+    public <E extends ExpressionEvaluator> E evaluator(Class<E> evaluator) {
         return null;
     }
 
     /* util methods: filters */
 
-    public ProcessorBuilder filterWith(RefBuilder ref) {
+    public ProcessorBuilder filter(ExpressionBuilder ref) {
         return null;
     }
-
-    public <FB extends FilterBuilder> FB filterWith(FB filter) {
-        return null;
-    }
-
-    public <F extends Filter> ProcessorBuilder filterWith(F clazz) {
-        return null;
-    }
-
-    public <F extends Filter> ProcessorBuilder filterWith(Class<F> clazz) {
-        return null;
-    }
-
 
     /* util methods: transformers */
 
-    public ProcessorBuilder transformTo(Class<?> clazz) {
-        return null;
-    }
-
-    public ProcessorBuilder transformWith(RefBuilder ref) {
-        return null;
-    }
-
-    public <TB extends TransformerBuilder> TB transformWith(TB obj) {
-        return null;
-    }
-
-    public <T extends Transformer> ProcessorBuilder transformWith(T obj) {
-        return null;
-    }
-
-    public <T extends Transformer> ProcessorBuilder transformWith(Class<T> clazz) {
+    public ProcessorBuilder transform(Class<?> clazz) {
         return null;
     }
 
@@ -212,14 +104,6 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public ThenToInboundEndpointProcessor from(RefBuilder ref) {
-        return null;
-    }
-
-    public <E extends EndpointExtension<InboundEndpointProcessor>> E from(E from) {
-        return null;
-    }
-
     /* outbound */
 
     public EndpointProcessor send(URIBuilder uri) {
@@ -230,22 +114,6 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public EndpointProcessor send(RefBuilder ref) {
-        return null;
-    }
-
-    public EndpointProcessor sendAndWait(RefBuilder ref) {
-        return null;
-    }
-
-    public <E extends EndpointExtension<OutboundEndpointProcessor>> E send(E from) {
-        return null;
-    }
-
-    public <E extends EndpointExtension<OutboundEndpointProcessor>> E sendAndWait(E from) {
-        return null;
-    }
-
     /* util methods: routers */
 
     public ChoiceRouterBuilder choice() {
@@ -253,14 +121,6 @@ public abstract class AbstractModule {
     }
 
     public MulticastRouterBuilder multicast(OutboundEndpointProcessor... out) {
-        return null;
-    }
-
-    public RouterBuilder roundRobin(OutboundEndpointProcessor... out) {
-        return null;
-    }
-
-    public AsyncMulticastRouterBuilder asyncMulticast(ProcessorBuilder... processorBuilders) {
         return null;
     }
 

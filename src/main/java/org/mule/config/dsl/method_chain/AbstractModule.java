@@ -20,57 +20,6 @@ public abstract class AbstractModule {
 
     /* elements definition/declaration */
 
-    /* property placeholder usage */
-
-    public void propertyPlaceholder(String fileRef) {
-    }
-
-    public void propertyPlaceholder(File s) {
-    }
-
-    public void propertyPlaceholder(InputStream resourceAsStream) {
-    }
-
-    /* transformer */
-
-    public <T extends TransformerBuilder> T transformer(Class<T> transformer) {
-        return null;
-    }
-
-    public <T extends TransformerBuilder> T transformer(Class<T> transformer, NameBuilder name) {
-        return null;
-    }
-
-    /* connection */
-
-    /* connector */
-
-    public ConnectorBuilder connector(String connector) {
-        return null;
-    }
-
-    public <C extends ConnectorBuilder> C connector(C connector) {
-        return null;
-    }
-
-    public <C extends ConnectorBuilder> C connector(C connector, NameBuilder name) {
-        return null;
-    }
-
-    /* endpoint */
-
-    public EndpointProcessor endpoint(String from) {
-        return null;
-    }
-
-    public <P extends EndpointExtension<? extends EndpointProcessor>> P endpoint(P from) {
-        return null;
-    }
-
-    public <P extends EndpointExtension<? extends EndpointProcessor>> P endpoint(P from, NameBuilder name) {
-        return null;
-    }
-
     /* flow */
 
     public FlowBuilder flow() {
@@ -83,17 +32,7 @@ public abstract class AbstractModule {
 
     /* util methods */
 
-    /* util methods: pipeline */
-
-    public FlowProcessBuilder pipeline() {
-        return null;
-    }
-
     /* util methods: named params  */
-
-    public RefBuilder ref(String ref) {
-        return null;
-    }
 
     public HostBuilder host(String host) {
         return null;
@@ -107,5 +46,15 @@ public abstract class AbstractModule {
         return null;
     }
 
+    public ExpressionBuilder expression(String expression, ExpressionEvaluator eval) {
+        return null;
+    }
 
+    public ExpressionEvaluator evaluator(String evaluator) {
+        return null;
+    }
+
+    public <E extends ExpressionEvaluator> E evaluator(Class<E> evaluator) {
+        return null;
+    }
 }
