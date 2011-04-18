@@ -85,6 +85,13 @@ public interface TempModel {
 
         <S extends Splitter> FlowProcessBuilder splitWith(Class<S> splitter);
 
+        /* routers */
+
+        AsyncMulticastRouterBuilder asyncMulticast(FlowProcessBuilder pipeline);
+
+        FlowProcessBuilder multicast(FlowProcessBuilder pipeline);
+
+        ChoiceRouterBuilder choice();
     }
 
     public interface FlowBuilder extends FlowProcessBuilder {
@@ -377,8 +384,8 @@ public interface TempModel {
         RouterBuilder onFirstSuccessful(ExpressionBuilder ex);
     }
 
-    public interface AsyncMulticastRouterBuilder extends RouterBuilder {
-        RouterBuilder with(ThreadProfileBuilder threadProfile);
+    public interface AsyncMulticastRouterBuilder extends FlowProcessBuilder {
+        FlowProcessBuilder with(ThreadProfileBuilder threadProfile);
     }
 
 
