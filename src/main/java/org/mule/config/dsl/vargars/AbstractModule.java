@@ -20,6 +20,17 @@ public abstract class AbstractModule {
 
     /* elements definition/declaration */
 
+    /* property placeholder */
+
+    public void propertyResolver(FileRefBuilder fileRef) {
+    }
+
+    public void propertyResolver(ClasspathBuilder classpathRef) {
+    }
+
+    public void propertyResolver(InputStream inputStream) {
+    }
+
     /* flow */
 
     public FlowBuilder flow() {
@@ -34,10 +45,6 @@ public abstract class AbstractModule {
 
     /* util methods: named params  */
 
-    public HostBuilder host(String host) {
-        return null;
-    }
-
     public NameBuilder name(String alias) {
         return null;
     }
@@ -46,16 +53,32 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public ExpressionBuilder expression(String expression, ExpressionEvaluator eval) {
+    public ClasspathBuilder classpath(String classpath) {
         return null;
     }
 
-    public ExpressionEvaluator evaluator(String evaluator) {
+    public FileRefBuilder file(String path) {
         return null;
     }
 
-    public <E extends ExpressionEvaluator> E evaluator(Class<E> evaluator) {
+    public FileRefBuilder file(File path) {
         return null;
+    }
+
+    public ExpressionBuilder expression(String expression, ExpressionEvaluatorBuilder eval) {
+        return null;
+    }
+
+    public <E extends ExpressionEvaluator> ExpressionEvaluatorBuilder evaluator(Class<E> evaluator) {
+        return null;
+    }
+
+    public <E extends ExpressionEvaluator> ExpressionEvaluatorBuilder evaluator(E evaluator) {
+        return null;
+    }
+
+    public interface XpathExpressionEvaluator extends ExpressionEvaluator {
+        XpathExpressionEvaluator XPATH = null;
     }
 
     /* util methods: filters */
@@ -66,11 +89,11 @@ public abstract class AbstractModule {
 
     /* util methods: transformers */
 
-    public PayloadTypeTransformToBuilder transform(Class<?> clazz) {
+    public ProcessorBuilder transform(ExpressionBuilder expression) {
         return null;
     }
 
-    public PayloadTypeTransformToBuilder transform(ExpressionBuilder expression) {
+    public ProcessorBuilder transformTo(Class<?> clazz) {
         return null;
     }
 
@@ -80,15 +103,27 @@ public abstract class AbstractModule {
         return null;
     }
 
+    public ProcessorBuilder log(String message) {
+        return null;
+    }
+
+    public ProcessorBuilder log(ExpressionBuilder expression) {
+        return null;
+    }
+
+    public ProcessorBuilder log(String message, ErrorLevel level) {
+        return null;
+    }
+
+    public ProcessorBuilder log(ExpressionBuilder expression, ErrorLevel level) {
+        return null;
+    }
+
     public ProcessorBuilder echo() {
         return null;
     }
 
     public ProcessorBuilder nil() {
-        return null;
-    }
-
-    public ProcessorBuilder passThrough() {
         return null;
     }
 
@@ -121,10 +156,6 @@ public abstract class AbstractModule {
     /* util methods: routers */
 
     public ChoiceRouterBuilder choice() {
-        return null;
-    }
-
-    public MulticastRouterBuilder multicast(OutboundEndpointProcessor... out) {
         return null;
     }
 

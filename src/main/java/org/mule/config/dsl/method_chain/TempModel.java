@@ -18,11 +18,17 @@ public interface TempModel {
 
         FlowProcessBuilder log();
 
+        FlowProcessBuilder log(String message);
+
+        FlowProcessBuilder log(ExpressionBuilder message);
+
+        FlowProcessBuilder log(String message, ErrorLevel level);
+
+        FlowProcessBuilder log(ExpressionBuilder expression, ErrorLevel level);
+
         FlowProcessBuilder echo();
 
         FlowProcessBuilder nil();
-
-        FlowProcessBuilder passThrough();
 
         CustomExecutorBuilder execute(Object obj);
 
@@ -36,9 +42,9 @@ public interface TempModel {
 
         /* transform */
 
-        PayloadTypeTransformToBuilder transform(Class<?> clazz);
-
         FlowProcessBuilder transform(ExpressionBuilder expression);
+
+        FlowProcessBuilder transformTo(Class<?> clazz);
 
         /* filter */
 
@@ -46,7 +52,7 @@ public interface TempModel {
 
         /* routers */
 
-        MulticastRouterBuilder multicast(FlowProcessBuilder pipeline);
+        FlowProcessBuilder multicast(FlowProcessBuilder pipeline);
 
         ChoiceRouterBuilder choice();
     }
@@ -57,11 +63,6 @@ public interface TempModel {
 
     public interface ProcessorBuilder {
     }
-
-    public interface PayloadTypeTransformToBuilder {
-        FlowProcessBuilder to(Class<?> clzz);
-    }
-
 
     public interface CustomExecutorBuilder extends FlowProcessBuilder {
         CustomExecutorBuilder methodAnnotatedWith(Class<? extends Annotation> annotationType);
@@ -87,13 +88,7 @@ public interface TempModel {
     public interface RouterBuilder extends ProcessorBuilder {
     }
 
-    public interface MulticastRouterBuilder extends RouterBuilder {
-        RouterBuilder onFirstSuccessful();
-
-        RouterBuilder onFirstSuccessful(ExpressionBuilder ex);
-    }
-
-    public interface ChoiceRouterBuilder extends RouterBuilder {
+    public interface ChoiceRouterBuilder extends RouterBuilder, FlowProcessBuilder {
         WhenChoiceBuilder when(ExpressionBuilder x);
 
         OtherwiseChoiceBuilder otherwise();
@@ -113,16 +108,23 @@ public interface TempModel {
     public interface ExpressionEvaluator {
     }
 
+    public interface ExpressionEvaluatorBuilder {
+    }
+
+    public interface ClasspathBuilder {
+    }
+
+    public interface FileRefBuilder {
+    }
+
     public interface NameBuilder {
     }
 
     public interface URIBuilder {
     }
 
-    public interface HostBuilder {
-        HostBuilder port(int port);
-
-        HostBuilder path(String path);
+    public enum ErrorLevel {
+        WARN, INFO, ERROR, FATAL
     }
 
     @Target({ElementType.TYPE})

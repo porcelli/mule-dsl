@@ -35,10 +35,6 @@ public interface TempModel {
         CustomExecutorBuilder asSingleton();
     }
 
-    public interface PayloadTypeTransformToBuilder {
-        ProcessorBuilder to(Class<?> clzz);
-    }
-
     public interface EndpointProcessor extends ProcessorBuilder {
     }
 
@@ -59,12 +55,6 @@ public interface TempModel {
 
 
     public interface RouterBuilder extends ProcessorBuilder {
-    }
-
-    public interface MulticastRouterBuilder extends RouterBuilder {
-        RouterBuilder onFirstSuccessful();
-
-        RouterBuilder onFirstSuccessful(ExpressionBuilder ex);
     }
 
     public interface ChoiceRouterBuilder extends RouterBuilder {
@@ -88,6 +78,8 @@ public interface TempModel {
     public interface ExpressionEvaluator {
     }
 
+    public interface ExpressionEvaluatorBuilder {
+    }
 
     public interface NameBuilder {
     }
@@ -95,10 +87,14 @@ public interface TempModel {
     public interface URIBuilder {
     }
 
-    public interface HostBuilder {
-        HostBuilder port(int port);
+    public interface ClasspathBuilder{
+    }
 
-        HostBuilder path(String path);
+    public interface FileRefBuilder{
+    }
+
+    public enum ErrorLevel {
+        WARN, INFO, ERROR, FATAL
     }
 
     @Target({ElementType.TYPE})

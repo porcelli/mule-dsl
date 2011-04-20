@@ -20,6 +20,17 @@ public abstract class AbstractModule {
 
     /* elements definition/declaration */
 
+        /* property placeholder */
+
+    public void propertyResolver(FileRefBuilder fileRef) {
+    }
+
+    public void propertyResolver(ClasspathBuilder classpathRef) {
+    }
+
+    public void propertyResolver(InputStream inputStream) {
+    }
+
     /* flow */
 
     public FlowBuilder flow() {
@@ -34,10 +45,6 @@ public abstract class AbstractModule {
 
     /* util methods: named params  */
 
-    public HostBuilder host(String host) {
-        return null;
-    }
-
     public NameBuilder name(String alias) {
         return null;
     }
@@ -46,15 +53,28 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public ExpressionBuilder expression(String expression, ExpressionEvaluator eval) {
+    public ClasspathBuilder classpath(String classpath) {
         return null;
     }
 
-    public ExpressionEvaluator evaluator(String evaluator) {
+    public FileRefBuilder file(String path) {
         return null;
     }
 
-    public <E extends ExpressionEvaluator> E evaluator(Class<E> evaluator) {
+    public FileRefBuilder file(File path) {
         return null;
     }
+
+    public ExpressionBuilder expression(String expression, ExpressionEvaluatorBuilder eval) {
+        return null;
+    }
+
+    public <E extends ExpressionEvaluator> ExpressionEvaluatorBuilder evaluator(Class<E> evaluator) {
+        return null;
+    }
+
+    public <E extends ExpressionEvaluator> ExpressionEvaluatorBuilder evaluator(E evaluator) {
+        return null;
+    }
+
 }
