@@ -87,10 +87,10 @@ public interface TempModel {
     public interface URIBuilder {
     }
 
-    public interface ClasspathBuilder{
+    public interface ClasspathBuilder {
     }
 
-    public interface FileRefBuilder{
+    public interface FileRefBuilder {
     }
 
     public enum ErrorLevel {
@@ -100,6 +100,12 @@ public interface TempModel {
     @Target({ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     public @interface ModuleName {
+        String value();
+    }
+
+    @Target({ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface ModuleDescription {
         String value();
     }
 

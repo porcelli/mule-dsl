@@ -132,4 +132,11 @@ public interface TempModel {
     public @interface ModuleName {
         String value();
     }
+
+    @Target({ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface ModuleDescription {
+        String value();
+    }
+
 }
