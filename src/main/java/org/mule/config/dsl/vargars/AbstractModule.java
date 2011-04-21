@@ -78,7 +78,15 @@ public abstract class AbstractModule {
     }
 
     public interface XpathExpressionEvaluator extends ExpressionEvaluator {
-        XpathExpressionEvaluator XPATH = null;
+        public static XpathExpressionEvaluator XPATH = null;
+    }
+
+    public interface BeanExpressionEvaluator extends ExpressionEvaluator {
+        public static BeanExpressionEvaluator BEAN = null;
+    }
+
+    public interface GroovyExpressionEvaluator extends ExpressionEvaluator {
+        public static GroovyExpressionEvaluator GROOVY = null;
     }
 
     /* util methods: filters */

@@ -98,7 +98,7 @@ public interface TempModel {
         }
 
         public interface OtherwiseChoiceBuilder {
-            ProcessorBuilder then(FlowProcessBuilder pipeline);
+            FlowProcessBuilder then(FlowProcessBuilder pipeline);
         }
     }
 
@@ -106,6 +106,18 @@ public interface TempModel {
     }
 
     public interface ExpressionEvaluator {
+    }
+
+    public interface XpathExpressionEvaluator extends ExpressionEvaluator {
+        public static XpathExpressionEvaluator XPATH = null;
+    }
+
+    public interface BeanExpressionEvaluator extends ExpressionEvaluator {
+        public static BeanExpressionEvaluator BEAN = null;
+    }
+
+    public interface GroovyExpressionEvaluator extends ExpressionEvaluator {
+        public static GroovyExpressionEvaluator GROOVY = null;
     }
 
     public interface ExpressionEvaluatorBuilder {

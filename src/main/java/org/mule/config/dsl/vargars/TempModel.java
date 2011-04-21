@@ -14,13 +14,13 @@ import java.lang.annotation.*;
 public interface TempModel {
 
     public interface FlowBuilder {
-        FlowBuilderPipeline from(URIBuilder uri);
+        InboundEndpointProcessor from(URIBuilder uri);
 
-        void process(ProcessorBuilder processor, ProcessorBuilder... processors);
+        FlowBuilderPipeline process(ProcessorBuilder processor, ProcessorBuilder... processors);
+    }
 
-        public interface FlowBuilderPipeline {
-            FlowBuilder process(ProcessorBuilder processor, ProcessorBuilder... processors);
-        }
+    public interface FlowBuilderPipeline {
+        FlowBuilderPipeline process(ProcessorBuilder processor, ProcessorBuilder... processors);
     }
 
     public interface ProcessorBuilder {
@@ -43,11 +43,11 @@ public interface TempModel {
 
     public interface ThenToInboundEndpointProcessor extends EndpointProcessor {
 
-        InboundEndpointProcessor then();
+        FlowBuilderPipeline then();
 
     }
 
-    public interface InboundEndpointProcessor extends EndpointProcessor {
+    public interface InboundEndpointProcessor extends FlowBuilderPipeline {
         InboundEndpointProcessor processRequest(ProcessorBuilder... processors);
 
         InboundEndpointProcessor processResponse(ProcessorBuilder... processors);

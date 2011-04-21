@@ -20,7 +20,7 @@ public abstract class AbstractModule {
 
     /* elements definition/declaration */
 
-        /* property placeholder */
+    /* property placeholder */
 
     public void propertyResolver(FileRefBuilder fileRef) {
     }
@@ -42,6 +42,10 @@ public abstract class AbstractModule {
     }
 
     /* util methods */
+
+    public FlowProcessBuilder pipeline() {
+        return null;
+    }
 
     /* util methods: named params  */
 
