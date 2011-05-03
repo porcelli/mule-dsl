@@ -9,7 +9,10 @@
  */
 package org.mule.config.dsl.method_chain;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 public interface TempModel {
 
@@ -20,9 +23,9 @@ public interface TempModel {
 
         FlowProcessBuilder log(String message);
 
-        FlowProcessBuilder log(ExpressionBuilder message);
-
         FlowProcessBuilder log(String message, ErrorLevel level);
+
+        FlowProcessBuilder log(ExpressionBuilder message);
 
         FlowProcessBuilder log(ExpressionBuilder expression, ErrorLevel level);
 
@@ -36,19 +39,20 @@ public interface TempModel {
 
         /* outbound */
 
-        EndpointProcessor send(URIBuilder uri);
-
-        EndpointProcessor sendAndWait(URIBuilder uri);
+        OutboundEndpointProcessor send(String uri);
 
         /* transform */
 
-        FlowProcessBuilder transform(ExpressionBuilder expression);
+        FlowProcessBuilder transform(String expr, Evaluator evaluator);
+
+        FlowProcessBuilder transform(String expr, ExpressionEvaluatorBuilder evaluator);
 
         FlowProcessBuilder transformTo(Class<?> clazz);
 
         /* filter */
+        FlowProcessBuilder filter(String expr, Evaluator evaluator);
 
-        FlowProcessBuilder filter(ExpressionBuilder expression);
+        FlowProcessBuilder filter(String expr, ExpressionEvaluatorBuilder evaluator);
 
         /* routers */
 
@@ -58,30 +62,27 @@ public interface TempModel {
     }
 
     public interface FlowBuilder {
-        InboundEndpointProcessor from(URIBuilder uri);
+        InboundEndpointProcessor from(String uri);
     }
 
     public interface ProcessorBuilder {
     }
 
     public interface CustomExecutorBuilder extends FlowProcessBuilder {
-        CustomExecutorBuilder methodAnnotatedWith(Class<? extends Annotation> annotationType);
+        FlowProcessBuilder asSingleton();
 
-        CustomExecutorBuilder methodAnnotatedWith(Annotation annotation);
-
-        CustomExecutorBuilder asSingleton();
+        FlowProcessBuilder asPrototype();
     }
 
     public interface EndpointProcessor extends FlowProcessBuilder {
     }
 
     public interface OutboundEndpointProcessor extends EndpointProcessor {
+        FlowProcessBuilder asOneWay();
+        FlowProcessBuilder asRequestResponse();
     }
 
     public interface InboundEndpointProcessor extends EndpointProcessor {
-        InboundEndpointProcessor processRequest(FlowProcessBuilder pipeline);
-
-        InboundEndpointProcessor processResponse(FlowProcessBuilder pipeline);
     }
 
 
@@ -89,7 +90,10 @@ public interface TempModel {
     }
 
     public interface ChoiceRouterBuilder extends RouterBuilder, FlowProcessBuilder {
-        WhenChoiceBuilder when(ExpressionBuilder x);
+
+        FlowProcessBuilder when(String expr, Evaluator evaluator);
+
+        FlowProcessBuilder when(String expr, ExpressionEvaluatorBuilder evaluator);
 
         OtherwiseChoiceBuilder otherwise();
 
@@ -102,22 +106,14 @@ public interface TempModel {
         }
     }
 
-    public interface ExpressionBuilder {
-    }
-
     public interface ExpressionEvaluator {
     }
 
-    public interface XpathExpressionEvaluator extends ExpressionEvaluator {
-        public static XpathExpressionEvaluator XPATH = null;
+    public enum Evaluator {
+        XPATH, BEAN, GROOVY
     }
 
-    public interface BeanExpressionEvaluator extends ExpressionEvaluator {
-        public static BeanExpressionEvaluator BEAN = null;
-    }
-
-    public interface GroovyExpressionEvaluator extends ExpressionEvaluator {
-        public static GroovyExpressionEvaluator GROOVY = null;
+    public interface ExpressionBuilder {
     }
 
     public interface ExpressionEvaluatorBuilder {
@@ -141,14 +137,9 @@ public interface TempModel {
 
     @Target({ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface ModuleName {
-        String value();
-    }
-
-    @Target({ElementType.TYPE})
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface ModuleDescription {
-        String value();
+    public @interface ModuleInfo {
+        String name();
+        String description();
     }
 
 }

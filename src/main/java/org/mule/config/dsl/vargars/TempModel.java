@@ -9,12 +9,15 @@
  */
 package org.mule.config.dsl.vargars;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 public interface TempModel {
 
     public interface FlowBuilder {
-        InboundEndpointProcessor from(URIBuilder uri);
+        InboundEndpointProcessor from(String uri);
 
         FlowBuilderPipeline process(ProcessorBuilder processor, ProcessorBuilder... processors);
     }
@@ -28,17 +31,18 @@ public interface TempModel {
 
 
     public interface CustomExecutorBuilder extends ProcessorBuilder {
-        CustomExecutorBuilder methodAnnotatedWith(Class<? extends Annotation> annotationType);
+        ProcessorBuilder asSingleton();
 
-        CustomExecutorBuilder methodAnnotatedWith(Annotation annotation);
-
-        CustomExecutorBuilder asSingleton();
+        ProcessorBuilder asPrototype();
     }
 
     public interface EndpointProcessor extends ProcessorBuilder {
     }
 
     public interface OutboundEndpointProcessor extends EndpointProcessor {
+        ProcessorBuilder asOneWay();
+
+        ProcessorBuilder asRequestResponse();
     }
 
     public interface ThenToInboundEndpointProcessor extends EndpointProcessor {
@@ -48,9 +52,6 @@ public interface TempModel {
     }
 
     public interface InboundEndpointProcessor extends FlowBuilderPipeline {
-        InboundEndpointProcessor processRequest(ProcessorBuilder... processors);
-
-        InboundEndpointProcessor processResponse(ProcessorBuilder... processors);
     }
 
 
@@ -58,7 +59,9 @@ public interface TempModel {
     }
 
     public interface ChoiceRouterBuilder extends RouterBuilder {
-        WhenChoiceBuilder when(ExpressionBuilder x);
+        WhenChoiceBuilder when(String expr, Evaluator evaluator);
+
+        WhenChoiceBuilder when(String expr, ExpressionEvaluatorBuilder evaluator);
 
         OtherwiseChoiceBuilder otherwise();
 
@@ -72,19 +75,17 @@ public interface TempModel {
     }
 
 
-    public interface ExpressionBuilder {
-    }
-
     public interface ExpressionEvaluator {
     }
 
+    public enum Evaluator {
+        XPATH, BEAN, GROOVY
+    }
+
+    public interface ExpressionBuilder {
+    }
+
     public interface ExpressionEvaluatorBuilder {
-    }
-
-    public interface NameBuilder {
-    }
-
-    public interface URIBuilder {
     }
 
     public interface ClasspathBuilder {
@@ -93,20 +94,22 @@ public interface TempModel {
     public interface FileRefBuilder {
     }
 
+    public interface NameBuilder {
+    }
+
+    public interface URIBuilder {
+    }
+
     public enum ErrorLevel {
         WARN, INFO, ERROR, FATAL
     }
 
     @Target({ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface ModuleName {
-        String value();
-    }
+    public @interface ModuleInfo {
+        String name();
 
-    @Target({ElementType.TYPE})
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface ModuleDescription {
-        String value();
+        String description();
     }
 
 

@@ -37,7 +37,7 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public FlowBuilder flow(NameBuilder name) {
+    public FlowBuilder flow(String name) {
         return null;
     }
 
@@ -69,6 +69,10 @@ public abstract class AbstractModule {
         return null;
     }
 
+    public ExpressionBuilder expression(String expression, Evaluator eval) {
+        return null;
+    }
+
     public <E extends ExpressionEvaluator> ExpressionEvaluatorBuilder evaluator(Class<E> evaluator) {
         return null;
     }
@@ -77,27 +81,23 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public interface XpathExpressionEvaluator extends ExpressionEvaluator {
-        public static XpathExpressionEvaluator XPATH = null;
-    }
-
-    public interface BeanExpressionEvaluator extends ExpressionEvaluator {
-        public static BeanExpressionEvaluator BEAN = null;
-    }
-
-    public interface GroovyExpressionEvaluator extends ExpressionEvaluator {
-        public static GroovyExpressionEvaluator GROOVY = null;
-    }
-
     /* util methods: filters */
 
-    public ProcessorBuilder filter(ExpressionBuilder ref) {
+    public ProcessorBuilder filter(String expr, Evaluator evaluator) {
+        return null;
+    }
+
+    public ProcessorBuilder filter(String expr, ExpressionEvaluatorBuilder evaluator) {
         return null;
     }
 
     /* util methods: transformers */
 
-    public ProcessorBuilder transform(ExpressionBuilder expression) {
+    public ProcessorBuilder transform(String expr, Evaluator evaluator) {
+        return null;
+    }
+
+    public ProcessorBuilder transform(String expr, ExpressionEvaluatorBuilder evaluator) {
         return null;
     }
 
@@ -115,11 +115,11 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public ProcessorBuilder log(ExpressionBuilder expression) {
+    public ProcessorBuilder log(String message, ErrorLevel level) {
         return null;
     }
 
-    public ProcessorBuilder log(String message, ErrorLevel level) {
+    public ProcessorBuilder log(ExpressionBuilder expression) {
         return null;
     }
 
@@ -147,17 +147,13 @@ public abstract class AbstractModule {
 
     /* inbound */
 
-    public ThenToInboundEndpointProcessor from(URIBuilder uri) {
+    public ThenToInboundEndpointProcessor from(String uri) {
         return null;
     }
 
     /* outbound */
 
-    public EndpointProcessor send(URIBuilder uri) {
-        return null;
-    }
-
-    public EndpointProcessor sendAndWait(URIBuilder uri) {
+    public OutboundEndpointProcessor send(String uri) {
         return null;
     }
 

@@ -22,6 +22,7 @@ public abstract class AbstractModule {
 
     /* property placeholder */
 
+
     public void propertyResolver(FileRefBuilder fileRef) {
     }
 
@@ -37,7 +38,7 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public FlowBuilder flow(NameBuilder name) {
+    public FlowBuilder flow(String name) {
         return null;
     }
 
@@ -61,11 +62,11 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public FileRefBuilder file(String path) {
+    public FileRefBuilder file(File path) {
         return null;
     }
 
-    public FileRefBuilder file(File path) {
+    public ExpressionBuilder expression(String expression, Evaluator evaluator) {
         return null;
     }
 
