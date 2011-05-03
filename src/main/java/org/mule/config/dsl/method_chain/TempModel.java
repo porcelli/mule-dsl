@@ -25,9 +25,9 @@ public interface TempModel {
 
         FlowProcessBuilder log(String message, ErrorLevel level);
 
-        FlowProcessBuilder log(ExpressionBuilder message);
+        <E extends ExpressionEvaluatorBuilder> FlowProcessBuilder log(E expr);
 
-        FlowProcessBuilder log(ExpressionBuilder expression, ErrorLevel level);
+        <E extends ExpressionEvaluatorBuilder> FlowProcessBuilder log(E expr, ErrorLevel level);
 
         FlowProcessBuilder echo();
 
@@ -43,16 +43,12 @@ public interface TempModel {
 
         /* transform */
 
-        FlowProcessBuilder transform(String expr, Evaluator evaluator);
-
-        FlowProcessBuilder transform(String expr, ExpressionEvaluatorBuilder evaluator);
+        <E extends ExpressionEvaluatorBuilder> FlowProcessBuilder transform(E expr);
 
         FlowProcessBuilder transformTo(Class<?> clazz);
 
         /* filter */
-        FlowProcessBuilder filter(String expr, Evaluator evaluator);
-
-        FlowProcessBuilder filter(String expr, ExpressionEvaluatorBuilder evaluator);
+        <E extends ExpressionEvaluatorBuilder> FlowProcessBuilder filter(E expr);
 
         /* routers */
 
@@ -79,6 +75,7 @@ public interface TempModel {
 
     public interface OutboundEndpointProcessor extends EndpointProcessor {
         FlowProcessBuilder asOneWay();
+
         FlowProcessBuilder asRequestResponse();
     }
 
@@ -91,9 +88,7 @@ public interface TempModel {
 
     public interface ChoiceRouterBuilder extends RouterBuilder, FlowProcessBuilder {
 
-        FlowProcessBuilder when(String expr, Evaluator evaluator);
-
-        FlowProcessBuilder when(String expr, ExpressionEvaluatorBuilder evaluator);
+        <E extends ExpressionEvaluatorBuilder> FlowProcessBuilder when(E expr);
 
         OtherwiseChoiceBuilder otherwise();
 
@@ -104,16 +99,6 @@ public interface TempModel {
         public interface OtherwiseChoiceBuilder {
             FlowProcessBuilder then(FlowProcessBuilder pipeline);
         }
-    }
-
-    public interface ExpressionEvaluator {
-    }
-
-    public enum Evaluator {
-        XPATH, BEAN, GROOVY
-    }
-
-    public interface ExpressionBuilder {
     }
 
     public interface ExpressionEvaluatorBuilder {
@@ -139,7 +124,8 @@ public interface TempModel {
     @Retention(RetentionPolicy.RUNTIME)
     public @interface ModuleInfo {
         String name();
-        String description();
+
+        String description() default "";
     }
 
 }

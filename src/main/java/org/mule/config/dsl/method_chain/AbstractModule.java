@@ -66,20 +66,4 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public ExpressionBuilder expression(String expression, Evaluator evaluator) {
-        return null;
-    }
-
-    public ExpressionBuilder expression(String expression, ExpressionEvaluatorBuilder eval) {
-        return null;
-    }
-
-    public <E extends ExpressionEvaluator> ExpressionEvaluatorBuilder evaluator(Class<E> evaluator) {
-        return null;
-    }
-
-    public <E extends ExpressionEvaluator> ExpressionEvaluatorBuilder evaluator(E evaluator) {
-        return null;
-    }
-
 }

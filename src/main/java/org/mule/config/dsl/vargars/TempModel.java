@@ -59,9 +59,8 @@ public interface TempModel {
     }
 
     public interface ChoiceRouterBuilder extends RouterBuilder {
-        WhenChoiceBuilder when(String expr, Evaluator evaluator);
 
-        WhenChoiceBuilder when(String expr, ExpressionEvaluatorBuilder evaluator);
+        <E extends ExpressionEvaluatorBuilder> WhenChoiceBuilder when(E expr);
 
         OtherwiseChoiceBuilder otherwise();
 
@@ -72,17 +71,6 @@ public interface TempModel {
         public interface OtherwiseChoiceBuilder {
             ProcessorBuilder then(ProcessorBuilder... processorBuilders);
         }
-    }
-
-
-    public interface ExpressionEvaluator {
-    }
-
-    public enum Evaluator {
-        XPATH, BEAN, GROOVY
-    }
-
-    public interface ExpressionBuilder {
     }
 
     public interface ExpressionEvaluatorBuilder {
@@ -109,7 +97,7 @@ public interface TempModel {
     public @interface ModuleInfo {
         String name();
 
-        String description();
+        String description() default "";
     }
 
 

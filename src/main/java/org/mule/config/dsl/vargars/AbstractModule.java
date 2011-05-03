@@ -65,39 +65,16 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public ExpressionBuilder expression(String expression, ExpressionEvaluatorBuilder eval) {
-        return null;
-    }
-
-    public ExpressionBuilder expression(String expression, Evaluator eval) {
-        return null;
-    }
-
-    public <E extends ExpressionEvaluator> ExpressionEvaluatorBuilder evaluator(Class<E> evaluator) {
-        return null;
-    }
-
-    public <E extends ExpressionEvaluator> ExpressionEvaluatorBuilder evaluator(E evaluator) {
-        return null;
-    }
 
     /* util methods: filters */
 
-    public ProcessorBuilder filter(String expr, Evaluator evaluator) {
-        return null;
-    }
-
-    public ProcessorBuilder filter(String expr, ExpressionEvaluatorBuilder evaluator) {
+    public <E extends ExpressionEvaluatorBuilder> ProcessorBuilder filter(E expr) {
         return null;
     }
 
     /* util methods: transformers */
 
-    public ProcessorBuilder transform(String expr, Evaluator evaluator) {
-        return null;
-    }
-
-    public ProcessorBuilder transform(String expr, ExpressionEvaluatorBuilder evaluator) {
+    public <E extends ExpressionEvaluatorBuilder> ProcessorBuilder transform(E expr) {
         return null;
     }
 
@@ -119,11 +96,11 @@ public abstract class AbstractModule {
         return null;
     }
 
-    public ProcessorBuilder log(ExpressionBuilder expression) {
+    public <E extends ExpressionEvaluatorBuilder> ProcessorBuilder log(E expr) {
         return null;
     }
 
-    public ProcessorBuilder log(ExpressionBuilder expression, ErrorLevel level) {
+    public <E extends ExpressionEvaluatorBuilder> ProcessorBuilder log(E expr, ErrorLevel level) {
         return null;
     }
 
