@@ -34,11 +34,13 @@ public final class CoreExpr {
     }
 
     public interface GroovyExpressionEvaluatorBuilder extends TempModel.ExpressionEvaluatorBuilder {
-        public GroovyExpressionEvaluatorBuilder file(String filePath);
+        public TempModel.ExpressionEvaluatorBuilder file(String filePath);
 
-        public GroovyExpressionEvaluatorBuilder file(File file);
+        public TempModel.ExpressionEvaluatorBuilder file(File file);
 
-        public GroovyExpressionEvaluatorBuilder expr(String filePath);
+        public TempModel.ExpressionEvaluatorBuilder classpath(String classpath);
+
+        public TempModel.ExpressionEvaluatorBuilder expr(String filePath);
 
     }
 
