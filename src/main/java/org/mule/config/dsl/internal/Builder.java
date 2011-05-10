@@ -7,10 +7,10 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.dsl;
+package org.mule.config.dsl.internal;
 
-public interface ExecutorBuilder extends PipelineBuilder {
-    PipelineBuilder asSingleton();
+public interface Builder<T> {
 
-    PipelineBuilder asPrototype();
+    public T build();
+
 }

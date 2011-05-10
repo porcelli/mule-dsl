@@ -7,60 +7,58 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.dsl;
+package org.mule.config.dsl.internal;
 
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
-import org.mule.api.endpoint.InboundEndpoint;
-import org.mule.api.endpoint.OutboundEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.config.dsl.EndPointBuilder;
+import org.mule.config.dsl.PipelineBuilder;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.endpoint.URIBuilder;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-public abstract class EndpointBuilder extends PipelineBuilder {
+public abstract class EndpointBuilderImpl extends PipelineBuilderImpl implements EndPointBuilder, Builder<ImmutableEndpoint> {
 
     protected final org.mule.api.endpoint.EndpointBuilder internalEndpointBuilder;
     protected final PipelineBuilder parentScope;
 
-    public EndpointBuilder(PipelineBuilder parentScope, MuleContext muleContext, String uri) {
+    public EndpointBuilderImpl(final PipelineBuilderImpl parentScope, MuleContext muleContext, String uri) {
+        super(muleContext, parentScope);
         checkNotNull(parentScope, "parentScope");
         checkNotNull(muleContext, "muleContext");
         checkNotEmpty(uri, "uri");
 
         this.internalEndpointBuilder = new EndpointURIEndpointBuilder(new URIBuilder(uri, muleContext));
         this.parentScope = parentScope;
-
-        build();
     }
 
-    protected abstract void build();
+    public abstract ImmutableEndpoint build();
 
-    PipelineBuilder asOneWay() {
+    @Override
+    public PipelineBuilder asOneWay() {
         internalEndpointBuilder.setExchangePattern(MessageExchangePattern.ONE_WAY);
-        build();
         return parentScope;
     }
 
-    PipelineBuilder asRequestResponse() {
+    @Override
+    public PipelineBuilder asRequestResponse() {
         internalEndpointBuilder.setExchangePattern(MessageExchangePattern.REQUEST_RESPONSE);
         return parentScope;
     }
 
+    public static class OutboundEndpointBuilderImpl extends EndpointBuilderImpl implements OutboundEndpointBuilder {
 
-    public static class OutboundEndpointBuilder extends EndpointBuilder {
-
-        private OutboundEndpoint endpoint;
-
-        public OutboundEndpointBuilder(PipelineBuilder parentScope, MuleContext muleContext, String uri) {
+        public OutboundEndpointBuilderImpl(final PipelineBuilderImpl parentScope, MuleContext muleContext, String uri) {
             super(parentScope, muleContext, uri);
         }
 
         @Override
-        protected synchronized void build() {
+        public ImmutableEndpoint build() {
             try {
-                endpoint = internalEndpointBuilder.buildOutboundEndpoint();
+                return internalEndpointBuilder.buildOutboundEndpoint();
             } catch (Exception e) {
                 //TODO handle
                 throw new RuntimeException();
@@ -68,21 +66,19 @@ public abstract class EndpointBuilder extends PipelineBuilder {
         }
     }
 
-    public static class InboundEndpointBuilder extends EndpointBuilder {
+    public static class InboundEndpointBuilderImpl extends EndpointBuilderImpl implements InboundEndpointBuilder {
 
-        private InboundEndpoint endpoint;
-
-        public InboundEndpointBuilder(PipelineBuilder parentScope, MuleContext muleContext, String uri) {
+        public InboundEndpointBuilderImpl(final PipelineBuilderImpl parentScope, MuleContext muleContext, String uri) {
             super(parentScope, muleContext, uri);
         }
 
         @Override
-        protected synchronized void build() {
+        public ImmutableEndpoint build() {
             try {
-                ((FlowBuilder) parentScope).setMessageSource(internalEndpointBuilder.buildInboundEndpoint());
+                return internalEndpointBuilder.buildInboundEndpoint();
             } catch (Exception e) {
                 //TODO handle
-                throw new RuntimeException();
+                throw new RuntimeException(e);
             }
         }
     }

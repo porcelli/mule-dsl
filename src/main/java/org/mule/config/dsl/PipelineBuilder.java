@@ -11,78 +11,46 @@ package org.mule.config.dsl;
 
 import org.mule.api.lifecycle.Callable;
 
-public abstract class PipelineBuilder {
+public interface PipelineBuilder {
     /* component */
 
-    public PipelineBuilder log() {
-        return null;
-    }
+    PipelineBuilder log();
 
-    public PipelineBuilder log(String message) {
-        return null;
-    }
+    PipelineBuilder log(String message);
 
-    public PipelineBuilder log(String message, ErrorLevel level) {
-        return null;
-    }
+    PipelineBuilder log(String message, ErrorLevel level);
 
-    public <E extends ExpressionEvaluatorBuilder> PipelineBuilder log(E expr) {
-        return null;
-    }
+    <E extends ExpressionEvaluatorBuilder> PipelineBuilder log(E expr);
 
-    public <E extends ExpressionEvaluatorBuilder> PipelineBuilder log(E expr, ErrorLevel level) {
-        return null;
-    }
+    <E extends ExpressionEvaluatorBuilder> PipelineBuilder log(E expr, ErrorLevel level);
 
-    public PipelineBuilder echo() {
-        return null;
-    }
+    PipelineBuilder echo();
 
-    public PipelineBuilder nil() {
-        return null;
-    }
+    PipelineBuilder execute(Object obj);
 
-    public ExecutorBuilder execute(Object obj) {
-        return null;
-    }
+    ExecutorBuilder execute(Callable obj);
 
-    public ExecutorBuilder execute(Callable obj) {
-        return null;
-    }
+    ExecutorBuilder execute(java.util.concurrent.Callable obj);
 
-    public ExecutorBuilder execute(Class<?> clazz) {
-        return null;
-    }
+    ExecutorBuilder execute(Class<?> clazz);
 
     /* outbound */
-    public EndpointBuilder.OutboundEndpointBuilder send(String uri) {
-        return null;
-    }
+    EndPointBuilder.OutboundEndpointBuilder send(String uri);
 
     /* transform */
 
-    public <E extends ExpressionEvaluatorBuilder> PipelineBuilder transform(E expr) {
-        return null;
-    }
+    <E extends ExpressionEvaluatorBuilder> PipelineBuilder transform(E expr);
 
-    public PipelineBuilder transformTo(Class<?> clazz) {
-        return null;
-    }
+    PipelineBuilder transformTo(Class<?> clazz);
 
     /* filter */
-    public <E extends ExpressionEvaluatorBuilder> PipelineBuilder filter(E expr) {
-        return null;
-    }
+    <E extends ExpressionEvaluatorBuilder> PipelineBuilder filter(E expr);
 
     /* routers */
 
-    public PipelineBuilder multicast(PipelineBuilder pipeline) {
-        return null;
-    }
+    PipelineBuilder multicast(PipelineBuilder pipeline);
 
-    public RouterBuilder.ChoiceRouterBuilder choice() {
-        return null;
-    }
+    RouterBuilder.ChoiceRouterBuilder choice();
 
     public enum ErrorLevel {
         WARN, INFO, ERROR, FATAL

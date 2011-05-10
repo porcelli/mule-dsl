@@ -9,8 +9,16 @@
 
 package org.mule.config.dsl;
 
-public interface ExecutorBuilder extends PipelineBuilder {
-    PipelineBuilder asSingleton();
+public interface EndPointBuilder extends PipelineBuilder {
 
-    PipelineBuilder asPrototype();
+    PipelineBuilder asOneWay();
+
+    PipelineBuilder asRequestResponse();
+
+    public interface OutboundEndpointBuilder extends EndPointBuilder {
+    }
+
+    public interface InboundEndpointBuilder extends EndPointBuilder {
+    }
+
 }

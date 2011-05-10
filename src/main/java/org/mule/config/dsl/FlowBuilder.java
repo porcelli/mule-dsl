@@ -11,36 +11,34 @@ package org.mule.config.dsl;
 
 import org.mule.api.MuleContext;
 import org.mule.api.construct.FlowConstruct;
-import org.mule.api.endpoint.InboundEndpoint;
-import org.mule.api.processor.MessageProcessor;
+import org.mule.api.source.MessageSource;
+import org.mule.config.dsl.internal.EndpointBuilderImpl;
+import org.mule.config.dsl.internal.PipelineBuilderImpl;
 import org.mule.construct.SimpleFlowConstruct;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class FlowBuilder extends PipelineBuilder {
+public class FlowBuilder extends PipelineBuilderImpl {
 
     private final SimpleFlowConstruct flow;
-    private final List<MessageProcessor> processorList;
+    private EndpointBuilderImpl.InboundEndpointBuilderImpl inboundEndpointBuilder;
+    private boolean processorListEmpty;
 
     public FlowBuilder(String name, MuleContext muleContext) {
+        super(muleContext, null);
         this.flow = new SimpleFlowConstruct(name, muleContext);
-        processorList = new ArrayList<MessageProcessor>();
     }
 
-    EndpointBuilder.InboundEndpointBuilder from(String uri) {
-        return new EndpointBuilder.InboundEndpointBuilder(this, this.flow.getMuleContext(), uri);
+    EndPointBuilder.InboundEndpointBuilder from(String uri) {
+        this.inboundEndpointBuilder = new EndpointBuilderImpl.InboundEndpointBuilderImpl(this, this.flow.getMuleContext(), uri);
+        return inboundEndpointBuilder;
     }
 
     FlowConstruct build() {
-        if (processorList != null && processorList.size() > 0) {
-            flow.setMessageProcessors(processorList);
+        if (inboundEndpointBuilder != null) {
+            flow.setMessageSource((MessageSource) inboundEndpointBuilder.build());
+        }
+        if (!isProcessorListEmpty()) {
+            flow.setMessageProcessors(buildProcessorList());
         }
         return flow;
     }
-
-    void setMessageSource(InboundEndpoint endpoint) {
-        flow.setMessageSource(endpoint);
-    }
-
 }
