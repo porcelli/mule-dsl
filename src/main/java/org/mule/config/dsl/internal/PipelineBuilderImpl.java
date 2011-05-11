@@ -14,12 +14,13 @@ import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.component.simple.EchoComponent;
 import org.mule.config.dsl.*;
+import org.mule.config.dsl.component.ExtendedLogComponent;
+import org.mule.config.dsl.component.SimpleLogComponent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PipelineBuilderImpl implements PipelineBuilder {
-    /* component */
 
     private final List<Builder<?>> processorList;
     private final PipelineBuilderImpl parentScope;
@@ -31,19 +32,36 @@ public class PipelineBuilderImpl implements PipelineBuilder {
         this.muleContext = muleContext;
     }
 
+    /* component */
+
     @Override
     public PipelineBuilder log() {
-        return null;
+        return log(ErrorLevel.INFO);
+    }
+
+    @Override
+    public PipelineBuilder log(ErrorLevel level) {
+        if (parentScope != null) {
+            return parentScope.log();
+        }
+
+        processorList.add(new ExecutorBuilderImpl(this, muleContext, new SimpleLogComponent(level)));
+        return this;
     }
 
     @Override
     public PipelineBuilder log(String message) {
-        return null;
+        return log(message, ErrorLevel.INFO);
     }
 
     @Override
     public PipelineBuilder log(String message, ErrorLevel level) {
-        return null;
+        if (parentScope != null) {
+            return parentScope.log(message, level);
+        }
+
+        processorList.add(new ExecutorBuilderImpl(this, muleContext, new ExtendedLogComponent(message, level)));
+        return this;
     }
 
     @Override
@@ -117,8 +135,13 @@ public class PipelineBuilderImpl implements PipelineBuilder {
     }
 
     @Override
-    public PipelineBuilder transformTo(Class<?> clazz) {
-        return null;
+    public <T> PipelineBuilder transformTo(Class<T> clazz) {
+        if (parentScope != null) {
+            return parentScope.transformTo(clazz);
+        }
+
+        processorList.add(new TransformerBuilderImpl<T>(clazz));
+        return this;
     }
 
     /* filter */

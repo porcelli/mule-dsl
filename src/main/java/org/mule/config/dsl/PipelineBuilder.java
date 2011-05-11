@@ -16,6 +16,8 @@ public interface PipelineBuilder {
 
     PipelineBuilder log();
 
+    PipelineBuilder log(ErrorLevel level);
+
     PipelineBuilder log(String message);
 
     PipelineBuilder log(String message, ErrorLevel level);
@@ -41,7 +43,7 @@ public interface PipelineBuilder {
 
     <E extends ExpressionEvaluatorBuilder> PipelineBuilder transform(E expr);
 
-    PipelineBuilder transformTo(Class<?> clazz);
+    <T> PipelineBuilder transformTo(Class<T> clazz);
 
     /* filter */
     <E extends ExpressionEvaluatorBuilder> PipelineBuilder filter(E expr);
