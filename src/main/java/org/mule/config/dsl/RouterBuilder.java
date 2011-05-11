@@ -18,11 +18,11 @@ public interface RouterBuilder {
         OtherwiseChoiceBuilder otherwise();
 
         public interface WhenChoiceBuilder {
-            ChoiceRouterBuilder then(PipelineBuilder pipeline);
+            ChoiceRouterBuilder then();
         }
 
         public interface OtherwiseChoiceBuilder {
-            PipelineBuilder then(PipelineBuilder pipeline);
+            PipelineBuilder then();
         }
     }
 

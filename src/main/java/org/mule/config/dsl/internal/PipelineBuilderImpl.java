@@ -12,6 +12,7 @@ package org.mule.config.dsl.internal;
 import org.mule.api.MuleContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
+import org.mule.component.simple.EchoComponent;
 import org.mule.config.dsl.*;
 
 import java.util.ArrayList;
@@ -57,7 +58,12 @@ public class PipelineBuilderImpl implements PipelineBuilder {
 
     @Override
     public PipelineBuilder echo() {
-        return null;
+        if (parentScope != null) {
+            return parentScope.echo();
+        }
+
+        processorList.add(new ExecutorBuilderImpl(this, muleContext, new EchoComponent()));
+        return this;
     }
 
     @Override
@@ -67,7 +73,14 @@ public class PipelineBuilderImpl implements PipelineBuilder {
 
     @Override
     public ExecutorBuilder execute(Callable obj) {
-        return null;
+        if (parentScope != null) {
+            return parentScope.execute(obj);
+        }
+
+        ExecutorBuilderImpl builder = new ExecutorBuilderImpl(this, muleContext, obj);
+        processorList.add(builder);
+
+        return builder;
     }
 
     @Override
@@ -80,7 +93,7 @@ public class PipelineBuilderImpl implements PipelineBuilder {
         if (parentScope != null) {
             return parentScope.execute(clazz);
         }
-        ExecutorBuilderImpl builder = new ExecutorBuilderImpl(muleContext, clazz);
+        ExecutorBuilderImpl builder = new ExecutorBuilderImpl(this, muleContext, clazz);
         processorList.add(builder);
         return builder;
     }
@@ -117,7 +130,7 @@ public class PipelineBuilderImpl implements PipelineBuilder {
     /* routers */
 
     @Override
-    public PipelineBuilder multicast(PipelineBuilder pipeline) {
+    public PipelineBuilder multicast() {
         return null;
     }
 

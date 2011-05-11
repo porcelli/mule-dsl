@@ -17,20 +17,22 @@ import org.mule.component.SimpleCallableJavaComponent;
 import org.mule.config.dsl.ExecutorBuilder;
 import org.mule.config.dsl.PipelineBuilder;
 
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+
 public class ExecutorBuilderImpl extends PipelineBuilderImpl implements ExecutorBuilder, Builder<Component> {
 
     private final Class<?> clazz;
     private final Object obj;
 
-    ExecutorBuilderImpl(MuleContext muleContext, Class<?> clazz) {
-        super(muleContext, null);
+    ExecutorBuilderImpl(final PipelineBuilderImpl parentScope, MuleContext muleContext, Class<?> clazz) {
+        super(muleContext, parentScope);
         this.clazz = clazz;
         this.obj = null;
     }
 
-    public ExecutorBuilderImpl(MuleContext muleContext, Callable obj) {
-        super(muleContext, null);
-        this.obj = obj;
+    ExecutorBuilderImpl(final PipelineBuilderImpl parentScope, MuleContext muleContext, Object obj) {
+        super(muleContext, parentScope);
+        this.obj = checkNotNull(obj, "obj");
         this.clazz = null;
     }
 
@@ -49,7 +51,11 @@ public class ExecutorBuilderImpl extends PipelineBuilderImpl implements Executor
                 throw new RuntimeException("Not supported");
             }
         } else {
-            throw new RuntimeException("Not supported");
+            if (obj instanceof Callable){
+                return new SimpleCallableJavaComponent((Callable) obj);
+            } else {
+                throw new RuntimeException("Not supported");
+            }
         }
     }
 

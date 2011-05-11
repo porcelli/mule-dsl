@@ -48,7 +48,7 @@ public interface PipelineBuilder {
 
     /* routers */
 
-    PipelineBuilder multicast(PipelineBuilder pipeline);
+    PipelineBuilder multicast();
 
     RouterBuilder.ChoiceRouterBuilder choice();
 
