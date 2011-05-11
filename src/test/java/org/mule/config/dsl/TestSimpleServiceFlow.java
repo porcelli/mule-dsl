@@ -27,55 +27,6 @@ import static org.fest.assertions.Assertions.assertThat;
 
 public class TestSimpleServiceFlow {
 
-//    @Test
-//    public void testMuleRegistry() throws MuleException, InitialisationException, ConfigurationException, InterruptedException {
-//        MuleContextFactory muleContextFactory = new DefaultMuleContextFactory();
-//
-//        MuleContext muleContext = muleContextFactory.createMuleContext();
-//        EndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(new URIBuilder("file:///Users/porcelli/test", muleContext));
-//        InboundEndpoint endpoint = endpointBuilder.buildInboundEndpoint();
-//
-//        SimpleFlowConstruct flow = new SimpleFlowConstruct("MyFlow", muleContext);
-//        flow.setMessageSource(endpoint);
-//
-//        List<MessageProcessor> list = new ArrayList<MessageProcessor>();
-//
-//        list.add(new SimpleCallableJavaComponent(SimpleCallable.class));
-//
-//        flow.setMessageProcessors(list);
-//
-//        muleContext.getRegistry().registerFlowConstruct(flow);
-//
-//
-//        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
-//
-//        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
-//
-//        assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-//        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-//
-//        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
-//
-//        assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
-//
-//        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
-//
-//        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-//
-//        assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
-//
-//        assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
-//
-//        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-//
-//        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-//
-//        assertThat(processor).isNotNull().isInstanceOf(JavaComponent.class);
-//
-//        muleContext.start();
-//    }
-
-
     @Test
     public void simpleService() throws MuleException, ConfigurationException, InterruptedException {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {

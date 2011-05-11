@@ -61,8 +61,7 @@ public class TestBasicFlowWithJustOneInboundEndpoint {
             @Override
             public void configure() {
                 flow("MyFlow")
-                        .from("file:///Users/porcelli/test")
-                        .asOneWay();
+                        .from("file:///Users/porcelli/test").asOneWay();
             }
         });
 
@@ -94,8 +93,7 @@ public class TestBasicFlowWithJustOneInboundEndpoint {
             @Override
             public void configure() {
                 flow("MyFlow")
-                        .from("file:///Users/porcelli/test")
-                        .asRequestResponse();
+                        .from("file:///Users/porcelli/test").asRequestResponse();
             }
         });
     }
