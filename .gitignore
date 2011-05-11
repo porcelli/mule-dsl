@@ -1,4 +1,4 @@
-# .gitignore for OpenSpotLight
+# .gitignore for mule-dsl
 jrat.output
 jrat.xml
 
@@ -41,3 +41,6 @@ nbproject
 *.ipr
 *.iws
 *.iml
+
+# mule hidden
+.mule
