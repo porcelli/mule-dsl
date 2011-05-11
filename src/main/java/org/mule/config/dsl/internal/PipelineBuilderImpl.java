@@ -42,7 +42,7 @@ public class PipelineBuilderImpl implements PipelineBuilder {
     @Override
     public PipelineBuilder log(ErrorLevel level) {
         if (parentScope != null) {
-            return parentScope.log();
+            return parentScope.log(level);
         }
 
         processorList.add(new ExecutorBuilderImpl(this, muleContext, new SimpleLogComponent(level)));

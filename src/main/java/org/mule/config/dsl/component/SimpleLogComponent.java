@@ -45,4 +45,9 @@ public class SimpleLogComponent extends LogComponent {
                 }
         }
     }
+
+    public PipelineBuilder.ErrorLevel getLevel() {
+        return level;
+    }
+
 }

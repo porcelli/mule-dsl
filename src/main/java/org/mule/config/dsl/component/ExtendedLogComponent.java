@@ -27,5 +27,8 @@ public class ExtendedLogComponent extends SimpleLogComponent {
         return context.getMessage();
     }
 
+    public String getMessage() {
+        return message;
+    }
 
 }
