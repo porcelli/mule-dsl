@@ -9,6 +9,7 @@
 
 package org.mule.config.dsl;
 
+import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.construct.FlowConstruct;
 import org.mule.api.source.MessageSource;
@@ -20,7 +21,6 @@ public class FlowBuilder extends PipelineBuilderImpl {
 
     private final SimpleFlowConstruct flow;
     private EndpointBuilderImpl.InboundEndpointBuilderImpl inboundEndpointBuilder;
-    private boolean processorListEmpty;
 
     public FlowBuilder(String name, MuleContext muleContext) {
         super(muleContext, null);
@@ -32,12 +32,12 @@ public class FlowBuilder extends PipelineBuilderImpl {
         return inboundEndpointBuilder;
     }
 
-    FlowConstruct build() {
+    FlowConstruct build(Injector injector) {
         if (inboundEndpointBuilder != null) {
-            flow.setMessageSource((MessageSource) inboundEndpointBuilder.build());
+            flow.setMessageSource((MessageSource) inboundEndpointBuilder.build(injector));
         }
         if (!isProcessorListEmpty()) {
-            flow.setMessageProcessors(buildProcessorList());
+            flow.setMessageProcessors(buildProcessorList(injector));
         }
         return flow;
     }

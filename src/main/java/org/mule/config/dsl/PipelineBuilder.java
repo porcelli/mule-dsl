@@ -32,8 +32,6 @@ public interface PipelineBuilder {
 
     ExecutorBuilder execute(Callable obj);
 
-    ExecutorBuilder execute(java.util.concurrent.Callable obj);
-
     ExecutorBuilder execute(Class<?> clazz);
 
     /* outbound */

@@ -9,24 +9,31 @@
 
 package org.mule.config.dsl.internal;
 
+import com.google.inject.Injector;
 import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.component.Component;
 import org.mule.api.lifecycle.Callable;
+import org.mule.component.DefaultJavaComponent;
 import org.mule.component.SimpleCallableJavaComponent;
 import org.mule.config.dsl.ExecutorBuilder;
 import org.mule.config.dsl.PipelineBuilder;
+import org.mule.config.dsl.internal.util.InjectorUtil;
+import org.mule.object.PrototypeObjectFactory;
+import org.mule.object.SingletonObjectFactory;
 
+import static org.mule.config.dsl.internal.util.EntryPointResolverSetUtil.createDefaultResolverSet;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-public class ExecutorBuilderImpl extends PipelineBuilderImpl implements ExecutorBuilder, Builder<Component> {
+class ExecutorBuilderImpl extends PipelineBuilderImpl implements ExecutorBuilder, Builder<Component> {
 
     private final Class<?> clazz;
     private final Object obj;
+    private InstanceType instanceType = InstanceType.PROTOTYPE;
 
     ExecutorBuilderImpl(final PipelineBuilderImpl parentScope, MuleContext muleContext, Class<?> clazz) {
         super(muleContext, parentScope);
-        this.clazz = clazz;
+        this.clazz = checkNotNull(clazz, "clazz");
         this.obj = null;
     }
 
@@ -37,35 +44,49 @@ public class ExecutorBuilderImpl extends PipelineBuilderImpl implements Executor
     }
 
     @Override
-    public Component build() {
-        if (clazz != null) {
-            if (Callable.class.isAssignableFrom(clazz) || java.util.concurrent.Callable.class.isAssignableFrom(clazz)) {
-                try {
-                    return new SimpleCallableJavaComponent(clazz);
-                } catch (DefaultMuleException e) {
-                    //TODO here
-                    throw new RuntimeException(e);
-                }
-            } else {
-                //ReflectionEntryPointResolver
-                throw new RuntimeException("Not supported");
-            }
-        } else {
-            if (obj instanceof Callable){
-                return new SimpleCallableJavaComponent((Callable) obj);
-            } else {
-                throw new RuntimeException("Not supported");
-            }
-        }
-    }
-
-    @Override
     public PipelineBuilder asSingleton() {
-        return null;
+        this.instanceType = InstanceType.SINGLETON;
+        return this;
     }
 
     @Override
     public PipelineBuilder asPrototype() {
-        return null;
+        this.instanceType = InstanceType.PROTOTYPE;
+        return this;
+    }
+
+    private enum InstanceType {
+        SINGLETON, PROTOTYPE
+    }
+
+    @Override
+    public Component build(Injector injector) {
+        if (clazz != null) {
+            if (Callable.class.isAssignableFrom(clazz)) {
+                try {
+                    return new SimpleCallableJavaComponent(clazz);
+                } catch (DefaultMuleException e) {
+                    //todo keep this root couse
+                }
+            } else {
+                if (InjectorUtil.hasProvider(injector, clazz)) {
+                    return new DefaultJavaComponent(new GuiceLookup(injector, clazz), createDefaultResolverSet(), null);
+                } else {
+                    if (instanceType.equals(ExecutorBuilderImpl.InstanceType.PROTOTYPE)) {
+                        return new DefaultJavaComponent(new PrototypeObjectFactory(clazz), createDefaultResolverSet(), null);
+                    } else if (instanceType.equals(ExecutorBuilderImpl.InstanceType.SINGLETON)) {
+                        return new DefaultJavaComponent(new SingletonObjectFactory(clazz), createDefaultResolverSet(), null);
+                    }
+                }
+            }
+        } else {
+            if (obj instanceof Callable) {
+                return new SimpleCallableJavaComponent((Callable) obj);
+            } else {
+                return new DefaultJavaComponent(new SingletonObjectFactory(obj), createDefaultResolverSet(), null);
+            }
+        }
+
+        throw new RuntimeException("Not supported");
     }
 }

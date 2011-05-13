@@ -15,19 +15,13 @@ import java.io.InputStream;
 import static org.mule.config.dsl.internal.util.NameGenerator.newName;
 import static org.mule.config.dsl.internal.util.Preconditions.*;
 
-public abstract class AbstractModule {
+public abstract class AbstractModule extends com.google.inject.AbstractModule {
 
     private Registry registry;
 
-    public final synchronized void configure(Registry registry) {
+    void setRegistry(Registry registry) {
         checkState(this.registry == null, "Re-entry is not allowed.");
-
         this.registry = checkNotNull(registry, "registry");
-        try {
-            configure();
-        } finally {
-            this.registry = null;
-        }
     }
 
     public abstract void configure();
@@ -72,7 +66,7 @@ public abstract class AbstractModule {
         return new FileRefBuilder(path);
     }
 
-    public class ClasspathBuilder {
+    public static class ClasspathBuilder {
         private final String value;
 
         public ClasspathBuilder(String value) {
@@ -84,12 +78,12 @@ public abstract class AbstractModule {
         }
     }
 
-    public class FileRefBuilder {
+    public static class FileRefBuilder {
         private final File file;
 
         public FileRefBuilder(String file) {
-            String fielRef = checkNotEmpty(file, "file");
-            this.file = new File(fielRef);
+            checkNotEmpty(file, "file");
+            this.file = new File(file);
         }
 
         public FileRefBuilder(File file) {

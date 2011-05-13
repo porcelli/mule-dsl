@@ -9,6 +9,7 @@
 
 package org.mule.config.dsl.internal;
 
+import com.google.inject.Injector;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -35,7 +36,7 @@ public abstract class EndpointBuilderImpl extends PipelineBuilderImpl implements
         this.parentScope = parentScope;
     }
 
-    public abstract ImmutableEndpoint build();
+    public abstract ImmutableEndpoint build(Injector injector);
 
     @Override
     public PipelineBuilder asOneWay() {
@@ -56,7 +57,7 @@ public abstract class EndpointBuilderImpl extends PipelineBuilderImpl implements
         }
 
         @Override
-        public ImmutableEndpoint build() {
+        public ImmutableEndpoint build(Injector injector) {
             try {
                 return internalEndpointBuilder.buildOutboundEndpoint();
             } catch (Exception e) {
@@ -73,7 +74,7 @@ public abstract class EndpointBuilderImpl extends PipelineBuilderImpl implements
         }
 
         @Override
-        public ImmutableEndpoint build() {
+        public ImmutableEndpoint build(Injector injector) {
             try {
                 return internalEndpointBuilder.buildInboundEndpoint();
             } catch (Exception e) {

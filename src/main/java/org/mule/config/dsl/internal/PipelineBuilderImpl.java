@@ -9,6 +9,7 @@
 
 package org.mule.config.dsl.internal;
 
+import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
@@ -33,6 +34,39 @@ public class PipelineBuilderImpl implements PipelineBuilder {
     }
 
     /* component */
+
+    @Override
+    public PipelineBuilder execute(Object obj) {
+        if (parentScope != null) {
+            return parentScope.execute(obj);
+        }
+        ExecutorBuilderImpl builder = new ExecutorBuilderImpl(this, muleContext, obj);
+        processorList.add(builder);
+        return builder;
+    }
+
+    @Override
+    public ExecutorBuilder execute(Callable obj) {
+        if (parentScope != null) {
+            return parentScope.execute(obj);
+        }
+
+        ExecutorBuilderImpl builder = new ExecutorBuilderImpl(this, muleContext, obj);
+        processorList.add(builder);
+
+        return builder;
+    }
+
+    @Override
+    public ExecutorBuilder execute(Class<?> clazz) {
+        if (parentScope != null) {
+            return parentScope.execute(clazz);
+        }
+        ExecutorBuilderImpl builder = new ExecutorBuilderImpl(this, muleContext, clazz);
+        processorList.add(builder);
+        return builder;
+    }
+
 
     @Override
     public PipelineBuilder log() {
@@ -84,38 +118,6 @@ public class PipelineBuilderImpl implements PipelineBuilder {
         return this;
     }
 
-    @Override
-    public PipelineBuilder execute(Object obj) {
-        return null;
-    }
-
-    @Override
-    public ExecutorBuilder execute(Callable obj) {
-        if (parentScope != null) {
-            return parentScope.execute(obj);
-        }
-
-        ExecutorBuilderImpl builder = new ExecutorBuilderImpl(this, muleContext, obj);
-        processorList.add(builder);
-
-        return builder;
-    }
-
-    @Override
-    public ExecutorBuilder execute(java.util.concurrent.Callable obj) {
-        return null;
-    }
-
-    @Override
-    public ExecutorBuilder execute(Class<?> clazz) {
-        if (parentScope != null) {
-            return parentScope.execute(clazz);
-        }
-        ExecutorBuilderImpl builder = new ExecutorBuilderImpl(this, muleContext, clazz);
-        processorList.add(builder);
-        return builder;
-    }
-
     /* outbound */
     @Override
     public EndPointBuilder.OutboundEndpointBuilder send(String uri) {
@@ -163,16 +165,16 @@ public class PipelineBuilderImpl implements PipelineBuilder {
     }
 
 
-    public List<MessageProcessor> buildProcessorList() {
+    public List<MessageProcessor> buildProcessorList(Injector injector) {
         if (parentScope != null) {
-            return parentScope.buildProcessorList();
+            return parentScope.buildProcessorList(injector);
         }
 
         List<MessageProcessor> result = new ArrayList<MessageProcessor>();
 
         if (!isProcessorListEmpty()) {
             for (Builder builder : processorList) {
-                result.add((MessageProcessor) builder.build());
+                result.add((MessageProcessor) builder.build(injector));
             }
         }
 

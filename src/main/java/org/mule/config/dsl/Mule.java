@@ -9,6 +9,8 @@
 
 package org.mule.config.dsl;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.lifecycle.InitialisationException;
@@ -26,10 +28,12 @@ public final class Mule {
         Registry myRegistry = new Registry(muleContext);
 
         for (AbstractModule module : modules) {
-            module.configure(myRegistry);
+            module.setRegistry(myRegistry);
         }
 
-        myRegistry.build();
+        Injector injector = Guice.createInjector(modules);
+
+        myRegistry.build(injector);
 
         return muleContext;
     }

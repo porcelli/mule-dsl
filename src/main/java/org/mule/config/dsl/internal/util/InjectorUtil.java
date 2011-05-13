@@ -7,12 +7,21 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.dsl.internal;
+package org.mule.config.dsl.internal.util;
 
 import com.google.inject.Injector;
 
-interface Builder<T> {
+public final class InjectorUtil {
 
-    public T build(Injector injector);
+    private InjectorUtil() {
+    }
 
+    public static boolean hasProvider(Injector injector, Class<?> clazz) {
+        try {
+            injector.getProvider(clazz);
+            return true;
+        } catch (Exception ex) {
+        }
+        return false;
+    }
 }

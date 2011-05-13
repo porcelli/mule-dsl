@@ -9,6 +9,8 @@
 
 package org.mule.config.dsl;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.construct.FlowConstruct;
@@ -23,10 +25,12 @@ public class Registry {
 
     final Map<String, FlowBuilder> flows;
     final MuleContext muleContext;
+    final Injector injector;
 
     public Registry(MuleContext muleContext) {
         this.muleContext = checkNotNull(muleContext, "muleContext");
         this.flows = new HashMap<String, FlowBuilder>();
+        this.injector = Guice.createInjector();
     }
 
     public FlowBuilder flow(String flowName) {
@@ -44,9 +48,9 @@ public class Registry {
         //todo implment
     }
 
-    public void build() {
+    public void build(Injector injector) {
         for (FlowBuilder activeFlowBuilder : flows.values()) {
-            FlowConstruct flow = activeFlowBuilder.build();
+            FlowConstruct flow = activeFlowBuilder.build(injector);
             if (flow != null) {
                 try {
                     muleContext.getRegistry().registerFlowConstruct(flow);
