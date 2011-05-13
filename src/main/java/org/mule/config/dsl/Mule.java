@@ -12,8 +12,6 @@ package org.mule.config.dsl;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.api.config.ConfigurationException;
-import org.mule.api.lifecycle.InitialisationException;
 import org.mule.context.DefaultMuleContextFactory;
 
 public final class Mule {
@@ -21,9 +19,14 @@ public final class Mule {
     private Mule() {
     }
 
-    public static MuleContext newMuleContext(AbstractModule... modules) throws InitialisationException, ConfigurationException {
+    public static MuleContext newMuleContext(AbstractModule... modules) {
 
-        MuleContext muleContext = new DefaultMuleContextFactory().createMuleContext();
+        MuleContext muleContext = null;
+        try {
+            muleContext = new DefaultMuleContextFactory().createMuleContext();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         Registry myRegistry = new Registry(muleContext);
 

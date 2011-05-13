@@ -149,7 +149,12 @@ public class PipelineBuilderImpl implements PipelineBuilder {
     /* filter */
     @Override
     public <E extends ExpressionEvaluatorBuilder> PipelineBuilder filter(E expr) {
-        return null;
+        if (parentScope != null) {
+            return parentScope.filter(expr);
+        }
+
+        processorList.add(new ExpressionFilterBuilderImpl<E>(expr));
+        return this;
     }
 
     /* routers */

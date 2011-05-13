@@ -10,4 +10,7 @@
 package org.mule.config.dsl;
 
 public interface ExpressionEvaluatorBuilder {
+    String getEvaluator();
+
+    String getExpression();
 }

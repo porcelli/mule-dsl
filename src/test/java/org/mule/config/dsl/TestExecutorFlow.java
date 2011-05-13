@@ -25,9 +25,14 @@ public class TestExecutorFlow {
             public void configure() {
                 Simple2 x = new Simple2();
 
+                flow().from("file:///Users/porcelli/test")
+                        .execute(x)
+                        .execute(Simple.class);
+
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .execute(SimpleCallable.class)
+                        .execute(String.class)
                         .transformTo(String.class)
                         .execute(Simple.class)
                         .execute(x);
