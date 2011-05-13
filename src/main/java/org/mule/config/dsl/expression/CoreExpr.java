@@ -10,8 +10,6 @@ package org.mule.config.dsl.expression;
 
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
 
-import java.io.File;
-
 public final class CoreExpr {
 
     private CoreExpr() {
@@ -34,14 +32,16 @@ public final class CoreExpr {
 
     }
 
-    public interface GroovyExpressionEvaluatorBuilder extends ExpressionEvaluatorBuilder {
-        public ExpressionEvaluatorBuilder file(String filePath);
+    public static class GroovyExpressionEvaluatorBuilder implements ExpressionEvaluatorBuilder {
+//        public ExpressionEvaluatorBuilder file(String filePath);
+//
+//        public ExpressionEvaluatorBuilder file(File file);
+//
+//        public ExpressionEvaluatorBuilder classpath(String classpath);
 
-        public ExpressionEvaluatorBuilder file(File file);
-
-        public ExpressionEvaluatorBuilder classpath(String classpath);
-
-        public ExpressionEvaluatorBuilder expr(String filePath);
+        public ExpressionEvaluatorBuilder expr(String expression){
+            return this;
+        }
 
     }
 

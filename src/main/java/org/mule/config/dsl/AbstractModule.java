@@ -24,8 +24,6 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
         this.registry = checkNotNull(registry, "registry");
     }
 
-    public abstract void configure();
-
     /* elements definition/declaration */
 
     /* property placeholder */

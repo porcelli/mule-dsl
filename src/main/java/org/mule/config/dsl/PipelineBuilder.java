@@ -30,7 +30,7 @@ public interface PipelineBuilder {
 
     PipelineBuilder execute(Object obj);
 
-    ExecutorBuilder execute(Callable obj);
+    PipelineBuilder execute(Callable obj);
 
     ExecutorBuilder execute(Class<?> clazz);
 
