@@ -12,26 +12,26 @@ package org.mule.config.dsl;
 import org.mule.api.lifecycle.Callable;
 import org.mule.config.dsl.expression.CoreExpr;
 
-public interface PipelineBuilder {
+public interface PipelineBuilder<P extends PipelineBuilder> {
     /* component */
 
-    PipelineBuilder log();
+    P log();
 
-    PipelineBuilder log(ErrorLevel level);
+    P log(ErrorLevel level);
 
-    PipelineBuilder log(String message);
+    P log(String message);
 
-    PipelineBuilder log(String message, ErrorLevel level);
+    P log(String message, ErrorLevel level);
 
-    <E extends ExpressionEvaluatorBuilder> PipelineBuilder log(E expr);
+    <E extends ExpressionEvaluatorBuilder> P log(E expr);
 
-    <E extends ExpressionEvaluatorBuilder> PipelineBuilder log(E expr, ErrorLevel level);
+    <E extends ExpressionEvaluatorBuilder> P log(E expr, ErrorLevel level);
 
-    PipelineBuilder echo();
+    P echo();
 
-    PipelineBuilder execute(Object obj);
+    P execute(Object obj);
 
-    PipelineBuilder execute(Callable obj);
+    P execute(Callable obj);
 
     ExecutorBuilder execute(Class<?> clazz);
 
@@ -40,19 +40,19 @@ public interface PipelineBuilder {
 
     /* transform */
 
-    <E extends ExpressionEvaluatorBuilder> PipelineBuilder transform(E expr);
+    <E extends ExpressionEvaluatorBuilder> P transform(E expr);
 
-    <T> PipelineBuilder transformTo(Class<T> clazz);
+    <T> P transformTo(Class<T> clazz);
 
 
     /* filter */
-    PipelineBuilder filter(CoreExpr.GenericExpressionFilterEvaluatorBuilder expr);
+    P filter(CoreExpr.GenericExpressionFilterEvaluatorBuilder expr);
 
-    <E extends ExpressionEvaluatorBuilder> PipelineBuilder filter(E expr);
+    <E extends ExpressionEvaluatorBuilder> P filter(E expr);
 
     /* routers */
 
-    PipelineBuilder multicast();
+    AllRouterBuilder all();
 
     RouterBuilder.ChoiceRouterBuilder choice();
 

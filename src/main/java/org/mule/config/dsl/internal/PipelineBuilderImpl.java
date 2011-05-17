@@ -23,7 +23,7 @@ import org.mule.config.dsl.expression.CoreExpr;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PipelineBuilderImpl implements PipelineBuilder {
+public class PipelineBuilderImpl implements PipelineBuilder<PipelineBuilder> {
 
     private final List<Builder<?>> processorList;
     private final PipelineBuilderImpl parentScope;
@@ -184,7 +184,7 @@ public class PipelineBuilderImpl implements PipelineBuilder {
     /* routers */
 
     @Override
-    public PipelineBuilder multicast() {
+    public AllRouterBuilder all() {
         return null;
     }
 
