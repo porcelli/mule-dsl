@@ -34,90 +34,58 @@ public final class CoreExpr {
         return new RegExExpressionEvaluatorBuilder(expr);
     }
 
-    public static class GenericExpressionFilterEvaluatorBuilder {
+    public static class GenericExpressionFilterEvaluatorBuilder extends BaseEvaluatorBuilder {
         private static final String EVALUATOR = "generic-filter";
-        private final String expression;
 
         public GenericExpressionFilterEvaluatorBuilder(String expression) {
-            this.expression = checkNotNull(expression, "expr");
-        }
-
-        public String getEvaluator() {
-            return EVALUATOR;
-        }
-
-        public String getExpression() {
-            return expression;
+            super(EVALUATOR, expression, null);
         }
     }
 
-    public static class RegExExpressionEvaluatorBuilder implements ExpressionEvaluatorBuilder {
+    public static class RegExExpressionEvaluatorBuilder extends BaseEvaluatorBuilder implements ExpressionEvaluatorBuilder {
         private static final String EVALUATOR = "regex";
-        private final String expression;
 
         public RegExExpressionEvaluatorBuilder(String expression) {
-            this.expression = checkNotNull(expression, "expr");
-        }
-
-        @Override
-        public String getEvaluator() {
-            return EVALUATOR;
-        }
-
-        @Override
-        public String getCustomEvaluator() {
-            return null;
-        }
-
-        @Override
-        public String getExpression() {
-            return expression;
+            super(EVALUATOR, expression, null);
         }
     }
 
-    public static class WildcardExpressionEvaluatorBuilder implements ExpressionEvaluatorBuilder {
+    public static class WildcardExpressionEvaluatorBuilder extends BaseEvaluatorBuilder implements ExpressionEvaluatorBuilder {
         private static final String EVALUATOR = "wildcard";
-        private final String expression;
 
         public WildcardExpressionEvaluatorBuilder(String expression) {
-            this.expression = checkNotNull(expression, "expr");
-        }
-
-        @Override
-        public String getEvaluator() {
-            return EVALUATOR;
-        }
-
-        @Override
-        public String getCustomEvaluator() {
-            return null;
-        }
-
-        @Override
-        public String getExpression() {
-            return expression;
+            super(EVALUATOR, expression, null);
         }
     }
 
-    public static class StringExpressionEvaluatorBuilder implements ExpressionEvaluatorBuilder {
+    public static class StringExpressionEvaluatorBuilder extends BaseEvaluatorBuilder implements ExpressionEvaluatorBuilder {
         private static final String EVALUATOR = "string";
-        private final String expression;
 
         public StringExpressionEvaluatorBuilder(String expression) {
+            super(EVALUATOR, expression, null);
+        }
+    }
+
+
+    public static abstract class BaseEvaluatorBuilder {
+        private final String evaluator;
+        private final String expression;
+        private final String customEvaluator;
+
+        public BaseEvaluatorBuilder(String evaluator, String expression, String customEvaluator) {
             this.expression = checkNotNull(expression, "expr");
+            this.evaluator = checkNotNull(evaluator, "expr");
+            this.customEvaluator = customEvaluator;
         }
 
-        @Override
         public String getEvaluator() {
-            return EVALUATOR;
+            return evaluator;
         }
 
-        @Override
         public String getCustomEvaluator() {
-            return null;
+            return customEvaluator;
         }
 
-        @Override
         public String getExpression() {
             return expression;
         }

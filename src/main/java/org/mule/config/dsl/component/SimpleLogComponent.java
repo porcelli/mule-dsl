@@ -15,7 +15,7 @@ import org.mule.component.simple.LogComponent;
 import org.mule.config.dsl.PipelineBuilder;
 
 public class SimpleLogComponent extends LogComponent {
-    private static Log logger = LogFactory.getLog(SimpleLogComponent.class);
+    private static final Log logger = LogFactory.getLog(SimpleLogComponent.class);
 
     private final PipelineBuilder.ErrorLevel level;
 
@@ -27,23 +27,35 @@ public class SimpleLogComponent extends LogComponent {
     @Override
     public void log(String message) {
         switch (level) {
-            case ERROR:
-                if (logger.isErrorEnabled()) {
-                    logger.error(message);
-                }
             case FATAL:
-                if (logger.isFatalEnabled()) {
-                    logger.fatal(message);
+                if (getLogger().isFatalEnabled()) {
+                    getLogger().fatal(message);
                 }
-            case INFO:
-                if (logger.isInfoEnabled()) {
-                    logger.info(message);
+            case ERROR:
+                if (getLogger().isErrorEnabled()) {
+                    getLogger().error(message);
                 }
             case WARN:
-                if (logger.isWarnEnabled()) {
-                    logger.warn(message);
+                if (getLogger().isWarnEnabled()) {
+                    getLogger().warn(message);
+                }
+            case INFO:
+                if (getLogger().isInfoEnabled()) {
+                    getLogger().info(message);
+                }
+            case DEBUG:
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug(message);
+                }
+            case TRACE:
+                if (getLogger().isTraceEnabled()) {
+                    getLogger().trace(message);
                 }
         }
+    }
+
+    public Log getLogger() {
+        return logger;
     }
 
     public PipelineBuilder.ErrorLevel getLevel() {

@@ -17,7 +17,6 @@ public final class EntryPointResolverSetUtil {
     private EntryPointResolverSetUtil() {
     }
 
-
     public static EntryPointResolverSet createDefaultResolverSet() {
         final EntryPointResolverSet resolverSet = new DefaultEntryPointResolverSet();
         resolverSet.addEntryPointResolver(new ReflectionEntryPointResolver());

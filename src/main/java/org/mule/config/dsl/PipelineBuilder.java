@@ -57,7 +57,7 @@ public interface PipelineBuilder {
     RouterBuilder.ChoiceRouterBuilder choice();
 
     public enum ErrorLevel {
-        WARN, INFO, ERROR, FATAL
+        TRACE, DEBUG, INFO, WARN, ERROR, FATAL
     }
 
 }

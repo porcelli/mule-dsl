@@ -9,11 +9,15 @@
 
 package org.mule.config.dsl.component;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mule.api.MuleEventContext;
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
 import org.mule.config.dsl.PipelineBuilder;
 
 public class ExpressionLogComponent<E extends ExpressionEvaluatorBuilder> extends SimpleLogComponent {
+
+    private static final Log logger = LogFactory.getLog(ExpressionLogComponent.class);
 
     private final E message;
 
@@ -29,9 +33,12 @@ public class ExpressionLogComponent<E extends ExpressionEvaluatorBuilder> extend
         return context.getMessage();
     }
 
+    @Override
+    public Log getLogger() {
+        return logger;
+    }
+
     public E getMessageExpression() {
         return message;
     }
-
-
 }
