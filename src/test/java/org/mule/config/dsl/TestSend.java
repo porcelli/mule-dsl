@@ -12,24 +12,27 @@ package org.mule.config.dsl;
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
-import org.mule.api.config.ConfigurationException;
 import org.mule.api.construct.FlowConstruct;
 import org.mule.api.endpoint.InboundEndpoint;
-import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.endpoint.OutboundEndpoint;
+import org.mule.api.processor.MessageProcessor;
 import org.mule.api.source.MessageSource;
 import org.mule.construct.SimpleFlowConstruct;
 
+import java.util.Iterator;
+
 import static org.fest.assertions.Assertions.assertThat;
 
-public class TestBasicFlowWithJustOneInboundEndpoint {
-
+public class TestSend {
 
     @Test
-    public void simpleInbound() throws InitialisationException, ConfigurationException {
+    public void simpleBridge() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
-                flow("MyFlow").from("file:///Users/porcelli/test");
+                flow("MyFlow")
+                        .from("file:///Users/porcelli/test")
+                        .send("file:///Users/porcelli/out");
             }
         });
 
@@ -52,16 +55,30 @@ public class TestBasicFlowWithJustOneInboundEndpoint {
 
         assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
+        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+
+        assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+        OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+        assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+        assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
+
+        assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/out");
     }
 
     @Test
-    public void simpleOneWayInbound() throws InitialisationException, ConfigurationException {
+    public void simpleEchoBridge() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
-                        .from("file:///Users/porcelli/test").asOneWay();
+                        .from("file:///Users/porcelli/test")
+                        .send("file:///Users/porcelli/out")
+                        .send("file:///Users/porcelli/out2");
             }
         });
 
@@ -84,17 +101,34 @@ public class TestBasicFlowWithJustOneInboundEndpoint {
 
         assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
+        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
+
+        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+
+        MessageProcessor endpointProcessor1 = (MessageProcessor) iterator.next();
+
+        assertThat(endpointProcessor1).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+        OutboundEndpoint outboundEndpoint1 = (OutboundEndpoint) endpointProcessor1;
+
+        assertThat(outboundEndpoint1.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+        assertThat(outboundEndpoint1.getProtocol()).isNotNull().isEqualTo("file");
+
+        assertThat(outboundEndpoint1.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/out");
+
+        MessageProcessor endpointProcessor2 = (MessageProcessor) iterator.next();
+
+        assertThat(endpointProcessor2).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+        OutboundEndpoint outboundEndpoint2 = (OutboundEndpoint) endpointProcessor2;
+
+        assertThat(outboundEndpoint2.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+        assertThat(outboundEndpoint2.getProtocol()).isNotNull().isEqualTo("file");
+
+        assertThat(outboundEndpoint2.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/out2");
+
     }
 
-    @Test(expected = RuntimeException.class)
-    public void simpleRequestResponseInbound() throws InitialisationException, ConfigurationException {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
-            @Override
-            public void configure() {
-                flow("MyFlow")
-                        .from("file:///Users/porcelli/test").asRequestResponse();
-            }
-        });
-    }
 }

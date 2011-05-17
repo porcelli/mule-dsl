@@ -19,27 +19,31 @@ import org.mule.routing.filters.ExpressionFilter;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-public class ExpressionFilterBuilderImpl<E extends ExpressionEvaluatorBuilder> implements Builder<MessageFilter> {
+public class ExpressionFilterBuilderImpl implements Builder<MessageFilter> {
 
-    private final E expr;
+    private final Object objExpr;
 
-    public ExpressionFilterBuilderImpl(E expr) {
-        this.expr = checkNotNull(expr, "expr");
+    public ExpressionFilterBuilderImpl(Object expr) {
+        this.objExpr = checkNotNull(expr, "expr");
     }
 
     @Override
     public MessageFilter build(Injector injector) {
         final MessageFilter messageFilter;
-        if (expr instanceof CoreExpr.GenericFilterExpressionEvaluatorBuilder) {
+        if (objExpr instanceof CoreExpr.GenericExpressionFilterEvaluatorBuilder) {
             final ExpressionFilterParser parser = new ExpressionFilterParser();
             try {
-                messageFilter = new MessageFilter(parser.parseFilterString(expr.getExpression()));
+                messageFilter = new MessageFilter(parser.parseFilterString(((CoreExpr.GenericExpressionFilterEvaluatorBuilder) objExpr).getExpression()));
             } catch (DefaultMuleException e) {
                 //todo handle propert
                 throw new RuntimeException(e);
             }
-        } else {
+        } else if (objExpr instanceof ExpressionEvaluatorBuilder) {
+            ExpressionEvaluatorBuilder expr = (ExpressionEvaluatorBuilder) objExpr;
             messageFilter = new MessageFilter(new ExpressionFilter(expr.getEvaluator(), expr.getExpression()));
+        } else {
+            //TODO impl
+            throw new RuntimeException();
         }
 
         return messageFilter;

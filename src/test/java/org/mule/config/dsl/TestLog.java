@@ -12,12 +12,12 @@ package org.mule.config.dsl;
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
-import org.mule.api.config.ConfigurationException;
 import org.mule.api.construct.FlowConstruct;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.source.MessageSource;
 import org.mule.component.SimpleCallableJavaComponent;
+import org.mule.config.dsl.component.ExpressionLogComponent;
 import org.mule.config.dsl.component.ExtendedLogComponent;
 import org.mule.config.dsl.component.SimpleLogComponent;
 import org.mule.construct.SimpleFlowConstruct;
@@ -25,11 +25,12 @@ import org.mule.construct.SimpleFlowConstruct;
 import java.util.Iterator;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.expression.CoreExpr.string;
 
 public class TestLog {
 
     @Test
-    public void simpleLog() throws Exception, ConfigurationException, InterruptedException {
+    public void simpleLog() throws Exception {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
@@ -81,7 +82,7 @@ public class TestLog {
     }
 
     @Test
-    public void simpleLogChain() throws Exception, ConfigurationException, InterruptedException {
+    public void simpleLogChain() throws Exception {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
@@ -155,7 +156,7 @@ public class TestLog {
 
 
     @Test
-    public void simpleLogJustLevel() throws Exception, ConfigurationException, InterruptedException {
+    public void simpleLogJustLevel() throws Exception {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
@@ -207,7 +208,7 @@ public class TestLog {
     }
 
     @Test
-    public void simpleLogJustLevelChain() throws Exception, ConfigurationException, InterruptedException {
+    public void simpleLogJustLevelChain() throws Exception {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
@@ -281,7 +282,7 @@ public class TestLog {
     }
 
     @Test
-    public void simpleLogJustMessage() throws Exception, ConfigurationException, InterruptedException {
+    public void simpleLogJustMessage() throws Exception {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
@@ -334,7 +335,7 @@ public class TestLog {
     }
 
     @Test
-    public void simpleLogJustMessageChain() throws Exception, ConfigurationException, InterruptedException {
+    public void simpleLogJustMessageChain() throws Exception {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
@@ -409,7 +410,7 @@ public class TestLog {
     }
 
     @Test
-    public void simpleLogMessageAndLevel() throws Exception, ConfigurationException, InterruptedException {
+    public void simpleLogMessageAndLevel() throws Exception {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
@@ -461,8 +462,9 @@ public class TestLog {
         assertThat(log1.getMessage()).isEqualTo("message here!");
     }
 
+
     @Test
-    public void simpleLogMessageAndLevelChain() throws Exception, ConfigurationException, InterruptedException {
+    public void simpleLogMessageAndLevelChain() throws Exception {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
@@ -536,4 +538,273 @@ public class TestLog {
         assertThat(log_2 != log2_2).isEqualTo(true);
     }
 
+
+    @Test
+    public void expressionLogJustMessage() throws Exception {
+        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
+                flow("MyFlow")
+                        .from("file:///Users/porcelli/test")
+                        .log(string("payload content: #[mule:message.payload()]"));
+            }
+        });
+
+        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
+
+        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+
+        assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
+        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+
+        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+
+        assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
+
+        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+
+        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+        assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
+
+        assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
+
+        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+
+        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
+
+        assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+
+        SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logProcessor;
+
+        assertThat(log.getObjectType()).isEqualTo(ExpressionLogComponent.class);
+
+        assertThat(log.getObjectFactory().isSingleton()).isEqualTo(true);
+
+        ExpressionLogComponent log1 = (ExpressionLogComponent) log.getObjectFactory().getInstance(null);
+        ExpressionLogComponent log2 = (ExpressionLogComponent) log.getObjectFactory().getInstance(null);
+
+        assertThat(log1 == log2).isEqualTo(true);
+
+        assertThat(log1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.INFO);
+        assertThat(log1.getMessageExpression().getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
+        assertThat(log1.getMessageExpression().getEvaluator()).isEqualTo("string");
+        assertThat(log1.getMessageExpression().getCustomEvaluator()).isNull();
+    }
+
+    @Test
+    public void expressionLogJustMessageChain() throws Exception {
+        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
+                flow("MyFlow")
+                        .from("file:///Users/porcelli/test")
+                        .log(string("payload content: #[mule:message.payload()]"))
+                        .log(string("payload2 content: #[mule:message.payload()]"));
+            }
+        });
+
+        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
+
+        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+
+        assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
+        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+
+        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+
+        assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
+
+        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+
+        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+        assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
+
+        assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
+
+        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
+
+        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+
+        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
+
+        assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+
+        SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logProcessor;
+
+        assertThat(log.getObjectType()).isEqualTo(ExpressionLogComponent.class);
+
+        assertThat(log.getObjectFactory().isSingleton()).isEqualTo(true);
+
+        ExpressionLogComponent log_1 = (ExpressionLogComponent) log.getObjectFactory().getInstance(null);
+        ExpressionLogComponent log_2 = (ExpressionLogComponent) log.getObjectFactory().getInstance(null);
+
+        assertThat(log_1 == log_2).isEqualTo(true);
+
+        assertThat(log_1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.INFO);
+        assertThat(log_1.getMessageExpression().getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
+        assertThat(log_1.getMessageExpression().getEvaluator()).isEqualTo("string");
+        assertThat(log_1.getMessageExpression().getCustomEvaluator()).isNull();
+
+        MessageProcessor log2Processor = (MessageProcessor) iterator.next();
+
+        assertThat(log2Processor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+
+        SimpleCallableJavaComponent log2 = (SimpleCallableJavaComponent) log2Processor;
+
+        assertThat(log2.getObjectType()).isEqualTo(ExpressionLogComponent.class);
+
+        assertThat(log2.getObjectFactory().isSingleton()).isEqualTo(true);
+
+        ExpressionLogComponent log2_1 = (ExpressionLogComponent) log2.getObjectFactory().getInstance(null);
+        ExpressionLogComponent log2_2 = (ExpressionLogComponent) log2.getObjectFactory().getInstance(null);
+
+        assertThat(log2_1 == log2_2).isEqualTo(true);
+
+        assertThat(log2_1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.INFO);
+        assertThat(log2_1.getMessageExpression().getExpression()).isEqualTo("payload2 content: #[mule:message.payload()]");
+        assertThat(log2_1.getMessageExpression().getEvaluator()).isEqualTo("string");
+        assertThat(log2_1.getMessageExpression().getCustomEvaluator()).isNull();
+
+        assertThat(log_1 != log2_1).isEqualTo(true);
+        assertThat(log_2 != log2_2).isEqualTo(true);
+    }
+
+    @Test
+    public void expressionLogMessageAndLevel() throws Exception {
+        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
+                flow("MyFlow")
+                        .from("file:///Users/porcelli/test")
+                        .log(string("payload content: #[mule:message.payload()]"), PipelineBuilder.ErrorLevel.WARN);
+            }
+        });
+
+        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
+
+        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+
+        assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
+        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+
+        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+
+        assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
+
+        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+
+        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+        assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
+
+        assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
+
+        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+
+        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
+
+        assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+
+        SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logProcessor;
+
+        assertThat(log.getObjectType()).isEqualTo(ExpressionLogComponent.class);
+
+        assertThat(log.getObjectFactory().isSingleton()).isEqualTo(true);
+
+        ExpressionLogComponent log1 = (ExpressionLogComponent) log.getObjectFactory().getInstance(null);
+        ExpressionLogComponent log2 = (ExpressionLogComponent) log.getObjectFactory().getInstance(null);
+
+        assertThat(log1 == log2).isEqualTo(true);
+
+        assertThat(log1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.WARN);
+        assertThat(log1.getMessageExpression().getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
+        assertThat(log1.getMessageExpression().getEvaluator()).isEqualTo("string");
+        assertThat(log1.getMessageExpression().getCustomEvaluator()).isNull();
+    }
+
+
+    @Test
+    public void expressionLogMessageAndLevelChain() throws Exception {
+        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
+                flow("MyFlow")
+                        .from("file:///Users/porcelli/test")
+                        .log(string("payload content: #[mule:message.payload()]"), PipelineBuilder.ErrorLevel.WARN)
+                        .log(string("payload2 content: #[mule:message.payload()]"), PipelineBuilder.ErrorLevel.FATAL);
+            }
+        });
+
+        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
+
+        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+
+        assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
+        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+
+        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+
+        assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
+
+        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+
+        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+        assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
+
+        assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
+
+        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
+
+        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+
+        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
+
+        assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+
+        SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logProcessor;
+
+        assertThat(log.getObjectType()).isEqualTo(ExpressionLogComponent.class);
+
+        assertThat(log.getObjectFactory().isSingleton()).isEqualTo(true);
+
+        ExpressionLogComponent log_1 = (ExpressionLogComponent) log.getObjectFactory().getInstance(null);
+        ExpressionLogComponent log_2 = (ExpressionLogComponent) log.getObjectFactory().getInstance(null);
+
+        assertThat(log_1 == log_2).isEqualTo(true);
+
+        assertThat(log_1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.WARN);
+        assertThat(log_1.getMessageExpression().getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
+        assertThat(log_1.getMessageExpression().getEvaluator()).isEqualTo("string");
+        assertThat(log_1.getMessageExpression().getCustomEvaluator()).isNull();
+
+        MessageProcessor log2Processor = (MessageProcessor) iterator.next();
+
+        assertThat(log2Processor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+
+        SimpleCallableJavaComponent log2 = (SimpleCallableJavaComponent) log2Processor;
+
+        assertThat(log2.getObjectType()).isEqualTo(ExpressionLogComponent.class);
+
+        assertThat(log2.getObjectFactory().isSingleton()).isEqualTo(true);
+
+        ExpressionLogComponent log2_1 = (ExpressionLogComponent) log2.getObjectFactory().getInstance(null);
+        ExpressionLogComponent log2_2 = (ExpressionLogComponent) log2.getObjectFactory().getInstance(null);
+
+        assertThat(log2_1 == log2_2).isEqualTo(true);
+
+        assertThat(log2_1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.FATAL);
+        assertThat(log_1.getMessageExpression().getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
+        assertThat(log_1.getMessageExpression().getEvaluator()).isEqualTo("string");
+        assertThat(log_1.getMessageExpression().getCustomEvaluator()).isNull();
+
+        assertThat(log_1 != log2_1).isEqualTo(true);
+        assertThat(log_2 != log2_2).isEqualTo(true);
+    }
 }

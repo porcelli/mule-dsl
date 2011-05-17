@@ -12,29 +12,29 @@ package org.mule.config.dsl;
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
-import org.mule.api.config.ConfigurationException;
 import org.mule.api.construct.FlowConstruct;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.source.MessageSource;
-import org.mule.api.transformer.Transformer;
 import org.mule.construct.SimpleFlowConstruct;
-import org.mule.transformer.types.SimpleDataType;
+import org.mule.expression.transformers.ExpressionArgument;
+import org.mule.expression.transformers.ExpressionTransformer;
 
 import java.util.Iterator;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.expression.CoreExpr.string;
 
-public class TestTransformTo {
+public class TestExpressionTransform {
 
     @Test
-    public void simpleToString() {
+    public void testSimpleExpressionTransform() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .transformTo(String.class);
+                        .transform(string("'JUST #[mule:message.payload()] COOL!'"));
             }
         });
 
@@ -63,23 +63,31 @@ public class TestTransformTo {
 
         MessageProcessor transformerProcessor = (MessageProcessor) iterator.next();
 
-        assertThat(transformerProcessor).isNotNull().isInstanceOf(Transformer.class);
+        assertThat(transformerProcessor).isNotNull().isInstanceOf(ExpressionTransformer.class);
 
-        Transformer transformer = (Transformer) transformerProcessor;
+        ExpressionTransformer transformer = (ExpressionTransformer) transformerProcessor;
 
-        assertThat(transformer.getReturnDataType()).isEqualTo(new SimpleDataType<String>(String.class));
+        assertThat(transformer.getArguments()).isNotEmpty().hasSize(1);
+
+        assertThat(transformer.getArguments().get(0)).isNotNull().isInstanceOf(ExpressionArgument.class);
+
+        ExpressionArgument argument = transformer.getArguments().get(0);
+
+        assertThat(argument.getExpression()).isEqualTo("'JUST #[mule:message.payload()] COOL!'");
+        assertThat(argument.getEvaluator()).isEqualTo("string");
+        assertThat(argument.getCustomEvaluator()).isNull();
     }
 
 
     @Test
-    public void simpleChainToStringToByteArray() {
+    public void testChainExpressionTransform() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .transformTo(String.class)
-                        .transformTo(byte[].class);
+                        .transform(string("'JUST #[mule:message.payload()] COOL!'"))
+                        .transform(string("'JUST2 #[mule:message.payload()] COOL!'"));
             }
         });
 
@@ -108,19 +116,36 @@ public class TestTransformTo {
 
         MessageProcessor transformerProcessor = (MessageProcessor) iterator.next();
 
-        assertThat(transformerProcessor).isNotNull().isInstanceOf(Transformer.class);
+        assertThat(transformerProcessor).isNotNull().isInstanceOf(ExpressionTransformer.class);
 
-        Transformer transformer = (Transformer) transformerProcessor;
+        ExpressionTransformer transformer = (ExpressionTransformer) transformerProcessor;
 
-        assertThat(transformer.getReturnDataType()).isEqualTo(new SimpleDataType<String>(String.class));
+        assertThat(transformer.getArguments()).isNotEmpty().hasSize(1);
 
-        MessageProcessor transformer2Processor = (MessageProcessor) iterator.next();
+        assertThat(transformer.getArguments().get(0)).isNotNull().isInstanceOf(ExpressionArgument.class);
 
-        assertThat(transformer2Processor).isNotNull().isInstanceOf(Transformer.class);
+        ExpressionArgument argument = transformer.getArguments().get(0);
 
-        Transformer transformer2 = (Transformer) transformer2Processor;
+        assertThat(argument.getExpression()).isEqualTo("'JUST #[mule:message.payload()] COOL!'");
+        assertThat(argument.getEvaluator()).isEqualTo("string");
+        assertThat(argument.getCustomEvaluator()).isNull();
 
-        assertThat(transformer2.getReturnDataType()).isEqualTo(new SimpleDataType<String>(byte[].class));
+
+        MessageProcessor transformerProcessor2 = (MessageProcessor) iterator.next();
+
+        assertThat(transformerProcessor2).isNotNull().isInstanceOf(ExpressionTransformer.class);
+
+        ExpressionTransformer transformer2 = (ExpressionTransformer) transformerProcessor2;
+
+        assertThat(transformer2.getArguments()).isNotEmpty().hasSize(1);
+
+        assertThat(transformer2.getArguments().get(0)).isNotNull().isInstanceOf(ExpressionArgument.class);
+
+        ExpressionArgument argument2 = transformer2.getArguments().get(0);
+
+        assertThat(argument2.getExpression()).isEqualTo("'JUST2 #[mule:message.payload()] COOL!'");
+        assertThat(argument2.getEvaluator()).isEqualTo("string");
+        assertThat(argument2.getCustomEvaluator()).isNull();
 
     }
 }

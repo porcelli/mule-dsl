@@ -15,8 +15,10 @@ import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.component.simple.EchoComponent;
 import org.mule.config.dsl.*;
+import org.mule.config.dsl.component.ExpressionLogComponent;
 import org.mule.config.dsl.component.ExtendedLogComponent;
 import org.mule.config.dsl.component.SimpleLogComponent;
+import org.mule.config.dsl.expression.CoreExpr;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,12 +102,17 @@ public class PipelineBuilderImpl implements PipelineBuilder {
 
     @Override
     public <E extends ExpressionEvaluatorBuilder> PipelineBuilder log(E expr) {
-        return null;
+        return log(expr, ErrorLevel.INFO);
     }
 
     @Override
     public <E extends ExpressionEvaluatorBuilder> PipelineBuilder log(E expr, ErrorLevel level) {
-        return null;
+        if (parentScope != null) {
+            return parentScope.log(expr, level);
+        }
+
+        processorList.add(new ExecutorBuilderImpl(this, muleContext, new ExpressionLogComponent<E>(expr, level)));
+        return this;
     }
 
     @Override
@@ -133,7 +140,12 @@ public class PipelineBuilderImpl implements PipelineBuilder {
 
     @Override
     public <E extends ExpressionEvaluatorBuilder> PipelineBuilder transform(E expr) {
-        return null;
+        if (parentScope != null) {
+            return parentScope.transform(expr);
+        }
+
+        processorList.add(new ExpressionTransformerBuilderImpl(expr));
+        return this;
     }
 
     @Override
@@ -147,13 +159,25 @@ public class PipelineBuilderImpl implements PipelineBuilder {
     }
 
     /* filter */
+
+    @Override
+    public PipelineBuilder filter(CoreExpr.GenericExpressionFilterEvaluatorBuilder expr) {
+        if (parentScope != null) {
+            return parentScope.filter(expr);
+        }
+
+        processorList.add(new ExpressionFilterBuilderImpl(expr));
+        return this;
+    }
+
+
     @Override
     public <E extends ExpressionEvaluatorBuilder> PipelineBuilder filter(E expr) {
         if (parentScope != null) {
             return parentScope.filter(expr);
         }
 
-        processorList.add(new ExpressionFilterBuilderImpl<E>(expr));
+        processorList.add(new ExpressionFilterBuilderImpl(expr));
         return this;
     }
 

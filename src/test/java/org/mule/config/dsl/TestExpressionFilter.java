@@ -12,29 +12,30 @@ package org.mule.config.dsl;
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
-import org.mule.api.config.ConfigurationException;
 import org.mule.api.construct.FlowConstruct;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.source.MessageSource;
-import org.mule.api.transformer.Transformer;
 import org.mule.construct.SimpleFlowConstruct;
-import org.mule.transformer.types.SimpleDataType;
+import org.mule.routing.MessageFilter;
+import org.mule.routing.filters.ExpressionFilter;
 
 import java.util.Iterator;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.expression.CoreExpr.generic;
+import static org.mule.config.dsl.expression.CoreExpr.string;
 
-public class TestTransformTo {
+public class TestExpressionFilter {
 
     @Test
-    public void simpleToString() {
+    public void testSimpleFilterExpression() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .transformTo(String.class);
+                        .filter(generic("#[wildcard:foo*]"));
             }
         });
 
@@ -61,25 +62,30 @@ public class TestTransformTo {
 
         Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor transformerProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor filterProcessor = (MessageProcessor) iterator.next();
 
-        assertThat(transformerProcessor).isNotNull().isInstanceOf(Transformer.class);
+        assertThat(filterProcessor).isNotNull().isInstanceOf(MessageFilter.class);
 
-        Transformer transformer = (Transformer) transformerProcessor;
+        MessageFilter filter = (MessageFilter) filterProcessor;
 
-        assertThat(transformer.getReturnDataType()).isEqualTo(new SimpleDataType<String>(String.class));
+        assertThat(filter.getFilter()).isInstanceOf(ExpressionFilter.class);
+
+        ExpressionFilter exprFilter = (ExpressionFilter) filter.getFilter();
+
+        assertThat(exprFilter.getExpression()).isEqualTo("foo*");
+        assertThat(exprFilter.getEvaluator()).isEqualTo("wildcard");
+        assertThat(exprFilter.getCustomEvaluator()).isNull();
     }
 
-
     @Test
-    public void simpleChainToStringToByteArray() {
+    public void testChainFilterExpression() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .transformTo(String.class)
-                        .transformTo(byte[].class);
+                        .filter(generic("#[wildcard:foo*]"))
+                        .filter(string("'some text here'"));
             }
         });
 
@@ -106,21 +112,32 @@ public class TestTransformTo {
 
         Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor transformerProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor filterProcessor = (MessageProcessor) iterator.next();
 
-        assertThat(transformerProcessor).isNotNull().isInstanceOf(Transformer.class);
+        assertThat(filterProcessor).isNotNull().isInstanceOf(MessageFilter.class);
 
-        Transformer transformer = (Transformer) transformerProcessor;
+        MessageFilter filter = (MessageFilter) filterProcessor;
 
-        assertThat(transformer.getReturnDataType()).isEqualTo(new SimpleDataType<String>(String.class));
+        assertThat(filter.getFilter()).isInstanceOf(ExpressionFilter.class);
 
-        MessageProcessor transformer2Processor = (MessageProcessor) iterator.next();
+        ExpressionFilter exprFilter = (ExpressionFilter) filter.getFilter();
 
-        assertThat(transformer2Processor).isNotNull().isInstanceOf(Transformer.class);
+        assertThat(exprFilter.getExpression()).isEqualTo("foo*");
+        assertThat(exprFilter.getEvaluator()).isEqualTo("wildcard");
+        assertThat(exprFilter.getCustomEvaluator()).isNull();
 
-        Transformer transformer2 = (Transformer) transformer2Processor;
+        MessageProcessor filterProcessor2 = (MessageProcessor) iterator.next();
 
-        assertThat(transformer2.getReturnDataType()).isEqualTo(new SimpleDataType<String>(byte[].class));
+        assertThat(filterProcessor2).isNotNull().isInstanceOf(MessageFilter.class);
 
+        MessageFilter filter2 = (MessageFilter) filterProcessor2;
+
+        assertThat(filter2.getFilter()).isInstanceOf(ExpressionFilter.class);
+
+        ExpressionFilter exprFilter2 = (ExpressionFilter) filter2.getFilter();
+
+        assertThat(exprFilter2.getExpression()).isEqualTo("'some text here'");
+        assertThat(exprFilter2.getEvaluator()).isEqualTo("string");
+        assertThat(exprFilter2.getCustomEvaluator()).isNull();
     }
 }

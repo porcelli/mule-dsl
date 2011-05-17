@@ -15,26 +15,21 @@ import org.mule.api.MuleContext;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.construct.FlowConstruct;
 import org.mule.api.endpoint.InboundEndpoint;
-import org.mule.api.processor.MessageProcessor;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.source.MessageSource;
-import org.mule.api.transformer.Transformer;
 import org.mule.construct.SimpleFlowConstruct;
-import org.mule.transformer.types.SimpleDataType;
-
-import java.util.Iterator;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-public class TestTransformTo {
+public class TestInboundEndpoint {
+
 
     @Test
-    public void simpleToString() {
+    public void simpleInbound() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
-                flow("MyFlow")
-                        .from("file:///Users/porcelli/test")
-                        .transformTo(String.class);
+                flow("MyFlow").from("file:///Users/porcelli/test");
             }
         });
 
@@ -57,29 +52,16 @@ public class TestTransformTo {
 
         assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
-
-        MessageProcessor transformerProcessor = (MessageProcessor) iterator.next();
-
-        assertThat(transformerProcessor).isNotNull().isInstanceOf(Transformer.class);
-
-        Transformer transformer = (Transformer) transformerProcessor;
-
-        assertThat(transformer.getReturnDataType()).isEqualTo(new SimpleDataType<String>(String.class));
+        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
     }
 
-
     @Test
-    public void simpleChainToStringToByteArray() {
+    public void simpleOneWayInbound() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
-                        .from("file:///Users/porcelli/test")
-                        .transformTo(String.class)
-                        .transformTo(byte[].class);
+                        .from("file:///Users/porcelli/test").asOneWay();
             }
         });
 
@@ -102,25 +84,17 @@ public class TestTransformTo {
 
         assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
+        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
+    }
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
-
-        MessageProcessor transformerProcessor = (MessageProcessor) iterator.next();
-
-        assertThat(transformerProcessor).isNotNull().isInstanceOf(Transformer.class);
-
-        Transformer transformer = (Transformer) transformerProcessor;
-
-        assertThat(transformer.getReturnDataType()).isEqualTo(new SimpleDataType<String>(String.class));
-
-        MessageProcessor transformer2Processor = (MessageProcessor) iterator.next();
-
-        assertThat(transformer2Processor).isNotNull().isInstanceOf(Transformer.class);
-
-        Transformer transformer2 = (Transformer) transformer2Processor;
-
-        assertThat(transformer2.getReturnDataType()).isEqualTo(new SimpleDataType<String>(byte[].class));
-
+    @Test(expected = RuntimeException.class)
+    public void simpleRequestResponseInbound() throws InitialisationException, ConfigurationException {
+        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
+                flow("MyFlow")
+                        .from("file:///Users/porcelli/test").asRequestResponse();
+            }
+        });
     }
 }

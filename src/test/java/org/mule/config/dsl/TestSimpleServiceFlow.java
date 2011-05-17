@@ -13,9 +13,7 @@ import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEventContext;
-import org.mule.api.MuleException;
 import org.mule.api.component.JavaComponent;
-import org.mule.api.config.ConfigurationException;
 import org.mule.api.construct.FlowConstruct;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.Callable;
@@ -28,7 +26,7 @@ import static org.fest.assertions.Assertions.assertThat;
 public class TestSimpleServiceFlow {
 
     @Test
-    public void simpleService() throws MuleException, ConfigurationException, InterruptedException {
+    public void simpleService() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
@@ -62,13 +60,19 @@ public class TestSimpleServiceFlow {
         MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(JavaComponent.class);
+
+        JavaComponent component = (JavaComponent) processor;
+
+        assertThat(component.getObjectType()).isEqualTo(SimpleCallable.class);
+
+        assertThat(component.getObjectFactory().isSingleton()).isEqualTo(true);
     }
 
     public static class SimpleCallable implements Callable {
 
         @Override
         public Object onCall(MuleEventContext muleEventContext) throws Exception {
-            System.out.println("AQUI!");
+            System.out.println("here...");
             return null;
         }
     }

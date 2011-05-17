@@ -6,6 +6,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
 package org.mule.config.dsl.expression;
 
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
@@ -17,43 +18,27 @@ public final class CoreExpr {
     private CoreExpr() {
     }
 
-//    public static GenericExpressionEvaluatorBuilder xpath(String expr) {
-//        return null;
-//    }
-
-//    public static GenericExpressionEvaluatorBuilder bean(String expr) {
-//        return null;
-//    }
-
-//    public static GroovyExpressionEvaluatorBuilder groovy() {
-//        return null;
-//    }
-
-//    public static class GroovyExpressionEvaluatorBuilder implements ExpressionEvaluatorBuilder {
-//        public ExpressionEvaluatorBuilder file(String filePath);
-//
-//        public ExpressionEvaluatorBuilder file(File file);
-//
-//        public ExpressionEvaluatorBuilder classpath(String classpath);
-//
-//        public ExpressionEvaluatorBuilder expr(String expression) {
-//            return this;
-//        }
-//    }
-
-    public static GenericFilterExpressionEvaluatorBuilder generic(String expr) {
-        return new GenericFilterExpressionEvaluatorBuilder(expr);
+    public static GenericExpressionFilterEvaluatorBuilder generic(String expr) {
+        return new GenericExpressionFilterEvaluatorBuilder(expr);
     }
 
     public static RegExExpressionEvaluatorBuilder regex(String expr) {
         return new RegExExpressionEvaluatorBuilder(expr);
     }
 
-    public static class GenericFilterExpressionEvaluatorBuilder implements ExpressionEvaluatorBuilder {
+    public static StringExpressionEvaluatorBuilder string(String expr) {
+        return new StringExpressionEvaluatorBuilder(expr);
+    }
+
+    public static RegExExpressionEvaluatorBuilder wildcard(String expr) {
+        return new RegExExpressionEvaluatorBuilder(expr);
+    }
+
+    public static class GenericExpressionFilterEvaluatorBuilder {
         private static final String EVALUATOR = "generic-filter";
         private final String expression;
 
-        public GenericFilterExpressionEvaluatorBuilder(String expression) {
+        public GenericExpressionFilterEvaluatorBuilder(String expression) {
             this.expression = checkNotNull(expression, "expr");
         }
 
@@ -80,8 +65,62 @@ public final class CoreExpr {
         }
 
         @Override
+        public String getCustomEvaluator() {
+            return null;
+        }
+
+        @Override
         public String getExpression() {
             return expression;
         }
     }
+
+    public static class WildcardExpressionEvaluatorBuilder implements ExpressionEvaluatorBuilder {
+        private static final String EVALUATOR = "wildcard";
+        private final String expression;
+
+        public WildcardExpressionEvaluatorBuilder(String expression) {
+            this.expression = checkNotNull(expression, "expr");
+        }
+
+        @Override
+        public String getEvaluator() {
+            return EVALUATOR;
+        }
+
+        @Override
+        public String getCustomEvaluator() {
+            return null;
+        }
+
+        @Override
+        public String getExpression() {
+            return expression;
+        }
+    }
+
+    public static class StringExpressionEvaluatorBuilder implements ExpressionEvaluatorBuilder {
+        private static final String EVALUATOR = "string";
+        private final String expression;
+
+        public StringExpressionEvaluatorBuilder(String expression) {
+            this.expression = checkNotNull(expression, "expr");
+        }
+
+        @Override
+        public String getEvaluator() {
+            return EVALUATOR;
+        }
+
+        @Override
+        public String getCustomEvaluator() {
+            return null;
+        }
+
+        @Override
+        public String getExpression() {
+            return expression;
+        }
+    }
+
 }

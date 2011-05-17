@@ -10,6 +10,7 @@
 package org.mule.config.dsl;
 
 import org.mule.api.lifecycle.Callable;
+import org.mule.config.dsl.expression.CoreExpr;
 
 public interface PipelineBuilder {
     /* component */
@@ -43,7 +44,10 @@ public interface PipelineBuilder {
 
     <T> PipelineBuilder transformTo(Class<T> clazz);
 
+
     /* filter */
+    PipelineBuilder filter(CoreExpr.GenericExpressionFilterEvaluatorBuilder expr);
+
     <E extends ExpressionEvaluatorBuilder> PipelineBuilder filter(E expr);
 
     /* routers */

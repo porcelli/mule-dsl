@@ -12,29 +12,28 @@ package org.mule.config.dsl;
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
-import org.mule.api.config.ConfigurationException;
 import org.mule.api.construct.FlowConstruct;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.source.MessageSource;
-import org.mule.api.transformer.Transformer;
+import org.mule.component.SimpleCallableJavaComponent;
+import org.mule.component.simple.EchoComponent;
 import org.mule.construct.SimpleFlowConstruct;
-import org.mule.transformer.types.SimpleDataType;
 
 import java.util.Iterator;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-public class TestTransformTo {
+public class TestEcho {
 
     @Test
-    public void simpleToString() {
+    public void simpleEcho() throws Exception {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .transformTo(String.class);
+                        .echo();
             }
         });
 
@@ -61,25 +60,31 @@ public class TestTransformTo {
 
         Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor transformerProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
 
-        assertThat(transformerProcessor).isNotNull().isInstanceOf(Transformer.class);
+        assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        Transformer transformer = (Transformer) transformerProcessor;
+        SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) logProcessor;
 
-        assertThat(transformer.getReturnDataType()).isEqualTo(new SimpleDataType<String>(String.class));
+        assertThat(echo.getObjectType()).isEqualTo(EchoComponent.class);
+
+        assertThat(echo.getObjectFactory().isSingleton()).isEqualTo(true);
+
+        EchoComponent echo1 = (EchoComponent) echo.getObjectFactory().getInstance(null);
+        EchoComponent echo2 = (EchoComponent) echo.getObjectFactory().getInstance(null);
+
+        assertThat(echo1 == echo2).isEqualTo(true);
     }
 
-
     @Test
-    public void simpleChainToStringToByteArray() {
+    public void simpleEchoChain() throws Exception {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .transformTo(String.class)
-                        .transformTo(byte[].class);
+                        .echo()
+                        .echo();
             }
         });
 
@@ -106,21 +111,38 @@ public class TestTransformTo {
 
         Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor transformerProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor echoProcessor = (MessageProcessor) iterator.next();
 
-        assertThat(transformerProcessor).isNotNull().isInstanceOf(Transformer.class);
+        assertThat(echoProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        Transformer transformer = (Transformer) transformerProcessor;
+        SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) echoProcessor;
 
-        assertThat(transformer.getReturnDataType()).isEqualTo(new SimpleDataType<String>(String.class));
+        assertThat(echo.getObjectType()).isEqualTo(EchoComponent.class);
 
-        MessageProcessor transformer2Processor = (MessageProcessor) iterator.next();
+        assertThat(echo.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        assertThat(transformer2Processor).isNotNull().isInstanceOf(Transformer.class);
+        EchoComponent echo_1 = (EchoComponent) echo.getObjectFactory().getInstance(null);
+        EchoComponent echo_2 = (EchoComponent) echo.getObjectFactory().getInstance(null);
 
-        Transformer transformer2 = (Transformer) transformer2Processor;
+        assertThat(echo_1 == echo_2).isEqualTo(true);
 
-        assertThat(transformer2.getReturnDataType()).isEqualTo(new SimpleDataType<String>(byte[].class));
+        MessageProcessor echoProcessor2 = (MessageProcessor) iterator.next();
 
+        assertThat(echoProcessor2).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+
+        SimpleCallableJavaComponent log2 = (SimpleCallableJavaComponent) echoProcessor2;
+
+        assertThat(log2.getObjectType()).isEqualTo(EchoComponent.class);
+
+        assertThat(log2.getObjectFactory().isSingleton()).isEqualTo(true);
+
+        EchoComponent echo2_1 = (EchoComponent) log2.getObjectFactory().getInstance(null);
+        EchoComponent echo2_2 = (EchoComponent) log2.getObjectFactory().getInstance(null);
+
+        assertThat(echo2_1 == echo2_2).isEqualTo(true);
+
+        assertThat(echo_1 != echo2_1).isEqualTo(true);
+        assertThat(echo_2 != echo2_2).isEqualTo(true);
     }
+
 }

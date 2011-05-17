@@ -13,8 +13,6 @@ import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEventContext;
-import org.mule.api.MuleException;
-import org.mule.api.config.ConfigurationException;
 import org.mule.api.construct.FlowConstruct;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
@@ -31,7 +29,7 @@ import static org.fest.assertions.Assertions.assertThat;
 public class TestBridgeFlow {
 
     @Test
-    public void simpleBridge() throws MuleException, ConfigurationException, InterruptedException {
+    public void simpleBridge() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
@@ -76,7 +74,7 @@ public class TestBridgeFlow {
     }
 
     @Test
-    public void simpleEchoBridge() throws MuleException, ConfigurationException, InterruptedException {
+    public void simpleEchoBridge() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
@@ -131,7 +129,7 @@ public class TestBridgeFlow {
     }
 
     @Test
-    public void simpleServiceBridgeObjectInstance() throws MuleException, ConfigurationException, InterruptedException {
+    public void simpleServiceBridgeObjectInstance() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
