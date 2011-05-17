@@ -27,7 +27,7 @@ public class FlowBuilder extends PipelineBuilderImpl {
         this.flow = new SimpleFlowConstruct(name, muleContext);
     }
 
-    EndPointBuilder.InboundEndpointBuilder from(String uri) {
+    public EndPointBuilder.InboundEndpointBuilder from(String uri) {
         this.inboundEndpointBuilder = new EndpointBuilderImpl.InboundEndpointBuilderImpl(this, this.flow.getMuleContext(), uri);
         return inboundEndpointBuilder;
     }
