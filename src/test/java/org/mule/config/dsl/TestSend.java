@@ -103,9 +103,9 @@ public class TestSend {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor endpointProcessor1 = (MessageProcessor) iterator.next();
+        MessageProcessor endpointProcessor1 = iterator.next();
 
         assertThat(endpointProcessor1).isNotNull().isInstanceOf(OutboundEndpoint.class);
 
@@ -117,7 +117,7 @@ public class TestSend {
 
         assertThat(outboundEndpoint1.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/out");
 
-        MessageProcessor endpointProcessor2 = (MessageProcessor) iterator.next();
+        MessageProcessor endpointProcessor2 = iterator.next();
 
         assertThat(endpointProcessor2).isNotNull().isInstanceOf(OutboundEndpoint.class);
 

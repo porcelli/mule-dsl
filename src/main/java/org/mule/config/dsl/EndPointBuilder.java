@@ -9,11 +9,11 @@
 
 package org.mule.config.dsl;
 
-public interface EndPointBuilder extends PipelineBuilder<PipelineBuilder> {
+public interface EndPointBuilder extends PipelineBuilder<EndPointBuilder> {
 
-    PipelineBuilder asOneWay();
+	PipelineBuilder<EndPointBuilder> asOneWay();
 
-    PipelineBuilder asRequestResponse();
+	PipelineBuilder<EndPointBuilder> asRequestResponse();
 
     public interface OutboundEndpointBuilder extends EndPointBuilder {
     }

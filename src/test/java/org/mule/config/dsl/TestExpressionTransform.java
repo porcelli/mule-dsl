@@ -59,9 +59,9 @@ public class TestExpressionTransform {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor transformerProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor transformerProcessor = iterator.next();
 
         assertThat(transformerProcessor).isNotNull().isInstanceOf(ExpressionTransformer.class);
 
@@ -112,9 +112,9 @@ public class TestExpressionTransform {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor transformerProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor transformerProcessor = iterator.next();
 
         assertThat(transformerProcessor).isNotNull().isInstanceOf(ExpressionTransformer.class);
 
@@ -131,7 +131,7 @@ public class TestExpressionTransform {
         assertThat(argument.getCustomEvaluator()).isNull();
 
 
-        MessageProcessor transformerProcessor2 = (MessageProcessor) iterator.next();
+        MessageProcessor transformerProcessor2 = iterator.next();
 
         assertThat(transformerProcessor2).isNotNull().isInstanceOf(ExpressionTransformer.class);
 

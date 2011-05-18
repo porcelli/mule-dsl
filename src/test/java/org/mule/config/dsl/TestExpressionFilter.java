@@ -60,9 +60,9 @@ public class TestExpressionFilter {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor filterProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor filterProcessor = iterator.next();
 
         assertThat(filterProcessor).isNotNull().isInstanceOf(MessageFilter.class);
 
@@ -110,9 +110,9 @@ public class TestExpressionFilter {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor filterProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor filterProcessor = iterator.next();
 
         assertThat(filterProcessor).isNotNull().isInstanceOf(MessageFilter.class);
 
@@ -126,7 +126,7 @@ public class TestExpressionFilter {
         assertThat(exprFilter.getEvaluator()).isEqualTo("wildcard");
         assertThat(exprFilter.getCustomEvaluator()).isNull();
 
-        MessageProcessor filterProcessor2 = (MessageProcessor) iterator.next();
+        MessageProcessor filterProcessor2 = iterator.next();
 
         assertThat(filterProcessor2).isNotNull().isInstanceOf(MessageFilter.class);
 

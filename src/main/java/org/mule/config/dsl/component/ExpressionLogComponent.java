@@ -12,16 +12,16 @@ package org.mule.config.dsl.component;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.api.MuleEventContext;
+import org.mule.config.dsl.ErrorLevel;
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
-import org.mule.config.dsl.PipelineBuilder;
 
-public class ExpressionLogComponent<E extends ExpressionEvaluatorBuilder> extends SimpleLogComponent {
+public class ExpressionLogComponent extends SimpleLogComponent {
 
     private static final Log logger = LogFactory.getLog(ExpressionLogComponent.class);
 
-    private final E message;
+    private final ExpressionEvaluatorBuilder message;
 
-    public ExpressionLogComponent(E message, PipelineBuilder.ErrorLevel level) {
+    public ExpressionLogComponent(ExpressionEvaluatorBuilder message, ErrorLevel level) {
         super(level);
         this.message = message;
     }
@@ -38,7 +38,7 @@ public class ExpressionLogComponent<E extends ExpressionEvaluatorBuilder> extend
         return logger;
     }
 
-    public E getMessageExpression() {
+    public ExpressionEvaluatorBuilder getMessageExpression() {
         return message;
     }
 }

@@ -9,14 +9,19 @@
 
 package org.mule.config.dsl.component;
 
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.ErrorLevel.DEBUG;
+import static org.mule.config.dsl.ErrorLevel.ERROR;
+import static org.mule.config.dsl.ErrorLevel.FATAL;
+import static org.mule.config.dsl.ErrorLevel.INFO;
+import static org.mule.config.dsl.ErrorLevel.TRACE;
+import static org.mule.config.dsl.ErrorLevel.WARN;
+import static org.mule.config.dsl.expression.CoreExpr.string;
+
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.lifecycle.InitialisationException;
-
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mule.config.dsl.PipelineBuilder.ErrorLevel.*;
-import static org.mule.config.dsl.expression.CoreExpr.string;
 
 public class TestExpressionLogComponent extends BaseComponentTests {
 

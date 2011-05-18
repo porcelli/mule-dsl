@@ -58,9 +58,9 @@ public class TestEcho {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -109,9 +109,9 @@ public class TestEcho {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor echoProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor echoProcessor = iterator.next();
 
         assertThat(echoProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -126,7 +126,7 @@ public class TestEcho {
 
         assertThat(echo_1 == echo_2).isEqualTo(true);
 
-        MessageProcessor echoProcessor2 = (MessageProcessor) iterator.next();
+        MessageProcessor echoProcessor2 = iterator.next();
 
         assertThat(echoProcessor2).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 

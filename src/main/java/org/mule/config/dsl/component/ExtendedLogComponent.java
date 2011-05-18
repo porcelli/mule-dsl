@@ -12,14 +12,14 @@ package org.mule.config.dsl.component;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.api.MuleEventContext;
-import org.mule.config.dsl.PipelineBuilder;
+import org.mule.config.dsl.ErrorLevel;
 
 public class ExtendedLogComponent extends SimpleLogComponent {
     private static final Log logger = LogFactory.getLog(ExtendedLogComponent.class);
 
     private final String message;
 
-    public ExtendedLogComponent(String message, PipelineBuilder.ErrorLevel level) {
+    public ExtendedLogComponent(String message, ErrorLevel level) {
         super(level);
         this.message = message;
     }

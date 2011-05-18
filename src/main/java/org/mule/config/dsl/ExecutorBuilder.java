@@ -9,8 +9,9 @@
 
 package org.mule.config.dsl;
 
-public interface ExecutorBuilder extends PipelineBuilder<PipelineBuilder> {
-    PipelineBuilder asSingleton();
+public interface ExecutorBuilder extends PipelineBuilder<ExecutorBuilder> {
+	PipelineBuilder<ExecutorBuilder> asSingleton();
 
-    PipelineBuilder asPrototype();
+	PipelineBuilder<ExecutorBuilder> asPrototype();
 }
+

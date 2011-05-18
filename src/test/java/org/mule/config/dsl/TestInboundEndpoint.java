@@ -89,7 +89,7 @@ public class TestInboundEndpoint {
 
     @Test(expected = RuntimeException.class)
     public void simpleRequestResponseInbound() throws InitialisationException, ConfigurationException {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

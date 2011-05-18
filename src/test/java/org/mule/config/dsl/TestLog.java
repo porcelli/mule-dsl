@@ -9,6 +9,11 @@
 
 package org.mule.config.dsl;
 
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.expression.CoreExpr.string;
+
+import java.util.Iterator;
+
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -21,11 +26,6 @@ import org.mule.config.dsl.component.ExpressionLogComponent;
 import org.mule.config.dsl.component.ExtendedLogComponent;
 import org.mule.config.dsl.component.SimpleLogComponent;
 import org.mule.construct.SimpleFlowConstruct;
-
-import java.util.Iterator;
-
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mule.config.dsl.expression.CoreExpr.string;
 
 public class TestLog {
 
@@ -61,9 +61,9 @@ public class TestLog {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -78,7 +78,7 @@ public class TestLog {
 
         assertThat(log1 == log2).isEqualTo(true);
 
-        assertThat(log1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.INFO);
+        assertThat(log1.getLevel()).isEqualTo(ErrorLevel.INFO);
     }
 
     @Test
@@ -114,9 +114,9 @@ public class TestLog {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -131,9 +131,9 @@ public class TestLog {
 
         assertThat(log_1 == log_2).isEqualTo(true);
 
-        assertThat(log_1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.INFO);
+        assertThat(log_1.getLevel()).isEqualTo(ErrorLevel.INFO);
 
-        MessageProcessor logProcessor2 = (MessageProcessor) iterator.next();
+        MessageProcessor logProcessor2 = iterator.next();
 
         assertThat(logProcessor2).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -148,7 +148,7 @@ public class TestLog {
 
         assertThat(log2_1 == log2_2).isEqualTo(true);
 
-        assertThat(log2_1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.INFO);
+        assertThat(log2_1.getLevel()).isEqualTo(ErrorLevel.INFO);
 
         assertThat(log_1 != log2_1).isEqualTo(true);
         assertThat(log_2 != log2_2).isEqualTo(true);
@@ -162,7 +162,7 @@ public class TestLog {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .log(PipelineBuilder.ErrorLevel.ERROR);
+                        .log(ErrorLevel.ERROR);
             }
         });
 
@@ -187,9 +187,9 @@ public class TestLog {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -204,7 +204,7 @@ public class TestLog {
 
         assertThat(log_1 == log_2).isEqualTo(true);
 
-        assertThat(log_1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.ERROR);
+        assertThat(log_1.getLevel()).isEqualTo(ErrorLevel.ERROR);
     }
 
     @Test
@@ -214,8 +214,8 @@ public class TestLog {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .log(PipelineBuilder.ErrorLevel.ERROR)
-                        .log(PipelineBuilder.ErrorLevel.WARN);
+                        .log(ErrorLevel.ERROR)
+                        .log(ErrorLevel.WARN);
             }
         });
 
@@ -240,9 +240,9 @@ public class TestLog {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -257,9 +257,9 @@ public class TestLog {
 
         assertThat(log_1 == log_2).isEqualTo(true);
 
-        assertThat(log_1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.ERROR);
+        assertThat(log_1.getLevel()).isEqualTo(ErrorLevel.ERROR);
 
-        MessageProcessor logProcessor2 = (MessageProcessor) iterator.next();
+        MessageProcessor logProcessor2 = iterator.next();
 
         assertThat(logProcessor2).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -274,7 +274,7 @@ public class TestLog {
 
         assertThat(log2_1 == log2_2).isEqualTo(true);
 
-        assertThat(log2_1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.WARN);
+        assertThat(log2_1.getLevel()).isEqualTo(ErrorLevel.WARN);
 
         assertThat(log_1 != log2_1).isEqualTo(true);
         assertThat(log_2 != log2_2).isEqualTo(true);
@@ -313,9 +313,9 @@ public class TestLog {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -330,7 +330,7 @@ public class TestLog {
 
         assertThat(log1 == log2).isEqualTo(true);
 
-        assertThat(log1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.INFO);
+        assertThat(log1.getLevel()).isEqualTo(ErrorLevel.INFO);
         assertThat(log1.getMessage()).isEqualTo("message here!");
     }
 
@@ -367,9 +367,9 @@ public class TestLog {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -384,10 +384,10 @@ public class TestLog {
 
         assertThat(log_1 == log_2).isEqualTo(true);
 
-        assertThat(log_1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.INFO);
+        assertThat(log_1.getLevel()).isEqualTo(ErrorLevel.INFO);
         assertThat(log_1.getMessage()).isEqualTo("message here!");
 
-        MessageProcessor log2Processor = (MessageProcessor) iterator.next();
+        MessageProcessor log2Processor = iterator.next();
 
         assertThat(log2Processor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -402,7 +402,7 @@ public class TestLog {
 
         assertThat(log2_1 == log2_2).isEqualTo(true);
 
-        assertThat(log2_1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.INFO);
+        assertThat(log2_1.getLevel()).isEqualTo(ErrorLevel.INFO);
         assertThat(log2_1.getMessage()).isEqualTo("message here 2!");
 
         assertThat(log_1 != log2_1).isEqualTo(true);
@@ -416,7 +416,7 @@ public class TestLog {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .log("message here!", PipelineBuilder.ErrorLevel.WARN);
+                        .log("message here!", ErrorLevel.WARN);
             }
         });
 
@@ -441,9 +441,9 @@ public class TestLog {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -458,7 +458,7 @@ public class TestLog {
 
         assertThat(log1 == log2).isEqualTo(true);
 
-        assertThat(log1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.WARN);
+        assertThat(log1.getLevel()).isEqualTo(ErrorLevel.WARN);
         assertThat(log1.getMessage()).isEqualTo("message here!");
     }
 
@@ -470,8 +470,8 @@ public class TestLog {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .log("message here!", PipelineBuilder.ErrorLevel.WARN)
-                        .log("message here 2!", PipelineBuilder.ErrorLevel.FATAL);
+                        .log("message here!", ErrorLevel.WARN)
+                        .log("message here 2!", ErrorLevel.FATAL);
             }
         });
 
@@ -496,9 +496,9 @@ public class TestLog {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -513,10 +513,10 @@ public class TestLog {
 
         assertThat(log_1 == log_2).isEqualTo(true);
 
-        assertThat(log_1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.WARN);
+        assertThat(log_1.getLevel()).isEqualTo(ErrorLevel.WARN);
         assertThat(log_1.getMessage()).isEqualTo("message here!");
 
-        MessageProcessor log2Processor = (MessageProcessor) iterator.next();
+        MessageProcessor log2Processor = iterator.next();
 
         assertThat(log2Processor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -531,7 +531,7 @@ public class TestLog {
 
         assertThat(log2_1 == log2_2).isEqualTo(true);
 
-        assertThat(log2_1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.FATAL);
+        assertThat(log2_1.getLevel()).isEqualTo(ErrorLevel.FATAL);
         assertThat(log2_1.getMessage()).isEqualTo("message here 2!");
 
         assertThat(log_1 != log2_1).isEqualTo(true);
@@ -571,9 +571,9 @@ public class TestLog {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -588,7 +588,7 @@ public class TestLog {
 
         assertThat(log1 == log2).isEqualTo(true);
 
-        assertThat(log1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.INFO);
+        assertThat(log1.getLevel()).isEqualTo(ErrorLevel.INFO);
         assertThat(log1.getMessageExpression().getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
         assertThat(log1.getMessageExpression().getEvaluator()).isEqualTo("string");
         assertThat(log1.getMessageExpression().getCustomEvaluator()).isNull();
@@ -627,9 +627,9 @@ public class TestLog {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -644,12 +644,12 @@ public class TestLog {
 
         assertThat(log_1 == log_2).isEqualTo(true);
 
-        assertThat(log_1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.INFO);
+        assertThat(log_1.getLevel()).isEqualTo(ErrorLevel.INFO);
         assertThat(log_1.getMessageExpression().getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
         assertThat(log_1.getMessageExpression().getEvaluator()).isEqualTo("string");
         assertThat(log_1.getMessageExpression().getCustomEvaluator()).isNull();
 
-        MessageProcessor log2Processor = (MessageProcessor) iterator.next();
+        MessageProcessor log2Processor = iterator.next();
 
         assertThat(log2Processor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -664,7 +664,7 @@ public class TestLog {
 
         assertThat(log2_1 == log2_2).isEqualTo(true);
 
-        assertThat(log2_1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.INFO);
+        assertThat(log2_1.getLevel()).isEqualTo(ErrorLevel.INFO);
         assertThat(log2_1.getMessageExpression().getExpression()).isEqualTo("payload2 content: #[mule:message.payload()]");
         assertThat(log2_1.getMessageExpression().getEvaluator()).isEqualTo("string");
         assertThat(log2_1.getMessageExpression().getCustomEvaluator()).isNull();
@@ -680,7 +680,7 @@ public class TestLog {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .log(string("payload content: #[mule:message.payload()]"), PipelineBuilder.ErrorLevel.WARN);
+                        .log(string("payload content: #[mule:message.payload()]"), ErrorLevel.WARN);
             }
         });
 
@@ -705,9 +705,9 @@ public class TestLog {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -722,7 +722,7 @@ public class TestLog {
 
         assertThat(log1 == log2).isEqualTo(true);
 
-        assertThat(log1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.WARN);
+        assertThat(log1.getLevel()).isEqualTo(ErrorLevel.WARN);
         assertThat(log1.getMessageExpression().getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
         assertThat(log1.getMessageExpression().getEvaluator()).isEqualTo("string");
         assertThat(log1.getMessageExpression().getCustomEvaluator()).isNull();
@@ -736,8 +736,8 @@ public class TestLog {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .log(string("payload content: #[mule:message.payload()]"), PipelineBuilder.ErrorLevel.WARN)
-                        .log(string("payload2 content: #[mule:message.payload()]"), PipelineBuilder.ErrorLevel.FATAL);
+                        .log(string("payload content: #[mule:message.payload()]"), ErrorLevel.WARN)
+                        .log(string("payload2 content: #[mule:message.payload()]"), ErrorLevel.FATAL);
             }
         });
 
@@ -762,9 +762,9 @@ public class TestLog {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -779,12 +779,12 @@ public class TestLog {
 
         assertThat(log_1 == log_2).isEqualTo(true);
 
-        assertThat(log_1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.WARN);
+        assertThat(log_1.getLevel()).isEqualTo(ErrorLevel.WARN);
         assertThat(log_1.getMessageExpression().getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
         assertThat(log_1.getMessageExpression().getEvaluator()).isEqualTo("string");
         assertThat(log_1.getMessageExpression().getCustomEvaluator()).isNull();
 
-        MessageProcessor log2Processor = (MessageProcessor) iterator.next();
+        MessageProcessor log2Processor = iterator.next();
 
         assertThat(log2Processor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -799,7 +799,7 @@ public class TestLog {
 
         assertThat(log2_1 == log2_2).isEqualTo(true);
 
-        assertThat(log2_1.getLevel()).isEqualTo(PipelineBuilder.ErrorLevel.FATAL);
+        assertThat(log2_1.getLevel()).isEqualTo(ErrorLevel.FATAL);
         assertThat(log_1.getMessageExpression().getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
         assertThat(log_1.getMessageExpression().getEvaluator()).isEqualTo("string");
         assertThat(log_1.getMessageExpression().getCustomEvaluator()).isNull();

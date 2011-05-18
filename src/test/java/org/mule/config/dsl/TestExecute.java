@@ -61,9 +61,9 @@ public class TestExecute {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor = iterator.next();
 
         assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -108,9 +108,9 @@ public class TestExecute {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -120,7 +120,7 @@ public class TestExecute {
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        MessageProcessor executeProcessor2 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -163,9 +163,9 @@ public class TestExecute {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor = iterator.next();
 
         assertThat(executeProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -210,9 +210,9 @@ public class TestExecute {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -222,7 +222,7 @@ public class TestExecute {
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        MessageProcessor executeProcessor2 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -266,9 +266,9 @@ public class TestExecute {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor = iterator.next();
 
         assertThat(executeProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -313,9 +313,9 @@ public class TestExecute {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -325,7 +325,7 @@ public class TestExecute {
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        MessageProcessor executeProcessor2 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -368,9 +368,9 @@ public class TestExecute {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor = iterator.next();
 
         assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -415,9 +415,9 @@ public class TestExecute {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -427,7 +427,7 @@ public class TestExecute {
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(false);
 
-        MessageProcessor executeProcessor2 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -470,9 +470,9 @@ public class TestExecute {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor = iterator.next();
 
         assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -517,9 +517,9 @@ public class TestExecute {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -529,7 +529,7 @@ public class TestExecute {
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(false);
 
-        MessageProcessor executeProcessor2 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -572,9 +572,9 @@ public class TestExecute {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor = iterator.next();
 
         assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -619,9 +619,9 @@ public class TestExecute {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -631,7 +631,7 @@ public class TestExecute {
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        MessageProcessor executeProcessor2 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -677,9 +677,9 @@ public class TestExecute {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor = iterator.next();
 
         assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -726,9 +726,9 @@ public class TestExecute {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -738,7 +738,7 @@ public class TestExecute {
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(false);
 
-        MessageProcessor executeProcessor2 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -784,9 +784,9 @@ public class TestExecute {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor = iterator.next();
 
         assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -833,9 +833,9 @@ public class TestExecute {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -845,7 +845,7 @@ public class TestExecute {
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        MessageProcessor executeProcessor2 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -895,9 +895,9 @@ public class TestExecute {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(6);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -907,7 +907,7 @@ public class TestExecute {
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        MessageProcessor executeProcessor2 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
@@ -917,7 +917,7 @@ public class TestExecute {
 
         assertThat(execute2.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        MessageProcessor executeProcessor3 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor3 = iterator.next();
 
         assertThat(executeProcessor3).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -927,7 +927,7 @@ public class TestExecute {
 
         assertThat(execute3.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        MessageProcessor executeProcessor4 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor4 = iterator.next();
 
         assertThat(executeProcessor4).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -937,7 +937,7 @@ public class TestExecute {
 
         assertThat(execute4.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        MessageProcessor executeProcessor5 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor5 = iterator.next();
 
         assertThat(executeProcessor5).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
@@ -947,7 +947,7 @@ public class TestExecute {
 
         assertThat(execute5.getObjectFactory().isSingleton()).isEqualTo(false);
 
-        MessageProcessor executeProcessor6 = (MessageProcessor) iterator.next();
+        MessageProcessor executeProcessor6 = iterator.next();
 
         assertThat(executeProcessor6).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 

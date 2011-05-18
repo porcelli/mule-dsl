@@ -10,13 +10,12 @@
 package org.mule.config.dsl;
 
 import org.junit.Test;
-import org.mule.api.MuleContext;
 
 public class TestAllRouter {
 
     @Test
     public void allRouterTet() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -35,11 +34,40 @@ public class TestAllRouter {
                                         .endAll()
                                     .echo()
                                 .endAll()
+                        .endAll()
+                        .all()
+                        	.echo()
+                        		.all()
+                        			.echo()
+                        		.endAll()
+                        		.echo()
                         .endAll();
+                
+                flow("MyFlow")
+                	.all()
+                    .echo()
+                        .all()
+                            .echo()
+                                .all()
+                                    .echo()
+                                    .echo()
+                                .endAll()
+                                .all()
+                                    .all()
+                                    .endAll()
+                                .endAll()
+                            .echo()
+                        .endAll()
+                .endAll()
+                .all()
+                	.echo()
+                		.all()
+                			.echo()
+                		.endAll()
+                		.echo()
+                .endAll();
             }
         });
-//
-//        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
     }
 
 }

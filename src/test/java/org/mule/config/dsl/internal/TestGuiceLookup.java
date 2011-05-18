@@ -74,7 +74,7 @@ public class TestGuiceLookup {
 
         GuiceLookup mylookup = new GuiceLookup(injector, Complex2.class);
 
-        Object returnValue = mylookup.getInstance(null);
+        mylookup.getInstance(null);
     }
 
     @Test(expected = ConfigurationException.class)
@@ -83,7 +83,7 @@ public class TestGuiceLookup {
 
         GuiceLookup mylookup = new GuiceLookup(injector, Complex2.class);
 
-        Object returnValue = mylookup.getInstance(null);
+        mylookup.getInstance(null);
     }
 
     private static class MySimpleModule1 extends AbstractModule {

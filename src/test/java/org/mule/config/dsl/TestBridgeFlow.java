@@ -106,15 +106,15 @@ public class TestBridgeFlow {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor echoProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor echoProcessor = iterator.next();
 
         assertThat(echoProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
         ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor endpointProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor endpointProcessor = iterator.next();
 
         assertThat(endpointProcessor).isNotNull().isInstanceOf(OutboundEndpoint.class);
 
@@ -164,21 +164,21 @@ public class TestBridgeFlow {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(4);
 
-        Iterator iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor myCallableProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor myCallableProcessor = iterator.next();
 
         assertThat(myCallableProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
         ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor echoProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor echoProcessor = iterator.next();
 
         assertThat(echoProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
         ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor endpointProcessor = (MessageProcessor) iterator.next();
+        MessageProcessor endpointProcessor = iterator.next();
 
         assertThat(endpointProcessor).isNotNull().isInstanceOf(OutboundEndpoint.class);
 
