@@ -34,8 +34,8 @@ public class TestAllRouter {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .all()
-                        .echo()
-                        .echo()
+                            .echo()
+                            .echo()
                         .endAll();
             }
         });
@@ -94,11 +94,11 @@ public class TestAllRouter {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .all()
-                        .echo()
-                        .all()
-                        .echo()
-                        .endAll()
-                        .echo()
+                            .echo()
+                            .all()
+                                .echo()
+                            .endAll()
+                            .echo()
                         .endAll();
             }
         });
@@ -202,19 +202,5 @@ public class TestAllRouter {
         assertThat(multicastingRouter.getRoutes()).isNotEmpty().hasSize(1);
 
         assertThat(multicastingRouter.getRoutes().get(0)).isNotNull().isInstanceOf(ImmutableEndpoint.class);
-//
-//        SimpleCallableJavaComponent echo1 = (SimpleCallableJavaComponent) multicastingRouter.getRoutes().get(0);
-//
-//        assertThat(echo1.getObjectType()).isEqualTo(EchoComponent.class);
-//
-//        assertThat(echo1.getObjectFactory().isSingleton()).isEqualTo(true);
-//
-//        assertThat(multicastingRouter.getRoutes().get(1)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
-//
-//        SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) multicastingRouter.getRoutes().get(1);
-//
-//        assertThat(echo2.getObjectType()).isEqualTo(EchoComponent.class);
-//
-//        assertThat(echo2.getObjectFactory().isSingleton()).isEqualTo(true);
     }
 }
