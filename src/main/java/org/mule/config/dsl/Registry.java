@@ -56,7 +56,7 @@ public class Registry {
                     muleContext.getRegistry().registerFlowConstruct(flow);
                 } catch (MuleException e) {
                     //TODO handle
-                    throw new RuntimeException();
+                    throw new RuntimeException(e);
                 }
             }
         }

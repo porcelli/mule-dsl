@@ -25,13 +25,13 @@ import java.util.List;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuilder<P> {
+public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuilder<P>, MessageProcessorListBuilder {
 
     protected final List<Builder<?>> processorList;
-    protected final PipelineBuilderImpl<P> parentScope;
+    protected final P parentScope;
     protected final MuleContext muleContext;
 
-    public PipelineBuilderImpl(MuleContext muleContext, PipelineBuilderImpl<P> parent) {
+    public PipelineBuilderImpl(MuleContext muleContext, P parent) {
         this.processorList = new ArrayList<Builder<?>>();
         this.parentScope = parent;
         this.muleContext = muleContext;
@@ -48,7 +48,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         if (parentScope != null) {
             return parentScope.execute(obj);
         }
-        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(this, muleContext, obj);
+        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), muleContext, obj);
         processorList.add(builder);
 
         return getThis();
@@ -60,7 +60,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.execute(obj);
         }
 
-        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(this, muleContext, obj);
+        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), muleContext, obj);
         processorList.add(builder);
 
         return getThis();
@@ -71,7 +71,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         if (parentScope != null) {
             return parentScope.execute(clazz);
         }
-        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(this, muleContext, clazz);
+        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), muleContext, clazz);
         processorList.add(builder);
 
         return builder;
@@ -88,7 +88,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.log(level);
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(this, muleContext, new SimpleLogComponent(level)));
+        processorList.add(new ExecutorBuilderImpl<P>(getThis(), muleContext, new SimpleLogComponent(level)));
         return getThis();
     }
 
@@ -103,7 +103,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.log(message, level);
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(this, muleContext, new ExtendedLogComponent(message, level)));
+        processorList.add(new ExecutorBuilderImpl<P>(getThis(), muleContext, new ExtendedLogComponent(message, level)));
         return getThis();
     }
 
@@ -119,7 +119,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.log(expr, level);
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(this, muleContext, new ExpressionLogComponent(expr, level)));
+        processorList.add(new ExecutorBuilderImpl<P>(getThis(), muleContext, new ExpressionLogComponent(expr, level)));
         return getThis();
     }
 
@@ -129,7 +129,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.echo();
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(this, muleContext, new EchoComponent()));
+        processorList.add(new ExecutorBuilderImpl<P>(getThis(), muleContext, new EchoComponent()));
         return getThis();
     }
 
@@ -139,7 +139,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         if (parentScope != null) {
             return parentScope.send(uri);
         }
-        OutboundEndpointBuilderImpl<P> builder = new OutboundEndpointBuilderImpl<P>(this, muleContext, uri);
+        OutboundEndpointBuilderImpl<P> builder = new OutboundEndpointBuilderImpl<P>(getThis(), muleContext, uri);
         processorList.add(builder);
 
         return builder;
@@ -209,14 +209,17 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         return null;
     }
 
+
+    @Override
     public void addToProcessorList(Builder<?> builder) {
         checkNotNull(builder, "builder");
         processorList.add(builder);
     }
 
+    @Override
     public List<MessageProcessor> buildProcessorList(Injector injector) {
-        if (parentScope != null) {
-            return parentScope.buildProcessorList(injector);
+        if (parentScope != null && parentScope instanceof MessageProcessorListBuilder) {
+            return ((MessageProcessorListBuilder) parentScope).buildProcessorList(injector);
         }
 
         List<MessageProcessor> result = new ArrayList<MessageProcessor>();
@@ -230,9 +233,10 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         return result;
     }
 
+    @Override
     public boolean isProcessorListEmpty() {
-        if (parentScope != null) {
-            return parentScope.isProcessorListEmpty();
+        if (parentScope != null && parentScope instanceof MessageProcessorListBuilder) {
+            return ((MessageProcessorListBuilder) parentScope).isProcessorListEmpty();
         }
 
         if (processorList != null && processorList.size() > 0) {

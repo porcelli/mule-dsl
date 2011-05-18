@@ -25,7 +25,7 @@ public class OutboundEndpointBuilderImpl<P extends PipelineBuilder<P>> extends P
 
     protected final org.mule.api.endpoint.EndpointBuilder internalEndpointBuilder;
 
-    public OutboundEndpointBuilderImpl(final PipelineBuilderImpl<P> parentScope, MuleContext muleContext, String uri) {
+    public OutboundEndpointBuilderImpl(final P parentScope, MuleContext muleContext, String uri) {
         super(muleContext, parentScope);
         checkNotNull(parentScope, "parentScope");
         checkNotNull(muleContext, "muleContext");
@@ -46,18 +46,18 @@ public class OutboundEndpointBuilderImpl<P extends PipelineBuilder<P>> extends P
 
     public P asOneWay() {
         internalEndpointBuilder.setExchangePattern(MessageExchangePattern.ONE_WAY);
-        return getThis();
+        return parentScope;
     }
 
     public P asRequestResponse() {
         internalEndpointBuilder.setExchangePattern(MessageExchangePattern.REQUEST_RESPONSE);
-        return getThis();
+        return parentScope;
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    protected P getThis() {
-        return (P) this;
-    }
-
+//    @Override
+//    @SuppressWarnings("unchecked")
+//    protected P getThis() {
+//        return (P) this;
+//    }
+//
 }

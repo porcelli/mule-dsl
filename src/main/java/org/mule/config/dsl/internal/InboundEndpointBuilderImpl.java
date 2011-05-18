@@ -25,7 +25,7 @@ public class InboundEndpointBuilderImpl<P extends PipelineBuilder<P>> extends Pi
 
     protected final org.mule.api.endpoint.EndpointBuilder internalEndpointBuilder;
 
-    public InboundEndpointBuilderImpl(final PipelineBuilderImpl<P> parentScope, MuleContext muleContext, String uri) {
+    public InboundEndpointBuilderImpl(final P parentScope, MuleContext muleContext, String uri) {
         super(muleContext, parentScope);
         checkNotNull(parentScope, "parentScope");
         checkNotNull(muleContext, "muleContext");

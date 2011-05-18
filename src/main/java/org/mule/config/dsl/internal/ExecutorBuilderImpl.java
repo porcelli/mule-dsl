@@ -31,13 +31,13 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
     private final Object obj;
     private InstanceType instanceType = InstanceType.PROTOTYPE;
 
-    ExecutorBuilderImpl(final PipelineBuilderImpl<P> parentScope, MuleContext muleContext, Class<?> clazz) {
+    ExecutorBuilderImpl(final P parentScope, MuleContext muleContext, Class<?> clazz) {
         super(muleContext, parentScope);
         this.clazz = checkNotNull(clazz, "clazz");
         this.obj = null;
     }
 
-    ExecutorBuilderImpl(final PipelineBuilderImpl<P> parentScope, MuleContext muleContext, Object obj) {
+    ExecutorBuilderImpl(final P parentScope, MuleContext muleContext, Object obj) {
         super(muleContext, parentScope);
         this.obj = checkNotNull(obj, "obj");
         this.clazz = null;

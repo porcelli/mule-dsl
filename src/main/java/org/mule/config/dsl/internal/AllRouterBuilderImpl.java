@@ -13,14 +13,17 @@ import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.lifecycle.Callable;
+import org.mule.api.processor.MessageProcessor;
 import org.mule.config.dsl.*;
 import org.mule.config.dsl.expression.CoreExpr;
 import org.mule.routing.outbound.MulticastingRouter;
 
+import java.util.List;
+
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 
-public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRouterBuilder<P>, Builder<MulticastingRouter> {
+public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRouterBuilder<P>, Builder<MulticastingRouter>, MessageProcessorListBuilder {
 
     private final P parentScope;
     private final PipelineBuilderImpl<AllRouterBuilder<P>> pipeline;
@@ -93,12 +96,13 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
 
     @Override
     public ExecutorBuilder<AllRouterBuilder<P>> execute(Class<?> clazz) {
-        return pipeline.execute(clazz);
+        return null;
     }
 
     @Override
     public OutboundEndpointBuilder<AllRouterBuilder<P>> send(String uri) {
-        OutboundEndpointBuilderImpl<AllRouterBuilder<P>> builder = new OutboundEndpointBuilderImpl<AllRouterBuilder<P>>(pipeline, muleContext, uri);
+        OutboundEndpointBuilderImpl<AllRouterBuilder<P>> builder = new OutboundEndpointBuilderImpl<AllRouterBuilder<P>>(this, muleContext, uri);
+        pipeline.addToProcessorList(builder);
 
         return builder;
     }
@@ -137,7 +141,7 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
 
     @Override
     public ChoiceRouterBuilder<AllRouterBuilder<P>> choice() {
-        return pipeline.choice();
+        return null;
     }
 
     @Override
@@ -155,5 +159,20 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
         }
 
         throw new RuntimeException();
+    }
+
+    @Override
+    public void addToProcessorList(Builder<?> builder) {
+        pipeline.addToProcessorList(builder);
+    }
+
+    @Override
+    public List<MessageProcessor> buildProcessorList(Injector injector) {
+        return pipeline.buildProcessorList(injector);
+    }
+
+    @Override
+    public boolean isProcessorListEmpty() {
+        return pipeline.isProcessorListEmpty();
     }
 }
