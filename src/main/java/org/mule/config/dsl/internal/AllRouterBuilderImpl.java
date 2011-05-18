@@ -96,7 +96,10 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
 
     @Override
     public ExecutorBuilder<AllRouterBuilder<P>> execute(Class<?> clazz) {
-        return null;
+        ExecutorBuilderImpl<AllRouterBuilder<P>> builder = new ExecutorBuilderImpl<AllRouterBuilder<P>>(this, muleContext, clazz);
+        pipeline.addToProcessorList(builder);
+
+        return builder;
     }
 
     @Override
@@ -141,7 +144,25 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
 
     @Override
     public ChoiceRouterBuilder<AllRouterBuilder<P>> choice() {
-        return null;
+        ChoiceRouterBuilderImpl<AllRouterBuilder<P>> builder = new ChoiceRouterBuilderImpl<AllRouterBuilder<P>>(muleContext, this);
+        pipeline.addToProcessorList(builder);
+
+        return builder;
+    }
+
+    @Override
+    public void addToProcessorList(Builder<?> builder) {
+        pipeline.addToProcessorList(builder);
+    }
+
+    @Override
+    public List<MessageProcessor> buildProcessorList(Injector injector) {
+        return pipeline.buildProcessorList(injector);
+    }
+
+    @Override
+    public boolean isProcessorListEmpty() {
+        return pipeline.isProcessorListEmpty();
     }
 
     @Override
@@ -159,20 +180,5 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
         }
 
         throw new RuntimeException();
-    }
-
-    @Override
-    public void addToProcessorList(Builder<?> builder) {
-        pipeline.addToProcessorList(builder);
-    }
-
-    @Override
-    public List<MessageProcessor> buildProcessorList(Injector injector) {
-        return pipeline.buildProcessorList(injector);
-    }
-
-    @Override
-    public boolean isProcessorListEmpty() {
-        return pipeline.isProcessorListEmpty();
     }
 }

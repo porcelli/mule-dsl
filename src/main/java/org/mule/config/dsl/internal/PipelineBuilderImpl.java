@@ -37,6 +37,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         this.muleContext = muleContext;
     }
 
+    @SuppressWarnings("unchecked")
     protected P getThis() {
         return (P) this;
     }
@@ -206,7 +207,13 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
 
     @Override
     public ChoiceRouterBuilder<P> choice() {
-        return null;
+        if (parentScope != null) {
+            return parentScope.choice();
+        }
+        ChoiceRouterBuilderImpl<P> builder = new ChoiceRouterBuilderImpl<P>(muleContext, getThis());
+        processorList.add(builder);
+
+        return builder;
     }
 
 

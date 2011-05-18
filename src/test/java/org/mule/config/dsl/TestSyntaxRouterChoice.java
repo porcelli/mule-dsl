@@ -63,6 +63,25 @@ public class TestSyntaxRouterChoice {
                                 .echo()
                         .endChoice();
 
+                flow("MyFlow2")
+                        .execute((Class<?>)null)
+                        .choice()
+                            .when(string(""))
+                                .echo()
+                                .echo()
+                                .echo()
+                                .choice()
+                                    .when(string(""))
+                                        .echo()
+                                    .otherwise()
+                                        .echo()
+                                .endChoice()
+                                .echo()
+                                .echo()
+                            .otherwise()
+                                .echo()
+                                .echo()
+                        .endChoice();
             }
         });
     }
