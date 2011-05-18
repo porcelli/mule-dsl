@@ -11,7 +11,7 @@ package org.mule.config.dsl;
 
 import org.mule.api.lifecycle.Callable;
 
-public class TestAllRouter {
+public class TestAllRouterSyntax {
 
     //@Test
     public void allRouterTet() {

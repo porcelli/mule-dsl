@@ -53,6 +53,6 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> {
 
     AllRouterBuilder<P> all();
 
-    RouterBuilder.ChoiceRouterBuilder choice();
+    ChoiceRouterBuilder<P> choice();
 
 }

@@ -178,8 +178,7 @@ public abstract class PipelineBuilderImpl<P extends PipelineBuilder<P>> implemen
     }
 
     @Override
-    public <E extends ExpressionEvaluatorBuilder> P filter(
-            E expr) {
+    public <E extends ExpressionEvaluatorBuilder> P filter(E expr) {
         if (parentScope != null) {
             return parentScope.filter(expr);
         }
@@ -192,11 +191,17 @@ public abstract class PipelineBuilderImpl<P extends PipelineBuilder<P>> implemen
 
     @Override
     public AllRouterBuilder<P> all() {
-        return null;
+        if (parentScope != null) {
+            return parentScope.all();
+        }
+        AllRouterBuilderImpl<P> builder = new AllRouterBuilderImpl<P>();
+        processorList.add(builder);
+
+        return builder;
     }
 
     @Override
-    public RouterBuilder.ChoiceRouterBuilder choice() {
+    public ChoiceRouterBuilder<P> choice() {
         return null;
     }
 
