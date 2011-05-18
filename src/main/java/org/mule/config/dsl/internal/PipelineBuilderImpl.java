@@ -23,7 +23,7 @@ import org.mule.config.dsl.expression.CoreExpr;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PipelineBuilderImpl implements PipelineBuilder<PipelineBuilder> {
+public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuilder<P> {
 
     private final List<Builder<?>> processorList;
     private final PipelineBuilderImpl parentScope;
@@ -38,25 +38,25 @@ public class PipelineBuilderImpl implements PipelineBuilder<PipelineBuilder> {
     /* component */
 
     @Override
-    public PipelineBuilder execute(Object obj) {
+    public P execute(Object obj) {
         if (parentScope != null) {
-            return parentScope.execute(obj);
+            return (P) parentScope.execute(obj);
         }
         ExecutorBuilderImpl builder = new ExecutorBuilderImpl(this, muleContext, obj);
         processorList.add(builder);
-        return builder;
+        return (P) builder;
     }
 
     @Override
-    public ExecutorBuilder execute(Callable obj) {
+    public P execute(Callable obj) {
         if (parentScope != null) {
-            return parentScope.execute(obj);
+            return (P) parentScope.execute(obj);
         }
 
         ExecutorBuilderImpl builder = new ExecutorBuilderImpl(this, muleContext, obj);
         processorList.add(builder);
 
-        return builder;
+        return (P) builder;
     }
 
     @Override
@@ -71,58 +71,58 @@ public class PipelineBuilderImpl implements PipelineBuilder<PipelineBuilder> {
 
 
     @Override
-    public PipelineBuilder log() {
+    public P log() {
         return log(ErrorLevel.INFO);
     }
 
     @Override
-    public PipelineBuilder log(ErrorLevel level) {
+    public P log(ErrorLevel level) {
         if (parentScope != null) {
-            return parentScope.log(level);
+            return (P) parentScope.log(level);
         }
 
         processorList.add(new ExecutorBuilderImpl(this, muleContext, new SimpleLogComponent(level)));
-        return this;
+        return (P) this;
     }
 
     @Override
-    public PipelineBuilder log(String message) {
+    public P log(String message) {
         return log(message, ErrorLevel.INFO);
     }
 
     @Override
-    public PipelineBuilder log(String message, ErrorLevel level) {
+    public P log(String message, ErrorLevel level) {
         if (parentScope != null) {
-            return parentScope.log(message, level);
+            return (P) parentScope.log(message, level);
         }
 
         processorList.add(new ExecutorBuilderImpl(this, muleContext, new ExtendedLogComponent(message, level)));
-        return this;
+        return (P) this;
     }
 
     @Override
-    public <E extends ExpressionEvaluatorBuilder> PipelineBuilder log(E expr) {
+    public <E extends ExpressionEvaluatorBuilder> P log(E expr) {
         return log(expr, ErrorLevel.INFO);
     }
 
     @Override
-    public <E extends ExpressionEvaluatorBuilder> PipelineBuilder log(E expr, ErrorLevel level) {
+    public <E extends ExpressionEvaluatorBuilder> P log(E expr, ErrorLevel level) {
         if (parentScope != null) {
-            return parentScope.log(expr, level);
+            return (P) parentScope.log(expr, level);
         }
 
         processorList.add(new ExecutorBuilderImpl(this, muleContext, new ExpressionLogComponent<E>(expr, level)));
-        return this;
+        return (P) this;
     }
 
     @Override
-    public PipelineBuilder echo() {
+    public P echo() {
         if (parentScope != null) {
-            return parentScope.echo();
+            return (P) parentScope.echo();
         }
 
         processorList.add(new ExecutorBuilderImpl(this, muleContext, new EchoComponent()));
-        return this;
+        return (P) this;
     }
 
     /* outbound */
@@ -139,46 +139,46 @@ public class PipelineBuilderImpl implements PipelineBuilder<PipelineBuilder> {
     /* transform */
 
     @Override
-    public <E extends ExpressionEvaluatorBuilder> PipelineBuilder transform(E expr) {
+    public <E extends ExpressionEvaluatorBuilder> P transform(E expr) {
         if (parentScope != null) {
-            return parentScope.transform(expr);
+            return (P) parentScope.transform(expr);
         }
 
         processorList.add(new ExpressionTransformerBuilderImpl(expr));
-        return this;
+        return (P) this;
     }
 
     @Override
-    public <T> PipelineBuilder transformTo(Class<T> clazz) {
+    public <T> P transformTo(Class<T> clazz) {
         if (parentScope != null) {
-            return parentScope.transformTo(clazz);
+            return (P) parentScope.transformTo(clazz);
         }
 
         processorList.add(new TransformerBuilderImpl<T>(clazz));
-        return this;
+        return (P) this;
     }
 
     /* filter */
 
     @Override
-    public PipelineBuilder filter(CoreExpr.GenericExpressionFilterEvaluatorBuilder expr) {
+    public P filter(CoreExpr.GenericExpressionFilterEvaluatorBuilder expr) {
         if (parentScope != null) {
-            return parentScope.filter(expr);
+            return (P) parentScope.filter(expr);
         }
 
         processorList.add(new ExpressionFilterBuilderImpl(expr));
-        return this;
+        return (P) this;
     }
 
 
     @Override
-    public <E extends ExpressionEvaluatorBuilder> PipelineBuilder filter(E expr) {
+    public <E extends ExpressionEvaluatorBuilder> P filter(E expr) {
         if (parentScope != null) {
-            return parentScope.filter(expr);
+            return (P) parentScope.filter(expr);
         }
 
         processorList.add(new ExpressionFilterBuilderImpl(expr));
-        return this;
+        return (P) this;
     }
 
     /* routers */

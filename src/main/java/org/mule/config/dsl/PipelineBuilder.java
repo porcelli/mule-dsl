@@ -12,7 +12,7 @@ package org.mule.config.dsl;
 import org.mule.api.lifecycle.Callable;
 import org.mule.config.dsl.expression.CoreExpr;
 
-public interface PipelineBuilder<P extends PipelineBuilder> {
+public interface PipelineBuilder<P extends PipelineBuilder<P>> {
     /* component */
 
     P log();
@@ -52,7 +52,7 @@ public interface PipelineBuilder<P extends PipelineBuilder> {
 
     /* routers */
 
-    AllRouterBuilder all();
+    AllRouterBuilder<P> all();
 
     RouterBuilder.ChoiceRouterBuilder choice();
 

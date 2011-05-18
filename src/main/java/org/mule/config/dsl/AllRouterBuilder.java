@@ -9,7 +9,7 @@
 
 package org.mule.config.dsl;
 
-public interface AllRouterBuilder extends PipelineBuilder<AllRouterBuilder> {
+public interface AllRouterBuilder<P extends PipelineBuilder> extends PipelineBuilder<AllRouterBuilder<P>> {
 
-    PipelineBuilder endAll();
+    P endAll();
 }

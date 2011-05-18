@@ -15,7 +15,7 @@ import org.mule.api.MuleContext;
 public class TestAllRouter {
 
     @Test
-    public void simpleBridge() {
+    public void allRouterTet() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
@@ -23,8 +23,18 @@ public class TestAllRouter {
                         .from("file:///Users/porcelli/test")
                         .all()
                             .echo()
-                            .echo()
-                            .echo()
+                                .all()
+                                    .echo()
+                                        .all()
+                                            .echo()
+                                            .echo()
+                                        .endAll()
+                                        .all()
+                                            .all()
+                                            .endAll()
+                                        .endAll()
+                                    .echo()
+                                .endAll()
                         .endAll();
             }
         });
