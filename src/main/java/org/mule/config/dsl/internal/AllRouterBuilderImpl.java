@@ -10,107 +10,150 @@
 package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
+import org.mule.api.MuleContext;
+import org.mule.api.MuleException;
 import org.mule.api.lifecycle.Callable;
 import org.mule.config.dsl.*;
 import org.mule.config.dsl.expression.CoreExpr;
-import org.mule.routing.outbound.FilteringOutboundRouter;
+import org.mule.routing.outbound.MulticastingRouter;
+
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 
-public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRouterBuilder<P>, Builder<FilteringOutboundRouter> {
+public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRouterBuilder<P>, Builder<MulticastingRouter> {
 
+    private final P parentScope;
+    private final PipelineBuilderImpl<AllRouterBuilder<P>> pipeline;
+    private final MuleContext muleContext;
+
+    AllRouterBuilderImpl(final MuleContext muleContext, P parentScope) {
+        this.parentScope = checkNotNull(parentScope, "parentScope");
+        this.muleContext = checkNotNull(muleContext, "muleContext");
+        this.pipeline = new PipelineBuilderImpl<AllRouterBuilder<P>>(this.muleContext, null);
+    }
 
     @Override
     public P endAll() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return parentScope;
     }
 
     @Override
     public AllRouterBuilder<P> log() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        pipeline.log();
+        return this;
     }
 
     @Override
     public AllRouterBuilder<P> log(ErrorLevel level) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        pipeline.log(level);
+        return this;
     }
 
     @Override
     public AllRouterBuilder<P> log(String message) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        pipeline.log(message);
+        return this;
     }
 
     @Override
     public AllRouterBuilder<P> log(String message, ErrorLevel level) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        pipeline.log(message, level);
+        return this;
     }
 
     @Override
     public <E extends ExpressionEvaluatorBuilder> AllRouterBuilder<P> log(E expr) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        pipeline.log(expr);
+        return this;
     }
 
     @Override
     public <E extends ExpressionEvaluatorBuilder> AllRouterBuilder<P> log(E expr, ErrorLevel level) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        pipeline.log(expr, level);
+        return this;
     }
 
     @Override
     public AllRouterBuilder<P> echo() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        pipeline.echo();
+        return this;
     }
 
     @Override
     public AllRouterBuilder<P> execute(Object obj) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        pipeline.execute(obj);
+        return this;
     }
 
     @Override
     public AllRouterBuilder<P> execute(Callable obj) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        pipeline.execute(obj);
+        return this;
     }
 
     @Override
     public ExecutorBuilder<AllRouterBuilder<P>> execute(Class<?> clazz) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return pipeline.execute(clazz);
     }
 
     @Override
     public OutboundEndpointBuilder<AllRouterBuilder<P>> send(String uri) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        OutboundEndpointBuilderImpl<AllRouterBuilder<P>> builder = new OutboundEndpointBuilderImpl<AllRouterBuilder<P>>(pipeline, muleContext, uri);
+
+        return builder;
     }
 
     @Override
     public <E extends ExpressionEvaluatorBuilder> AllRouterBuilder<P> transform(E expr) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        pipeline.transform(expr);
+        return this;
     }
 
     @Override
     public <T> AllRouterBuilder<P> transformTo(Class<T> clazz) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        pipeline.transformTo(clazz);
+        return this;
     }
 
     @Override
     public AllRouterBuilder<P> filter(CoreExpr.GenericExpressionFilterEvaluatorBuilder expr) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        pipeline.filter(expr);
+        return this;
     }
 
     @Override
     public <E extends ExpressionEvaluatorBuilder> AllRouterBuilder<P> filter(E expr) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        pipeline.filter(expr);
+        return this;
     }
 
     @Override
     public AllRouterBuilder<AllRouterBuilder<P>> all() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        AllRouterBuilderImpl<AllRouterBuilder<P>> builder = new AllRouterBuilderImpl<AllRouterBuilder<P>>(muleContext, this);
+        pipeline.addToProcessorList(builder);
+
+        return builder;
     }
 
     @Override
-    public ChoiceRouterBuilder choice() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public ChoiceRouterBuilder<AllRouterBuilder<P>> choice() {
+        return pipeline.choice();
     }
 
     @Override
-    public FilteringOutboundRouter build(Injector injector) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public MulticastingRouter build(Injector injector) {
+        if (!pipeline.isProcessorListEmpty()) {
+            try {
+                MulticastingRouter router = new MulticastingRouter();
+                router.setMuleContext(muleContext);
+                router.setRoutes(pipeline.buildProcessorList(injector));
+                return router;
+            } catch (MuleException e) {
+                //TODO handle
+                throw new RuntimeException(e);
+            }
+        }
+
+        throw new RuntimeException();
     }
 }

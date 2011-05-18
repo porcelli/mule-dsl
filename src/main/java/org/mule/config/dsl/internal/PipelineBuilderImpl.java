@@ -23,11 +23,13 @@ import org.mule.config.dsl.expression.CoreExpr;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuilder<P> {
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-    private final List<Builder<?>> processorList;
+public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuilder<P> {
+
+    protected final List<Builder<?>> processorList;
     protected final PipelineBuilderImpl<P> parentScope;
-    private final MuleContext muleContext;
+    protected final MuleContext muleContext;
 
     public PipelineBuilderImpl(MuleContext muleContext, PipelineBuilderImpl<P> parent) {
         this.processorList = new ArrayList<Builder<?>>();
@@ -35,7 +37,9 @@ public abstract class PipelineBuilderImpl<P extends PipelineBuilder<P>> implemen
         this.muleContext = muleContext;
     }
 
-    protected abstract P getThis();
+    protected P getThis() {
+        return (P) this;
+    }
 
     /* component */
 
@@ -194,7 +198,7 @@ public abstract class PipelineBuilderImpl<P extends PipelineBuilder<P>> implemen
         if (parentScope != null) {
             return parentScope.all();
         }
-        AllRouterBuilderImpl<P> builder = new AllRouterBuilderImpl<P>();
+        AllRouterBuilderImpl<P> builder = new AllRouterBuilderImpl<P>(muleContext, getThis());
         processorList.add(builder);
 
         return builder;
@@ -203,6 +207,11 @@ public abstract class PipelineBuilderImpl<P extends PipelineBuilder<P>> implemen
     @Override
     public ChoiceRouterBuilder<P> choice() {
         return null;
+    }
+
+    public void addToProcessorList(Builder<?> builder) {
+        checkNotNull(builder, "builder");
+        processorList.add(builder);
     }
 
     public List<MessageProcessor> buildProcessorList(Injector injector) {
