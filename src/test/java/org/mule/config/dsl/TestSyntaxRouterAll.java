@@ -11,10 +11,10 @@ package org.mule.config.dsl;
 
 import org.mule.api.lifecycle.Callable;
 
-public class TestAllRouterSyntax {
+public class TestSyntaxRouterAll {
 
     //@Test
-    public void allRouterTet() {
+    public void allRouterTest() {
         Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {

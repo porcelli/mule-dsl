@@ -11,10 +11,9 @@ package org.mule.config.dsl;
 
 import static org.mule.config.dsl.expression.CoreExpr.string;
 
-public class TestChoiceRouterSyntax {
+public class TestSyntaxRouterChoice {
 
-    //@Test
-    public void allRouterTet() {
+    public void choiceRouterTest() {
         Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
@@ -40,6 +39,30 @@ public class TestChoiceRouterSyntax {
                                 .echo()
                                 .echo()
                         .endChoice();
+
+                flow("MyFlow2")
+                        .execute((Class<?>)null)
+                        .choice()
+                            .when(string(""))
+                                .echo()
+                                .echo()
+                                .echo()
+                                .choice()
+                                    .when(string(""))
+                                        .echo()
+                                    .otherwise()
+                                        .echo()
+                                .endChoice()
+                                .echo()
+                                .echo()
+                            .when(string(""))
+                                .echo()
+                                .echo()
+                            .otherwise()
+                                .echo()
+                                .echo()
+                        .endChoice();
+
             }
         });
     }
