@@ -65,10 +65,10 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
     }
 
     public static class ClasspathBuilder {
-        private final String value;
+//        private final String value;
 
         public ClasspathBuilder(String value) {
-            this.value = checkNotEmpty(value, "classpath");
+//            this.value = checkNotEmpty(value, "classpath");
         }
 
         public InputStream get() {
@@ -77,15 +77,15 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
     }
 
     public static class FileRefBuilder {
-        private final File file;
+//        private final File file;
 
         public FileRefBuilder(String file) {
             checkNotEmpty(file, "file");
-            this.file = new File(file);
+//            this.file = new File(file);
         }
 
         public FileRefBuilder(File file) {
-            this.file = checkNotNull(file, "file");
+//            this.file = checkNotNull(file, "file");
         }
 
         public InputStream get() {

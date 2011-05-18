@@ -25,34 +25,34 @@ import org.mule.object.SingletonObjectFactory;
 import static org.mule.config.dsl.internal.util.EntryPointResolverSetUtil.createDefaultResolverSet;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-class ExecutorBuilderImpl extends PipelineBuilderImpl implements ExecutorBuilder, Builder<Component> {
+class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderImpl<P> implements ExecutorBuilder<P>, Builder<Component> {
 
     private final Class<?> clazz;
     private final Object obj;
     private InstanceType instanceType = InstanceType.PROTOTYPE;
 
-    ExecutorBuilderImpl(final PipelineBuilderImpl parentScope, MuleContext muleContext, Class<?> clazz) {
+    ExecutorBuilderImpl(final PipelineBuilderImpl<P> parentScope, MuleContext muleContext, Class<?> clazz) {
         super(muleContext, parentScope);
         this.clazz = checkNotNull(clazz, "clazz");
         this.obj = null;
     }
 
-    ExecutorBuilderImpl(final PipelineBuilderImpl parentScope, MuleContext muleContext, Object obj) {
+    ExecutorBuilderImpl(final PipelineBuilderImpl<P> parentScope, MuleContext muleContext, Object obj) {
         super(muleContext, parentScope);
         this.obj = checkNotNull(obj, "obj");
         this.clazz = null;
     }
 
     @Override
-    public PipelineBuilder asSingleton() {
+    public P asSingleton() {
         this.instanceType = InstanceType.SINGLETON;
-        return this;
+        return getThis();
     }
 
     @Override
-    public PipelineBuilder asPrototype() {
+    public P asPrototype() {
         this.instanceType = InstanceType.PROTOTYPE;
-        return this;
+        return getThis();
     }
 
     private enum InstanceType {
@@ -88,5 +88,14 @@ class ExecutorBuilderImpl extends PipelineBuilderImpl implements ExecutorBuilder
         }
 
         throw new RuntimeException("Not supported");
+    }
+
+	@Override
+    @SuppressWarnings("unchecked")
+    protected P getThis() {
+        if (parentScope != null){
+            return (P) parentScope;
+        }
+        return (P) this;
     }
 }

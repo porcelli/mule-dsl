@@ -9,9 +9,8 @@
 
 package org.mule.config.dsl;
 
-public interface ExecutorBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<P> {
-    P asSingleton();
+public interface InboundEndpointBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<P> {
+    P asOneWay();
 
-    P asPrototype();
+    P asRequestResponse();
 }
-

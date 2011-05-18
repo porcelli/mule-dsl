@@ -9,11 +9,11 @@
 
 package org.mule.config.dsl;
 
-import org.junit.Test;
+import org.mule.api.lifecycle.Callable;
 
 public class TestAllRouter {
 
-    @Test
+    //@Test
     public void allRouterTet() {
         Mule.newMuleContext(new AbstractModule() {
             @Override
@@ -26,7 +26,8 @@ public class TestAllRouter {
                                     .echo()
                                         .all()
                                             .echo()
-                                            .echo()
+                                            .execute((Class<?>) null).asSingleton()
+                                            .send(null).asOneWay()
                                         .endAll()
                                         .all()
                                             .all()
@@ -42,10 +43,10 @@ public class TestAllRouter {
                         		.endAll()
                         		.echo()
                         .endAll();
-                
+
                 flow("MyFlow")
                 	.all()
-                    .echo()
+                        .echo()
                         .all()
                             .echo()
                                 .all()
@@ -58,14 +59,28 @@ public class TestAllRouter {
                                 .endAll()
                             .echo()
                         .endAll()
-                .endAll()
-                .all()
-                	.echo()
-                		.all()
-                			.echo()
-                		.endAll()
+                    .endAll()
+                    .all()
+                	    .echo()
+                		    .all()
+                			    .echo()
+                		    .endAll()
                 		.echo()
-                .endAll();
+                    .endAll();
+
+                flow("MyFlow")
+                        .execute((Class<?>)null)
+                        .echo()
+                        .all()
+                            .execute((Callable) null)
+                        .endAll();
+
+                flow("MyFlow")
+                        .send(null).asOneWay()
+                        .echo()
+                        .all()
+                            .execute((Callable) null)
+                        .endAll();
             }
         });
     }
