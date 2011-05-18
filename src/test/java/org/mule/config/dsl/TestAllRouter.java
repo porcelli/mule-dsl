@@ -17,6 +17,7 @@ import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.source.MessageSource;
+import org.mule.component.DefaultJavaComponent;
 import org.mule.component.SimpleCallableJavaComponent;
 import org.mule.component.simple.EchoComponent;
 import org.mule.construct.SimpleFlowConstruct;
@@ -203,4 +204,65 @@ public class TestAllRouter {
 
         assertThat(multicastingRouter.getRoutes().get(0)).isNotNull().isInstanceOf(ImmutableEndpoint.class);
     }
+
+    @Test
+    public void simpleAllWithExecute() {
+        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
+                flow("MyFlow")
+                        .from("file:///Users/porcelli/test")
+                        .all()
+                            .execute(Simple.class).asPrototype()
+                            .execute(Simple.class).asPrototype()
+                        .endAll();
+
+                bind(Simple.class).to(Simple2.class);
+            }
+        });
+
+        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
+
+        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+
+        assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
+        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+
+        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+
+        assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
+
+        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+
+        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+        assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
+
+        assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
+
+        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+
+        assertThat(processor).isNotNull().isInstanceOf(MulticastingRouter.class);
+
+        MulticastingRouter multicastingRouter = (MulticastingRouter) processor;
+
+        assertThat(multicastingRouter.getRoutes()).isNotEmpty().hasSize(2);
+
+        assertThat(multicastingRouter.getRoutes().get(0)).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(multicastingRouter.getRoutes().get(1)).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+    }
+
+
+    public static interface Simple {
+        void execute(String string);
+    }
+
+    public static class Simple2 implements Simple {
+        public void execute(String string) {
+            System.out.println("SIMPLE 2! : " + string);
+        }
+    }
+
 }

@@ -53,11 +53,4 @@ public class OutboundEndpointBuilderImpl<P extends PipelineBuilder<P>> extends P
         internalEndpointBuilder.setExchangePattern(MessageExchangePattern.REQUEST_RESPONSE);
         return parentScope;
     }
-
-//    @Override
-//    @SuppressWarnings("unchecked")
-//    protected P getThis() {
-//        return (P) this;
-//    }
-//
 }

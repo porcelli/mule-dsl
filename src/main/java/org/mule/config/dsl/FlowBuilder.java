@@ -41,9 +41,4 @@ public class FlowBuilder extends PipelineBuilderImpl<FlowBuilder> {
         }
         return flow;
     }
-
-    @Override
-    protected FlowBuilder getThis() {
-        return this;
-    }
 }
