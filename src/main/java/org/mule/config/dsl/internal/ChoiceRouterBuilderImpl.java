@@ -218,7 +218,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         return choiceRouter;
     }
 
-	public class OtherwiseChoiceBuilderImpl<P extends PipelineBuilder<P>> implements OtherwiseChoiceBuilder<P> {
+    public class OtherwiseChoiceBuilderImpl<P extends PipelineBuilder<P>> implements OtherwiseChoiceBuilder<P> {
         @Override
         @SuppressWarnings("unchecked")
         public P endChoice() {

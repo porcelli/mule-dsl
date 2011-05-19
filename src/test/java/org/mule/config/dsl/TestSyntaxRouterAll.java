@@ -13,7 +13,7 @@ import org.mule.api.lifecycle.Callable;
 
 public class TestSyntaxRouterAll {
 
-    //@Test
+//    @Test
     public void allRouterTest() {
         Mule.newMuleContext(new AbstractModule() {
             @Override
@@ -44,7 +44,7 @@ public class TestSyntaxRouterAll {
                         		.echo()
                         .endAll();
 
-                flow("MyFlow")
+                flow("MyFlow2")
                 	.all()
                         .echo()
                         .all()
@@ -68,14 +68,14 @@ public class TestSyntaxRouterAll {
                 		.echo()
                     .endAll();
 
-                flow("MyFlow")
+                flow("MyFlow3")
                         .execute((Class<?>)null)
                         .echo()
                         .all()
                             .execute((Callable) null)
                         .endAll();
 
-                flow("MyFlow")
+                flow("MyFlow4")
                         .send(null).asOneWay()
                         .echo()
                         .all()
