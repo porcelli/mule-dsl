@@ -10,6 +10,7 @@
 package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
+import org.mule.api.MuleContext;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 
@@ -19,7 +20,7 @@ public interface MessageProcessorListBuilder {
 
     void addToProcessorList(Builder<?> builder);
 
-    List<MessageProcessor> buildProcessorList(Injector injector, PropertyPlaceholder placeholder);
+    List<MessageProcessor> buildProcessorList(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder);
 
     boolean isProcessorListEmpty();
 

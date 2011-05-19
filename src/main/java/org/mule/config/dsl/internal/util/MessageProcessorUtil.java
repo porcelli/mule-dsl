@@ -10,6 +10,7 @@
 package org.mule.config.dsl.internal.util;
 
 import com.google.inject.Injector;
+import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.processor.MessageProcessorChain;
@@ -23,17 +24,17 @@ public final class MessageProcessorUtil {
     private MessageProcessorUtil() {
     }
 
-    public static MessageProcessorChain buildProcessorChain(List<Builder<?>> processorList, Injector injector, PropertyPlaceholder placeholder) {
+    public static MessageProcessorChain buildProcessorChain(List<Builder<?>> processorList, MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
 
         if (processorList == null || processorList.size() == 0) {
             return null;
         }
 
-        return buildProcessorChain(buildProcessorList(processorList, injector, placeholder));
+        return buildProcessorChain(buildProcessorList(processorList, muleContext, injector, placeholder));
     }
 
 
-    public static List<MessageProcessor> buildProcessorList(List<Builder<?>> processorList, Injector injector, PropertyPlaceholder placeholder) {
+    public static List<MessageProcessor> buildProcessorList(List<Builder<?>> processorList, MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         if (processorList == null || processorList.size() == 0) {
             return new ArrayList<MessageProcessor>(0);
         }
@@ -41,7 +42,7 @@ public final class MessageProcessorUtil {
         List<MessageProcessor> result = new ArrayList<MessageProcessor>(processorList.size());
 
         for (Builder<?> activeBuilder : processorList) {
-            result.add((MessageProcessor) activeBuilder.build(injector, placeholder));
+            result.add((MessageProcessor) activeBuilder.build(muleContext, injector, placeholder));
         }
 
         return result;

@@ -10,10 +10,11 @@
 package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
+import org.mule.api.MuleContext;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 
 public interface Builder<T> {
 
-    T build(Injector injector, PropertyPlaceholder placeholder);
+    T build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder);
 
 }

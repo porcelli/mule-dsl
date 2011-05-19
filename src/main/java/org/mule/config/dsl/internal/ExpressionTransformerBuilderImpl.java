@@ -10,6 +10,7 @@
 package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
+import org.mule.api.MuleContext;
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.expression.ExpressionConfig;
@@ -29,7 +30,7 @@ public class ExpressionTransformerBuilderImpl<E extends ExpressionEvaluatorBuild
 
 
     @Override
-    public ExpressionTransformer build(Injector injector, PropertyPlaceholder placeholder) {
+    public ExpressionTransformer build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         ExpressionTransformer transformer = new ExpressionTransformer();
         transformer.addArgument(new ExpressionArgument(newName("expr"),
                 new ExpressionConfig(placeholder.replace(expr.getExpression()),

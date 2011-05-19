@@ -15,7 +15,6 @@ import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.component.simple.EchoComponent;
 import org.mule.config.dsl.*;
-import org.mule.config.dsl.component.ExtendedLogComponent;
 import org.mule.config.dsl.component.SimpleLogComponent;
 import org.mule.config.dsl.expression.CoreExpr;
 import org.mule.config.dsl.internal.util.MessageProcessorUtil;
@@ -30,12 +29,10 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
 
     protected final List<Builder<?>> processorList;
     protected final P parentScope;
-    protected final MuleContext muleContext;
 
-    public PipelineBuilderImpl(MuleContext muleContext, P parent) {
+    public PipelineBuilderImpl(P parent) {
         this.processorList = new ArrayList<Builder<?>>();
         this.parentScope = parent;
-        this.muleContext = muleContext;
     }
 
     @SuppressWarnings("unchecked")
@@ -50,7 +47,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         if (parentScope != null) {
             return parentScope.execute(obj);
         }
-        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), muleContext, obj);
+        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), obj);
         processorList.add(builder);
 
         return getThis();
@@ -62,7 +59,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.execute(obj);
         }
 
-        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), muleContext, obj);
+        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), obj);
         processorList.add(builder);
 
         return getThis();
@@ -73,7 +70,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         if (parentScope != null) {
             return parentScope.execute(clazz);
         }
-        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), muleContext, clazz);
+        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), clazz);
         processorList.add(builder);
 
         return builder;
@@ -90,7 +87,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.log(level);
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(getThis(), muleContext, new SimpleLogComponent(level)));
+        processorList.add(new ExecutorBuilderImpl<P>(getThis(), new SimpleLogComponent(level)));
         return getThis();
     }
 
@@ -105,7 +102,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.log(message, level);
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(getThis(), muleContext, new ExtendedLogComponentBuilder(message, level)));
+        processorList.add(new ExecutorBuilderImpl<P>(getThis(), new ExtendedLogComponentBuilder(message, level)));
         return getThis();
     }
 
@@ -121,7 +118,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.log(expr, level);
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(getThis(), muleContext, new ExpressionLogComponentBuilder(expr, level)));
+        processorList.add(new ExecutorBuilderImpl<P>(getThis(), new ExpressionLogComponentBuilder(expr, level)));
         return getThis();
     }
 
@@ -131,7 +128,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.echo();
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(getThis(), muleContext, new EchoComponent()));
+        processorList.add(new ExecutorBuilderImpl<P>(getThis(), new EchoComponent()));
         return getThis();
     }
 
@@ -141,7 +138,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         if (parentScope != null) {
             return parentScope.send(uri);
         }
-        OutboundEndpointBuilderImpl<P> builder = new OutboundEndpointBuilderImpl<P>(getThis(), muleContext, uri);
+        OutboundEndpointBuilderImpl<P> builder = new OutboundEndpointBuilderImpl<P>(getThis(), uri);
         processorList.add(builder);
 
         return builder;
@@ -200,7 +197,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         if (parentScope != null) {
             return parentScope.all();
         }
-        AllRouterBuilderImpl<P> builder = new AllRouterBuilderImpl<P>(muleContext, getThis());
+        AllRouterBuilderImpl<P> builder = new AllRouterBuilderImpl<P>(getThis());
         processorList.add(builder);
 
         return builder;
@@ -211,7 +208,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         if (parentScope != null) {
             return parentScope.choice();
         }
-        ChoiceRouterBuilderImpl<P> builder = new ChoiceRouterBuilderImpl<P>(muleContext, getThis());
+        ChoiceRouterBuilderImpl<P> builder = new ChoiceRouterBuilderImpl<P>(getThis());
         processorList.add(builder);
 
         return builder;
@@ -225,12 +222,12 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
     }
 
     @Override
-    public List<MessageProcessor> buildProcessorList(Injector injector, PropertyPlaceholder placeholder) {
+    public List<MessageProcessor> buildProcessorList(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         if (parentScope != null && parentScope instanceof MessageProcessorListBuilder) {
-            return ((MessageProcessorListBuilder) parentScope).buildProcessorList(injector, placeholder);
+            return ((MessageProcessorListBuilder) parentScope).buildProcessorList(muleContext, injector, placeholder);
         }
 
-        return MessageProcessorUtil.buildProcessorList(processorList, injector, placeholder);
+        return MessageProcessorUtil.buildProcessorList(processorList, muleContext, injector, placeholder);
     }
 
     @Override

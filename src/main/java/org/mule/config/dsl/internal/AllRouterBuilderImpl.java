@@ -28,12 +28,10 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
 
     private final P parentScope;
     private final PipelineBuilderImpl<AllRouterBuilder<P>> pipeline;
-    private final MuleContext muleContext;
 
-    AllRouterBuilderImpl(final MuleContext muleContext, P parentScope) {
+    AllRouterBuilderImpl(P parentScope) {
         this.parentScope = checkNotNull(parentScope, "parentScope");
-        this.muleContext = checkNotNull(muleContext, "muleContext");
-        this.pipeline = new PipelineBuilderImpl<AllRouterBuilder<P>>(this.muleContext, null);
+        this.pipeline = new PipelineBuilderImpl<AllRouterBuilder<P>>(null);
     }
 
     @Override
@@ -97,7 +95,7 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
 
     @Override
     public ExecutorBuilder<AllRouterBuilder<P>> execute(Class<?> clazz) {
-        ExecutorBuilderImpl<AllRouterBuilder<P>> builder = new ExecutorBuilderImpl<AllRouterBuilder<P>>(this, muleContext, clazz);
+        ExecutorBuilderImpl<AllRouterBuilder<P>> builder = new ExecutorBuilderImpl<AllRouterBuilder<P>>(this, clazz);
         pipeline.addToProcessorList(builder);
 
         return builder;
@@ -105,7 +103,7 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
 
     @Override
     public OutboundEndpointBuilder<AllRouterBuilder<P>> send(String uri) {
-        OutboundEndpointBuilderImpl<AllRouterBuilder<P>> builder = new OutboundEndpointBuilderImpl<AllRouterBuilder<P>>(this, muleContext, uri);
+        OutboundEndpointBuilderImpl<AllRouterBuilder<P>> builder = new OutboundEndpointBuilderImpl<AllRouterBuilder<P>>(this, uri);
         pipeline.addToProcessorList(builder);
 
         return builder;
@@ -137,7 +135,7 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
 
     @Override
     public AllRouterBuilder<AllRouterBuilder<P>> all() {
-        AllRouterBuilderImpl<AllRouterBuilder<P>> builder = new AllRouterBuilderImpl<AllRouterBuilder<P>>(muleContext, this);
+        AllRouterBuilderImpl<AllRouterBuilder<P>> builder = new AllRouterBuilderImpl<AllRouterBuilder<P>>(this);
         pipeline.addToProcessorList(builder);
 
         return builder;
@@ -145,7 +143,7 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
 
     @Override
     public ChoiceRouterBuilder<AllRouterBuilder<P>> choice() {
-        ChoiceRouterBuilderImpl<AllRouterBuilder<P>> builder = new ChoiceRouterBuilderImpl<AllRouterBuilder<P>>(muleContext, this);
+        ChoiceRouterBuilderImpl<AllRouterBuilder<P>> builder = new ChoiceRouterBuilderImpl<AllRouterBuilder<P>>(this);
         pipeline.addToProcessorList(builder);
 
         return builder;
@@ -157,8 +155,8 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
     }
 
     @Override
-    public List<MessageProcessor> buildProcessorList(Injector injector, PropertyPlaceholder placeholder) {
-        return pipeline.buildProcessorList(injector, placeholder);
+    public List<MessageProcessor> buildProcessorList(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+        return pipeline.buildProcessorList(muleContext, injector, placeholder);
     }
 
     @Override
@@ -172,12 +170,12 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
     }
 
     @Override
-    public MulticastingRouter build(Injector injector, PropertyPlaceholder placeholder) {
+    public MulticastingRouter build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         if (!pipeline.isProcessorListEmpty()) {
             try {
                 MulticastingRouter router = new MulticastingRouter();
                 router.setMuleContext(muleContext);
-                router.setRoutes(pipeline.buildProcessorList(injector, placeholder));
+                router.setRoutes(pipeline.buildProcessorList(muleContext, injector, placeholder));
                 return router;
             } catch (MuleException e) {
                 //TODO handle

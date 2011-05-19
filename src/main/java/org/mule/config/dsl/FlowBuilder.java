@@ -24,21 +24,21 @@ public class FlowBuilder extends PipelineBuilderImpl<FlowBuilder> {
     private InboundEndpointBuilderImpl<FlowBuilder> inboundEndpointBuilder;
 
     public FlowBuilder(String name, MuleContext muleContext) {
-        super(muleContext, null);
+        super(null);
         this.flow = new SimpleFlowConstruct(name, muleContext);
     }
 
     public InboundEndpointBuilder<FlowBuilder> from(String uri) {
-        this.inboundEndpointBuilder = new InboundEndpointBuilderImpl<FlowBuilder>(this, this.flow.getMuleContext(), uri);
+        this.inboundEndpointBuilder = new InboundEndpointBuilderImpl<FlowBuilder>(this, uri);
         return inboundEndpointBuilder;
     }
 
-    FlowConstruct build(Injector injector, PropertyPlaceholder placeholder) {
+    FlowConstruct build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         if (inboundEndpointBuilder != null) {
-            flow.setMessageSource((MessageSource) inboundEndpointBuilder.build(injector, placeholder));
+            flow.setMessageSource((MessageSource) inboundEndpointBuilder.build(muleContext, injector, placeholder));
         }
         if (!isProcessorListEmpty()) {
-            flow.setMessageProcessors(buildProcessorList(injector, placeholder));
+            flow.setMessageProcessors(buildProcessorList(muleContext, injector, placeholder));
         }
         return flow;
     }

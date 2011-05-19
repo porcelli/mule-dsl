@@ -33,22 +33,22 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
     private final Builder<?> builder;
     private InstanceType instanceType = InstanceType.PROTOTYPE;
 
-    ExecutorBuilderImpl(final P parentScope, MuleContext muleContext, Class<?> clazz) {
-        super(muleContext, parentScope);
+    ExecutorBuilderImpl(final P parentScope, Class<?> clazz) {
+        super(parentScope);
         this.clazz = checkNotNull(clazz, "clazz");
         this.obj = null;
         this.builder = null;
     }
 
-    ExecutorBuilderImpl(final P parentScope, MuleContext muleContext, Object obj) {
-        super(muleContext, parentScope);
+    ExecutorBuilderImpl(final P parentScope, Object obj) {
+        super(parentScope);
         this.obj = checkNotNull(obj, "obj");
         this.clazz = null;
         this.builder = null;
     }
 
-    ExecutorBuilderImpl(final P parentScope, MuleContext muleContext, Builder<?> builder) {
-        super(muleContext, parentScope);
+    ExecutorBuilderImpl(final P parentScope, Builder<?> builder) {
+        super(parentScope);
         this.builder = checkNotNull(builder, "builder");
         this.clazz = null;
         this.obj = null;
@@ -71,7 +71,7 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
     }
 
     @Override
-    public Component build(Injector injector, PropertyPlaceholder placeholder) {
+    public Component build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         if (clazz != null) {
             if (Callable.class.isAssignableFrom(clazz)) {
                 try {
@@ -92,7 +92,7 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
             }
         } else {
             if (builder != null) {
-                obj = builder.build(injector, placeholder);
+                obj = builder.build(muleContext, injector, placeholder);
             }
 
             if (obj instanceof Callable) {

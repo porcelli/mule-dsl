@@ -10,6 +10,7 @@
 package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
+import org.mule.api.MuleContext;
 import org.mule.config.dsl.ErrorLevel;
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
 import org.mule.config.dsl.component.ExpressionLogComponent;
@@ -28,7 +29,7 @@ public class ExpressionLogComponentBuilder implements Builder<ExpressionLogCompo
     }
 
     @Override
-    public ExpressionLogComponent build(Injector injector, PropertyPlaceholder placeholder) {
+    public ExpressionLogComponent build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         return new ExpressionLogComponent(placeholder.replace(message.getExpression()), message.getEvaluator(), level);
     }
 

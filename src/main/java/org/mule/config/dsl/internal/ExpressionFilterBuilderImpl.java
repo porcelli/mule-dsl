@@ -11,6 +11,7 @@ package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
 import org.mule.api.DefaultMuleException;
+import org.mule.api.MuleContext;
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
 import org.mule.config.dsl.expression.CoreExpr;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
@@ -29,7 +30,7 @@ public class ExpressionFilterBuilderImpl implements Builder<MessageFilter> {
     }
 
     @Override
-    public MessageFilter build(Injector injector, PropertyPlaceholder placeholder) {
+    public MessageFilter build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         final MessageFilter messageFilter;
         if (objExpr instanceof CoreExpr.GenericExpressionFilterEvaluatorBuilder) {
             final ExpressionFilterParser parser = new ExpressionFilterParser();

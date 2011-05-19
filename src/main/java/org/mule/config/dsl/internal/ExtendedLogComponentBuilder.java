@@ -10,6 +10,7 @@
 package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
+import org.mule.api.MuleContext;
 import org.mule.config.dsl.ErrorLevel;
 import org.mule.config.dsl.component.ExtendedLogComponent;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
@@ -27,7 +28,7 @@ public class ExtendedLogComponentBuilder implements Builder<ExtendedLogComponent
     }
 
     @Override
-    public ExtendedLogComponent build(Injector injector, PropertyPlaceholder placeholder) {
+    public ExtendedLogComponent build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         return new ExtendedLogComponent(placeholder.replace(message), level);
     }
 }

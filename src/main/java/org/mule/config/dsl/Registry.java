@@ -64,7 +64,7 @@ public class Registry {
     public void build(Injector injector) {
         PropertyPlaceholder placeholder = new PropertyPlaceholder(properties);
         for (FlowBuilder activeFlowBuilder : flows.values()) {
-            FlowConstruct flow = activeFlowBuilder.build(injector, placeholder);
+            FlowConstruct flow = activeFlowBuilder.build(muleContext, injector, placeholder);
             if (flow != null) {
                 try {
                     muleContext.getRegistry().registerFlowConstruct(flow);

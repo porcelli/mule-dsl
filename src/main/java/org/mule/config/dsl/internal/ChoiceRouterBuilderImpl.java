@@ -30,15 +30,13 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
 
     private final P parentScope;
     private final PipelineBuilderImpl<P> pipeline;
-    private final MuleContext muleContext;
     private final LinkedList<Route> choiceElements;
 
     private ExpressionEvaluatorBuilder lastWhenExpr = null;
 
-    ChoiceRouterBuilderImpl(final MuleContext muleContext, P parentScope) {
+    ChoiceRouterBuilderImpl(P parentScope) {
         this.parentScope = checkNotNull(parentScope, "parentScope");
-        this.muleContext = checkNotNull(muleContext, "muleContext");
-        this.pipeline = new PipelineBuilderImpl<P>(this.muleContext, null);
+        this.pipeline = new PipelineBuilderImpl<P>(null);
         this.choiceElements = new LinkedList<Route>();
     }
 
@@ -124,7 +122,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
 
     @Override
     public ExecutorBuilder<InnerWhenChoiceBuilder<P>> execute(Class<?> clazz) {
-        ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>>(this, muleContext, clazz);
+        ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>>(this, clazz);
         pipeline.addToProcessorList(builder);
 
         return builder;
@@ -132,7 +130,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
 
     @Override
     public OutboundEndpointBuilder<InnerWhenChoiceBuilder<P>> send(String uri) {
-        OutboundEndpointBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new OutboundEndpointBuilderImpl<InnerWhenChoiceBuilder<P>>(this, muleContext, uri);
+        OutboundEndpointBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new OutboundEndpointBuilderImpl<InnerWhenChoiceBuilder<P>>(this, uri);
         pipeline.addToProcessorList(builder);
 
         return builder;
@@ -164,7 +162,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
 
     @Override
     public AllRouterBuilder<InnerWhenChoiceBuilder<P>> all() {
-        AllRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new AllRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(muleContext, this);
+        AllRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new AllRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
         pipeline.addToProcessorList(builder);
 
         return builder;
@@ -172,7 +170,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
 
     @Override
     public ChoiceRouterBuilder<InnerWhenChoiceBuilder<P>> choice() {
-        ChoiceRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new ChoiceRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(muleContext, this);
+        ChoiceRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new ChoiceRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
         pipeline.addToProcessorList(builder);
 
         return builder;
@@ -184,8 +182,8 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     }
 
     @Override
-    public List<MessageProcessor> buildProcessorList(Injector injector, PropertyPlaceholder placeholder) {
-        return pipeline.buildProcessorList(injector, placeholder);
+    public List<MessageProcessor> buildProcessorList(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+        return pipeline.buildProcessorList(muleContext, injector, placeholder);
     }
 
     @Override
@@ -199,7 +197,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     }
 
     @Override
-    public ChoiceRouter build(Injector injector, PropertyPlaceholder placeholder) {
+    public ChoiceRouter build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         if (lastWhenExpr != null) {
             choiceElements.add(new Route(lastWhenExpr, pipeline.getProcessorList()));
             pipeline.getProcessorList().clear();
@@ -210,9 +208,9 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         ChoiceRouter choiceRouter = new ChoiceRouter();
         for (Route activeRoute : choiceElements) {
             if (activeRoute.getExpr() != null) {
-                choiceRouter.addRoute(buildProcessorChain(activeRoute.getProcessorList(), injector, placeholder), activeRoute.getExpr().getFilter(placeholder));
+                choiceRouter.addRoute(buildProcessorChain(activeRoute.getProcessorList(), muleContext, injector, placeholder), activeRoute.getExpr().getFilter(placeholder));
             } else {
-                choiceRouter.setDefaultRoute(buildProcessorChain(activeRoute.getProcessorList(), injector, placeholder));
+                choiceRouter.setDefaultRoute(buildProcessorChain(activeRoute.getProcessorList(), muleContext, injector, placeholder));
             }
         }
 
@@ -282,7 +280,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
 
         @Override
         public ExecutorBuilder<OtherwiseChoiceBuilder<P>> execute(Class<?> clazz) {
-            ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>>(this, muleContext, clazz);
+            ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>>(this, clazz);
             pipeline.addToProcessorList(builder);
 
             return builder;
@@ -290,7 +288,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
 
         @Override
         public OutboundEndpointBuilder<OtherwiseChoiceBuilder<P>> send(String uri) {
-            OutboundEndpointBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new OutboundEndpointBuilderImpl<OtherwiseChoiceBuilder<P>>(this, muleContext, uri);
+            OutboundEndpointBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new OutboundEndpointBuilderImpl<OtherwiseChoiceBuilder<P>>(this, uri);
             pipeline.addToProcessorList(builder);
 
             return builder;
@@ -322,7 +320,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
 
         @Override
         public AllRouterBuilder<OtherwiseChoiceBuilder<P>> all() {
-            AllRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new AllRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(muleContext, this);
+            AllRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new AllRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
             pipeline.addToProcessorList(builder);
 
             return builder;
@@ -330,7 +328,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
 
         @Override
         public ChoiceRouterBuilder<OtherwiseChoiceBuilder<P>> choice() {
-            ChoiceRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ChoiceRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(muleContext, this);
+            ChoiceRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ChoiceRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
             pipeline.addToProcessorList(builder);
 
             return builder;

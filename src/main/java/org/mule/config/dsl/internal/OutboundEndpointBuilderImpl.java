@@ -27,17 +27,16 @@ public class OutboundEndpointBuilderImpl<P extends PipelineBuilder<P>> extends P
     private final String uri;
     private MessageExchangePattern exchangePattern = null;
 
-    public OutboundEndpointBuilderImpl(final P parentScope, MuleContext muleContext, String uri) {
-        super(muleContext, parentScope);
+    public OutboundEndpointBuilderImpl(final P parentScope, String uri) {
+        super(parentScope);
         checkNotNull(parentScope, "parentScope");
-        checkNotNull(muleContext, "muleContext");
         checkNotEmpty(uri, "uri");
 
         this.uri = checkNotEmpty(uri, "uri");
     }
 
     @Override
-    public ImmutableEndpoint build(Injector injector, PropertyPlaceholder placeholder) {
+    public ImmutableEndpoint build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         org.mule.api.endpoint.EndpointBuilder internalEndpointBuilder = new EndpointURIEndpointBuilder(new URIBuilder(placeholder.replace(uri), muleContext));
         if (exchangePattern != null){
             internalEndpointBuilder.setExchangePattern(exchangePattern);
