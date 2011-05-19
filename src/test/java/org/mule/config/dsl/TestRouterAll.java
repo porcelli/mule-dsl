@@ -25,7 +25,7 @@ import org.mule.routing.outbound.MulticastingRouter;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-public class TestAllRouter {
+public class TestRouterAll {
 
     @Test
     public void simpleAll() {

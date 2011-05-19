@@ -25,7 +25,7 @@ public final class MessageProcessorUtil {
 
     public static MessageProcessorChain buildProcessorChain(List<Builder<?>> processorList, Injector injector) {
 
-        if (processorList == null || processorList.size() > 0) {
+        if (processorList == null || processorList.size() == 0) {
             return null;
         }
 

@@ -18,6 +18,7 @@ import org.mule.config.dsl.ChoiceRouterBuilder.InnerWhenChoiceBuilder;
 import org.mule.config.dsl.expression.CoreExpr.GenericExpressionFilterEvaluatorBuilder;
 import org.mule.routing.ChoiceRouter;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -217,7 +218,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         return choiceRouter;
     }
 
-    public class OtherwiseChoiceBuilderImpl<P extends PipelineBuilder<P>> implements OtherwiseChoiceBuilder<P> {
+	public class OtherwiseChoiceBuilderImpl<P extends PipelineBuilder<P>> implements OtherwiseChoiceBuilder<P> {
         @Override
         @SuppressWarnings("unchecked")
         public P endChoice() {
@@ -342,7 +343,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
 
         Route(ExpressionEvaluatorBuilder expr, List<Builder<?>> processorList) {
             this.expr = expr;
-            this.processorList = processorList;
+            this.processorList = new ArrayList<Builder<?>>(processorList);
         }
 
         ExpressionEvaluatorBuilder getExpr() {

@@ -33,8 +33,8 @@ public final class CoreExpr {
         return new StringExpressionEvaluatorBuilder(expr);
     }
 
-    public static RegExExpressionEvaluatorBuilder wildcard(String expr) {
-        return new RegExExpressionEvaluatorBuilder(expr);
+    public static WildcardExpressionEvaluatorBuilder wildcard(String expr) {
+        return new WildcardExpressionEvaluatorBuilder(expr);
     }
 
     public static class GenericExpressionFilterEvaluatorBuilder extends BaseEvaluatorBuilder {
