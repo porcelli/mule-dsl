@@ -16,6 +16,7 @@ import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.config.dsl.*;
 import org.mule.config.dsl.expression.CoreExpr;
+import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.routing.outbound.MulticastingRouter;
 
 import java.util.List;
@@ -156,8 +157,8 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
     }
 
     @Override
-    public List<MessageProcessor> buildProcessorList(Injector injector) {
-        return pipeline.buildProcessorList(injector);
+    public List<MessageProcessor> buildProcessorList(Injector injector, PropertyPlaceholder placeholder) {
+        return pipeline.buildProcessorList(injector, placeholder);
     }
 
     @Override
@@ -171,12 +172,12 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
     }
 
     @Override
-    public MulticastingRouter build(Injector injector) {
+    public MulticastingRouter build(Injector injector, PropertyPlaceholder placeholder) {
         if (!pipeline.isProcessorListEmpty()) {
             try {
                 MulticastingRouter router = new MulticastingRouter();
                 router.setMuleContext(muleContext);
-                router.setRoutes(pipeline.buildProcessorList(injector));
+                router.setRoutes(pipeline.buildProcessorList(injector, placeholder));
                 return router;
             } catch (MuleException e) {
                 //TODO handle

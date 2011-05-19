@@ -13,22 +13,26 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.api.MuleEventContext;
 import org.mule.config.dsl.ErrorLevel;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class ExpressionLogComponent extends SimpleLogComponent {
 
     private static final Log logger = LogFactory.getLog(ExpressionLogComponent.class);
 
-    private final ExpressionEvaluatorBuilder message;
+    private final String expression;
+    private final String evaluator;
 
-    public ExpressionLogComponent(ExpressionEvaluatorBuilder message, ErrorLevel level) {
+    public ExpressionLogComponent(String expression, String evaluator, ErrorLevel level) {
         super(level);
-        this.message = message;
+        this.expression = checkNotNull(expression, "expression");
+        this.evaluator = checkNotEmpty(evaluator, "evaluator");
     }
 
     @Override
     public Object onCall(MuleEventContext context) throws Exception {
-        Object returnMessage = context.getMuleContext().getExpressionManager().evaluate(message.getExpression(), message.getEvaluator(), context.getMessage(), false);
+        Object returnMessage = context.getMuleContext().getExpressionManager().evaluate(expression, evaluator, context.getMessage(), false);
         log(returnMessage.toString());
         return context.getMessage();
     }
@@ -38,7 +42,15 @@ public class ExpressionLogComponent extends SimpleLogComponent {
         return logger;
     }
 
-    public ExpressionEvaluatorBuilder getMessageExpression() {
-        return message;
+    public String getExpression() {
+        return expression;
+    }
+
+    public String getEvaluator() {
+        return evaluator;
+    }
+
+    public String getCustomEvaluator() {
+        return null;
     }
 }

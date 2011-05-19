@@ -13,6 +13,7 @@ import com.google.inject.Injector;
 import org.mule.api.DefaultMuleException;
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
 import org.mule.config.dsl.expression.CoreExpr;
+import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.expression.ExpressionFilterParser;
 import org.mule.routing.MessageFilter;
 import org.mule.routing.filters.ExpressionFilter;
@@ -28,19 +29,19 @@ public class ExpressionFilterBuilderImpl implements Builder<MessageFilter> {
     }
 
     @Override
-    public MessageFilter build(Injector injector) {
+    public MessageFilter build(Injector injector, PropertyPlaceholder placeholder) {
         final MessageFilter messageFilter;
         if (objExpr instanceof CoreExpr.GenericExpressionFilterEvaluatorBuilder) {
             final ExpressionFilterParser parser = new ExpressionFilterParser();
             try {
-                messageFilter = new MessageFilter(parser.parseFilterString(((CoreExpr.GenericExpressionFilterEvaluatorBuilder) objExpr).getExpression()));
+                messageFilter = new MessageFilter(parser.parseFilterString(placeholder.replace(((CoreExpr.GenericExpressionFilterEvaluatorBuilder) objExpr).getExpression())));
             } catch (DefaultMuleException e) {
                 //todo handle propert
                 throw new RuntimeException(e);
             }
         } else if (objExpr instanceof ExpressionEvaluatorBuilder) {
             ExpressionEvaluatorBuilder expr = (ExpressionEvaluatorBuilder) objExpr;
-            messageFilter = new MessageFilter(new ExpressionFilter(expr.getEvaluator(), expr.getExpression()));
+            messageFilter = new MessageFilter(new ExpressionFilter(expr.getEvaluator(), placeholder.replace(expr.getExpression())));
         } else {
             //TODO impl
             throw new RuntimeException();

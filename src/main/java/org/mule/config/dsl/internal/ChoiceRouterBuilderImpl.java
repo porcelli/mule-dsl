@@ -16,6 +16,7 @@ import org.mule.api.processor.MessageProcessor;
 import org.mule.config.dsl.*;
 import org.mule.config.dsl.ChoiceRouterBuilder.InnerWhenChoiceBuilder;
 import org.mule.config.dsl.expression.CoreExpr.GenericExpressionFilterEvaluatorBuilder;
+import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.routing.ChoiceRouter;
 
 import java.util.ArrayList;
@@ -183,8 +184,8 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     }
 
     @Override
-    public List<MessageProcessor> buildProcessorList(Injector injector) {
-        return pipeline.buildProcessorList(injector);
+    public List<MessageProcessor> buildProcessorList(Injector injector, PropertyPlaceholder placeholder) {
+        return pipeline.buildProcessorList(injector, placeholder);
     }
 
     @Override
@@ -198,7 +199,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     }
 
     @Override
-    public ChoiceRouter build(Injector injector) {
+    public ChoiceRouter build(Injector injector, PropertyPlaceholder placeholder) {
         if (lastWhenExpr != null) {
             choiceElements.add(new Route(lastWhenExpr, pipeline.getProcessorList()));
             pipeline.getProcessorList().clear();
@@ -209,9 +210,9 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         ChoiceRouter choiceRouter = new ChoiceRouter();
         for (Route activeRoute : choiceElements) {
             if (activeRoute.getExpr() != null) {
-                choiceRouter.addRoute(buildProcessorChain(activeRoute.getProcessorList(), injector), activeRoute.getExpr().getFilter());
+                choiceRouter.addRoute(buildProcessorChain(activeRoute.getProcessorList(), injector, placeholder), activeRoute.getExpr().getFilter(placeholder));
             } else {
-                choiceRouter.setDefaultRoute(buildProcessorChain(activeRoute.getProcessorList(), injector));
+                choiceRouter.setDefaultRoute(buildProcessorChain(activeRoute.getProcessorList(), injector, placeholder));
             }
         }
 

@@ -23,17 +23,17 @@ public final class MessageProcessorUtil {
     private MessageProcessorUtil() {
     }
 
-    public static MessageProcessorChain buildProcessorChain(List<Builder<?>> processorList, Injector injector) {
+    public static MessageProcessorChain buildProcessorChain(List<Builder<?>> processorList, Injector injector, PropertyPlaceholder placeholder) {
 
         if (processorList == null || processorList.size() == 0) {
             return null;
         }
 
-        return buildProcessorChain(buildProcessorList(processorList, injector));
+        return buildProcessorChain(buildProcessorList(processorList, injector, placeholder));
     }
 
 
-    public static List<MessageProcessor> buildProcessorList(List<Builder<?>> processorList, Injector injector) {
+    public static List<MessageProcessor> buildProcessorList(List<Builder<?>> processorList, Injector injector, PropertyPlaceholder placeholder) {
         if (processorList == null || processorList.size() == 0) {
             return new ArrayList<MessageProcessor>(0);
         }
@@ -41,7 +41,7 @@ public final class MessageProcessorUtil {
         List<MessageProcessor> result = new ArrayList<MessageProcessor>(processorList.size());
 
         for (Builder<?> activeBuilder : processorList) {
-            result.add((MessageProcessor) activeBuilder.build(injector));
+            result.add((MessageProcessor) activeBuilder.build(injector, placeholder));
         }
 
         return result;

@@ -15,6 +15,7 @@ import org.mule.api.construct.FlowConstruct;
 import org.mule.api.source.MessageSource;
 import org.mule.config.dsl.internal.InboundEndpointBuilderImpl;
 import org.mule.config.dsl.internal.PipelineBuilderImpl;
+import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.construct.SimpleFlowConstruct;
 
 public class FlowBuilder extends PipelineBuilderImpl<FlowBuilder> {
@@ -32,12 +33,12 @@ public class FlowBuilder extends PipelineBuilderImpl<FlowBuilder> {
         return inboundEndpointBuilder;
     }
 
-    FlowConstruct build(Injector injector) {
+    FlowConstruct build(Injector injector, PropertyPlaceholder placeholder) {
         if (inboundEndpointBuilder != null) {
-            flow.setMessageSource((MessageSource) inboundEndpointBuilder.build(injector));
+            flow.setMessageSource((MessageSource) inboundEndpointBuilder.build(injector, placeholder));
         }
         if (!isProcessorListEmpty()) {
-            flow.setMessageProcessors(buildProcessorList(injector));
+            flow.setMessageProcessors(buildProcessorList(injector, placeholder));
         }
         return flow;
     }

@@ -15,11 +15,11 @@ import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.component.simple.EchoComponent;
 import org.mule.config.dsl.*;
-import org.mule.config.dsl.component.ExpressionLogComponent;
 import org.mule.config.dsl.component.ExtendedLogComponent;
 import org.mule.config.dsl.component.SimpleLogComponent;
 import org.mule.config.dsl.expression.CoreExpr;
 import org.mule.config.dsl.internal.util.MessageProcessorUtil;
+import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +105,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.log(message, level);
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(getThis(), muleContext, new ExtendedLogComponent(message, level)));
+        processorList.add(new ExecutorBuilderImpl<P>(getThis(), muleContext, new ExtendedLogComponentBuilder(message, level)));
         return getThis();
     }
 
@@ -121,7 +121,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.log(expr, level);
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(getThis(), muleContext, new ExpressionLogComponent(expr, level)));
+        processorList.add(new ExecutorBuilderImpl<P>(getThis(), muleContext, new ExpressionLogComponentBuilder(expr, level)));
         return getThis();
     }
 
@@ -225,12 +225,12 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
     }
 
     @Override
-    public List<MessageProcessor> buildProcessorList(Injector injector) {
+    public List<MessageProcessor> buildProcessorList(Injector injector, PropertyPlaceholder placeholder) {
         if (parentScope != null && parentScope instanceof MessageProcessorListBuilder) {
-            return ((MessageProcessorListBuilder) parentScope).buildProcessorList(injector);
+            return ((MessageProcessorListBuilder) parentScope).buildProcessorList(injector, placeholder);
         }
 
-        return MessageProcessorUtil.buildProcessorList(processorList, injector);
+        return MessageProcessorUtil.buildProcessorList(processorList, injector, placeholder);
     }
 
     @Override

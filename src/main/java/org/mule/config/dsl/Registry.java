@@ -14,23 +14,28 @@ import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.construct.FlowConstruct;
+import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class Registry {
 
-    final Map<String, FlowBuilder> flows;
-    final MuleContext muleContext;
-    final Injector injector;
+    private final Map<String, FlowBuilder> flows;
+    private final MuleContext muleContext;
+    private final Injector injector;
+    private final Properties properties;
 
     public Registry(MuleContext muleContext) {
         this.muleContext = checkNotNull(muleContext, "muleContext");
         this.flows = new HashMap<String, FlowBuilder>();
         this.injector = Guice.createInjector();
+        this.properties = new Properties();
     }
 
     public FlowBuilder flow(String flowName) {
@@ -45,12 +50,21 @@ public class Registry {
     }
 
     public void registerPropertyResolver(InputStream inputStream) {
-        //todo implment
+        checkNotNull(inputStream, "inputStream");
+        Properties fileProperties = new Properties();
+        try {
+            fileProperties.load(inputStream);
+            properties.putAll(fileProperties);
+        } catch (IOException e) {
+            //TODO handle here
+            throw new RuntimeException(e);
+        }
     }
 
     public void build(Injector injector) {
+        PropertyPlaceholder placeholder = new PropertyPlaceholder(properties);
         for (FlowBuilder activeFlowBuilder : flows.values()) {
-            FlowConstruct flow = activeFlowBuilder.build(injector);
+            FlowConstruct flow = activeFlowBuilder.build(injector, placeholder);
             if (flow != null) {
                 try {
                     muleContext.getRegistry().registerFlowConstruct(flow);
@@ -61,5 +75,4 @@ public class Registry {
             }
         }
     }
-
 }

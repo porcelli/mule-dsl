@@ -10,6 +10,7 @@
 package org.mule.config.dsl;
 
 import org.mule.api.routing.filter.Filter;
+import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 
 public interface ExpressionEvaluatorBuilder {
     String getEvaluator();
@@ -18,5 +19,5 @@ public interface ExpressionEvaluatorBuilder {
 
     String getExpression();
 
-    Filter getFilter();
+    Filter getFilter(PropertyPlaceholder placeholder);
 }

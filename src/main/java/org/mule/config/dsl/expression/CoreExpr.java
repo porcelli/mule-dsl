@@ -11,6 +11,7 @@ package org.mule.config.dsl.expression;
 
 import org.mule.api.routing.filter.Filter;
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.routing.filters.RegExFilter;
 import org.mule.routing.filters.WildcardFilter;
 
@@ -45,7 +46,7 @@ public final class CoreExpr {
         }
 
         @Override
-        public Filter getFilter() {
+        public Filter getFilter(PropertyPlaceholder placeholder) {
             return null;
         }
     }
@@ -58,8 +59,8 @@ public final class CoreExpr {
         }
 
         @Override
-        public Filter getFilter() {
-            return new RegExFilter(getExpression());
+        public Filter getFilter(PropertyPlaceholder placeholder) {
+            return new RegExFilter(placeholder.replace(getExpression()));
         }
     }
 
@@ -71,8 +72,8 @@ public final class CoreExpr {
         }
 
         @Override
-        public Filter getFilter() {
-            return new WildcardFilter(getExpression());
+        public Filter getFilter(PropertyPlaceholder placeholder) {
+            return new WildcardFilter(placeholder.replace(getExpression()));
         }
     }
 
@@ -84,7 +85,7 @@ public final class CoreExpr {
         }
 
         @Override
-        public Filter getFilter() {
+        public Filter getFilter(PropertyPlaceholder placeholder) {
             return null;
         }
     }
@@ -113,7 +114,7 @@ public final class CoreExpr {
             return expression;
         }
 
-        public abstract Filter getFilter();
+        public abstract Filter getFilter(PropertyPlaceholder placeholder);
     }
 
 }

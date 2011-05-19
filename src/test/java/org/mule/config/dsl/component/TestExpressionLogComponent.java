@@ -9,23 +9,19 @@
 
 package org.mule.config.dsl.component;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mule.config.dsl.ErrorLevel.DEBUG;
-import static org.mule.config.dsl.ErrorLevel.ERROR;
-import static org.mule.config.dsl.ErrorLevel.FATAL;
-import static org.mule.config.dsl.ErrorLevel.INFO;
-import static org.mule.config.dsl.ErrorLevel.TRACE;
-import static org.mule.config.dsl.ErrorLevel.WARN;
-import static org.mule.config.dsl.expression.CoreExpr.string;
-
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
-import org.mule.api.config.ConfigurationException;
-import org.mule.api.lifecycle.InitialisationException;
+import org.mule.config.dsl.expression.CoreExpr;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.ErrorLevel.*;
+import static org.mule.config.dsl.expression.CoreExpr.string;
 
 public class TestExpressionLogComponent extends BaseComponentTests {
 
-    public TestExpressionLogComponent() throws InitialisationException, ConfigurationException {
+    private static final CoreExpr.StringExpressionEvaluatorBuilder expressionEvaluatorBuilder = string("payload content: #[mule:message.payload()]");
+
+    public TestExpressionLogComponent() {
         super();
     }
 
@@ -36,7 +32,7 @@ public class TestExpressionLogComponent extends BaseComponentTests {
 
         testLogger.reset();
 
-        ExpressionLogComponent logFatalComponent = new ExpressionLogComponent(string("payload content: #[mule:message.payload()]"), FATAL);
+        ExpressionLogComponent logFatalComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), FATAL);
         logFatalComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isNotEmpty().hasSize(1);
@@ -59,7 +55,7 @@ public class TestExpressionLogComponent extends BaseComponentTests {
         LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(ExpressionLogComponent.class);
         testLogger.reset();
 
-        ExpressionLogComponent logErrorComponent = new ExpressionLogComponent(string("payload content: #[mule:message.payload()]"), ERROR);
+        ExpressionLogComponent logErrorComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), ERROR);
         logErrorComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isEmpty();
@@ -84,7 +80,7 @@ public class TestExpressionLogComponent extends BaseComponentTests {
         LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(ExpressionLogComponent.class);
         testLogger.reset();
 
-        ExpressionLogComponent logWarnComponent = new ExpressionLogComponent(string("payload content: #[mule:message.payload()]"), WARN);
+        ExpressionLogComponent logWarnComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), WARN);
         logWarnComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isEmpty();
@@ -111,7 +107,7 @@ public class TestExpressionLogComponent extends BaseComponentTests {
         LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(ExpressionLogComponent.class);
         testLogger.reset();
 
-        ExpressionLogComponent logInfoComponent = new ExpressionLogComponent(string("payload content: #[mule:message.payload()]"), INFO);
+        ExpressionLogComponent logInfoComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), INFO);
         logInfoComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isEmpty();
@@ -140,7 +136,7 @@ public class TestExpressionLogComponent extends BaseComponentTests {
         LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(ExpressionLogComponent.class);
         testLogger.reset();
 
-        ExpressionLogComponent logDebugComponent = new ExpressionLogComponent(string("payload content: #[mule:message.payload()]"), DEBUG);
+        ExpressionLogComponent logDebugComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), DEBUG);
         logDebugComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isEmpty();
@@ -171,7 +167,7 @@ public class TestExpressionLogComponent extends BaseComponentTests {
         LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(ExpressionLogComponent.class);
         testLogger.reset();
 
-        ExpressionLogComponent logTraceComponent = new ExpressionLogComponent(string("payload content: #[mule:message.payload()]"), TRACE);
+        ExpressionLogComponent logTraceComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), TRACE);
         logTraceComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isEmpty();

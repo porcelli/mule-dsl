@@ -15,6 +15,7 @@ import org.mule.api.MuleContext;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.config.dsl.InboundEndpointBuilder;
 import org.mule.config.dsl.PipelineBuilder;
+import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.endpoint.URIBuilder;
 
@@ -23,19 +24,24 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class InboundEndpointBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderImpl<P> implements InboundEndpointBuilder<P>, Builder<ImmutableEndpoint> {
 
-    protected final org.mule.api.endpoint.EndpointBuilder internalEndpointBuilder;
+    private final String uri;
+    private MessageExchangePattern exchangePattern = null;
 
     public InboundEndpointBuilderImpl(final P parentScope, MuleContext muleContext, String uri) {
         super(muleContext, parentScope);
         checkNotNull(parentScope, "parentScope");
         checkNotNull(muleContext, "muleContext");
-        checkNotEmpty(uri, "uri");
 
-        this.internalEndpointBuilder = new EndpointURIEndpointBuilder(new URIBuilder(uri, muleContext));
+        this.uri = checkNotEmpty(uri, "uri");
     }
 
     @Override
-    public ImmutableEndpoint build(Injector injector) {
+    public ImmutableEndpoint build(Injector injector, PropertyPlaceholder placeholder) {
+        org.mule.api.endpoint.EndpointBuilder internalEndpointBuilder = new EndpointURIEndpointBuilder(new URIBuilder(placeholder.replace(uri), muleContext));
+        if (exchangePattern != null) {
+            internalEndpointBuilder.setExchangePattern(exchangePattern);
+        }
+
         try {
             return internalEndpointBuilder.buildInboundEndpoint();
         } catch (Exception e) {
@@ -45,12 +51,12 @@ public class InboundEndpointBuilderImpl<P extends PipelineBuilder<P>> extends Pi
     }
 
     public P asOneWay() {
-        internalEndpointBuilder.setExchangePattern(MessageExchangePattern.ONE_WAY);
+        this.exchangePattern = MessageExchangePattern.ONE_WAY;
         return getThis();
     }
 
     public P asRequestResponse() {
-        internalEndpointBuilder.setExchangePattern(MessageExchangePattern.REQUEST_RESPONSE);
+        this.exchangePattern = MessageExchangePattern.REQUEST_RESPONSE;
         return getThis();
     }
 

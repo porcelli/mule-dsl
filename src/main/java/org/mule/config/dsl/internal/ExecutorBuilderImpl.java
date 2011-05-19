@@ -19,6 +19,7 @@ import org.mule.component.SimpleCallableJavaComponent;
 import org.mule.config.dsl.ExecutorBuilder;
 import org.mule.config.dsl.PipelineBuilder;
 import org.mule.config.dsl.internal.util.InjectorUtil;
+import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.object.PrototypeObjectFactory;
 import org.mule.object.SingletonObjectFactory;
 
@@ -27,20 +28,30 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderImpl<P> implements ExecutorBuilder<P>, Builder<Component> {
 
+    private Object obj;
     private final Class<?> clazz;
-    private final Object obj;
+    private final Builder<?> builder;
     private InstanceType instanceType = InstanceType.PROTOTYPE;
 
     ExecutorBuilderImpl(final P parentScope, MuleContext muleContext, Class<?> clazz) {
         super(muleContext, parentScope);
         this.clazz = checkNotNull(clazz, "clazz");
         this.obj = null;
+        this.builder = null;
     }
 
     ExecutorBuilderImpl(final P parentScope, MuleContext muleContext, Object obj) {
         super(muleContext, parentScope);
         this.obj = checkNotNull(obj, "obj");
         this.clazz = null;
+        this.builder = null;
+    }
+
+    ExecutorBuilderImpl(final P parentScope, MuleContext muleContext, Builder<?> builder) {
+        super(muleContext, parentScope);
+        this.builder = checkNotNull(builder, "builder");
+        this.clazz = null;
+        this.obj = null;
     }
 
     @Override
@@ -60,7 +71,7 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
     }
 
     @Override
-    public Component build(Injector injector) {
+    public Component build(Injector injector, PropertyPlaceholder placeholder) {
         if (clazz != null) {
             if (Callable.class.isAssignableFrom(clazz)) {
                 try {
@@ -80,20 +91,23 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
                 }
             }
         } else {
+            if (builder != null) {
+                obj = builder.build(injector, placeholder);
+            }
+
             if (obj instanceof Callable) {
                 return new SimpleCallableJavaComponent((Callable) obj);
             } else {
                 return new DefaultJavaComponent(new SingletonObjectFactory(obj), createDefaultResolverSet(), null);
             }
         }
-
         throw new RuntimeException("Not supported");
     }
 
-	@Override
+    @Override
     @SuppressWarnings("unchecked")
     protected P getThis() {
-        if (parentScope != null){
+        if (parentScope != null) {
             return (P) parentScope;
         }
         return (P) this;

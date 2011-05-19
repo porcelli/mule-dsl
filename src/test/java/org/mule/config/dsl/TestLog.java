@@ -589,9 +589,9 @@ public class TestLog {
         assertThat(log1 == log2).isEqualTo(true);
 
         assertThat(log1.getLevel()).isEqualTo(ErrorLevel.INFO);
-        assertThat(log1.getMessageExpression().getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
-        assertThat(log1.getMessageExpression().getEvaluator()).isEqualTo("string");
-        assertThat(log1.getMessageExpression().getCustomEvaluator()).isNull();
+        assertThat(log1.getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
+        assertThat(log1.getEvaluator()).isEqualTo("string");
+        assertThat(log1.getCustomEvaluator()).isNull();
     }
 
     @Test
@@ -645,9 +645,9 @@ public class TestLog {
         assertThat(log_1 == log_2).isEqualTo(true);
 
         assertThat(log_1.getLevel()).isEqualTo(ErrorLevel.INFO);
-        assertThat(log_1.getMessageExpression().getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
-        assertThat(log_1.getMessageExpression().getEvaluator()).isEqualTo("string");
-        assertThat(log_1.getMessageExpression().getCustomEvaluator()).isNull();
+        assertThat(log_1.getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
+        assertThat(log_1.getEvaluator()).isEqualTo("string");
+        assertThat(log_1.getCustomEvaluator()).isNull();
 
         MessageProcessor log2Processor = iterator.next();
 
@@ -665,9 +665,9 @@ public class TestLog {
         assertThat(log2_1 == log2_2).isEqualTo(true);
 
         assertThat(log2_1.getLevel()).isEqualTo(ErrorLevel.INFO);
-        assertThat(log2_1.getMessageExpression().getExpression()).isEqualTo("payload2 content: #[mule:message.payload()]");
-        assertThat(log2_1.getMessageExpression().getEvaluator()).isEqualTo("string");
-        assertThat(log2_1.getMessageExpression().getCustomEvaluator()).isNull();
+        assertThat(log2_1.getExpression()).isEqualTo("payload2 content: #[mule:message.payload()]");
+        assertThat(log2_1.getEvaluator()).isEqualTo("string");
+        assertThat(log2_1.getCustomEvaluator()).isNull();
 
         assertThat(log_1 != log2_1).isEqualTo(true);
         assertThat(log_2 != log2_2).isEqualTo(true);
@@ -723,9 +723,9 @@ public class TestLog {
         assertThat(log1 == log2).isEqualTo(true);
 
         assertThat(log1.getLevel()).isEqualTo(ErrorLevel.WARN);
-        assertThat(log1.getMessageExpression().getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
-        assertThat(log1.getMessageExpression().getEvaluator()).isEqualTo("string");
-        assertThat(log1.getMessageExpression().getCustomEvaluator()).isNull();
+        assertThat(log1.getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
+        assertThat(log1.getEvaluator()).isEqualTo("string");
+        assertThat(log1.getCustomEvaluator()).isNull();
     }
 
 
@@ -780,9 +780,9 @@ public class TestLog {
         assertThat(log_1 == log_2).isEqualTo(true);
 
         assertThat(log_1.getLevel()).isEqualTo(ErrorLevel.WARN);
-        assertThat(log_1.getMessageExpression().getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
-        assertThat(log_1.getMessageExpression().getEvaluator()).isEqualTo("string");
-        assertThat(log_1.getMessageExpression().getCustomEvaluator()).isNull();
+        assertThat(log_1.getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
+        assertThat(log_1.getEvaluator()).isEqualTo("string");
+        assertThat(log_1.getCustomEvaluator()).isNull();
 
         MessageProcessor log2Processor = iterator.next();
 
@@ -800,9 +800,9 @@ public class TestLog {
         assertThat(log2_1 == log2_2).isEqualTo(true);
 
         assertThat(log2_1.getLevel()).isEqualTo(ErrorLevel.FATAL);
-        assertThat(log_1.getMessageExpression().getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
-        assertThat(log_1.getMessageExpression().getEvaluator()).isEqualTo("string");
-        assertThat(log_1.getMessageExpression().getCustomEvaluator()).isNull();
+        assertThat(log_1.getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
+        assertThat(log_1.getEvaluator()).isEqualTo("string");
+        assertThat(log_1.getCustomEvaluator()).isNull();
 
         assertThat(log_1 != log2_1).isEqualTo(true);
         assertThat(log_2 != log2_2).isEqualTo(true);
