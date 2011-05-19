@@ -28,9 +28,9 @@ import org.mule.routing.filters.WildcardFilter;
 
 import java.util.List;
 
-import static org.PrivateAccessor.getPrivateFieldValue;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mule.config.dsl.expression.CoreExpr.wildcard;
+import static org.mule.config.dsl.hack.PrivateAccessor.getPrivateFieldValue;
 
 public class TestRouterChoice {
 

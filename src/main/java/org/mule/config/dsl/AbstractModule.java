@@ -9,7 +9,12 @@
 
 package org.mule.config.dsl;
 
+import org.apache.commons.discovery.Resource;
+import org.apache.commons.discovery.tools.ResourceUtils;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import static org.mule.config.dsl.internal.util.NameGenerator.newName;
@@ -65,31 +70,60 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
     }
 
     public static class ClasspathBuilder {
-//        private final String value;
+        private final String value;
+        private InputStream content = null;
 
         public ClasspathBuilder(String value) {
-//            this.value = checkNotEmpty(value, "classpath");
+            this.value = checkNotEmpty(value, "classpath");
         }
 
         public InputStream get() {
-            return null;
+            if (content == null) {
+                Resource res = ResourceUtils.getResource(this.getClass(), value, null);
+                if (res == null) {
+                    //TODO improve
+                    throw new RuntimeException("Resource not found.");
+                }
+                this.content = res.getResourceAsStream();
+            }
+            return content;
         }
     }
 
     public static class FileRefBuilder {
-//        private final File file;
+        private final File file;
+        private InputStream content = null;
 
         public FileRefBuilder(String file) {
             checkNotEmpty(file, "file");
-//            this.file = new File(file);
+            this.file = new File(file);
         }
 
         public FileRefBuilder(File file) {
-//            this.file = checkNotNull(file, "file");
+            this.file = checkNotNull(file, "file");
         }
 
         public InputStream get() {
-            return null;
+            if (content == null) {
+                if (!file.exists()) {
+                    //TODO improve
+                    throw new RuntimeException("File not found.");
+                }
+                if (!file.isFile()) {
+                    throw new RuntimeException("It's not a file.");
+                }
+                if (!file.canRead()) {
+                    throw new RuntimeException("Can't read file.");
+                }
+                try {
+                    this.content = new FileInputStream(file);
+                } catch (FileNotFoundException e) {
+                    //TODO improve
+                    throw new RuntimeException("File not found.", e);
+                }
+            }
+
+            return content;
         }
     }
 

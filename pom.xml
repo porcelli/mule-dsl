@@ -28,6 +28,12 @@
             <version>3.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>commons-discovery</groupId>
+            <artifactId>commons-discovery</artifactId>
+            <version>0.5</version>
+        </dependency>
+
         <!-- test dependencies -->
         <dependency>
             <groupId>org.mule.transports</groupId>
@@ -55,10 +61,10 @@
             <scope>test</scope>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>org.mockito</groupId>-->
-            <!--<artifactId>mockito-all</artifactId>-->
-            <!--<version>1.8.5</version>-->
-            <!--<scope>test</scope>-->
+        <!--<groupId>org.mockito</groupId>-->
+        <!--<artifactId>mockito-all</artifactId>-->
+        <!--<version>1.8.5</version>-->
+        <!--<scope>test</scope>-->
         <!--</dependency>-->
 
         <dependency>

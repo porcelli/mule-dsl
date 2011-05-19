@@ -7,7 +7,7 @@
  * LICENSE.txt file.
  */
 
-package org;
+package org.mule.config.dsl.hack;
 
 import org.fest.util.Collections;
 
