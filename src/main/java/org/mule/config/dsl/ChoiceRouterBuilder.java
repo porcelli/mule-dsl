@@ -16,6 +16,11 @@ public interface ChoiceRouterBuilder<P extends PipelineBuilder<P>> {
     P endChoice();
 
     public static interface InnerWhenChoiceBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<InnerWhenChoiceBuilder<P>>, ChoiceRouterBuilder<P> {
-        InnerWhenChoiceBuilder<P> otherwise();
+        OtherwiseChoiceBuilder<P> otherwise();
     }
+
+    public static interface OtherwiseChoiceBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<OtherwiseChoiceBuilder<P>> {
+        P endChoice();
+    }
+
 }

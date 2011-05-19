@@ -166,6 +166,11 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
     }
 
     @Override
+    public List<Builder<?>> getProcessorList() {
+        return pipeline.getProcessorList();
+    }
+
+    @Override
     public MulticastingRouter build(Injector injector) {
         if (!pipeline.isProcessorListEmpty()) {
             try {

@@ -18,8 +18,10 @@ import org.mule.config.dsl.ChoiceRouterBuilder.InnerWhenChoiceBuilder;
 import org.mule.config.dsl.expression.CoreExpr.GenericExpressionFilterEvaluatorBuilder;
 import org.mule.routing.ChoiceRouter;
 
+import java.util.LinkedList;
 import java.util.List;
 
+import static org.mule.config.dsl.internal.util.MessageProcessorUtil.buildProcessorChain;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements ChoiceRouterBuilder<P>, InnerWhenChoiceBuilder<P>, Builder<ChoiceRouter>, MessageProcessorListBuilder {
@@ -27,23 +29,36 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     private final P parentScope;
     private final PipelineBuilderImpl<P> pipeline;
     private final MuleContext muleContext;
+    private final LinkedList<Route> choiceElements;
+
+    private ExpressionEvaluatorBuilder lastWhenExpr = null;
 
     ChoiceRouterBuilderImpl(final MuleContext muleContext, P parentScope) {
         this.parentScope = checkNotNull(parentScope, "parentScope");
         this.muleContext = checkNotNull(muleContext, "muleContext");
         this.pipeline = new PipelineBuilderImpl<P>(this.muleContext, null);
+        this.choiceElements = new LinkedList<Route>();
     }
 
     @Override
     public <E extends ExpressionEvaluatorBuilder> InnerWhenChoiceBuilder<P> when(E expr) {
-        // TODO Auto-generated method stub
-        return null;
+        if (lastWhenExpr != null) {
+            choiceElements.add(new Route(lastWhenExpr, pipeline.getProcessorList()));
+            pipeline.getProcessorList().clear();
+        }
+        lastWhenExpr = checkNotNull(expr, "expr");
+        return this;
     }
 
     @Override
-    public InnerWhenChoiceBuilder<P> otherwise() {
-        // TODO Auto-generated method stub
-        return null;
+    public OtherwiseChoiceBuilder<P> otherwise() {
+        if (lastWhenExpr != null) {
+            choiceElements.add(new Route(lastWhenExpr, pipeline.getProcessorList()));
+            pipeline.getProcessorList().clear();
+        }
+        lastWhenExpr = null;
+
+        return new OtherwiseChoiceBuilderImpl<P>();
     }
 
     @Override
@@ -177,8 +192,165 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     }
 
     @Override
-    public ChoiceRouter build(Injector injector) {
-        return null;
+    public List<Builder<?>> getProcessorList() {
+        return pipeline.getProcessorList();
     }
 
+    @Override
+    public ChoiceRouter build(Injector injector) {
+        if (lastWhenExpr != null) {
+            choiceElements.add(new Route(lastWhenExpr, pipeline.getProcessorList()));
+            pipeline.getProcessorList().clear();
+        } else if (pipeline.getProcessorList().size() > 0) {
+            choiceElements.add(new Route(null, pipeline.getProcessorList()));
+        }
+
+        ChoiceRouter choiceRouter = new ChoiceRouter();
+        for (Route activeRoute : choiceElements) {
+            if (activeRoute.getExpr() != null) {
+                choiceRouter.addRoute(buildProcessorChain(activeRoute.getProcessorList(), injector), activeRoute.getExpr().getFilter());
+            } else {
+                choiceRouter.setDefaultRoute(buildProcessorChain(activeRoute.getProcessorList(), injector));
+            }
+        }
+
+        return choiceRouter;
+    }
+
+    public class OtherwiseChoiceBuilderImpl<P extends PipelineBuilder<P>> implements OtherwiseChoiceBuilder<P> {
+        @Override
+        @SuppressWarnings("unchecked")
+        public P endChoice() {
+            return (P) parentScope;
+        }
+
+        @Override
+        public OtherwiseChoiceBuilder<P> log() {
+            ChoiceRouterBuilderImpl.this.log();
+            return this;
+        }
+
+        @Override
+        public OtherwiseChoiceBuilder<P> log(ErrorLevel level) {
+            ChoiceRouterBuilderImpl.this.log(level);
+            return this;
+        }
+
+        @Override
+        public OtherwiseChoiceBuilder<P> log(String message) {
+            ChoiceRouterBuilderImpl.this.log(message);
+            return this;
+        }
+
+        @Override
+        public OtherwiseChoiceBuilder<P> log(String message, ErrorLevel level) {
+            ChoiceRouterBuilderImpl.this.log(message, level);
+            return this;
+        }
+
+        @Override
+        public <E extends ExpressionEvaluatorBuilder> OtherwiseChoiceBuilder<P> log(E expr) {
+            ChoiceRouterBuilderImpl.this.log(expr);
+            return this;
+        }
+
+        @Override
+        public <E extends ExpressionEvaluatorBuilder> OtherwiseChoiceBuilder<P> log(E expr, ErrorLevel level) {
+            ChoiceRouterBuilderImpl.this.log(expr, level);
+            return this;
+        }
+
+        @Override
+        public OtherwiseChoiceBuilder<P> echo() {
+            ChoiceRouterBuilderImpl.this.echo();
+            return this;
+        }
+
+        @Override
+        public OtherwiseChoiceBuilder<P> execute(Object obj) {
+            ChoiceRouterBuilderImpl.this.execute(obj);
+            return this;
+        }
+
+        @Override
+        public OtherwiseChoiceBuilder<P> execute(Callable obj) {
+            ChoiceRouterBuilderImpl.this.execute(obj);
+            return this;
+        }
+
+        @Override
+        public ExecutorBuilder<OtherwiseChoiceBuilder<P>> execute(Class<?> clazz) {
+            ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>>(this, muleContext, clazz);
+            pipeline.addToProcessorList(builder);
+
+            return builder;
+        }
+
+        @Override
+        public OutboundEndpointBuilder<OtherwiseChoiceBuilder<P>> send(String uri) {
+            OutboundEndpointBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new OutboundEndpointBuilderImpl<OtherwiseChoiceBuilder<P>>(this, muleContext, uri);
+            pipeline.addToProcessorList(builder);
+
+            return builder;
+        }
+
+        @Override
+        public <E extends ExpressionEvaluatorBuilder> OtherwiseChoiceBuilder<P> transform(E expr) {
+            ChoiceRouterBuilderImpl.this.transform(expr);
+            return this;
+        }
+
+        @Override
+        public <T> OtherwiseChoiceBuilder<P> transformTo(Class<T> clazz) {
+            ChoiceRouterBuilderImpl.this.transformTo(clazz);
+            return this;
+        }
+
+        @Override
+        public OtherwiseChoiceBuilder<P> filter(GenericExpressionFilterEvaluatorBuilder expr) {
+            ChoiceRouterBuilderImpl.this.filter(expr);
+            return this;
+        }
+
+        @Override
+        public <E extends ExpressionEvaluatorBuilder> OtherwiseChoiceBuilder<P> filter(E expr) {
+            ChoiceRouterBuilderImpl.this.filter(expr);
+            return this;
+        }
+
+        @Override
+        public AllRouterBuilder<OtherwiseChoiceBuilder<P>> all() {
+            AllRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new AllRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(muleContext, this);
+            pipeline.addToProcessorList(builder);
+
+            return builder;
+        }
+
+        @Override
+        public ChoiceRouterBuilder<OtherwiseChoiceBuilder<P>> choice() {
+            ChoiceRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ChoiceRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(muleContext, this);
+            pipeline.addToProcessorList(builder);
+
+            return builder;
+        }
+    }
+
+    private static class Route {
+        final ExpressionEvaluatorBuilder expr;
+
+        final List<Builder<?>> processorList;
+
+        Route(ExpressionEvaluatorBuilder expr, List<Builder<?>> processorList) {
+            this.expr = expr;
+            this.processorList = processorList;
+        }
+
+        ExpressionEvaluatorBuilder getExpr() {
+            return expr;
+        }
+
+        List<Builder<?>> getProcessorList() {
+            return processorList;
+        }
+    }
 }

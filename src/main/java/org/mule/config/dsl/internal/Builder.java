@@ -11,8 +11,8 @@ package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
 
-interface Builder<T> {
+public interface Builder<T> {
 
-    public T build(Injector injector);
+    T build(Injector injector);
 
 }

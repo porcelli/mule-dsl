@@ -19,6 +19,7 @@ import org.mule.config.dsl.component.ExpressionLogComponent;
 import org.mule.config.dsl.component.ExtendedLogComponent;
 import org.mule.config.dsl.component.SimpleLogComponent;
 import org.mule.config.dsl.expression.CoreExpr;
+import org.mule.config.dsl.internal.util.MessageProcessorUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -229,15 +230,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return ((MessageProcessorListBuilder) parentScope).buildProcessorList(injector);
         }
 
-        List<MessageProcessor> result = new ArrayList<MessageProcessor>();
-
-        if (!isProcessorListEmpty()) {
-            for (Builder<?> builder : processorList) {
-                result.add((MessageProcessor) builder.build(injector));
-            }
-        }
-
-        return result;
+        return MessageProcessorUtil.buildProcessorList(processorList, injector);
     }
 
     @Override
@@ -250,6 +243,11 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return false;
         }
         return true;
+    }
+
+    @Override
+    public List<Builder<?>> getProcessorList() {
+        return processorList;
     }
 
 }

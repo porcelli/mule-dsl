@@ -9,7 +9,10 @@
 
 package org.mule.config.dsl.expression;
 
+import org.mule.api.routing.filter.Filter;
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.routing.filters.RegExFilter;
+import org.mule.routing.filters.WildcardFilter;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
@@ -40,6 +43,11 @@ public final class CoreExpr {
         public GenericExpressionFilterEvaluatorBuilder(String expression) {
             super(EVALUATOR, expression, null);
         }
+
+        @Override
+        public Filter getFilter() {
+            return null;
+        }
     }
 
     public static class RegExExpressionEvaluatorBuilder extends BaseEvaluatorBuilder implements ExpressionEvaluatorBuilder {
@@ -47,6 +55,11 @@ public final class CoreExpr {
 
         public RegExExpressionEvaluatorBuilder(String expression) {
             super(EVALUATOR, expression, null);
+        }
+
+        @Override
+        public Filter getFilter() {
+            return new RegExFilter(getExpression());
         }
     }
 
@@ -56,6 +69,11 @@ public final class CoreExpr {
         public WildcardExpressionEvaluatorBuilder(String expression) {
             super(EVALUATOR, expression, null);
         }
+
+        @Override
+        public Filter getFilter() {
+            return new WildcardFilter(getExpression());
+        }
     }
 
     public static class StringExpressionEvaluatorBuilder extends BaseEvaluatorBuilder implements ExpressionEvaluatorBuilder {
@@ -63,6 +81,11 @@ public final class CoreExpr {
 
         public StringExpressionEvaluatorBuilder(String expression) {
             super(EVALUATOR, expression, null);
+        }
+
+        @Override
+        public Filter getFilter() {
+            return null;
         }
     }
 
@@ -89,6 +112,8 @@ public final class CoreExpr {
         public String getExpression() {
             return expression;
         }
+
+        public abstract Filter getFilter();
     }
 
 }

@@ -9,10 +9,14 @@
 
 package org.mule.config.dsl;
 
+import org.mule.api.routing.filter.Filter;
+
 public interface ExpressionEvaluatorBuilder {
     String getEvaluator();
 
     String getCustomEvaluator();
 
     String getExpression();
+
+    Filter getFilter();
 }

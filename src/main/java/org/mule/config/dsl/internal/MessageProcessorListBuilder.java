@@ -21,4 +21,6 @@ public interface MessageProcessorListBuilder {
     List<MessageProcessor> buildProcessorList(Injector injector);
 
     boolean isProcessorListEmpty();
+
+    List<Builder<?>> getProcessorList();
 }
