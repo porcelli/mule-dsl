@@ -42,5 +42,6 @@ nbproject
 *.iws
 *.iml
 
-# mule hidden
+# hidden folders
 .mule
+.clover
