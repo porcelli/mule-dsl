@@ -12,29 +12,25 @@ package org.mule.config.dsl.internal;
 import com.google.inject.Injector;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
-import org.mule.api.endpoint.ImmutableEndpoint;
-import org.mule.config.dsl.InboundEndpointBuilder;
-import org.mule.config.dsl.PipelineBuilder;
+import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.endpoint.URIBuilder;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-public class InboundEndpointBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderImpl<P> implements InboundEndpointBuilder<P>, Builder<ImmutableEndpoint> {
+public class InboundEndpointBuilderImpl implements Builder<InboundEndpoint> {
 
     private final String uri;
     private MessageExchangePattern exchangePattern = null;
 
-    public InboundEndpointBuilderImpl(final P parentScope, String uri) {
-        super(parentScope);
-        checkNotNull(parentScope, "parentScope");
+    public InboundEndpointBuilderImpl(String uri, MessageExchangePattern exchangePattern) {
         this.uri = checkNotEmpty(uri, "uri");
+        this.exchangePattern = exchangePattern;
     }
 
     @Override
-    public ImmutableEndpoint build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public InboundEndpoint build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         org.mule.api.endpoint.EndpointBuilder internalEndpointBuilder = new EndpointURIEndpointBuilder(new URIBuilder(placeholder.replace(uri), muleContext));
         if (exchangePattern != null) {
             internalEndpointBuilder.setExchangePattern(exchangePattern);
@@ -47,21 +43,4 @@ public class InboundEndpointBuilderImpl<P extends PipelineBuilder<P>> extends Pi
             throw new RuntimeException(e);
         }
     }
-
-    public P asOneWay() {
-        this.exchangePattern = MessageExchangePattern.ONE_WAY;
-        return getThis();
-    }
-
-    public P asRequestResponse() {
-        this.exchangePattern = MessageExchangePattern.REQUEST_RESPONSE;
-        return getThis();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    protected P getThis() {
-        return (P) this;
-    }
-
 }

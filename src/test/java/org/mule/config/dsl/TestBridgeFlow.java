@@ -138,8 +138,8 @@ public class TestBridgeFlow {
                         .from("file:///Users/porcelli/test")
                         .execute(myCallable)
                         .echo()
-                        .send("file:///Users/porcelli/out").asOneWay()
-                        .send("file:///Users/porcelli/out2").asOneWay();
+                        .send("file:///Users/porcelli/out", MessageExchangePattern.ONE_WAY)
+                        .send("file:///Users/porcelli/out2", MessageExchangePattern.ONE_WAY);
             }
         });
 

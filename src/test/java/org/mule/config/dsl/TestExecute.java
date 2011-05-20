@@ -26,6 +26,8 @@ import javax.inject.Singleton;
 import java.util.Iterator;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.Scope.PROTOTYPE;
+import static org.mule.config.dsl.Scope.SINGLETON;
 
 public class TestExecute {
 
@@ -445,7 +447,7 @@ public class TestExecute {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class).asPrototype();
+                        .execute(Complex2.class, PROTOTYPE);
             }
         });
 
@@ -491,8 +493,8 @@ public class TestExecute {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class).asPrototype()
-                        .execute(Complex2.class).asPrototype();
+                        .execute(Complex2.class, PROTOTYPE)
+                        .execute(Complex2.class, PROTOTYPE);
             }
         });
 
@@ -547,7 +549,7 @@ public class TestExecute {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class).asSingleton();
+                        .execute(Complex2.class, SINGLETON);
             }
         });
 
@@ -593,8 +595,8 @@ public class TestExecute {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class).asSingleton()
-                        .execute(Complex2.class).asSingleton();
+                        .execute(Complex2.class, SINGLETON)
+                        .execute(Complex2.class, SINGLETON);
             }
         });
 
@@ -865,9 +867,9 @@ public class TestExecute {
                         .from("file:///Users/porcelli/test")
                         .execute(Simple.class)
                         .execute(SimpleCallable.class)
-                        .execute(Complex2.class).asSingleton()
+                        .execute(Complex2.class, SINGLETON)
                         .execute(new Simple3())
-                        .execute(Complex2.class).asPrototype()
+                        .execute(Complex2.class, PROTOTYPE)
                         .execute(new SimpleCallable());
 
                 bind(Simple.class).to(Simple2.class).in(Singleton.class);

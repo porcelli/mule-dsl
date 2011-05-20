@@ -30,40 +30,27 @@ class ExecutorBuilderImpl implements Builder<Component> {
     private Object obj;
     private final Class<?> clazz;
     private final Builder<?> builder;
-    private InstanceType instanceType = InstanceType.PROTOTYPE;
+    private final Scope scope;
 
     ExecutorBuilderImpl(Class<?> clazz, Scope scope) {
         this.clazz = checkNotNull(clazz, "clazz");
+        this.scope = checkNotNull(scope, "scope");;
         this.obj = null;
         this.builder = null;
     }
 
     ExecutorBuilderImpl(Object obj) {
         this.obj = checkNotNull(obj, "obj");
+        this.scope = Scope.PROTOTYPE;
         this.clazz = null;
         this.builder = null;
     }
 
     ExecutorBuilderImpl(Builder<?> builder) {
         this.builder = checkNotNull(builder, "builder");
+        this.scope = Scope.PROTOTYPE;
         this.clazz = null;
         this.obj = null;
-    }
-
-    @Override
-    public P asSingleton() {
-        this.instanceType = InstanceType.SINGLETON;
-        return getThis();
-    }
-
-    @Override
-    public P asPrototype() {
-        this.instanceType = InstanceType.PROTOTYPE;
-        return getThis();
-    }
-
-    private enum InstanceType {
-        SINGLETON, PROTOTYPE
     }
 
     @Override
@@ -79,9 +66,9 @@ class ExecutorBuilderImpl implements Builder<Component> {
                 if (InjectorUtil.hasProvider(injector, clazz)) {
                     return new DefaultJavaComponent(new GuiceLookup(injector, clazz), createDefaultResolverSet(), null);
                 } else {
-                    if (instanceType.equals(ExecutorBuilderImpl.InstanceType.PROTOTYPE)) {
+                    if (scope.equals(Scope.PROTOTYPE)) {
                         return new DefaultJavaComponent(new PrototypeObjectFactory(clazz), createDefaultResolverSet(), null);
-                    } else if (instanceType.equals(ExecutorBuilderImpl.InstanceType.SINGLETON)) {
+                    } else if (scope.equals(Scope.SINGLETON)) {
                         return new DefaultJavaComponent(new SingletonObjectFactory(clazz), createDefaultResolverSet(), null);
                     }
                 }
@@ -98,14 +85,5 @@ class ExecutorBuilderImpl implements Builder<Component> {
             }
         }
         throw new RuntimeException("Not supported");
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    protected P getThis() {
-        if (parentScope != null) {
-            return (P) parentScope;
-        }
-        return (P) this;
     }
 }

@@ -12,7 +12,7 @@ package org.mule.config.dsl.internal;
 import com.google.inject.Injector;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
-import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.endpoint.URIBuilder;

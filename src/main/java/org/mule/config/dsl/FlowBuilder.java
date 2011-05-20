@@ -9,7 +9,12 @@
 
 package org.mule.config.dsl;
 
+import org.mule.MessageExchangePattern;
+
 public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
 
     PipelineBuilder<FlowBuilder> from(String uri);
+
+    PipelineBuilder<FlowBuilder> from(String uri, MessageExchangePattern pattern);
+
 }

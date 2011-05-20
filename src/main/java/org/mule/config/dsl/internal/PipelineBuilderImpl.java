@@ -66,7 +66,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
 
     @Override
     public P execute(Class<?> clazz) {
-        return parentScope.execute(clazz, Scope.PROTOTYPE);
+        return execute(clazz, Scope.PROTOTYPE);
     }
 
     @Override
@@ -139,7 +139,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
     /* outbound */
     @Override
     public P send(String uri) {
-        return parentScope.send(uri, null);
+        return send(uri, null);
     }
 
     @Override
@@ -147,8 +147,8 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         if (parentScope != null) {
             return parentScope.send(uri);
         }
-        OutboundEndpointBuilderImpl<P> builder = new OutboundEndpointBuilderImpl<P>(getThis(), uri);
-        processorList.add(builder);
+
+        processorList.add(new OutboundEndpointBuilderImpl(uri, pattern));
 
         return getThis();
     }

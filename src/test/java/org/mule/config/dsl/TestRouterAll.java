@@ -168,7 +168,7 @@ public class TestRouterAll {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .all()
-                            .send("file:///Users/porcelli/out").asOneWay()
+                            .send("file:///Users/porcelli/out", MessageExchangePattern.ONE_WAY)
                         .endAll();
             }
         });
@@ -213,8 +213,8 @@ public class TestRouterAll {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .all()
-                            .execute(Simple.class).asPrototype()
-                            .execute(Simple.class).asPrototype()
+                            .execute(Simple.class, Scope.PROTOTYPE)
+                            .execute(Simple.class, Scope.PROTOTYPE)
                         .endAll();
 
                 bind(Simple.class).to(Simple2.class);

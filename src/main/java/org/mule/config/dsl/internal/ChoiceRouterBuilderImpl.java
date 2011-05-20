@@ -10,6 +10,7 @@
 package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
+import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
@@ -121,19 +122,27 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     }
 
     @Override
-    public ExecutorBuilder<InnerWhenChoiceBuilder<P>> execute(Class<?> clazz) {
-        ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>>(this, clazz);
-        pipeline.addToProcessorList(builder);
-
-        return builder;
+    public InnerWhenChoiceBuilder<P> execute(Class<?> clazz) {
+        pipeline.execute(clazz);
+        return this;
     }
 
     @Override
-    public OutboundEndpointBuilder<InnerWhenChoiceBuilder<P>> send(String uri) {
-        OutboundEndpointBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new OutboundEndpointBuilderImpl<InnerWhenChoiceBuilder<P>>(this, uri);
-        pipeline.addToProcessorList(builder);
+    public InnerWhenChoiceBuilder<P> execute(Class<?> clazz, Scope scope) {
+        pipeline.execute(clazz, scope);
+        return this;
+    }
 
-        return builder;
+    @Override
+    public InnerWhenChoiceBuilder<P> send(String uri) {
+        pipeline.send(uri);
+        return this;
+    }
+
+    @Override
+    public InnerWhenChoiceBuilder<P> send(String uri, MessageExchangePattern pattern) {
+        pipeline.send(uri, pattern);
+        return this;
     }
 
     @Override
@@ -279,19 +288,27 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         }
 
         @Override
-        public ExecutorBuilder<OtherwiseChoiceBuilder<P>> execute(Class<?> clazz) {
-            ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>>(this, clazz);
-            pipeline.addToProcessorList(builder);
-
-            return builder;
+        public OtherwiseChoiceBuilder<P> execute(Class<?> clazz) {
+            ChoiceRouterBuilderImpl.this.execute(clazz);
+            return this;
         }
 
         @Override
-        public OutboundEndpointBuilder<OtherwiseChoiceBuilder<P>> send(String uri) {
-            OutboundEndpointBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new OutboundEndpointBuilderImpl<OtherwiseChoiceBuilder<P>>(this, uri);
-            pipeline.addToProcessorList(builder);
+        public OtherwiseChoiceBuilder<P> execute(Class<?> clazz, Scope scope) {
+            ChoiceRouterBuilderImpl.this.execute(clazz, scope);
+            return this;
+        }
 
-            return builder;
+        @Override
+        public OtherwiseChoiceBuilder<P> send(String uri) {
+            ChoiceRouterBuilderImpl.this.send(uri);
+            return this;
+        }
+
+        @Override
+        public OtherwiseChoiceBuilder<P> send(String uri, MessageExchangePattern pattern) {
+            ChoiceRouterBuilderImpl.this.send(uri, pattern);
+            return this;
         }
 
         @Override

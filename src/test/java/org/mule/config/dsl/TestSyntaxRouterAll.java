@@ -11,7 +11,7 @@ package org.mule.config.dsl;
 
 import org.mule.api.lifecycle.Callable;
 
-import static org.mule.config.dsl.ExchangePattern.ONE_WAY;
+import static org.mule.MessageExchangePattern.ONE_WAY;
 import static org.mule.config.dsl.Scope.SINGLETON;
 
 public class TestSyntaxRouterAll {

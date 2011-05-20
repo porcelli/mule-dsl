@@ -10,6 +10,7 @@
 package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
+import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.lifecycle.Callable;
@@ -94,20 +95,29 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
     }
 
     @Override
-    public ExecutorBuilder<AllRouterBuilder<P>> execute(Class<?> clazz) {
-        ExecutorBuilderImpl<AllRouterBuilder<P>> builder = new ExecutorBuilderImpl<AllRouterBuilder<P>>(this, clazz);
-        pipeline.addToProcessorList(builder);
-
-        return builder;
+    public AllRouterBuilder<P> execute(Class<?> clazz) {
+        pipeline.execute(clazz);
+        return this;
     }
 
     @Override
-    public OutboundEndpointBuilder<AllRouterBuilder<P>> send(String uri) {
-        OutboundEndpointBuilderImpl<AllRouterBuilder<P>> builder = new OutboundEndpointBuilderImpl<AllRouterBuilder<P>>(this, uri);
-        pipeline.addToProcessorList(builder);
-
-        return builder;
+    public AllRouterBuilder<P> execute(Class<?> clazz, Scope scope) {
+        pipeline.execute(clazz, scope);
+        return this;
     }
+
+    @Override
+    public AllRouterBuilder<P> send(String uri) {
+        pipeline.send(uri);
+        return this;
+    }
+
+    @Override
+    public AllRouterBuilder<P> send(String uri, MessageExchangePattern pattern) {
+        pipeline.send(uri, pattern);
+        return this;
+    }
+
 
     @Override
     public <E extends ExpressionEvaluatorBuilder> AllRouterBuilder<P> transform(E expr) {
