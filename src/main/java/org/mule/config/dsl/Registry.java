@@ -14,6 +14,7 @@ import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.construct.FlowConstruct;
+import org.mule.config.dsl.internal.FlowBuilderImpl;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 
 import java.io.IOException;
@@ -26,14 +27,14 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class Registry {
 
-    private final Map<String, FlowBuilder> flows;
+    private final Map<String, FlowBuilderImpl> flows;
     private final MuleContext muleContext;
     private final Injector injector;
     private final Properties properties;
 
     public Registry(MuleContext muleContext) {
         this.muleContext = checkNotNull(muleContext, "muleContext");
-        this.flows = new HashMap<String, FlowBuilder>();
+        this.flows = new HashMap<String, FlowBuilderImpl>();
         this.injector = Guice.createInjector();
         this.properties = new Properties();
     }
@@ -43,7 +44,7 @@ public class Registry {
             throw new IllegalArgumentException();
         }
 
-        FlowBuilder fb = new FlowBuilder(flowName, muleContext);
+        FlowBuilderImpl fb = new FlowBuilderImpl(flowName, muleContext);
         flows.put(flowName, fb);
 
         return fb;
@@ -63,7 +64,7 @@ public class Registry {
 
     public void build(Injector injector) {
         PropertyPlaceholder placeholder = new PropertyPlaceholder(properties);
-        for (FlowBuilder activeFlowBuilder : flows.values()) {
+        for (FlowBuilderImpl activeFlowBuilder : flows.values()) {
             FlowConstruct flow = activeFlowBuilder.build(muleContext, injector, placeholder);
             if (flow != null) {
                 try {
