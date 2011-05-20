@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.mule.config.dsl.expression.CoreExpr;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mule.config.dsl.ErrorLevel.*;
+import static org.mule.config.dsl.LogLevel.*;
 import static org.mule.config.dsl.expression.CoreExpr.string;
 
 public class TestExpressionLogComponent extends BaseComponentTests {

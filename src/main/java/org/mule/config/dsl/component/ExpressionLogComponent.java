@@ -12,7 +12,7 @@ package org.mule.config.dsl.component;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.api.MuleEventContext;
-import org.mule.config.dsl.ErrorLevel;
+import org.mule.config.dsl.LogLevel;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
@@ -24,7 +24,7 @@ public class ExpressionLogComponent extends SimpleLogComponent {
     private final String expression;
     private final String evaluator;
 
-    public ExpressionLogComponent(String expression, String evaluator, ErrorLevel level) {
+    public ExpressionLogComponent(String expression, String evaluator, LogLevel level) {
         super(level);
         this.expression = checkNotNull(expression, "expression");
         this.evaluator = checkNotEmpty(evaluator, "evaluator");

@@ -46,7 +46,7 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
     }
 
     @Override
-    public AllRouterBuilder<P> log(ErrorLevel level) {
+    public AllRouterBuilder<P> log(LogLevel level) {
         pipeline.log(level);
         return this;
     }
@@ -58,7 +58,7 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
     }
 
     @Override
-    public AllRouterBuilder<P> log(String message, ErrorLevel level) {
+    public AllRouterBuilder<P> log(String message, LogLevel level) {
         pipeline.log(message, level);
         return this;
     }
@@ -70,7 +70,7 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
     }
 
     @Override
-    public <E extends ExpressionEvaluatorBuilder> AllRouterBuilder<P> log(E expr, ErrorLevel level) {
+    public <E extends ExpressionEvaluatorBuilder> AllRouterBuilder<P> log(E expr, LogLevel level) {
         pipeline.log(expr, level);
         return this;
     }

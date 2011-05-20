@@ -12,16 +12,16 @@ package org.mule.config.dsl.component;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.component.simple.LogComponent;
-import org.mule.config.dsl.ErrorLevel;
+import org.mule.config.dsl.LogLevel;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class SimpleLogComponent extends LogComponent {
     private static final Log logger = LogFactory.getLog(SimpleLogComponent.class);
 
-    private final ErrorLevel level;
+    private final LogLevel level;
 
-    public SimpleLogComponent(ErrorLevel level) {
+    public SimpleLogComponent(LogLevel level) {
         super();
         this.level = checkNotNull(level, "level");
     }
@@ -60,7 +60,7 @@ public class SimpleLogComponent extends LogComponent {
         return logger;
     }
 
-    public ErrorLevel getLevel() {
+    public LogLevel getLevel() {
         return level;
     }
 

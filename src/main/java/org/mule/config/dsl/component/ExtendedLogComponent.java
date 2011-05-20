@@ -12,7 +12,7 @@ package org.mule.config.dsl.component;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.api.MuleEventContext;
-import org.mule.config.dsl.ErrorLevel;
+import org.mule.config.dsl.LogLevel;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
@@ -21,7 +21,7 @@ public class ExtendedLogComponent extends SimpleLogComponent {
 
     private final String message;
 
-    public ExtendedLogComponent(String message, ErrorLevel level) {
+    public ExtendedLogComponent(String message, LogLevel level) {
         super(level);
 
         this.message = checkNotNull(message, "message");

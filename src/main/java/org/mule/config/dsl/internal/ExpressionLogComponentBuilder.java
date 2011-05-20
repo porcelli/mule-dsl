@@ -11,7 +11,7 @@ package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ErrorLevel;
+import org.mule.config.dsl.LogLevel;
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
 import org.mule.config.dsl.component.ExpressionLogComponent;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
@@ -20,10 +20,10 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class ExpressionLogComponentBuilder implements Builder<ExpressionLogComponent> {
 
-    private final ErrorLevel level;
+    private final LogLevel level;
     private final ExpressionEvaluatorBuilder message;
 
-    ExpressionLogComponentBuilder(ExpressionEvaluatorBuilder message, ErrorLevel level) {
+    ExpressionLogComponentBuilder(ExpressionEvaluatorBuilder message, LogLevel level) {
         this.message = checkNotNull(message, "message");
         this.level = checkNotNull(level, "level");
     }

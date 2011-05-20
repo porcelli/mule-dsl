@@ -9,6 +9,6 @@
 
 package org.mule.config.dsl;
 
-public enum ErrorLevel {
+public enum LogLevel {
 	TRACE, DEBUG, INFO, WARN, ERROR, FATAL
 }

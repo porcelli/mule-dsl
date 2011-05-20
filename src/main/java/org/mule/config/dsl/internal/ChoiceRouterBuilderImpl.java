@@ -73,7 +73,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     }
 
     @Override
-    public InnerWhenChoiceBuilder<P> log(ErrorLevel level) {
+    public InnerWhenChoiceBuilder<P> log(LogLevel level) {
         pipeline.log(level);
         return this;
     }
@@ -85,7 +85,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     }
 
     @Override
-    public InnerWhenChoiceBuilder<P> log(String message, ErrorLevel level) {
+    public InnerWhenChoiceBuilder<P> log(String message, LogLevel level) {
         pipeline.log(message, level);
         return this;
     }
@@ -97,7 +97,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     }
 
     @Override
-    public <E extends ExpressionEvaluatorBuilder> InnerWhenChoiceBuilder<P> log(E expr, ErrorLevel level) {
+    public <E extends ExpressionEvaluatorBuilder> InnerWhenChoiceBuilder<P> log(E expr, LogLevel level) {
         pipeline.log(expr, level);
         return this;
     }
@@ -231,7 +231,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         }
 
         @Override
-        public OtherwiseChoiceBuilder<P> log(ErrorLevel level) {
+        public OtherwiseChoiceBuilder<P> log(LogLevel level) {
             ChoiceRouterBuilderImpl.this.log(level);
             return this;
         }
@@ -243,7 +243,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         }
 
         @Override
-        public OtherwiseChoiceBuilder<P> log(String message, ErrorLevel level) {
+        public OtherwiseChoiceBuilder<P> log(String message, LogLevel level) {
             ChoiceRouterBuilderImpl.this.log(message, level);
             return this;
         }
@@ -255,7 +255,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         }
 
         @Override
-        public <E extends ExpressionEvaluatorBuilder> OtherwiseChoiceBuilder<P> log(E expr, ErrorLevel level) {
+        public <E extends ExpressionEvaluatorBuilder> OtherwiseChoiceBuilder<P> log(E expr, LogLevel level) {
             ChoiceRouterBuilderImpl.this.log(expr, level);
             return this;
         }

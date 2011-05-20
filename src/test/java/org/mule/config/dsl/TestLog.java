@@ -78,7 +78,7 @@ public class TestLog {
 
         assertThat(log1 == log2).isEqualTo(true);
 
-        assertThat(log1.getLevel()).isEqualTo(ErrorLevel.INFO);
+        assertThat(log1.getLevel()).isEqualTo(LogLevel.INFO);
     }
 
     @Test
@@ -131,7 +131,7 @@ public class TestLog {
 
         assertThat(log_1 == log_2).isEqualTo(true);
 
-        assertThat(log_1.getLevel()).isEqualTo(ErrorLevel.INFO);
+        assertThat(log_1.getLevel()).isEqualTo(LogLevel.INFO);
 
         MessageProcessor logProcessor2 = iterator.next();
 
@@ -148,7 +148,7 @@ public class TestLog {
 
         assertThat(log2_1 == log2_2).isEqualTo(true);
 
-        assertThat(log2_1.getLevel()).isEqualTo(ErrorLevel.INFO);
+        assertThat(log2_1.getLevel()).isEqualTo(LogLevel.INFO);
 
         assertThat(log_1 != log2_1).isEqualTo(true);
         assertThat(log_2 != log2_2).isEqualTo(true);
@@ -162,7 +162,7 @@ public class TestLog {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .log(ErrorLevel.ERROR);
+                        .log(LogLevel.ERROR);
             }
         });
 
@@ -204,7 +204,7 @@ public class TestLog {
 
         assertThat(log_1 == log_2).isEqualTo(true);
 
-        assertThat(log_1.getLevel()).isEqualTo(ErrorLevel.ERROR);
+        assertThat(log_1.getLevel()).isEqualTo(LogLevel.ERROR);
     }
 
     @Test
@@ -214,8 +214,8 @@ public class TestLog {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .log(ErrorLevel.ERROR)
-                        .log(ErrorLevel.WARN);
+                        .log(LogLevel.ERROR)
+                        .log(LogLevel.WARN);
             }
         });
 
@@ -257,7 +257,7 @@ public class TestLog {
 
         assertThat(log_1 == log_2).isEqualTo(true);
 
-        assertThat(log_1.getLevel()).isEqualTo(ErrorLevel.ERROR);
+        assertThat(log_1.getLevel()).isEqualTo(LogLevel.ERROR);
 
         MessageProcessor logProcessor2 = iterator.next();
 
@@ -274,7 +274,7 @@ public class TestLog {
 
         assertThat(log2_1 == log2_2).isEqualTo(true);
 
-        assertThat(log2_1.getLevel()).isEqualTo(ErrorLevel.WARN);
+        assertThat(log2_1.getLevel()).isEqualTo(LogLevel.WARN);
 
         assertThat(log_1 != log2_1).isEqualTo(true);
         assertThat(log_2 != log2_2).isEqualTo(true);
@@ -330,7 +330,7 @@ public class TestLog {
 
         assertThat(log1 == log2).isEqualTo(true);
 
-        assertThat(log1.getLevel()).isEqualTo(ErrorLevel.INFO);
+        assertThat(log1.getLevel()).isEqualTo(LogLevel.INFO);
         assertThat(log1.getMessage()).isEqualTo("message here!");
     }
 
@@ -384,7 +384,7 @@ public class TestLog {
 
         assertThat(log_1 == log_2).isEqualTo(true);
 
-        assertThat(log_1.getLevel()).isEqualTo(ErrorLevel.INFO);
+        assertThat(log_1.getLevel()).isEqualTo(LogLevel.INFO);
         assertThat(log_1.getMessage()).isEqualTo("message here!");
 
         MessageProcessor log2Processor = iterator.next();
@@ -402,7 +402,7 @@ public class TestLog {
 
         assertThat(log2_1 == log2_2).isEqualTo(true);
 
-        assertThat(log2_1.getLevel()).isEqualTo(ErrorLevel.INFO);
+        assertThat(log2_1.getLevel()).isEqualTo(LogLevel.INFO);
         assertThat(log2_1.getMessage()).isEqualTo("message here 2!");
 
         assertThat(log_1 != log2_1).isEqualTo(true);
@@ -416,7 +416,7 @@ public class TestLog {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .log("message here!", ErrorLevel.WARN);
+                        .log("message here!", LogLevel.WARN);
             }
         });
 
@@ -458,7 +458,7 @@ public class TestLog {
 
         assertThat(log1 == log2).isEqualTo(true);
 
-        assertThat(log1.getLevel()).isEqualTo(ErrorLevel.WARN);
+        assertThat(log1.getLevel()).isEqualTo(LogLevel.WARN);
         assertThat(log1.getMessage()).isEqualTo("message here!");
     }
 
@@ -470,8 +470,8 @@ public class TestLog {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .log("message here!", ErrorLevel.WARN)
-                        .log("message here 2!", ErrorLevel.FATAL);
+                        .log("message here!", LogLevel.WARN)
+                        .log("message here 2!", LogLevel.FATAL);
             }
         });
 
@@ -513,7 +513,7 @@ public class TestLog {
 
         assertThat(log_1 == log_2).isEqualTo(true);
 
-        assertThat(log_1.getLevel()).isEqualTo(ErrorLevel.WARN);
+        assertThat(log_1.getLevel()).isEqualTo(LogLevel.WARN);
         assertThat(log_1.getMessage()).isEqualTo("message here!");
 
         MessageProcessor log2Processor = iterator.next();
@@ -531,7 +531,7 @@ public class TestLog {
 
         assertThat(log2_1 == log2_2).isEqualTo(true);
 
-        assertThat(log2_1.getLevel()).isEqualTo(ErrorLevel.FATAL);
+        assertThat(log2_1.getLevel()).isEqualTo(LogLevel.FATAL);
         assertThat(log2_1.getMessage()).isEqualTo("message here 2!");
 
         assertThat(log_1 != log2_1).isEqualTo(true);
@@ -588,7 +588,7 @@ public class TestLog {
 
         assertThat(log1 == log2).isEqualTo(true);
 
-        assertThat(log1.getLevel()).isEqualTo(ErrorLevel.INFO);
+        assertThat(log1.getLevel()).isEqualTo(LogLevel.INFO);
         assertThat(log1.getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
         assertThat(log1.getEvaluator()).isEqualTo("string");
         assertThat(log1.getCustomEvaluator()).isNull();
@@ -644,7 +644,7 @@ public class TestLog {
 
         assertThat(log_1 == log_2).isEqualTo(true);
 
-        assertThat(log_1.getLevel()).isEqualTo(ErrorLevel.INFO);
+        assertThat(log_1.getLevel()).isEqualTo(LogLevel.INFO);
         assertThat(log_1.getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
         assertThat(log_1.getEvaluator()).isEqualTo("string");
         assertThat(log_1.getCustomEvaluator()).isNull();
@@ -664,7 +664,7 @@ public class TestLog {
 
         assertThat(log2_1 == log2_2).isEqualTo(true);
 
-        assertThat(log2_1.getLevel()).isEqualTo(ErrorLevel.INFO);
+        assertThat(log2_1.getLevel()).isEqualTo(LogLevel.INFO);
         assertThat(log2_1.getExpression()).isEqualTo("payload2 content: #[mule:message.payload()]");
         assertThat(log2_1.getEvaluator()).isEqualTo("string");
         assertThat(log2_1.getCustomEvaluator()).isNull();
@@ -680,7 +680,7 @@ public class TestLog {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .log(string("payload content: #[mule:message.payload()]"), ErrorLevel.WARN);
+                        .log(string("payload content: #[mule:message.payload()]"), LogLevel.WARN);
             }
         });
 
@@ -722,7 +722,7 @@ public class TestLog {
 
         assertThat(log1 == log2).isEqualTo(true);
 
-        assertThat(log1.getLevel()).isEqualTo(ErrorLevel.WARN);
+        assertThat(log1.getLevel()).isEqualTo(LogLevel.WARN);
         assertThat(log1.getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
         assertThat(log1.getEvaluator()).isEqualTo("string");
         assertThat(log1.getCustomEvaluator()).isNull();
@@ -736,8 +736,8 @@ public class TestLog {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .log(string("payload content: #[mule:message.payload()]"), ErrorLevel.WARN)
-                        .log(string("payload2 content: #[mule:message.payload()]"), ErrorLevel.FATAL);
+                        .log(string("payload content: #[mule:message.payload()]"), LogLevel.WARN)
+                        .log(string("payload2 content: #[mule:message.payload()]"), LogLevel.FATAL);
             }
         });
 
@@ -779,7 +779,7 @@ public class TestLog {
 
         assertThat(log_1 == log_2).isEqualTo(true);
 
-        assertThat(log_1.getLevel()).isEqualTo(ErrorLevel.WARN);
+        assertThat(log_1.getLevel()).isEqualTo(LogLevel.WARN);
         assertThat(log_1.getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
         assertThat(log_1.getEvaluator()).isEqualTo("string");
         assertThat(log_1.getCustomEvaluator()).isNull();
@@ -799,7 +799,7 @@ public class TestLog {
 
         assertThat(log2_1 == log2_2).isEqualTo(true);
 
-        assertThat(log2_1.getLevel()).isEqualTo(ErrorLevel.FATAL);
+        assertThat(log2_1.getLevel()).isEqualTo(LogLevel.FATAL);
         assertThat(log_1.getExpression()).isEqualTo("payload content: #[mule:message.payload()]");
         assertThat(log_1.getEvaluator()).isEqualTo("string");
         assertThat(log_1.getCustomEvaluator()).isNull();

@@ -97,7 +97,7 @@ public class TestPropertyResolver {
 
         assertThat(log1 == log2).isEqualTo(true);
 
-        assertThat(log1.getLevel()).isEqualTo(ErrorLevel.INFO);
+        assertThat(log1.getLevel()).isEqualTo(LogLevel.INFO);
         assertThat(log1.getMessage()).isEqualTo("message here: My App cool name!");
 
         MessageProcessor processor = iterator.next();
@@ -182,7 +182,7 @@ public class TestPropertyResolver {
 
         assertThat(log1 == log2).isEqualTo(true);
 
-        assertThat(log1.getLevel()).isEqualTo(ErrorLevel.INFO);
+        assertThat(log1.getLevel()).isEqualTo(LogLevel.INFO);
         assertThat(log1.getMessage()).isEqualTo("message here: My App cool name!");
 
         MessageProcessor processor = iterator.next();
@@ -268,7 +268,7 @@ public class TestPropertyResolver {
 
         assertThat(log1 == log2).isEqualTo(true);
 
-        assertThat(log1.getLevel()).isEqualTo(ErrorLevel.INFO);
+        assertThat(log1.getLevel()).isEqualTo(LogLevel.INFO);
         assertThat(log1.getMessage()).isEqualTo("message here: My App cool name!");
 
         MessageProcessor processor = iterator.next();

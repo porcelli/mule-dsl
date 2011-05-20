@@ -11,7 +11,7 @@ package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ErrorLevel;
+import org.mule.config.dsl.LogLevel;
 import org.mule.config.dsl.component.ExtendedLogComponent;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 
@@ -19,10 +19,10 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class ExtendedLogComponentBuilder implements Builder<ExtendedLogComponent> {
 
-    private final ErrorLevel level;
+    private final LogLevel level;
     private final String message;
 
-    ExtendedLogComponentBuilder(String message, ErrorLevel level) {
+    ExtendedLogComponentBuilder(String message, LogLevel level) {
         this.message = checkNotNull(message, "message");
         this.level = checkNotNull(level, "level");
     }

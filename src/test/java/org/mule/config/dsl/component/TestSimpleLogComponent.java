@@ -10,12 +10,12 @@
 package org.mule.config.dsl.component;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mule.config.dsl.ErrorLevel.DEBUG;
-import static org.mule.config.dsl.ErrorLevel.ERROR;
-import static org.mule.config.dsl.ErrorLevel.FATAL;
-import static org.mule.config.dsl.ErrorLevel.INFO;
-import static org.mule.config.dsl.ErrorLevel.TRACE;
-import static org.mule.config.dsl.ErrorLevel.WARN;
+import static org.mule.config.dsl.LogLevel.DEBUG;
+import static org.mule.config.dsl.LogLevel.ERROR;
+import static org.mule.config.dsl.LogLevel.FATAL;
+import static org.mule.config.dsl.LogLevel.INFO;
+import static org.mule.config.dsl.LogLevel.TRACE;
+import static org.mule.config.dsl.LogLevel.WARN;
 
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;

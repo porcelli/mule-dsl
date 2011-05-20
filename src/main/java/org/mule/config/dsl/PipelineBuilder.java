@@ -17,15 +17,15 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> {
 
     P log();
 
-    P log(ErrorLevel level);
+    P log(LogLevel level);
 
     P log(String message);
 
-    P log(String message, ErrorLevel level);
+    P log(String message, LogLevel level);
 
     <E extends ExpressionEvaluatorBuilder> P log(E expr);
 
-    <E extends ExpressionEvaluatorBuilder> P log(E expr, ErrorLevel level);
+    <E extends ExpressionEvaluatorBuilder> P log(E expr, LogLevel level);
 
     P echo();
 

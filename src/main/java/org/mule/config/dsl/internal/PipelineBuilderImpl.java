@@ -78,11 +78,11 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
 
     @Override
     public P log() {
-        return log(ErrorLevel.INFO);
+        return log(LogLevel.INFO);
     }
 
     @Override
-    public P log(ErrorLevel level) {
+    public P log(LogLevel level) {
         if (parentScope != null) {
             return parentScope.log(level);
         }
@@ -93,11 +93,11 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
 
     @Override
     public P log(String message) {
-        return log(message, ErrorLevel.INFO);
+        return log(message, LogLevel.INFO);
     }
 
     @Override
-    public P log(String message, ErrorLevel level) {
+    public P log(String message, LogLevel level) {
         if (parentScope != null) {
             return parentScope.log(message, level);
         }
@@ -108,12 +108,12 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
 
     @Override
     public <E extends ExpressionEvaluatorBuilder> P log(E expr) {
-        return log(expr, ErrorLevel.INFO);
+        return log(expr, LogLevel.INFO);
     }
 
     @Override
     public <E extends ExpressionEvaluatorBuilder> P log(
-            E expr, ErrorLevel level) {
+            E expr, LogLevel level) {
         if (parentScope != null) {
             return parentScope.log(expr, level);
         }
