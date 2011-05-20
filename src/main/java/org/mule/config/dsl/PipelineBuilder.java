@@ -9,6 +9,7 @@
 
 package org.mule.config.dsl;
 
+import org.mule.MessageExchangePattern;
 import org.mule.api.lifecycle.Callable;
 import org.mule.config.dsl.expression.CoreExpr;
 
@@ -33,10 +34,14 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> {
 
     P execute(Callable obj);
 
-    ExecutorBuilder<P> execute(Class<?> clazz);
+    P execute(Class<?> clazz);
+
+    P execute(Class<?> clazz, Scope scope);
 
     /* outbound */
-    OutboundEndpointBuilder<P> send(String uri);
+    P send(String uri);
+
+    P send(String uri, MessageExchangePattern pattern);
 
     /* transform */
 

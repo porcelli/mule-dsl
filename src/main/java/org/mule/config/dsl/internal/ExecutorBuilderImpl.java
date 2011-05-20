@@ -16,8 +16,7 @@ import org.mule.api.component.Component;
 import org.mule.api.lifecycle.Callable;
 import org.mule.component.DefaultJavaComponent;
 import org.mule.component.SimpleCallableJavaComponent;
-import org.mule.config.dsl.ExecutorBuilder;
-import org.mule.config.dsl.PipelineBuilder;
+import org.mule.config.dsl.Scope;
 import org.mule.config.dsl.internal.util.InjectorUtil;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.object.PrototypeObjectFactory;
@@ -26,29 +25,26 @@ import org.mule.object.SingletonObjectFactory;
 import static org.mule.config.dsl.internal.util.EntryPointResolverSetUtil.createDefaultResolverSet;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderImpl<P> implements ExecutorBuilder<P>, Builder<Component> {
+class ExecutorBuilderImpl implements Builder<Component> {
 
     private Object obj;
     private final Class<?> clazz;
     private final Builder<?> builder;
     private InstanceType instanceType = InstanceType.PROTOTYPE;
 
-    ExecutorBuilderImpl(final P parentScope, Class<?> clazz) {
-        super(parentScope);
+    ExecutorBuilderImpl(Class<?> clazz, Scope scope) {
         this.clazz = checkNotNull(clazz, "clazz");
         this.obj = null;
         this.builder = null;
     }
 
-    ExecutorBuilderImpl(final P parentScope, Object obj) {
-        super(parentScope);
+    ExecutorBuilderImpl(Object obj) {
         this.obj = checkNotNull(obj, "obj");
         this.clazz = null;
         this.builder = null;
     }
 
-    ExecutorBuilderImpl(final P parentScope, Builder<?> builder) {
-        super(parentScope);
+    ExecutorBuilderImpl(Builder<?> builder) {
         this.builder = checkNotNull(builder, "builder");
         this.clazz = null;
         this.obj = null;

@@ -10,6 +10,7 @@
 package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
+import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
@@ -47,8 +48,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         if (parentScope != null) {
             return parentScope.execute(obj);
         }
-        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), obj);
-        processorList.add(builder);
+        processorList.add(new ExecutorBuilderImpl(obj));
 
         return getThis();
     }
@@ -59,21 +59,24 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.execute(obj);
         }
 
-        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), obj);
-        processorList.add(builder);
+        processorList.add(new ExecutorBuilderImpl(obj));
 
         return getThis();
     }
 
     @Override
-    public ExecutorBuilder<P> execute(Class<?> clazz) {
+    public P execute(Class<?> clazz) {
+        return parentScope.execute(clazz, Scope.PROTOTYPE);
+    }
+
+    @Override
+    public P execute(Class<?> clazz, Scope scope) {
         if (parentScope != null) {
             return parentScope.execute(clazz);
         }
-        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), clazz);
-        processorList.add(builder);
+        processorList.add(new ExecutorBuilderImpl(clazz, scope));
 
-        return builder;
+        return getThis();
     }
 
     @Override
@@ -87,7 +90,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.log(level);
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(getThis(), new SimpleLogComponent(level)));
+        processorList.add(new ExecutorBuilderImpl(new SimpleLogComponent(level)));
         return getThis();
     }
 
@@ -102,7 +105,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.log(message, level);
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(getThis(), new ExtendedLogComponentBuilder(message, level)));
+        processorList.add(new ExecutorBuilderImpl(new ExtendedLogComponentBuilder(message, level)));
         return getThis();
     }
 
@@ -118,7 +121,8 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.log(expr, level);
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(getThis(), new ExpressionLogComponentBuilder(expr, level)));
+        processorList.add(new ExecutorBuilderImpl(new ExpressionLogComponentBuilder(expr, level)));
+
         return getThis();
     }
 
@@ -128,20 +132,25 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.echo();
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(getThis(), new EchoComponent()));
+        processorList.add(new ExecutorBuilderImpl(new EchoComponent()));
         return getThis();
     }
 
     /* outbound */
     @Override
-    public OutboundEndpointBuilder<P> send(String uri) {
+    public P send(String uri) {
+        return parentScope.send(uri, null);
+    }
+
+    @Override
+    public P send(String uri, MessageExchangePattern pattern) {
         if (parentScope != null) {
             return parentScope.send(uri);
         }
         OutboundEndpointBuilderImpl<P> builder = new OutboundEndpointBuilderImpl<P>(getThis(), uri);
         processorList.add(builder);
 
-        return builder;
+        return getThis();
     }
 
     /* transform */

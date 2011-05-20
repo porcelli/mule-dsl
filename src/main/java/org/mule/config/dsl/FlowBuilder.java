@@ -11,5 +11,5 @@ package org.mule.config.dsl;
 
 public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
 
-    InboundEndpointBuilder<FlowBuilder> from(String uri);
+    PipelineBuilder<FlowBuilder> from(String uri);
 }
