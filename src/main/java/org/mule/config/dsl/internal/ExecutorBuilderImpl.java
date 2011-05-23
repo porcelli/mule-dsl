@@ -33,21 +33,21 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
     private final Builder<?> builder;
     private InstanceType instanceType = InstanceType.PROTOTYPE;
 
-    ExecutorBuilderImpl(final P parentScope, Class<?> clazz) {
+    public ExecutorBuilderImpl(final P parentScope, Class<?> clazz) {
         super(parentScope);
         this.clazz = checkNotNull(clazz, "clazz");
         this.obj = null;
         this.builder = null;
     }
 
-    ExecutorBuilderImpl(final P parentScope, Object obj) {
+    public ExecutorBuilderImpl(final P parentScope, Object obj) {
         super(parentScope);
         this.obj = checkNotNull(obj, "obj");
         this.clazz = null;
         this.builder = null;
     }
 
-    ExecutorBuilderImpl(final P parentScope, Builder<?> builder) {
+    public ExecutorBuilderImpl(final P parentScope, Builder<?> builder) {
         super(parentScope);
         this.builder = checkNotNull(builder, "builder");
         this.clazz = null;
