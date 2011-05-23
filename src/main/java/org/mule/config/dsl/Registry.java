@@ -44,7 +44,7 @@ public class Registry {
             throw new IllegalArgumentException();
         }
 
-        FlowBuilderImpl fb = new FlowBuilderImpl(flowName, muleContext);
+        FlowBuilderImpl fb = new FlowBuilderImpl(flowName);
         flows.put(flowName, fb);
 
         return fb;

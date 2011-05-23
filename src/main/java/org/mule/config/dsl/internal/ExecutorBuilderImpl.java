@@ -25,28 +25,28 @@ import org.mule.object.SingletonObjectFactory;
 import static org.mule.config.dsl.internal.util.EntryPointResolverSetUtil.createDefaultResolverSet;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-class ExecutorBuilderImpl implements Builder<Component> {
+public class ExecutorBuilderImpl implements Builder<Component> {
 
     private Object obj;
     private final Class<?> clazz;
     private final Builder<?> builder;
     private final Scope scope;
 
-    ExecutorBuilderImpl(Class<?> clazz, Scope scope) {
+    public ExecutorBuilderImpl(Class<?> clazz, Scope scope) {
         this.clazz = checkNotNull(clazz, "clazz");
         this.scope = checkNotNull(scope, "scope");;
         this.obj = null;
         this.builder = null;
     }
 
-    ExecutorBuilderImpl(Object obj) {
+    public ExecutorBuilderImpl(Object obj) {
         this.obj = checkNotNull(obj, "obj");
         this.scope = Scope.PROTOTYPE;
         this.clazz = null;
         this.builder = null;
     }
 
-    ExecutorBuilderImpl(Builder<?> builder) {
+    public ExecutorBuilderImpl(Builder<?> builder) {
         this.builder = checkNotNull(builder, "builder");
         this.scope = Scope.PROTOTYPE;
         this.clazz = null;

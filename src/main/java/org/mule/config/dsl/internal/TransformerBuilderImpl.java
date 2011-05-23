@@ -16,7 +16,7 @@ import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.transformer.simple.AutoTransformer;
 import org.mule.transformer.types.SimpleDataType;
 
-class TransformerBuilderImpl<T> implements Builder<Transformer> {
+public class TransformerBuilderImpl<T> implements Builder<Transformer> {
 
     private final Class<T> clazz;
 

@@ -19,14 +19,16 @@ import org.mule.config.dsl.PipelineBuilder;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.construct.SimpleFlowConstruct;
 
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
+
 public class FlowBuilderImpl extends PipelineBuilderImpl<FlowBuilder> implements FlowBuilder {
 
-    private final SimpleFlowConstruct flow;
+    private final String name;
     private InboundEndpointBuilderImpl inboundEndpointBuilder;
 
-    public FlowBuilderImpl(String name, MuleContext muleContext) {
+    public FlowBuilderImpl(String name) {
         super(null);
-        this.flow = new SimpleFlowConstruct(name, muleContext);
+        this.name = checkNotEmpty(name, "name");
     }
 
     public PipelineBuilder<FlowBuilder> from(String uri) {
@@ -39,6 +41,7 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowBuilder> implements
     }
 
     public FlowConstruct build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+        SimpleFlowConstruct flow = new SimpleFlowConstruct(name, muleContext);
         if (inboundEndpointBuilder != null) {
             flow.setMessageSource((MessageSource) inboundEndpointBuilder.build(muleContext, injector, placeholder));
         }

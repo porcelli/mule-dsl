@@ -19,7 +19,7 @@ import org.mule.object.AbstractObjectFactory;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-class GuiceLookup extends AbstractObjectFactory {
+public class GuiceLookup extends AbstractObjectFactory {
     private final Injector injector;
     private final Class<?> clazz;
 
