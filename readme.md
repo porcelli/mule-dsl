@@ -35,8 +35,43 @@ Its also clear that its out of the this initial scope the following:
  - Component Interceptors, Bindings, and less common Entry-point resolvers
  - Enterprise Edition module, MuleForge Projects and Cloud Connectors
 
-# Current Status
+# Two Minutes Tutorial
 
-This is the first preview of the Mule DSL syntax ***and is still a working in progress***.
+This two minutes tutorial assumes that you already have installed [git](http://git-scm.com) and [maven](http://maven.apache.org).
 
-**Important:** Feedbacks are welcomed ;)
+If you don't, check this links:
+
+- [Maven installation instructions](http://maven.apache.org/download.html#Installation)
+- Git installation instructions by operational system:
+  - [Mac Setup](http://help.github.com/mac-set-up-git)
+  - [Windows Setup](http://help.github.com/win-set-up-git)
+  - [Linux Setup](http://help.github.com/linux-set-up-git)
+
+### 1. Git clone into your preferred directory
+
+Execute the following command:
+
+	$ git clone git@github.com:mulesoft/mule-dsl.git optional_directory_here
+
+
+**Note**: if `optional_directory_here` is omitted, git will create a `mule-dsl` folder into current folder.
+
+### 2. Run mvn clean test
+
+Execute the following command:
+
+	$ mvn clean test
+
+
+### 3. Import project into your preferred ide
+
+  - If you use eclipse, don't forget to execute `mvn eclipse:eclipse` before import
+  - If you use IntelliJ, you just need point the root pom.xml
+
+### 4. Open StartHere class
+
+This file is located into **`dsl-example`** project at `src/main/java/org/mule/config/dsl/example/` folder.
+
+### 5. Run it
+
+That's all! Now you can explore mule dsl features by reading the [Users Guide](https://github.com/mulesoft/mule-dsl/wiki/User-Guide) and exploring the complete list of available [Building Blocks](https://github.com/mulesoft/mule-dsl/wiki/Building-Blocks).
