@@ -7,10 +7,12 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.dsl;
+package org.mule.config.dsl.example;
 
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
+import org.mule.config.dsl.AbstractModule;
+import org.mule.config.dsl.Mule;
 
 public class StartHere {
 
