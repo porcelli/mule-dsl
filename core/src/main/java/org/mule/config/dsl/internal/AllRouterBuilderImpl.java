@@ -15,9 +15,11 @@ import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
+import org.mule.api.transformer.Transformer;
 import org.mule.config.dsl.*;
 import org.mule.config.dsl.expression.CoreExpr;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
+import org.mule.routing.MessageFilter;
 import org.mule.routing.outbound.MulticastingRouter;
 
 import java.util.List;
@@ -132,6 +134,18 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
     }
 
     @Override
+    public <T extends Transformer> AllRouterBuilder<P> transformWith(Class<T> clazz) {
+        pipeline.transformWith(clazz);
+        return this;
+    }
+
+    @Override
+    public <T extends Transformer> AllRouterBuilder<P> transformWith(T obj) {
+        pipeline.transformWith(obj);
+        return this;
+    }
+
+    @Override
     public AllRouterBuilder<P> filter(CoreExpr.GenericExpressionFilterEvaluatorBuilder expr) {
         pipeline.filter(expr);
         return this;
@@ -140,6 +154,24 @@ public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRo
     @Override
     public <E extends ExpressionEvaluatorBuilder> AllRouterBuilder<P> filter(E expr) {
         pipeline.filter(expr);
+        return this;
+    }
+
+    @Override
+    public <T> AllRouterBuilder<P> filterBy(Class<T> clazz) {
+        pipeline.filterBy(clazz);
+        return this;
+    }
+
+    @Override
+    public <F extends MessageFilter> AllRouterBuilder<P> filterWith(Class<F> clazz) {
+        pipeline.filterWith(clazz);
+        return this;
+    }
+
+    @Override
+    public <F extends MessageFilter> AllRouterBuilder<P> filterWith(F obj) {
+        pipeline.filterWith(obj);
         return this;
     }
 

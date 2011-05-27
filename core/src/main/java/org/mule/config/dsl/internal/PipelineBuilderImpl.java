@@ -14,12 +14,14 @@ import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
+import org.mule.api.transformer.Transformer;
 import org.mule.component.simple.EchoComponent;
 import org.mule.config.dsl.*;
 import org.mule.config.dsl.component.SimpleLogComponent;
 import org.mule.config.dsl.expression.CoreExpr;
 import org.mule.config.dsl.internal.util.MessageProcessorUtil;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
+import org.mule.routing.MessageFilter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -176,6 +178,26 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         return getThis();
     }
 
+    @Override
+    public <T extends Transformer> P transformWith(Class<T> clazz) {
+        if (parentScope != null) {
+            return parentScope.transformWith(clazz);
+        }
+
+        //TODO
+        return getThis();
+    }
+
+    @Override
+    public <T extends Transformer> P transformWith(T obj) {
+        if (parentScope != null) {
+            return parentScope.transformWith(obj);
+        }
+
+        //TODO
+        return getThis();
+    }
+
     /* filter */
 
     @Override
@@ -196,6 +218,36 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         }
 
         processorList.add(new ExpressionFilterBuilderImpl(expr));
+        return getThis();
+    }
+
+    @Override
+    public <T> P filterBy(Class<T> clazz) {
+        if (parentScope != null) {
+            return parentScope.filterBy(clazz);
+        }
+
+        //TODO
+        return getThis();
+    }
+
+    @Override
+    public <F extends MessageFilter> P filterWith(Class<F> clazz) {
+        if (parentScope != null) {
+            return parentScope.filterWith(clazz);
+        }
+
+        //TODO
+        return getThis();
+    }
+
+    @Override
+    public <F extends MessageFilter> P filterWith(F obj) {
+        if (parentScope != null) {
+            return parentScope.filterWith(obj);
+        }
+
+        //TODO
         return getThis();
     }
 

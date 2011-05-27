@@ -14,11 +14,13 @@ import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
+import org.mule.api.transformer.Transformer;
 import org.mule.config.dsl.*;
 import org.mule.config.dsl.ChoiceRouterBuilder.InnerWhenChoiceBuilder;
 import org.mule.config.dsl.expression.CoreExpr.GenericExpressionFilterEvaluatorBuilder;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.routing.ChoiceRouter;
+import org.mule.routing.MessageFilter;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -158,6 +160,18 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     }
 
     @Override
+    public <T extends Transformer> InnerWhenChoiceBuilder<P> transformWith(Class<T> clazz) {
+        pipeline.transformWith(clazz);
+        return this;
+    }
+
+    @Override
+    public <T extends Transformer> InnerWhenChoiceBuilder<P> transformWith(T obj) {
+        pipeline.transformWith(obj);
+        return this;
+    }
+
+    @Override
     public InnerWhenChoiceBuilder<P> filter(GenericExpressionFilterEvaluatorBuilder expr) {
         pipeline.filter(expr);
         return this;
@@ -166,6 +180,24 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     @Override
     public <E extends ExpressionEvaluatorBuilder> InnerWhenChoiceBuilder<P> filter(E expr) {
         pipeline.filter(expr);
+        return this;
+    }
+
+    @Override
+    public <T> InnerWhenChoiceBuilder<P> filterBy(Class<T> clazz) {
+        pipeline.filterBy(clazz);
+        return this;
+    }
+
+    @Override
+    public <F extends MessageFilter> InnerWhenChoiceBuilder<P> filterWith(Class<F> clazz) {
+        pipeline.filterWith(clazz);
+        return this;
+    }
+
+    @Override
+    public <F extends MessageFilter> InnerWhenChoiceBuilder<P> filterWith(F obj) {
+        pipeline.filterWith(obj);
         return this;
     }
 
@@ -324,6 +356,18 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         }
 
         @Override
+        public <T extends Transformer> OtherwiseChoiceBuilder<P> transformWith(Class<T> clazz) {
+            ChoiceRouterBuilderImpl.this.transformWith(clazz);
+            return this;
+        }
+
+        @Override
+        public <T extends Transformer> OtherwiseChoiceBuilder<P> transformWith(T obj) {
+            ChoiceRouterBuilderImpl.this.transformWith(obj);
+            return this;
+        }
+
+        @Override
         public OtherwiseChoiceBuilder<P> filter(GenericExpressionFilterEvaluatorBuilder expr) {
             ChoiceRouterBuilderImpl.this.filter(expr);
             return this;
@@ -332,6 +376,24 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         @Override
         public <E extends ExpressionEvaluatorBuilder> OtherwiseChoiceBuilder<P> filter(E expr) {
             ChoiceRouterBuilderImpl.this.filter(expr);
+            return this;
+        }
+
+        @Override
+        public <T> OtherwiseChoiceBuilder<P> filterBy(Class<T> clazz) {
+            ChoiceRouterBuilderImpl.this.filterBy(clazz);
+            return this;
+        }
+
+        @Override
+        public <F extends MessageFilter> OtherwiseChoiceBuilder<P> filterWith(Class<F> clazz) {
+            ChoiceRouterBuilderImpl.this.filterWith(clazz);
+            return this;
+        }
+
+        @Override
+        public <F extends MessageFilter> OtherwiseChoiceBuilder<P> filterWith(F obj) {
+            ChoiceRouterBuilderImpl.this.filterWith(obj);
             return this;
         }
 
