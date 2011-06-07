@@ -328,6 +328,28 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         return builder;
     }
 
+    @Override
+    public FirstSuccessfulRouterBuilder<P> firstSuccessful() {
+        if (parentScope != null) {
+            return parentScope.firstSuccessful();
+        }
+        FirstSuccessfulRouterBuilderImpl<P> builder = new FirstSuccessfulRouterBuilderImpl<P>(getThis());
+        processorList.add(builder);
+
+        return builder;
+    }
+
+    @Override
+    public RoundRobinRouterBuilder<P> roundRobin() {
+        if (parentScope != null) {
+            return parentScope.roundRobin();
+        }
+        RoundRobinRouterBuilderImpl<P> builder = new RoundRobinRouterBuilderImpl<P>(getThis());
+        processorList.add(builder);
+
+        return builder;
+    }
+
 
     @Override
     public void addToProcessorList(Builder<?> builder) {

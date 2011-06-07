@@ -86,8 +86,8 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> {
 
     AsyncRouterBuilder<P> async();
 
-//    FirstSuccessfulRouterBuilder<P> firstSuccessful();
-//
-//    RoundRobinRouterBuilder<P> roundRobin();
+    FirstSuccessfulRouterBuilder<P> firstSuccessful();
+
+    RoundRobinRouterBuilder<P> roundRobin();
 
 }

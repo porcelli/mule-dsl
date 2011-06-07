@@ -24,7 +24,7 @@ public class AsyncRouterBuilderImpl<P extends PipelineBuilder<P>> extends BasePi
 
     private final P parentScope;
 
-    AsyncRouterBuilderImpl(P parentScope) {
+    public AsyncRouterBuilderImpl(P parentScope) {
         super();
         this.parentScope = checkNotNull(parentScope, "parentScope");
     }

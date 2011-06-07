@@ -220,6 +220,22 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
     }
 
     @Override
+    public FirstSuccessfulRouterBuilder<P> firstSuccessful() {
+        FirstSuccessfulRouterBuilderImpl<P> builder = new FirstSuccessfulRouterBuilderImpl<P>(getThis());
+        pipeline.addToProcessorList(builder);
+
+        return builder;
+    }
+
+    @Override
+    public RoundRobinRouterBuilder<P> roundRobin() {
+        RoundRobinRouterBuilderImpl<P> builder = new RoundRobinRouterBuilderImpl<P>(getThis());
+        pipeline.addToProcessorList(builder);
+
+        return builder;
+    }
+
+    @Override
     public void addToProcessorList(Builder<?> builder) {
         pipeline.addToProcessorList(builder);
     }

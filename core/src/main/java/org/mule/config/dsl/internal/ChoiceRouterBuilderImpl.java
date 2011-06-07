@@ -256,6 +256,22 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     }
 
     @Override
+    public FirstSuccessfulRouterBuilder<InnerWhenChoiceBuilder<P>> firstSuccessful() {
+        FirstSuccessfulRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new FirstSuccessfulRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
+        pipeline.addToProcessorList(builder);
+
+        return builder;
+    }
+
+    @Override
+    public RoundRobinRouterBuilder<InnerWhenChoiceBuilder<P>> roundRobin() {
+        RoundRobinRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new RoundRobinRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
+        pipeline.addToProcessorList(builder);
+
+        return builder;
+    }
+
+    @Override
     public void addToProcessorList(Builder<?> builder) {
         pipeline.addToProcessorList(builder);
     }
@@ -484,6 +500,22 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         @Override
         public AsyncRouterBuilder<OtherwiseChoiceBuilder<P>> async() {
             AsyncRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new AsyncRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
+            pipeline.addToProcessorList(builder);
+
+            return builder;
+        }
+
+        @Override
+        public FirstSuccessfulRouterBuilder<OtherwiseChoiceBuilder<P>> firstSuccessful() {
+            FirstSuccessfulRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new FirstSuccessfulRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
+            pipeline.addToProcessorList(builder);
+
+            return builder;
+        }
+
+        @Override
+        public RoundRobinRouterBuilder<OtherwiseChoiceBuilder<P>> roundRobin() {
+            RoundRobinRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new RoundRobinRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
             pipeline.addToProcessorList(builder);
 
             return builder;
