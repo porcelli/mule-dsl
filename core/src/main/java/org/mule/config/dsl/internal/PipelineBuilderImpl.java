@@ -14,6 +14,7 @@ import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
+import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
 import org.mule.component.simple.EchoComponent;
 import org.mule.config.dsl.*;
@@ -21,7 +22,6 @@ import org.mule.config.dsl.component.SimpleLogComponent;
 import org.mule.config.dsl.expression.CoreExpr;
 import org.mule.config.dsl.internal.util.MessageProcessorUtil;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
-import org.mule.routing.MessageFilter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +46,14 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
     /* component */
 
     @Override
-    public P execute(Object obj) {
+    public ExecutorBuilder<P> execute(Object obj) {
         if (parentScope != null) {
             return parentScope.execute(obj);
         }
-        processorList.add(new ExecutorBuilderImpl(obj));
+        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), obj);
+        processorList.add(builder);
 
-        return getThis();
+        return builder;
     }
 
     @Override
@@ -61,24 +62,26 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.execute(obj);
         }
 
-        processorList.add(new ExecutorBuilderImpl(obj));
+        processorList.add(new ExecutorBuilderImpl<P>(getThis(), obj));
 
         return getThis();
     }
 
     @Override
-    public P execute(Class<?> clazz) {
+    public ExecutorBuilder<P> execute(Class<?> clazz) {
         return execute(clazz, Scope.PROTOTYPE);
     }
 
     @Override
-    public P execute(Class<?> clazz, Scope scope) {
+    public ExecutorBuilder<P> execute(Class<?> clazz, Scope scope) {
         if (parentScope != null) {
-            return parentScope.execute(clazz);
+            return parentScope.execute(clazz, scope);
         }
-        processorList.add(new ExecutorBuilderImpl(clazz, scope));
 
-        return getThis();
+        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), clazz, scope);
+        processorList.add(builder);
+
+        return builder;
     }
 
     @Override
@@ -92,7 +95,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.log(level);
         }
 
-        processorList.add(new ExecutorBuilderImpl(new SimpleLogComponent(level)));
+        processorList.add(new ExecutorBuilderImpl<P>(getThis(), new SimpleLogComponent(level)));
         return getThis();
     }
 
@@ -107,7 +110,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.log(message, level);
         }
 
-        processorList.add(new ExecutorBuilderImpl(new ExtendedLogComponentBuilder(message, level)));
+        processorList.add(new ExecutorBuilderImpl<P>(getThis(), new ExtendedLogComponentBuilder(message, level)));
         return getThis();
     }
 
@@ -123,7 +126,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.log(expr, level);
         }
 
-        processorList.add(new ExecutorBuilderImpl(new ExpressionLogComponentBuilder(expr, level)));
+        processorList.add(new ExecutorBuilderImpl<P>(getThis(), new ExpressionLogComponentBuilder(expr, level)));
 
         return getThis();
     }
@@ -134,7 +137,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.echo();
         }
 
-        processorList.add(new ExecutorBuilderImpl(new EchoComponent()));
+        processorList.add(new ExecutorBuilderImpl<P>(getThis(), new EchoComponent()));
         return getThis();
     }
 
@@ -174,7 +177,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.transformTo(clazz);
         }
 
-        processorList.add(new TransformerBuilderImpl<T>(clazz));
+        processorList.add(new TypeBasedTransformerBuilderImpl<T>(clazz));
         return getThis();
     }
 
@@ -184,7 +187,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.transformWith(clazz);
         }
 
-        //TODO
+        processorList.add(new CustomTransformerBuilderImpl<T>(clazz));
         return getThis();
     }
 
@@ -194,15 +197,34 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.transformWith(obj);
         }
 
-        //TODO
+        processorList.add(new CustomTransformerBuilderImpl<T>(obj));
+        return getThis();
+    }
+
+    @Override
+    public <T extends Transformer> P transformWith(TransformerDefinition<T> obj) {
+        if (parentScope != null) {
+            return parentScope.transformWith(obj);
+        }
+
+        processorList.add(new CustomTransformerBuilderImpl<T>(obj));
+        return getThis();
+    }
+
+    @Override
+    public P transformWith(String ref) {
+        if (parentScope != null) {
+            return parentScope.transformWith(ref);
+        }
+
+        processorList.add(new CustomTransformerBuilderImpl(ref));
         return getThis();
     }
 
     /* filter */
 
     @Override
-    public P filter(
-            CoreExpr.GenericExpressionFilterEvaluatorBuilder expr) {
+    public P filter(CoreExpr.GenericExpressionFilterEvaluatorBuilder expr) {
         if (parentScope != null) {
             return parentScope.filter(expr);
         }
@@ -227,38 +249,58 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.filterBy(clazz);
         }
 
-        //TODO
+        processorList.add(new TypeBasedFilterBuilderImpl(clazz));
         return getThis();
     }
 
     @Override
-    public <F extends MessageFilter> P filterWith(Class<F> clazz) {
+    public <F extends Filter> P filterWith(Class<F> clazz) {
         if (parentScope != null) {
             return parentScope.filterWith(clazz);
         }
 
-        //TODO
+        processorList.add(new CustomFilterBuilderImpl<F>(clazz));
         return getThis();
     }
 
     @Override
-    public <F extends MessageFilter> P filterWith(F obj) {
+    public <F extends Filter> P filterWith(F obj) {
         if (parentScope != null) {
             return parentScope.filterWith(obj);
         }
 
-        //TODO
+        processorList.add(new CustomFilterBuilderImpl<F>(obj));
+        return getThis();
+    }
+
+    @Override
+    public <F extends Filter> P filterWith(FilterDefinition<F> obj) {
+        if (parentScope != null) {
+            return parentScope.filterWith(obj);
+        }
+
+        processorList.add(new CustomFilterBuilderImpl<F>(obj));
+        return getThis();
+    }
+
+    @Override
+    public P filterWith(String ref) {
+        if (parentScope != null) {
+            return parentScope.filterWith(ref);
+        }
+
+        processorList.add(new CustomFilterBuilderImpl(ref));
         return getThis();
     }
 
     /* routers */
 
     @Override
-    public AllRouterBuilder<P> all() {
+    public BroadcastRouterBuilder<P> broadcast() {
         if (parentScope != null) {
-            return parentScope.all();
+            return parentScope.broadcast();
         }
-        AllRouterBuilderImpl<P> builder = new AllRouterBuilderImpl<P>(getThis());
+        BroadcastRouterBuilderImpl<P> builder = new BroadcastRouterBuilderImpl<P>(getThis());
         processorList.add(builder);
 
         return builder;
@@ -273,6 +315,12 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         processorList.add(builder);
 
         return builder;
+    }
+
+    @Override
+    public AsyncRouterBuilder<P> async() {
+        //TODO
+        return null;
     }
 
 

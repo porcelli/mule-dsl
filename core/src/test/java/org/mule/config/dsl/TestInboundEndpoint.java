@@ -10,6 +10,7 @@
 package org.mule.config.dsl;
 
 import org.junit.Test;
+import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.construct.FlowConstruct;
@@ -19,8 +20,8 @@ import org.mule.api.source.MessageSource;
 import org.mule.construct.SimpleFlowConstruct;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mule.MessageExchangePattern.ONE_WAY;
-import static org.mule.MessageExchangePattern.REQUEST_RESPONSE;
+import static org.mule.config.dsl.ExchangePattern.ONE_WAY;
+import static org.mule.config.dsl.ExchangePattern.REQUEST_RESPONSE;
 
 public class TestInboundEndpoint {
 
@@ -47,7 +48,7 @@ public class TestInboundEndpoint {
 
         InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
-        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(ONE_WAY);
+        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
         assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
 
@@ -79,7 +80,7 @@ public class TestInboundEndpoint {
 
         InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
-        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(ONE_WAY);
+        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
         assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
 

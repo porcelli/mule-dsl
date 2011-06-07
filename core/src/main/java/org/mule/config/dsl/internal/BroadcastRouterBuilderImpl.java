@@ -15,11 +15,11 @@ import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
+import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
 import org.mule.config.dsl.*;
 import org.mule.config.dsl.expression.CoreExpr;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
-import org.mule.routing.MessageFilter;
 import org.mule.routing.outbound.MulticastingRouter;
 
 import java.util.List;
@@ -27,168 +27,204 @@ import java.util.List;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 
-public class AllRouterBuilderImpl<P extends PipelineBuilder<P>> implements AllRouterBuilder<P>, Builder<MulticastingRouter>, MessageProcessorListBuilder {
+public class BroadcastRouterBuilderImpl<P extends PipelineBuilder<P>> implements BroadcastRouterBuilder<P>, Builder<MulticastingRouter>, MessageProcessorListBuilder {
 
     private final P parentScope;
-    private final PipelineBuilderImpl<AllRouterBuilder<P>> pipeline;
+    private final PipelineBuilderImpl<BroadcastRouterBuilder<P>> pipeline;
 
-    AllRouterBuilderImpl(P parentScope) {
+    BroadcastRouterBuilderImpl(P parentScope) {
         this.parentScope = checkNotNull(parentScope, "parentScope");
-        this.pipeline = new PipelineBuilderImpl<AllRouterBuilder<P>>(null);
+        this.pipeline = new PipelineBuilderImpl<BroadcastRouterBuilder<P>>(null);
     }
 
     @Override
-    public P endAll() {
+    public P endBroadcast() {
         return parentScope;
     }
 
     @Override
-    public AllRouterBuilder<P> log() {
+    public BroadcastRouterBuilder<P> log() {
         pipeline.log();
         return this;
     }
 
     @Override
-    public AllRouterBuilder<P> log(LogLevel level) {
+    public BroadcastRouterBuilder<P> log(LogLevel level) {
         pipeline.log(level);
         return this;
     }
 
     @Override
-    public AllRouterBuilder<P> log(String message) {
+    public BroadcastRouterBuilder<P> log(String message) {
         pipeline.log(message);
         return this;
     }
 
     @Override
-    public AllRouterBuilder<P> log(String message, LogLevel level) {
+    public BroadcastRouterBuilder<P> log(String message, LogLevel level) {
         pipeline.log(message, level);
         return this;
     }
 
     @Override
-    public <E extends ExpressionEvaluatorBuilder> AllRouterBuilder<P> log(E expr) {
+    public <E extends ExpressionEvaluatorBuilder> BroadcastRouterBuilder<P> log(E expr) {
         pipeline.log(expr);
         return this;
     }
 
     @Override
-    public <E extends ExpressionEvaluatorBuilder> AllRouterBuilder<P> log(E expr, LogLevel level) {
+    public <E extends ExpressionEvaluatorBuilder> BroadcastRouterBuilder<P> log(E expr, LogLevel level) {
         pipeline.log(expr, level);
         return this;
     }
 
     @Override
-    public AllRouterBuilder<P> echo() {
+    public BroadcastRouterBuilder<P> echo() {
         pipeline.echo();
         return this;
     }
 
     @Override
-    public AllRouterBuilder<P> execute(Object obj) {
+    public ExecutorBuilder<BroadcastRouterBuilder<P>> execute(Object obj) {
+        ExecutorBuilderImpl<BroadcastRouterBuilder<P>> builder = new ExecutorBuilderImpl<BroadcastRouterBuilder<P>>(this, obj);
+        pipeline.addToProcessorList(builder);
+
+        return builder;
+    }
+
+    @Override
+    public BroadcastRouterBuilder<P> execute(Callable obj) {
         pipeline.execute(obj);
         return this;
     }
 
     @Override
-    public AllRouterBuilder<P> execute(Callable obj) {
-        pipeline.execute(obj);
-        return this;
+    public ExecutorBuilder<BroadcastRouterBuilder<P>> execute(Class<?> clazz) {
+        ExecutorBuilderImpl<BroadcastRouterBuilder<P>> builder = new ExecutorBuilderImpl<BroadcastRouterBuilder<P>>(this, clazz);
+        pipeline.addToProcessorList(builder);
+
+        return builder;
     }
 
     @Override
-    public AllRouterBuilder<P> execute(Class<?> clazz) {
-        pipeline.execute(clazz);
-        return this;
+    public ExecutorBuilder<BroadcastRouterBuilder<P>> execute(Class<?> clazz, Scope scope) {
+        ExecutorBuilderImpl<BroadcastRouterBuilder<P>> builder = new ExecutorBuilderImpl<BroadcastRouterBuilder<P>>(this, clazz, scope);
+        pipeline.addToProcessorList(builder);
+
+        return builder;
     }
 
     @Override
-    public AllRouterBuilder<P> execute(Class<?> clazz, Scope scope) {
-        pipeline.execute(clazz, scope);
-        return this;
-    }
-
-    @Override
-    public AllRouterBuilder<P> send(String uri) {
+    public BroadcastRouterBuilder<P> send(String uri) {
         pipeline.send(uri);
         return this;
     }
 
     @Override
-    public AllRouterBuilder<P> send(String uri, MessageExchangePattern pattern) {
+    public BroadcastRouterBuilder<P> send(String uri, MessageExchangePattern pattern) {
         pipeline.send(uri, pattern);
         return this;
     }
 
 
     @Override
-    public <E extends ExpressionEvaluatorBuilder> AllRouterBuilder<P> transform(E expr) {
+    public <E extends ExpressionEvaluatorBuilder> BroadcastRouterBuilder<P> transform(E expr) {
         pipeline.transform(expr);
         return this;
     }
 
     @Override
-    public <T> AllRouterBuilder<P> transformTo(Class<T> clazz) {
+    public <T> BroadcastRouterBuilder<P> transformTo(Class<T> clazz) {
         pipeline.transformTo(clazz);
         return this;
     }
 
     @Override
-    public <T extends Transformer> AllRouterBuilder<P> transformWith(Class<T> clazz) {
+    public <T extends Transformer> BroadcastRouterBuilder<P> transformWith(Class<T> clazz) {
         pipeline.transformWith(clazz);
         return this;
     }
 
     @Override
-    public <T extends Transformer> AllRouterBuilder<P> transformWith(T obj) {
+    public <T extends Transformer> BroadcastRouterBuilder<P> transformWith(T obj) {
         pipeline.transformWith(obj);
         return this;
     }
 
     @Override
-    public AllRouterBuilder<P> filter(CoreExpr.GenericExpressionFilterEvaluatorBuilder expr) {
+    public <T extends Transformer> BroadcastRouterBuilder<P> transformWith(TransformerDefinition<T> obj) {
+        pipeline.transformWith(obj);
+        return this;
+    }
+
+    @Override
+    public BroadcastRouterBuilder<P> transformWith(String ref) {
+        pipeline.transformWith(ref);
+        return this;
+    }
+
+    @Override
+    public BroadcastRouterBuilder<P> filter(CoreExpr.GenericExpressionFilterEvaluatorBuilder expr) {
         pipeline.filter(expr);
         return this;
     }
 
     @Override
-    public <E extends ExpressionEvaluatorBuilder> AllRouterBuilder<P> filter(E expr) {
+    public <E extends ExpressionEvaluatorBuilder> BroadcastRouterBuilder<P> filter(E expr) {
         pipeline.filter(expr);
         return this;
     }
 
     @Override
-    public <T> AllRouterBuilder<P> filterBy(Class<T> clazz) {
+    public <T> BroadcastRouterBuilder<P> filterBy(Class<T> clazz) {
         pipeline.filterBy(clazz);
         return this;
     }
 
     @Override
-    public <F extends MessageFilter> AllRouterBuilder<P> filterWith(Class<F> clazz) {
+    public <F extends Filter> BroadcastRouterBuilder<P> filterWith(Class<F> clazz) {
         pipeline.filterWith(clazz);
         return this;
     }
 
     @Override
-    public <F extends MessageFilter> AllRouterBuilder<P> filterWith(F obj) {
+    public <F extends Filter> BroadcastRouterBuilder<P> filterWith(F obj) {
         pipeline.filterWith(obj);
         return this;
     }
 
     @Override
-    public AllRouterBuilder<AllRouterBuilder<P>> all() {
-        AllRouterBuilderImpl<AllRouterBuilder<P>> builder = new AllRouterBuilderImpl<AllRouterBuilder<P>>(this);
+    public <F extends Filter> BroadcastRouterBuilder<P> filterWith(FilterDefinition<F> obj) {
+        pipeline.filterWith(obj);
+        return this;
+    }
+
+    @Override
+    public BroadcastRouterBuilder<P> filterWith(String ref) {
+        pipeline.filterWith(ref);
+        return this;
+    }
+
+    @Override
+    public BroadcastRouterBuilder<BroadcastRouterBuilder<P>> broadcast() {
+        BroadcastRouterBuilderImpl<BroadcastRouterBuilder<P>> builder = new BroadcastRouterBuilderImpl<BroadcastRouterBuilder<P>>(this);
         pipeline.addToProcessorList(builder);
 
         return builder;
     }
 
     @Override
-    public ChoiceRouterBuilder<AllRouterBuilder<P>> choice() {
-        ChoiceRouterBuilderImpl<AllRouterBuilder<P>> builder = new ChoiceRouterBuilderImpl<AllRouterBuilder<P>>(this);
+    public ChoiceRouterBuilder<BroadcastRouterBuilder<P>> choice() {
+        ChoiceRouterBuilderImpl<BroadcastRouterBuilder<P>> builder = new ChoiceRouterBuilderImpl<BroadcastRouterBuilder<P>>(this);
         pipeline.addToProcessorList(builder);
 
         return builder;
+    }
+
+    @Override
+    public AsyncRouterBuilder<BroadcastRouterBuilder<P>> async() {
+        //TODO
+        return null;
     }
 
     @Override

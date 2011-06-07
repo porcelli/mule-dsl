@@ -9,7 +9,11 @@
 
 package org.mule.config.dsl;
 
-public interface AllRouterBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<AllRouterBuilder<P>> {
+import org.mule.api.transformer.Transformer;
 
-    P endAll();
+public interface TransformerDefinition<T extends Transformer> {
+
+    String getName();
+
+    Class<T> getType();
 }

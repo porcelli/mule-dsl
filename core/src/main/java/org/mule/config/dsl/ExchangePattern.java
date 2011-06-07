@@ -9,10 +9,6 @@
 
 package org.mule.config.dsl;
 
-public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
-
-    PipelineBuilder<FlowBuilder> from(String uri);
-
-    PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern);
-
+public enum ExchangePattern {
+    ONE_WAY, REQUEST_RESPONSE;
 }

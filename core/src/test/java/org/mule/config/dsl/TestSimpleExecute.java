@@ -29,7 +29,7 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.mule.config.dsl.Scope.PROTOTYPE;
 import static org.mule.config.dsl.Scope.SINGLETON;
 
-public class TestExecute {
+public class TestSimpleExecute {
 
     @Test
     public void simpleObjectExecute() {

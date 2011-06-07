@@ -10,21 +10,22 @@
 package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
-import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.endpoint.InboundEndpoint;
+import org.mule.config.dsl.ExchangePattern;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.endpoint.URIBuilder;
 
+import static org.mule.config.dsl.internal.util.ExchangePatternUtil.convert;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
 
 public class InboundEndpointBuilderImpl implements Builder<InboundEndpoint> {
 
     private final String uri;
-    private MessageExchangePattern exchangePattern = null;
+    private ExchangePattern exchangePattern = null;
 
-    public InboundEndpointBuilderImpl(String uri, MessageExchangePattern exchangePattern) {
+    public InboundEndpointBuilderImpl(String uri, ExchangePattern exchangePattern) {
         this.uri = checkNotEmpty(uri, "uri");
         this.exchangePattern = exchangePattern;
     }
@@ -33,7 +34,7 @@ public class InboundEndpointBuilderImpl implements Builder<InboundEndpoint> {
     public InboundEndpoint build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         org.mule.api.endpoint.EndpointBuilder internalEndpointBuilder = new EndpointURIEndpointBuilder(new URIBuilder(placeholder.replace(uri), muleContext));
         if (exchangePattern != null) {
-            internalEndpointBuilder.setExchangePattern(exchangePattern);
+            internalEndpointBuilder.setExchangePattern(convert(exchangePattern));
         }
 
         try {

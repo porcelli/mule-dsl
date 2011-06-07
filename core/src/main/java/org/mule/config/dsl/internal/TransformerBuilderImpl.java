@@ -12,22 +12,39 @@ package org.mule.config.dsl.internal;
 import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.transformer.Transformer;
+import org.mule.config.dsl.TransformerBuilder;
+import org.mule.config.dsl.TransformerDefinition;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
-import org.mule.transformer.simple.AutoTransformer;
-import org.mule.transformer.types.SimpleDataType;
 
-public class TransformerBuilderImpl<T> implements Builder<Transformer> {
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
 
-    private final Class<T> clazz;
+public class TransformerBuilderImpl implements TransformerBuilder {
 
-    public TransformerBuilderImpl(Class<T> clazz) {
-        this.clazz = clazz;
+    private final String name;
+    private TransformerDefinition<? extends Transformer> definition;
+
+    public TransformerBuilderImpl(String name) {
+        this.name = checkNotEmpty(name, "name");
     }
 
     @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public <T extends Transformer> TransformerDefinition<T> with(T obj) {
+        this.definition = new TransformerDefinitionImpl<T>(name, obj);
+        return (TransformerDefinition<T>) definition;
+    }
+
+    @Override
+    public <T extends Transformer> TransformerDefinition<T> with(Class<T> clazz) {
+        this.definition = new TransformerDefinitionImpl<T>(name, clazz);
+        return (TransformerDefinition<T>) definition;
+    }
+
     public Transformer build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
-        Transformer transformer = new AutoTransformer();
-        transformer.setReturnDataType(new SimpleDataType<T>(clazz));
-        return transformer;
+        return ((TransformerDefinitionImpl) definition).build(muleContext, injector, placeholder);
     }
 }

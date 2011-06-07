@@ -9,10 +9,6 @@
 
 package org.mule.config.dsl;
 
-import static org.fest.assertions.Assertions.assertThat;
-
-import java.util.Iterator;
-
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -24,7 +20,11 @@ import org.mule.api.transformer.Transformer;
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.transformer.types.SimpleDataType;
 
-public class TestTransformTo {
+import java.util.Iterator;
+
+import static org.fest.assertions.Assertions.assertThat;
+
+public class TestTypeBasedTransformer {
 
     @Test
     public void simpleToString() {

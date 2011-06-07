@@ -16,37 +16,46 @@ import org.mule.api.component.Component;
 import org.mule.api.lifecycle.Callable;
 import org.mule.component.DefaultJavaComponent;
 import org.mule.component.SimpleCallableJavaComponent;
+import org.mule.config.dsl.ExecutorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.PipelineBuilder;
 import org.mule.config.dsl.Scope;
 import org.mule.config.dsl.internal.util.InjectorUtil;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.object.PrototypeObjectFactory;
 import org.mule.object.SingletonObjectFactory;
 
+import java.lang.annotation.Annotation;
+
 import static org.mule.config.dsl.internal.util.EntryPointResolverSetUtil.createDefaultResolverSet;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-public class ExecutorBuilderImpl implements Builder<Component> {
+class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderImpl<P> implements ExecutorBuilder<P>, Builder<Component> {
 
     private Object obj;
     private final Class<?> clazz;
     private final Builder<?> builder;
     private final Scope scope;
 
-    public ExecutorBuilderImpl(Class<?> clazz, Scope scope) {
+    public ExecutorBuilderImpl(final P parentScope, Class<?> clazz, Scope scope) {
+        super(parentScope);
         this.clazz = checkNotNull(clazz, "clazz");
-        this.scope = checkNotNull(scope, "scope");;
+        this.scope = checkNotNull(scope, "scope");
+        ;
         this.obj = null;
         this.builder = null;
     }
 
-    public ExecutorBuilderImpl(Object obj) {
+    public ExecutorBuilderImpl(final P parentScope, Object obj) {
+        super(parentScope);
         this.obj = checkNotNull(obj, "obj");
         this.scope = Scope.PROTOTYPE;
         this.clazz = null;
         this.builder = null;
     }
 
-    public ExecutorBuilderImpl(Builder<?> builder) {
+    public ExecutorBuilderImpl(final P parentScope, Builder<?> builder) {
+        super(parentScope);
         this.builder = checkNotNull(builder, "builder");
         this.scope = Scope.PROTOTYPE;
         this.clazz = null;
@@ -85,5 +94,35 @@ public class ExecutorBuilderImpl implements Builder<Component> {
             }
         }
         throw new RuntimeException("Not supported");
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    protected P getThis() {
+        if (parentScope != null) {
+            return (P) parentScope;
+        }
+        return (P) this;
+    }
+
+    @Override
+    public InnerArgsExecutorBuilder<P> methodAnnotatedWith(Class<? extends Annotation> annotationType) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public InnerArgsExecutorBuilder<P> methodAnnotatedWith(Annotation annotation) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public P withDefaultArg() {
+        //todo
+        return parentScope;
+    }
+
+    @Override
+    public <E extends ExpressionEvaluatorBuilder> P args(E... args) {
+        return parentScope;
     }
 }

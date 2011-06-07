@@ -25,19 +25,19 @@ import org.mule.routing.outbound.MulticastingRouter;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-public class TestRouterAll {
+public class TestRouterBroadcast {
 
     @Test
-    public void simpleAll() {
+    public void simpleBroadcast() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .all()
+                        .broadcast()
                             .echo()
                             .echo()
-                        .endAll();
+                        .endBroadcast();
             }
         });
 
@@ -88,19 +88,19 @@ public class TestRouterAll {
     }
 
     @Test
-    public void simpleAllNesting() {
+    public void simpleBroadcastNesting() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .all()
+                        .broadcast()
                             .echo()
-                            .all()
+                            .broadcast()
                                 .echo()
-                            .endAll()
+                            .endBroadcast()
                             .echo()
-                        .endAll();
+                        .endBroadcast();
             }
         });
 
@@ -161,15 +161,15 @@ public class TestRouterAll {
     }
 
     @Test
-    public void simpleAllWithSend() {
+    public void simpleBroadcastWithSend() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .all()
+                        .broadcast()
                             .send("file:///Users/porcelli/out", MessageExchangePattern.ONE_WAY)
-                        .endAll();
+                        .endBroadcast();
             }
         });
 
@@ -206,16 +206,16 @@ public class TestRouterAll {
     }
 
     @Test
-    public void simpleAllWithExecute() {
+    public void simpleBroadcastWithExecute() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .all()
+                        .broadcast()
                             .execute(Simple.class, Scope.PROTOTYPE)
-                            .execute(Simple.class, Scope.PROTOTYPE)
-                        .endAll();
+                            .execute(Simple.class, Scope.PROTOTYPE).withDefaultArg()
+                        .endBroadcast();
 
                 bind(Simple.class).to(Simple2.class);
             }

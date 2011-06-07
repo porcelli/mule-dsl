@@ -9,11 +9,6 @@
 
 package org.mule.config.dsl;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mule.config.dsl.expression.CoreExpr.string;
-
-import java.util.Iterator;
-
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -26,6 +21,11 @@ import org.mule.config.dsl.component.ExpressionLogComponent;
 import org.mule.config.dsl.component.ExtendedLogComponent;
 import org.mule.config.dsl.component.SimpleLogComponent;
 import org.mule.construct.SimpleFlowConstruct;
+
+import java.util.Iterator;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.expression.CoreExpr.string;
 
 public class TestLog {
 

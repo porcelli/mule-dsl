@@ -10,10 +10,10 @@
 package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
-import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.construct.FlowConstruct;
 import org.mule.api.source.MessageSource;
+import org.mule.config.dsl.ExchangePattern;
 import org.mule.config.dsl.FlowBuilder;
 import org.mule.config.dsl.PipelineBuilder;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
@@ -35,7 +35,7 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowBuilder> implements
         return from(uri, null);
     }
 
-    public PipelineBuilder<FlowBuilder> from(String uri, MessageExchangePattern pattern) {
+    public PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern) {
         this.inboundEndpointBuilder = new InboundEndpointBuilderImpl(uri, pattern);
         return this;
     }

@@ -9,10 +9,13 @@
 
 package org.mule.config.dsl;
 
-public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
+import org.mule.api.routing.filter.Filter;
 
-    PipelineBuilder<FlowBuilder> from(String uri);
+public interface FilterBuilder {
 
-    PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern);
+    String getName();
 
+    <F extends Filter> FilterDefinition<F> with(F obj);
+
+    <F extends Filter> FilterDefinition<F> with(Class<F> obj);
 }

@@ -11,11 +11,14 @@ package org.mule.config.dsl;
 
 import org.apache.commons.discovery.Resource;
 import org.apache.commons.discovery.tools.ResourceUtils;
+import org.mule.config.dsl.internal.Registry;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Map;
+import java.util.Properties;
 
 import static org.mule.config.dsl.internal.util.NameGenerator.newName;
 import static org.mule.config.dsl.internal.util.Preconditions.*;
@@ -43,6 +46,34 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule {
 
     public void propertyResolver(InputStream inputStream) {
         registry.registerPropertyResolver(inputStream);
+    }
+
+    public void propertyResolver(Map<String, String> properties) {
+        registry.registerPropertyResolver(properties);
+    }
+
+    public void propertyResolver(Properties properties) {
+        registry.registerPropertyResolver(properties);
+    }
+
+    /* global transformar and filters */
+
+    //<T extends Transformer>
+
+    public TransformerBuilder transformer() {
+        return registry.transformer(newName("Transformer"));
+    }
+
+    public TransformerBuilder transformer(String name) {
+        return registry.transformer(name);
+    }
+
+    public FilterBuilder filter() {
+        return registry.filter(newName("Filter"));
+    }
+
+    public FilterBuilder filter(String name) {
+        return registry.filter(name);
     }
 
     /* flow */

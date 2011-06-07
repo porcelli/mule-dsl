@@ -41,7 +41,7 @@ public class PrivateAccessor {
     }
 
     /**
-     * Return the set of fields declared at all level of class hierachy
+     * Return the set of fields declared at broadcast level of class hierachy
      */
     private static Set<Field> getAllFields(Class clazz) {
         return getAllFieldsRec(clazz, new HashSet<Field>());
