@@ -96,182 +96,96 @@ public class TestRouterAsync {
         }
     }
 
-//    @Test
-//    public void simpleBroadcastNesting() {
-//        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
-//            @Override
-//            public void configure() {
-//                flow("MyFlow")
-//                        .from("file:///Users/porcelli/test")
-//                        .async()
-//                            .echo()
-//                            .async()
-//                                .echo()
-//                            .endAsync()
-//                            .echo()
-//                        .endAsync();
-//            }
-//        });
-//
-//        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
-//
-//        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
-//
-//        assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-//        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-//
-//        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
-//
-//        assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
-//
-//        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
-//
-//        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-//
-//        assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
-//
-//        assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
-//
-//        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-//
-//        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-//
-//        assertThat(processor).isNotNull().isInstanceOf(MulticastingRouter.class);
-//
-//        MulticastingRouter multicastingRouter = (MulticastingRouter) processor;
-//
-//        assertThat(multicastingRouter.getRoutes()).isNotEmpty().hasSize(3);
-//
-//        assertThat(multicastingRouter.getRoutes().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
-//
-//        SimpleCallableJavaComponent echo1 = (SimpleCallableJavaComponent) multicastingRouter.getRoutes().get(0);
-//
-//        assertThat(echo1.getObjectType()).isEqualTo(EchoComponent.class);
-//
-//        assertThat(echo1.getObjectFactory().isSingleton()).isEqualTo(true);
-//
-//
-//        assertThat(multicastingRouter.getRoutes().get(1)).isNotNull().isInstanceOf(MulticastingRouter.class);
-//
-//        MulticastingRouter innerAll = (MulticastingRouter) multicastingRouter.getRoutes().get(1);
-//
-//        assertThat(innerAll.getRoutes()).isNotEmpty().hasSize(1);
-//
-//        assertThat(innerAll.getRoutes().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
-//
-//
-//        assertThat(multicastingRouter.getRoutes().get(2)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
-//
-//        SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) multicastingRouter.getRoutes().get(2);
-//
-//        assertThat(echo2.getObjectType()).isEqualTo(EchoComponent.class);
-//
-//        assertThat(echo2.getObjectFactory().isSingleton()).isEqualTo(true);
-//    }
-//
-//    @Test
-//    public void simpleBroadcastWithSend() {
-//        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
-//            @Override
-//            public void configure() {
-//                flow("MyFlow")
-//                        .from("file:///Users/porcelli/test")
-//                        .async()
-//                            .send("file:///Users/porcelli/out", MessageExchangePattern.ONE_WAY)
-//                        .endAsync();
-//            }
-//        });
-//
-//        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
-//
-//        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
-//
-//        assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-//        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-//
-//        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
-//
-//        assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
-//
-//        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
-//
-//        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-//
-//        assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
-//
-//        assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
-//
-//        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-//
-//        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-//
-//        assertThat(processor).isNotNull().isInstanceOf(MulticastingRouter.class);
-//
-//        MulticastingRouter multicastingRouter = (MulticastingRouter) processor;
-//
-//        assertThat(multicastingRouter.getRoutes()).isNotEmpty().hasSize(1);
-//
-//        assertThat(multicastingRouter.getRoutes().get(0)).isNotNull().isInstanceOf(ImmutableEndpoint.class);
-//    }
-//
-//    @Test
-//    public void simpleBroadcastWithExecute() {
-//        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
-//            @Override
-//            public void configure() {
-//                flow("MyFlow")
-//                        .from("file:///Users/porcelli/test")
-//                        .async()
-//                            .execute(Simple.class, Scope.PROTOTYPE)
-//                            .execute(Simple.class, Scope.PROTOTYPE).withDefaultArg()
-//                        .endAsync();
-//
-//                bind(Simple.class).to(Simple2.class);
-//            }
-//        });
-//
-//        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
-//
-//        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
-//
-//        assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-//        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-//
-//        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
-//
-//        assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
-//
-//        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
-//
-//        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-//
-//        assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
-//
-//        assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
-//
-//        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-//
-//        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-//
-//        assertThat(processor).isNotNull().isInstanceOf(MulticastingRouter.class);
-//
-//        MulticastingRouter multicastingRouter = (MulticastingRouter) processor;
-//
-//        assertThat(multicastingRouter.getRoutes()).isNotEmpty().hasSize(2);
-//
-//        assertThat(multicastingRouter.getRoutes().get(0)).isNotNull().isInstanceOf(DefaultJavaComponent.class);
-//        assertThat(multicastingRouter.getRoutes().get(1)).isNotNull().isInstanceOf(DefaultJavaComponent.class);
-//    }
-//
-//
-//    public static interface Simple {
-//        void execute(String string);
-//    }
-//
-//    public static class Simple2 implements Simple {
-//        public void execute(String string) {
-//            System.out.println("SIMPLE 2! : " + string);
-//        }
-//    }
+    @Test
+    public void simpleAsyncNesting() {
+        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
+                flow("MyFlow")
+                        .from("file:///Users/porcelli/test")
+                        .async()
+                            .echo()
+                            .async()
+                                .echo()
+                            .endAsync()
+                            .echo()
+                        .endAsync();
+            }
+        });
+
+        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
+
+        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+
+        assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
+        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+
+        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+
+        assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
+
+        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+
+        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+        assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
+
+        assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
+
+        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+
+        assertThat(processor).isNotNull().isInstanceOf(AsyncDelegateMessageProcessor.class);
+
+        {
+            AsyncDelegateMessageProcessor asyncRouter = (AsyncDelegateMessageProcessor) processor;
+
+            MessageProcessorChain chain = (MessageProcessorChain) PrivateAccessor.getPrivateFieldValue(asyncRouter, "delegate");
+
+            assertThat(chain.getMessageProcessors()).isNotEmpty().hasSize(3);
+
+            {
+                assertThat(chain.getMessageProcessors().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+
+                SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) chain.getMessageProcessors().get(0);
+
+                assertThat(echo.getObjectType()).isEqualTo(EchoComponent.class);
+
+                assertThat(echo.getObjectFactory().isSingleton()).isEqualTo(true);
+            }
+
+            {
+                assertThat(chain.getMessageProcessors().get(1)).isNotNull().isInstanceOf(AsyncDelegateMessageProcessor.class);
+
+                AsyncDelegateMessageProcessor innerAsync = (AsyncDelegateMessageProcessor) chain.getMessageProcessors().get(1);
+
+                MessageProcessorChain innerChain = (MessageProcessorChain) PrivateAccessor.getPrivateFieldValue(innerAsync, "delegate");
+
+                assertThat(innerChain.getMessageProcessors()).isNotEmpty().hasSize(1);
+
+                {
+                    assertThat(innerChain.getMessageProcessors().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+
+                    SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) innerChain.getMessageProcessors().get(0);
+
+                    assertThat(echo.getObjectType()).isEqualTo(EchoComponent.class);
+
+                    assertThat(echo.getObjectFactory().isSingleton()).isEqualTo(true);
+                }
+
+            }
+
+            {
+                assertThat(chain.getMessageProcessors().get(2)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+
+                SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) chain.getMessageProcessors().get(2);
+
+                assertThat(echo.getObjectType()).isEqualTo(EchoComponent.class);
+
+                assertThat(echo.getObjectFactory().isSingleton()).isEqualTo(true);
+            }
+        }
+    }
 
 }

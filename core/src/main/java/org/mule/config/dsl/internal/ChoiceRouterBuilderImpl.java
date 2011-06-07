@@ -249,8 +249,10 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
 
     @Override
     public AsyncRouterBuilder<InnerWhenChoiceBuilder<P>> async() {
-        //TODO
-        return null;
+        AsyncRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new AsyncRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
+        pipeline.addToProcessorList(builder);
+
+        return builder;
     }
 
     @Override
@@ -481,8 +483,10 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
 
         @Override
         public AsyncRouterBuilder<OtherwiseChoiceBuilder<P>> async() {
-            //TODO
-            return null;
+            AsyncRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new AsyncRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
+            pipeline.addToProcessorList(builder);
+
+            return builder;
         }
     }
 

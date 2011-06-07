@@ -319,8 +319,13 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
 
     @Override
     public AsyncRouterBuilder<P> async() {
-        //TODO
-        return null;
+        if (parentScope != null) {
+            return parentScope.async();
+        }
+        AsyncRouterBuilderImpl<P> builder = new AsyncRouterBuilderImpl<P>(getThis());
+        processorList.add(builder);
+
+        return builder;
     }
 
 
