@@ -17,12 +17,10 @@ public interface ExecutorBuilder<P extends PipelineBuilder<P>> extends PipelineB
 
     InnerArgsExecutorBuilder<P> methodAnnotatedWith(Annotation annotation);
 
-    P withDefaultArg();
-
-    <E extends ExpressionEvaluatorBuilder> P args(E... args);
+    P withoutArgs();
 
     public static interface InnerArgsExecutorBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<InnerArgsExecutorBuilder<P>> {
-        P withDefaultArg();
+        P withoutArgs();
 
         <E extends ExpressionEvaluatorBuilder> P args(E... args);
     }

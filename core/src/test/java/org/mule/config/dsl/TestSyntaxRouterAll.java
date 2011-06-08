@@ -83,7 +83,7 @@ public class TestSyntaxRouterAll {
                         .echo()
                         .broadcast()
                             .execute((Callable) null)
-                            .execute(String.class).withDefaultArg()
+                            .execute(String.class).withoutArgs()
                         .endBroadcast();
             }
         });

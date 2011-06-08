@@ -214,7 +214,7 @@ public class TestRouterRoundRobin {
                         .from("file:///Users/porcelli/test")
                         .roundRobin()
                             .execute(Simple.class, Scope.PROTOTYPE)
-                            .execute(Simple.class, Scope.PROTOTYPE).withDefaultArg()
+                            .execute(Simple.class, Scope.PROTOTYPE).withoutArgs()
                         .endRoundRobin();
 
                 bind(Simple.class).to(Simple2.class);

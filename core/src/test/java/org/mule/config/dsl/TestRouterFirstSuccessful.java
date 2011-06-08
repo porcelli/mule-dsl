@@ -214,7 +214,7 @@ public class TestRouterFirstSuccessful {
                         .from("file:///Users/porcelli/test")
                         .firstSuccessful()
                             .execute(Simple.class, Scope.PROTOTYPE)
-                            .execute(Simple.class, Scope.PROTOTYPE).withDefaultArg()
+                            .execute(Simple.class, Scope.PROTOTYPE).withoutArgs()
                         .endFirstSuccessful();
 
                 bind(Simple.class).to(Simple2.class);

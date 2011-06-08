@@ -26,6 +26,10 @@ public final class CoreExpr {
         return new GenericExpressionFilterEvaluatorBuilder(expr);
     }
 
+    public static PayloadExpressionEvaluatorBuilder payload() {
+        return new PayloadExpressionEvaluatorBuilder();
+    }
+
     public static RegExExpressionEvaluatorBuilder regex(String expr) {
         return new RegExExpressionEvaluatorBuilder(expr);
     }
@@ -44,10 +48,13 @@ public final class CoreExpr {
         public GenericExpressionFilterEvaluatorBuilder(String expression) {
             super(EVALUATOR, expression, null);
         }
+    }
 
-        @Override
-        public Filter getFilter(PropertyPlaceholder placeholder) {
-            return null;
+    public static class PayloadExpressionEvaluatorBuilder extends BaseEvaluatorBuilder implements ExpressionEvaluatorBuilder {
+        private static final String EVALUATOR = "payload";
+
+        public PayloadExpressionEvaluatorBuilder() {
+            super(EVALUATOR, null, null);
         }
     }
 
@@ -83,11 +90,6 @@ public final class CoreExpr {
         public StringExpressionEvaluatorBuilder(String expression) {
             super(EVALUATOR, expression, null);
         }
-
-        @Override
-        public Filter getFilter(PropertyPlaceholder placeholder) {
-            return null;
-        }
     }
 
 
@@ -97,8 +99,8 @@ public final class CoreExpr {
         private final String customEvaluator;
 
         public BaseEvaluatorBuilder(String evaluator, String expression, String customEvaluator) {
-            this.expression = checkNotNull(expression, "expr");
-            this.evaluator = checkNotNull(evaluator, "expr");
+            this.evaluator = checkNotNull(evaluator, "evaluator");
+            this.expression = expression;
             this.customEvaluator = customEvaluator;
         }
 
@@ -114,7 +116,17 @@ public final class CoreExpr {
             return expression;
         }
 
-        public abstract Filter getFilter(PropertyPlaceholder placeholder);
+        @Override
+        public String toString() {
+            if (expression == null) {
+                return "#[" + evaluator + "]";
+            }
+            return "#[" + evaluator + ":" + expression + "]";
+        }
+
+        public Filter getFilter(PropertyPlaceholder placeholder) {
+            return null;
+        }
     }
 
 }
