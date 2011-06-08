@@ -26,8 +26,10 @@ import javax.inject.Singleton;
 import java.util.Iterator;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.Scope.PROTOTYPE;
+import static org.mule.config.dsl.Scope.SINGLETON;
 
-public class TestExecute {
+public class TestExecuteSimple {
 
     @Test
     public void simpleObjectExecute() {
@@ -276,9 +278,55 @@ public class TestExecute {
 
         assertThat(execute.getObjectType()).isEqualTo(SimpleCallable.class);
 
-        assertThat(execute.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(execute.getObjectFactory().isSingleton()).isEqualTo(false);
     }
 
+    @Test
+    public void simpleCallableClassInjectedExecute() {
+        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
+                flow("MyFlow")
+                        .from("file:///Users/porcelli/test")
+                        .execute(ComplexCallable.class);
+
+                bind(ComplexCallable.class).toInstance(new ComplexCallable(null));
+            }
+        });
+
+        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
+
+        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+
+        assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
+        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+
+        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+
+        assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
+
+        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+
+        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+        assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
+
+        assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
+
+        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+
+        MessageProcessor executeProcessor = iterator.next();
+
+        assertThat(executeProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+
+        SimpleCallableJavaComponent execute = (SimpleCallableJavaComponent) executeProcessor;
+
+        assertThat(execute.getObjectType()).isEqualTo(ComplexCallable.class);
+
+        assertThat(execute.getObjectFactory().isSingleton()).isEqualTo(true);
+    }
 
     @Test
     public void simpleChainCallableClassExecute() {
@@ -323,7 +371,7 @@ public class TestExecute {
 
         assertThat(execute1.getObjectType()).isEqualTo(SimpleCallable.class);
 
-        assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(false);
 
         MessageProcessor executeProcessor2 = iterator.next();
 
@@ -333,7 +381,7 @@ public class TestExecute {
 
         assertThat(execute2.getObjectType()).isEqualTo(SimpleCallable.class);
 
-        assertThat(execute2.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(execute2.getObjectFactory().isSingleton()).isEqualTo(false);
     }
 
     @Test
@@ -445,7 +493,7 @@ public class TestExecute {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class).asPrototype();
+                        .execute(Complex2.class, PROTOTYPE);
             }
         });
 
@@ -491,8 +539,8 @@ public class TestExecute {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class).asPrototype()
-                        .execute(Complex2.class).asPrototype();
+                        .execute(Complex2.class, PROTOTYPE)
+                        .execute(Complex2.class, PROTOTYPE);
             }
         });
 
@@ -547,7 +595,7 @@ public class TestExecute {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class).asSingleton();
+                        .execute(Complex2.class, SINGLETON);
             }
         });
 
@@ -593,8 +641,8 @@ public class TestExecute {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class).asSingleton()
-                        .execute(Complex2.class).asSingleton();
+                        .execute(Complex2.class, SINGLETON)
+                        .execute(Complex2.class, SINGLETON);
             }
         });
 
@@ -865,9 +913,9 @@ public class TestExecute {
                         .from("file:///Users/porcelli/test")
                         .execute(Simple.class)
                         .execute(SimpleCallable.class)
-                        .execute(Complex2.class).asSingleton()
+                        .execute(Complex2.class, SINGLETON)
                         .execute(new Simple3())
-                        .execute(Complex2.class).asPrototype()
+                        .execute(Complex2.class, PROTOTYPE)
                         .execute(new SimpleCallable());
 
                 bind(Simple.class).to(Simple2.class).in(Singleton.class);
@@ -915,7 +963,7 @@ public class TestExecute {
 
         assertThat(execute2.getObjectType()).isEqualTo(SimpleCallable.class);
 
-        assertThat(execute2.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(execute2.getObjectFactory().isSingleton()).isEqualTo(false);
 
         MessageProcessor executeProcessor3 = iterator.next();
 
@@ -965,6 +1013,20 @@ public class TestExecute {
             return muleEventContext.getMessage().getPayload();
         }
     }
+
+    public static class ComplexCallable implements Callable {
+
+        public ComplexCallable(String none) {
+
+        }
+
+        @Override
+        public Object onCall(MuleEventContext muleEventContext) throws Exception {
+            System.out.println("HERE!");
+            return muleEventContext.getMessage().getPayload();
+        }
+    }
+
 
     public static interface Simple {
         void execute(String string);

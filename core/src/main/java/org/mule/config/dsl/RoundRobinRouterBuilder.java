@@ -9,10 +9,7 @@
 
 package org.mule.config.dsl;
 
-public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
+public interface RoundRobinRouterBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<RoundRobinRouterBuilder<P>> {
 
-    PipelineBuilder<FlowBuilder> from(String uri);
-
-    PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern);
-
+    P endRoundRobin();
 }

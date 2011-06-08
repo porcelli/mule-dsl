@@ -65,7 +65,7 @@ public class TestSimpleServiceFlow {
 
         assertThat(component.getObjectType()).isEqualTo(SimpleCallable.class);
 
-        assertThat(component.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(component.getObjectFactory().isSingleton()).isEqualTo(false);
     }
 
     public static class SimpleCallable implements Callable {

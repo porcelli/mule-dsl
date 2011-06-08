@@ -11,6 +11,9 @@ package org.mule.config.dsl;
 
 import org.mule.api.lifecycle.Callable;
 
+import static org.mule.MessageExchangePattern.ONE_WAY;
+import static org.mule.config.dsl.Scope.SINGLETON;
+
 public class TestSyntaxRouterAll {
 
 //    @Test
@@ -20,67 +23,68 @@ public class TestSyntaxRouterAll {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .all()
+                        .broadcast()
                             .echo()
-                                .all()
+                                .broadcast()
                                     .echo()
-                                        .all()
+                                        .broadcast()
                                             .echo()
-                                            .execute((Class<?>) null).asSingleton()
-                                            .send(null).asOneWay()
-                                        .endAll()
-                                        .all()
-                                            .all()
-                                            .endAll()
-                                        .endAll()
+                                            .execute((Class<?>) null, SINGLETON)
+                                            .send(null, ONE_WAY)
+                                        .endBroadcast()
+                                        .broadcast()
+                                            .broadcast()
+                                            .endBroadcast()
+                                        .endBroadcast()
                                     .echo()
-                                .endAll()
-                        .endAll()
-                        .all()
+                                .endBroadcast()
+                        .endBroadcast()
+                        .broadcast()
                         	.echo()
-                        		.all()
+                        		.broadcast()
                         			.echo()
-                        		.endAll()
+                        		.endBroadcast()
                         		.echo()
-                        .endAll();
+                        .endBroadcast();
 
                 flow("MyFlow2")
-                	.all()
+                	.broadcast()
                         .echo()
-                        .all()
+                        .broadcast()
                             .echo()
-                                .all()
+                                .broadcast()
                                     .echo()
                                     .echo()
-                                .endAll()
-                                .all()
-                                    .all()
-                                    .endAll()
-                                .endAll()
+                                .endBroadcast()
+                                .broadcast()
+                                    .broadcast()
+                                    .endBroadcast()
+                                .endBroadcast()
                             .echo()
-                        .endAll()
-                    .endAll()
-                    .all()
+                        .endBroadcast()
+                    .endBroadcast()
+                    .broadcast()
                 	    .echo()
-                		    .all()
+                		    .broadcast()
                 			    .echo()
-                		    .endAll()
+                		    .endBroadcast()
                 		.echo()
-                    .endAll();
+                    .endBroadcast();
 
                 flow("MyFlow3")
-                        .execute((Class<?>)null)
+                        .execute((Class<?>) null)
                         .echo()
-                        .all()
+                        .broadcast()
                             .execute((Callable) null)
-                        .endAll();
+                        .endBroadcast();
 
                 flow("MyFlow4")
-                        .send(null).asOneWay()
+                        .send(null)
                         .echo()
-                        .all()
+                        .broadcast()
                             .execute((Callable) null)
-                        .endAll();
+                            .execute(String.class).withoutArgs()
+                        .endBroadcast();
             }
         });
     }

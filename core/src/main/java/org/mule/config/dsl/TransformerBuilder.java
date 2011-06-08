@@ -9,10 +9,13 @@
 
 package org.mule.config.dsl;
 
-public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
+import org.mule.api.transformer.Transformer;
 
-    PipelineBuilder<FlowBuilder> from(String uri);
+public interface TransformerBuilder {
 
-    PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern);
+    String getName();
 
+    <T extends Transformer> TransformerDefinition<T> with(T obj);
+
+    <T extends Transformer> TransformerDefinition<T> with(Class<T> obj);
 }

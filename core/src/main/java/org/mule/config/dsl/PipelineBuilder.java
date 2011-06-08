@@ -9,7 +9,10 @@
 
 package org.mule.config.dsl;
 
+import org.mule.MessageExchangePattern;
 import org.mule.api.lifecycle.Callable;
+import org.mule.api.routing.filter.Filter;
+import org.mule.api.transformer.Transformer;
 import org.mule.config.dsl.expression.CoreExpr;
 
 public interface PipelineBuilder<P extends PipelineBuilder<P>> {
@@ -29,14 +32,22 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> {
 
     P echo();
 
-    P execute(Object obj);
-
     P execute(Callable obj);
+
+    ExecutorBuilder<P> execute(Object obj);
 
     ExecutorBuilder<P> execute(Class<?> clazz);
 
+    ExecutorBuilder<P> execute(Class<?> clazz, Scope scope);
+
+    /* typed MP builder */
+
+//    <C extends CustomBuilder<P>> C process(Class<C> clazz);
+
     /* outbound */
-    OutboundEndpointBuilder<P> send(String uri);
+    P send(String uri);
+
+    P send(String uri, MessageExchangePattern pattern);
 
     /* transform */
 
@@ -44,15 +55,39 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> {
 
     <T> P transformTo(Class<T> clazz);
 
+    <T extends Transformer> P transformWith(Class<T> clazz);
+
+    <T extends Transformer> P transformWith(T obj);
+
+    <T extends Transformer> P transformWith(TransformerDefinition<T> obj);
+
+    P transformWith(String ref);
+
     /* filter */
     P filter(CoreExpr.GenericExpressionFilterEvaluatorBuilder expr);
 
     <E extends ExpressionEvaluatorBuilder> P filter(E expr);
 
+    <T> P filterBy(Class<T> clazz);
+
+    <F extends Filter> P filterWith(Class<F> clazz);
+
+    <F extends Filter> P filterWith(F obj);
+
+    <F extends Filter> P filterWith(FilterDefinition<F> obj);
+
+    P filterWith(String ref);
+
     /* routers */
 
-    AllRouterBuilder<P> all();
+    BroadcastRouterBuilder<P> broadcast();
 
     ChoiceRouterBuilder<P> choice();
+
+    AsyncRouterBuilder<P> async();
+
+    FirstSuccessfulRouterBuilder<P> firstSuccessful();
+
+    RoundRobinRouterBuilder<P> roundRobin();
 
 }

@@ -21,23 +21,23 @@ import org.mule.component.DefaultJavaComponent;
 import org.mule.component.SimpleCallableJavaComponent;
 import org.mule.component.simple.EchoComponent;
 import org.mule.construct.SimpleFlowConstruct;
-import org.mule.routing.outbound.MulticastingRouter;
+import org.mule.routing.RoundRobin;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-public class TestRouterAll {
+public class TestRouterRoundRobin {
 
     @Test
-    public void simpleAll() {
+    public void simpleRoundRobin() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .all()
+                        .roundRobin()
                             .echo()
                             .echo()
-                        .endAll();
+                        .endRoundRobin();
             }
         });
 
@@ -64,23 +64,23 @@ public class TestRouterAll {
 
         MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
-        assertThat(processor).isNotNull().isInstanceOf(MulticastingRouter.class);
+        assertThat(processor).isNotNull().isInstanceOf(RoundRobin.class);
 
-        MulticastingRouter multicastingRouter = (MulticastingRouter) processor;
+        RoundRobin roundRobinRouter = (RoundRobin) processor;
 
-        assertThat(multicastingRouter.getRoutes()).isNotEmpty().hasSize(2);
+        assertThat(roundRobinRouter.getRoutes()).isNotEmpty().hasSize(2);
 
-        assertThat(multicastingRouter.getRoutes().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+        assertThat(roundRobinRouter.getRoutes().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent echo1 = (SimpleCallableJavaComponent) multicastingRouter.getRoutes().get(0);
+        SimpleCallableJavaComponent echo1 = (SimpleCallableJavaComponent) roundRobinRouter.getRoutes().get(0);
 
         assertThat(echo1.getObjectType()).isEqualTo(EchoComponent.class);
 
         assertThat(echo1.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        assertThat(multicastingRouter.getRoutes().get(1)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+        assertThat(roundRobinRouter.getRoutes().get(1)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) multicastingRouter.getRoutes().get(1);
+        SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) roundRobinRouter.getRoutes().get(1);
 
         assertThat(echo2.getObjectType()).isEqualTo(EchoComponent.class);
 
@@ -88,19 +88,19 @@ public class TestRouterAll {
     }
 
     @Test
-    public void simpleAllNesting() {
+    public void simpleRoundRobinNesting() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .all()
+                        .roundRobin()
                             .echo()
-                            .all()
+                            .roundRobin()
                                 .echo()
-                            .endAll()
+                            .endRoundRobin()
                             .echo()
-                        .endAll();
+                        .endRoundRobin();
             }
         });
 
@@ -127,33 +127,33 @@ public class TestRouterAll {
 
         MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
-        assertThat(processor).isNotNull().isInstanceOf(MulticastingRouter.class);
+        assertThat(processor).isNotNull().isInstanceOf(RoundRobin.class);
 
-        MulticastingRouter multicastingRouter = (MulticastingRouter) processor;
+        RoundRobin roundRobinRouter = (RoundRobin) processor;
 
-        assertThat(multicastingRouter.getRoutes()).isNotEmpty().hasSize(3);
+        assertThat(roundRobinRouter.getRoutes()).isNotEmpty().hasSize(3);
 
-        assertThat(multicastingRouter.getRoutes().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+        assertThat(roundRobinRouter.getRoutes().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent echo1 = (SimpleCallableJavaComponent) multicastingRouter.getRoutes().get(0);
+        SimpleCallableJavaComponent echo1 = (SimpleCallableJavaComponent) roundRobinRouter.getRoutes().get(0);
 
         assertThat(echo1.getObjectType()).isEqualTo(EchoComponent.class);
 
         assertThat(echo1.getObjectFactory().isSingleton()).isEqualTo(true);
 
 
-        assertThat(multicastingRouter.getRoutes().get(1)).isNotNull().isInstanceOf(MulticastingRouter.class);
+        assertThat(roundRobinRouter.getRoutes().get(1)).isNotNull().isInstanceOf(RoundRobin.class);
 
-        MulticastingRouter innerAll = (MulticastingRouter) multicastingRouter.getRoutes().get(1);
+        RoundRobin innerAll = (RoundRobin) roundRobinRouter.getRoutes().get(1);
 
         assertThat(innerAll.getRoutes()).isNotEmpty().hasSize(1);
 
         assertThat(innerAll.getRoutes().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
 
-        assertThat(multicastingRouter.getRoutes().get(2)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+        assertThat(roundRobinRouter.getRoutes().get(2)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) multicastingRouter.getRoutes().get(2);
+        SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) roundRobinRouter.getRoutes().get(2);
 
         assertThat(echo2.getObjectType()).isEqualTo(EchoComponent.class);
 
@@ -161,15 +161,15 @@ public class TestRouterAll {
     }
 
     @Test
-    public void simpleAllWithSend() {
+    public void simpleRoundRobinWithSend() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .all()
-                            .send("file:///Users/porcelli/out").asOneWay()
-                        .endAll();
+                        .roundRobin()
+                            .send("file:///Users/porcelli/out", MessageExchangePattern.ONE_WAY)
+                        .endRoundRobin();
             }
         });
 
@@ -196,26 +196,26 @@ public class TestRouterAll {
 
         MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
-        assertThat(processor).isNotNull().isInstanceOf(MulticastingRouter.class);
+        assertThat(processor).isNotNull().isInstanceOf(RoundRobin.class);
 
-        MulticastingRouter multicastingRouter = (MulticastingRouter) processor;
+        RoundRobin roundRobinRouter = (RoundRobin) processor;
 
-        assertThat(multicastingRouter.getRoutes()).isNotEmpty().hasSize(1);
+        assertThat(roundRobinRouter.getRoutes()).isNotEmpty().hasSize(1);
 
-        assertThat(multicastingRouter.getRoutes().get(0)).isNotNull().isInstanceOf(ImmutableEndpoint.class);
+        assertThat(roundRobinRouter.getRoutes().get(0)).isNotNull().isInstanceOf(ImmutableEndpoint.class);
     }
 
     @Test
-    public void simpleAllWithExecute() {
+    public void simpleRoundRobinWithExecute() {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .all()
-                            .execute(Simple.class).asPrototype()
-                            .execute(Simple.class).asPrototype()
-                        .endAll();
+                        .roundRobin()
+                            .execute(Simple.class, Scope.PROTOTYPE)
+                            .execute(Simple.class, Scope.PROTOTYPE).withoutArgs()
+                        .endRoundRobin();
 
                 bind(Simple.class).to(Simple2.class);
             }
@@ -244,14 +244,14 @@ public class TestRouterAll {
 
         MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
-        assertThat(processor).isNotNull().isInstanceOf(MulticastingRouter.class);
+        assertThat(processor).isNotNull().isInstanceOf(RoundRobin.class);
 
-        MulticastingRouter multicastingRouter = (MulticastingRouter) processor;
+        RoundRobin roundRobinRouter = (RoundRobin) processor;
 
-        assertThat(multicastingRouter.getRoutes()).isNotEmpty().hasSize(2);
+        assertThat(roundRobinRouter.getRoutes()).isNotEmpty().hasSize(2);
 
-        assertThat(multicastingRouter.getRoutes().get(0)).isNotNull().isInstanceOf(DefaultJavaComponent.class);
-        assertThat(multicastingRouter.getRoutes().get(1)).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(roundRobinRouter.getRoutes().get(0)).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(roundRobinRouter.getRoutes().get(1)).isNotNull().isInstanceOf(DefaultJavaComponent.class);
     }
 
 

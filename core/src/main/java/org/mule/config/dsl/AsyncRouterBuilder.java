@@ -9,10 +9,7 @@
 
 package org.mule.config.dsl;
 
-public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
+public interface AsyncRouterBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<AsyncRouterBuilder<P>> {
 
-    PipelineBuilder<FlowBuilder> from(String uri);
-
-    PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern);
-
+    P endAsync();
 }

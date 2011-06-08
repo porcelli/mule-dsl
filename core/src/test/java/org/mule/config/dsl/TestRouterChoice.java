@@ -332,14 +332,14 @@ public class TestRouterChoice {
                         .from("file:///Users/porcelli/test")
                         .choice()
                             .when(wildcard("foo*"))
-                                .send("file:///Users/porcelli/out").asOneWay()
-                                .send("file:///Users/porcelli/out1").asOneWay()
+                                .send("file:///Users/porcelli/out")
+                                .send("file:///Users/porcelli/out1")
                             .when(wildcard("bar*"))
-                                .send("file:///Users/porcelli/out2").asOneWay()
-                                .send("file:///Users/porcelli/out3").asOneWay()
+                                .send("file:///Users/porcelli/out2")
+                                .send("file:///Users/porcelli/out3")
                             .otherwise()
-                                .send("file:///Users/porcelli/out4").asOneWay()
-                                .send("file:///Users/porcelli/out5").asOneWay()
+                                .send("file:///Users/porcelli/out4")
+                                .send("file:///Users/porcelli/out5")
                         .endChoice();
             }
         });
@@ -431,11 +431,11 @@ public class TestRouterChoice {
                         .from("file:///Users/porcelli/test")
                         .choice()
                             .when(wildcard("foo*"))
-                                .send("file:///Users/porcelli/out").asOneWay()
-                                .send("file:///Users/porcelli/out1").asOneWay()
+                                .send("file:///Users/porcelli/out")
+                                .send("file:///Users/porcelli/out1")
                             .when(wildcard("bar*"))
-                                .send("file:///Users/porcelli/out2").asOneWay()
-                                .send("file:///Users/porcelli/out3").asOneWay()
+                                .send("file:///Users/porcelli/out2")
+                                .send("file:///Users/porcelli/out3")
                         .endChoice();
             }
         });

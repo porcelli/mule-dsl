@@ -22,7 +22,10 @@ import org.mule.config.dsl.component.ExtendedLogComponent;
 import org.mule.construct.SimpleFlowConstruct;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -284,8 +287,156 @@ public class TestPropertyResolver {
         assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/out");
     }
 
+    @Test
+    public void inputMapInboundLogAndOutbound() throws Exception {
+        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
+
+                Map<String, String> properties = new HashMap<String, String>();
+                properties.put("my.app.name", "My App cool name");
+                properties.put("in.folder.path", "/Users/porcelli/test");
+                properties.put("out.folder.path", "/Users/porcelli/out");
+
+                propertyResolver(properties);
+
+                flow("MyFlow")
+                        .from("file://${in.folder.path}")
+                        .log("message here: ${my.app.name}!")
+                        .send("file://${out.folder.path}");
+            }
+        });
+
+        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
+
+        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+
+        assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
+        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+
+        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+
+        assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
+
+        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+
+        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+        assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
+
+        assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
+
+        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
+
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+
+        MessageProcessor logProcessor = iterator.next();
+
+        assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+
+        SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logProcessor;
+
+        assertThat(log.getObjectType()).isEqualTo(ExtendedLogComponent.class);
+
+        assertThat(log.getObjectFactory().isSingleton()).isEqualTo(true);
+
+        ExtendedLogComponent log1 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
+        ExtendedLogComponent log2 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
+
+        assertThat(log1 == log2).isEqualTo(true);
+
+        assertThat(log1.getLevel()).isEqualTo(LogLevel.INFO);
+        assertThat(log1.getMessage()).isEqualTo("message here: My App cool name!");
+
+        MessageProcessor processor = iterator.next();
+
+        assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+        OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+        assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+        assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
+
+        assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/out");
+    }
+
+    @Test
+    public void inputPropertiesInboundLogAndOutbound() throws Exception {
+        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
+
+                Properties properties = new Properties();
+                properties.setProperty("my.app.name", "My App cool name");
+                properties.setProperty("in.folder.path", "/Users/porcelli/test");
+                properties.setProperty("out.folder.path", "/Users/porcelli/out");
+
+                propertyResolver(properties);
+
+                flow("MyFlow")
+                        .from("file://${in.folder.path}")
+                        .log("message here: ${my.app.name}!")
+                        .send("file://${out.folder.path}");
+            }
+        });
+
+        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
+
+        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+
+        assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
+        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+
+        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+
+        assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
+
+        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+
+        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+        assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
+
+        assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
+
+        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
+
+        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+
+        MessageProcessor logProcessor = iterator.next();
+
+        assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+
+        SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logProcessor;
+
+        assertThat(log.getObjectType()).isEqualTo(ExtendedLogComponent.class);
+
+        assertThat(log.getObjectFactory().isSingleton()).isEqualTo(true);
+
+        ExtendedLogComponent log1 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
+        ExtendedLogComponent log2 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
+
+        assertThat(log1 == log2).isEqualTo(true);
+
+        assertThat(log1.getLevel()).isEqualTo(LogLevel.INFO);
+        assertThat(log1.getMessage()).isEqualTo("message here: My App cool name!");
+
+        MessageProcessor processor = iterator.next();
+
+        assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+        OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+        assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+        assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
+
+        assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/out");
+    }
+
     @Test(expected = RuntimeException.class)
-    public void fileResolverNull() throws Exception {
+    public void fileResolverNullInputStream() throws Exception {
         Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
@@ -300,5 +451,67 @@ public class TestPropertyResolver {
         });
     }
 
+    @Test(expected = RuntimeException.class)
+    public void fileResolverNullMap() throws Exception {
+        Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
 
+                propertyResolver((Map<String, String>) null);
+
+                flow("MyFlow")
+                        .from("file://${in.folder.path}")
+                        .log("message here: ${my.app.name}!")
+                        .send("file://${out.folder.path}");
+            }
+        });
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void fileResolverNullProperties() throws Exception {
+        Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
+
+                propertyResolver((Properties) null);
+
+                flow("MyFlow")
+                        .from("file://${in.folder.path}")
+                        .log("message here: ${my.app.name}!")
+                        .send("file://${out.folder.path}");
+            }
+        });
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void fileResolverNullClasspathBuilder() throws Exception {
+        Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
+
+                propertyResolver((ClasspathBuilder) null);
+
+                flow("MyFlow")
+                        .from("file://${in.folder.path}")
+                        .log("message here: ${my.app.name}!")
+                        .send("file://${out.folder.path}");
+            }
+        });
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void fileResolverNullFileRefBuilder() throws Exception {
+        Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
+
+                propertyResolver((FileRefBuilder) null);
+
+                flow("MyFlow")
+                        .from("file://${in.folder.path}")
+                        .log("message here: ${my.app.name}!")
+                        .send("file://${out.folder.path}");
+            }
+        });
+    }
 }

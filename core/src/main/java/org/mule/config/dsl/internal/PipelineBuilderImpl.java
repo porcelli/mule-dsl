@@ -10,9 +10,12 @@
 package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
+import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
+import org.mule.api.routing.filter.Filter;
+import org.mule.api.transformer.Transformer;
 import org.mule.component.simple.EchoComponent;
 import org.mule.config.dsl.*;
 import org.mule.config.dsl.component.SimpleLogComponent;
@@ -43,14 +46,14 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
     /* component */
 
     @Override
-    public P execute(Object obj) {
+    public ExecutorBuilder<P> execute(Object obj) {
         if (parentScope != null) {
             return parentScope.execute(obj);
         }
         ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), obj);
         processorList.add(builder);
 
-        return getThis();
+        return builder;
     }
 
     @Override
@@ -59,18 +62,23 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.execute(obj);
         }
 
-        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), obj);
-        processorList.add(builder);
+        processorList.add(new ExecutorBuilderImpl<P>(getThis(), obj));
 
         return getThis();
     }
 
     @Override
     public ExecutorBuilder<P> execute(Class<?> clazz) {
+        return execute(clazz, Scope.PROTOTYPE);
+    }
+
+    @Override
+    public ExecutorBuilder<P> execute(Class<?> clazz, Scope scope) {
         if (parentScope != null) {
-            return parentScope.execute(clazz);
+            return parentScope.execute(clazz, scope);
         }
-        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), clazz);
+
+        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), clazz, scope);
         processorList.add(builder);
 
         return builder;
@@ -119,6 +127,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         }
 
         processorList.add(new ExecutorBuilderImpl<P>(getThis(), new ExpressionLogComponentBuilder(expr, level)));
+
         return getThis();
     }
 
@@ -134,14 +143,19 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
 
     /* outbound */
     @Override
-    public OutboundEndpointBuilder<P> send(String uri) {
+    public P send(String uri) {
+        return send(uri, null);
+    }
+
+    @Override
+    public P send(String uri, MessageExchangePattern pattern) {
         if (parentScope != null) {
             return parentScope.send(uri);
         }
-        OutboundEndpointBuilderImpl<P> builder = new OutboundEndpointBuilderImpl<P>(getThis(), uri);
-        processorList.add(builder);
 
-        return builder;
+        processorList.add(new OutboundEndpointBuilderImpl(uri, pattern));
+
+        return getThis();
     }
 
     /* transform */
@@ -163,15 +177,54 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.transformTo(clazz);
         }
 
-        processorList.add(new TransformerBuilderImpl<T>(clazz));
+        processorList.add(new TypeBasedTransformerBuilderImpl<T>(clazz));
+        return getThis();
+    }
+
+    @Override
+    public <T extends Transformer> P transformWith(Class<T> clazz) {
+        if (parentScope != null) {
+            return parentScope.transformWith(clazz);
+        }
+
+        processorList.add(new CustomTransformerBuilderImpl<T>(clazz));
+        return getThis();
+    }
+
+    @Override
+    public <T extends Transformer> P transformWith(T obj) {
+        if (parentScope != null) {
+            return parentScope.transformWith(obj);
+        }
+
+        processorList.add(new CustomTransformerBuilderImpl<T>(obj));
+        return getThis();
+    }
+
+    @Override
+    public <T extends Transformer> P transformWith(TransformerDefinition<T> obj) {
+        if (parentScope != null) {
+            return parentScope.transformWith(obj);
+        }
+
+        processorList.add(new CustomTransformerBuilderImpl<T>(obj));
+        return getThis();
+    }
+
+    @Override
+    public P transformWith(String ref) {
+        if (parentScope != null) {
+            return parentScope.transformWith(ref);
+        }
+
+        processorList.add(new CustomTransformerBuilderImpl(ref));
         return getThis();
     }
 
     /* filter */
 
     @Override
-    public P filter(
-            CoreExpr.GenericExpressionFilterEvaluatorBuilder expr) {
+    public P filter(CoreExpr.GenericExpressionFilterEvaluatorBuilder expr) {
         if (parentScope != null) {
             return parentScope.filter(expr);
         }
@@ -190,14 +243,64 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         return getThis();
     }
 
+    @Override
+    public <T> P filterBy(Class<T> clazz) {
+        if (parentScope != null) {
+            return parentScope.filterBy(clazz);
+        }
+
+        processorList.add(new TypeBasedFilterBuilderImpl(clazz));
+        return getThis();
+    }
+
+    @Override
+    public <F extends Filter> P filterWith(Class<F> clazz) {
+        if (parentScope != null) {
+            return parentScope.filterWith(clazz);
+        }
+
+        processorList.add(new CustomFilterBuilderImpl<F>(clazz));
+        return getThis();
+    }
+
+    @Override
+    public <F extends Filter> P filterWith(F obj) {
+        if (parentScope != null) {
+            return parentScope.filterWith(obj);
+        }
+
+        processorList.add(new CustomFilterBuilderImpl<F>(obj));
+        return getThis();
+    }
+
+    @Override
+    public <F extends Filter> P filterWith(FilterDefinition<F> obj) {
+        if (parentScope != null) {
+            return parentScope.filterWith(obj);
+        }
+
+        processorList.add(new CustomFilterBuilderImpl<F>(obj));
+        return getThis();
+    }
+
+    @Override
+    public P filterWith(String ref) {
+        if (parentScope != null) {
+            return parentScope.filterWith(ref);
+        }
+
+        processorList.add(new CustomFilterBuilderImpl(ref));
+        return getThis();
+    }
+
     /* routers */
 
     @Override
-    public AllRouterBuilder<P> all() {
+    public BroadcastRouterBuilder<P> broadcast() {
         if (parentScope != null) {
-            return parentScope.all();
+            return parentScope.broadcast();
         }
-        AllRouterBuilderImpl<P> builder = new AllRouterBuilderImpl<P>(getThis());
+        BroadcastRouterBuilderImpl<P> builder = new BroadcastRouterBuilderImpl<P>(getThis());
         processorList.add(builder);
 
         return builder;
@@ -209,6 +312,39 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
             return parentScope.choice();
         }
         ChoiceRouterBuilderImpl<P> builder = new ChoiceRouterBuilderImpl<P>(getThis());
+        processorList.add(builder);
+
+        return builder;
+    }
+
+    @Override
+    public AsyncRouterBuilder<P> async() {
+        if (parentScope != null) {
+            return parentScope.async();
+        }
+        AsyncRouterBuilderImpl<P> builder = new AsyncRouterBuilderImpl<P>(getThis());
+        processorList.add(builder);
+
+        return builder;
+    }
+
+    @Override
+    public FirstSuccessfulRouterBuilder<P> firstSuccessful() {
+        if (parentScope != null) {
+            return parentScope.firstSuccessful();
+        }
+        FirstSuccessfulRouterBuilderImpl<P> builder = new FirstSuccessfulRouterBuilderImpl<P>(getThis());
+        processorList.add(builder);
+
+        return builder;
+    }
+
+    @Override
+    public RoundRobinRouterBuilder<P> roundRobin() {
+        if (parentScope != null) {
+            return parentScope.roundRobin();
+        }
+        RoundRobinRouterBuilderImpl<P> builder = new RoundRobinRouterBuilderImpl<P>(getThis());
         processorList.add(builder);
 
         return builder;

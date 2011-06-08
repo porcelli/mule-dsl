@@ -11,8 +11,8 @@ package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.LogLevel;
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.LogLevel;
 import org.mule.config.dsl.component.ExpressionLogComponent;
 import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 

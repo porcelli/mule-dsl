@@ -12,6 +12,7 @@ package org.mule.config.dsl;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.mule.api.MuleContext;
+import org.mule.config.dsl.internal.Registry;
 import org.mule.context.DefaultMuleContextFactory;
 
 public final class Mule {
@@ -21,7 +22,7 @@ public final class Mule {
 
     public static MuleContext newMuleContext(AbstractModule... modules) {
 
-        MuleContext muleContext = null;
+        final MuleContext muleContext;
         try {
             muleContext = new DefaultMuleContextFactory().createMuleContext();
         } catch (Exception e) {

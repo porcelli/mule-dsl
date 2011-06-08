@@ -24,12 +24,12 @@
 			<dependency>
 				<groupId>org.mule</groupId>
 				<artifactId>mule-core</artifactId>
-				<version>3.1.1</version>
+				<version>3.1.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mule.modules</groupId>
 				<artifactId>mule-module-scripting</artifactId>
-				<version>3.1.1</version>
+				<version>3.1.2</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.inject</groupId>
@@ -50,17 +50,17 @@
 			<dependency>
 				<groupId>org.mule.transports</groupId>
 				<artifactId>mule-transport-file</artifactId>
-				<version>3.1.1</version>
+				<version>3.1.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mule.transports</groupId>
 				<artifactId>mule-transport-http</artifactId>
-				<version>3.1.1</version>
+				<version>3.1.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mule.transports</groupId>
 				<artifactId>mule-transport-http</artifactId>
-				<version>3.1.1</version>
+				<version>3.1.2</version>
 			</dependency>
 			<!-- test frameworks -->
 			<dependency>

@@ -10,9 +10,12 @@
 package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
+import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
+import org.mule.api.routing.filter.Filter;
+import org.mule.api.transformer.Transformer;
 import org.mule.config.dsl.*;
 import org.mule.config.dsl.ChoiceRouterBuilder.InnerWhenChoiceBuilder;
 import org.mule.config.dsl.expression.CoreExpr.GenericExpressionFilterEvaluatorBuilder;
@@ -109,9 +112,11 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     }
 
     @Override
-    public InnerWhenChoiceBuilder<P> execute(Object obj) {
-        pipeline.execute(obj);
-        return this;
+    public ExecutorBuilder<InnerWhenChoiceBuilder<P>> execute(Object obj) {
+        ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>>(this, obj);
+        pipeline.addToProcessorList(builder);
+
+        return builder;
     }
 
     @Override
@@ -129,11 +134,23 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     }
 
     @Override
-    public OutboundEndpointBuilder<InnerWhenChoiceBuilder<P>> send(String uri) {
-        OutboundEndpointBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new OutboundEndpointBuilderImpl<InnerWhenChoiceBuilder<P>>(this, uri);
+    public ExecutorBuilder<InnerWhenChoiceBuilder<P>> execute(Class<?> clazz, Scope scope) {
+        ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>>(this, clazz, scope);
         pipeline.addToProcessorList(builder);
 
         return builder;
+    }
+
+    @Override
+    public InnerWhenChoiceBuilder<P> send(String uri) {
+        pipeline.send(uri);
+        return this;
+    }
+
+    @Override
+    public InnerWhenChoiceBuilder<P> send(String uri, MessageExchangePattern pattern) {
+        pipeline.send(uri, pattern);
+        return this;
     }
 
     @Override
@@ -145,6 +162,30 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     @Override
     public <T> InnerWhenChoiceBuilder<P> transformTo(Class<T> clazz) {
         pipeline.transformTo(clazz);
+        return this;
+    }
+
+    @Override
+    public <T extends Transformer> InnerWhenChoiceBuilder<P> transformWith(Class<T> clazz) {
+        pipeline.transformWith(clazz);
+        return this;
+    }
+
+    @Override
+    public <T extends Transformer> InnerWhenChoiceBuilder<P> transformWith(T obj) {
+        pipeline.transformWith(obj);
+        return this;
+    }
+
+    @Override
+    public <T extends Transformer> InnerWhenChoiceBuilder<P> transformWith(TransformerDefinition<T> obj) {
+        pipeline.transformWith(obj);
+        return this;
+    }
+
+    @Override
+    public InnerWhenChoiceBuilder<P> transformWith(String ref) {
+        pipeline.transformWith(ref);
         return this;
     }
 
@@ -161,8 +202,38 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     }
 
     @Override
-    public AllRouterBuilder<InnerWhenChoiceBuilder<P>> all() {
-        AllRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new AllRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
+    public <T> InnerWhenChoiceBuilder<P> filterBy(Class<T> clazz) {
+        pipeline.filterBy(clazz);
+        return this;
+    }
+
+    @Override
+    public <F extends Filter> InnerWhenChoiceBuilder<P> filterWith(Class<F> clazz) {
+        pipeline.filterWith(clazz);
+        return this;
+    }
+
+    @Override
+    public <F extends Filter> InnerWhenChoiceBuilder<P> filterWith(F obj) {
+        pipeline.filterWith(obj);
+        return this;
+    }
+
+    @Override
+    public <F extends Filter> InnerWhenChoiceBuilder<P> filterWith(FilterDefinition<F> obj) {
+        pipeline.filterWith(obj);
+        return this;
+    }
+
+    @Override
+    public InnerWhenChoiceBuilder<P> filterWith(String ref) {
+        pipeline.filterWith(ref);
+        return this;
+    }
+
+    @Override
+    public BroadcastRouterBuilder<InnerWhenChoiceBuilder<P>> broadcast() {
+        BroadcastRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new BroadcastRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
         pipeline.addToProcessorList(builder);
 
         return builder;
@@ -171,6 +242,30 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     @Override
     public ChoiceRouterBuilder<InnerWhenChoiceBuilder<P>> choice() {
         ChoiceRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new ChoiceRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
+        pipeline.addToProcessorList(builder);
+
+        return builder;
+    }
+
+    @Override
+    public AsyncRouterBuilder<InnerWhenChoiceBuilder<P>> async() {
+        AsyncRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new AsyncRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
+        pipeline.addToProcessorList(builder);
+
+        return builder;
+    }
+
+    @Override
+    public FirstSuccessfulRouterBuilder<InnerWhenChoiceBuilder<P>> firstSuccessful() {
+        FirstSuccessfulRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new FirstSuccessfulRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
+        pipeline.addToProcessorList(builder);
+
+        return builder;
+    }
+
+    @Override
+    public RoundRobinRouterBuilder<InnerWhenChoiceBuilder<P>> roundRobin() {
+        RoundRobinRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new RoundRobinRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
         pipeline.addToProcessorList(builder);
 
         return builder;
@@ -267,9 +362,11 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         }
 
         @Override
-        public OtherwiseChoiceBuilder<P> execute(Object obj) {
-            ChoiceRouterBuilderImpl.this.execute(obj);
-            return this;
+        public ExecutorBuilder<OtherwiseChoiceBuilder<P>> execute(Object obj) {
+            ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>>(this, obj);
+            pipeline.addToProcessorList(builder);
+
+            return builder;
         }
 
         @Override
@@ -287,11 +384,23 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         }
 
         @Override
-        public OutboundEndpointBuilder<OtherwiseChoiceBuilder<P>> send(String uri) {
-            OutboundEndpointBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new OutboundEndpointBuilderImpl<OtherwiseChoiceBuilder<P>>(this, uri);
+        public ExecutorBuilder<OtherwiseChoiceBuilder<P>> execute(Class<?> clazz, Scope scope) {
+            ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>>(this, clazz, scope);
             pipeline.addToProcessorList(builder);
 
             return builder;
+        }
+
+        @Override
+        public OtherwiseChoiceBuilder<P> send(String uri) {
+            ChoiceRouterBuilderImpl.this.send(uri);
+            return this;
+        }
+
+        @Override
+        public OtherwiseChoiceBuilder<P> send(String uri, MessageExchangePattern pattern) {
+            ChoiceRouterBuilderImpl.this.send(uri, pattern);
+            return this;
         }
 
         @Override
@@ -303,6 +412,30 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         @Override
         public <T> OtherwiseChoiceBuilder<P> transformTo(Class<T> clazz) {
             ChoiceRouterBuilderImpl.this.transformTo(clazz);
+            return this;
+        }
+
+        @Override
+        public <T extends Transformer> OtherwiseChoiceBuilder<P> transformWith(Class<T> clazz) {
+            ChoiceRouterBuilderImpl.this.transformWith(clazz);
+            return this;
+        }
+
+        @Override
+        public <T extends Transformer> OtherwiseChoiceBuilder<P> transformWith(T obj) {
+            ChoiceRouterBuilderImpl.this.transformWith(obj);
+            return this;
+        }
+
+        @Override
+        public <T extends Transformer> OtherwiseChoiceBuilder<P> transformWith(TransformerDefinition<T> obj) {
+            ChoiceRouterBuilderImpl.this.transformWith(obj);
+            return this;
+        }
+
+        @Override
+        public OtherwiseChoiceBuilder<P> transformWith(String ref) {
+            ChoiceRouterBuilderImpl.this.transformWith(ref);
             return this;
         }
 
@@ -319,8 +452,38 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         }
 
         @Override
-        public AllRouterBuilder<OtherwiseChoiceBuilder<P>> all() {
-            AllRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new AllRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
+        public <T> OtherwiseChoiceBuilder<P> filterBy(Class<T> clazz) {
+            ChoiceRouterBuilderImpl.this.filterBy(clazz);
+            return this;
+        }
+
+        @Override
+        public <F extends Filter> OtherwiseChoiceBuilder<P> filterWith(Class<F> clazz) {
+            ChoiceRouterBuilderImpl.this.filterWith(clazz);
+            return this;
+        }
+
+        @Override
+        public <F extends Filter> OtherwiseChoiceBuilder<P> filterWith(F obj) {
+            ChoiceRouterBuilderImpl.this.filterWith(obj);
+            return this;
+        }
+
+        @Override
+        public <F extends Filter> OtherwiseChoiceBuilder<P> filterWith(FilterDefinition<F> obj) {
+            ChoiceRouterBuilderImpl.this.filterWith(obj);
+            return this;
+        }
+
+        @Override
+        public OtherwiseChoiceBuilder<P> filterWith(String ref) {
+            ChoiceRouterBuilderImpl.this.filterWith(ref);
+            return this;
+        }
+
+        @Override
+        public BroadcastRouterBuilder<OtherwiseChoiceBuilder<P>> broadcast() {
+            BroadcastRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new BroadcastRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
             pipeline.addToProcessorList(builder);
 
             return builder;
@@ -329,6 +492,30 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         @Override
         public ChoiceRouterBuilder<OtherwiseChoiceBuilder<P>> choice() {
             ChoiceRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ChoiceRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
+            pipeline.addToProcessorList(builder);
+
+            return builder;
+        }
+
+        @Override
+        public AsyncRouterBuilder<OtherwiseChoiceBuilder<P>> async() {
+            AsyncRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new AsyncRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
+            pipeline.addToProcessorList(builder);
+
+            return builder;
+        }
+
+        @Override
+        public FirstSuccessfulRouterBuilder<OtherwiseChoiceBuilder<P>> firstSuccessful() {
+            FirstSuccessfulRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new FirstSuccessfulRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
+            pipeline.addToProcessorList(builder);
+
+            return builder;
+        }
+
+        @Override
+        public RoundRobinRouterBuilder<OtherwiseChoiceBuilder<P>> roundRobin() {
+            RoundRobinRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new RoundRobinRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
             pipeline.addToProcessorList(builder);
 
             return builder;

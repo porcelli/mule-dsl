@@ -9,8 +9,11 @@
 
 package org.mule.config.dsl;
 
-public interface OutboundEndpointBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<P> {
-    P asOneWay();
+import org.mule.api.transformer.Transformer;
 
-    P asRequestResponse();
+public interface TransformerDefinition<T extends Transformer> {
+
+    String getName();
+
+    Class<T> getType();
 }

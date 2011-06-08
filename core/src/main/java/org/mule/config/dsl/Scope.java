@@ -9,7 +9,6 @@
 
 package org.mule.config.dsl;
 
-public interface AllRouterBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<AllRouterBuilder<P>> {
-
-    P endAll();
+public enum Scope {
+    PROTOTYPE, SINGLETON
 }

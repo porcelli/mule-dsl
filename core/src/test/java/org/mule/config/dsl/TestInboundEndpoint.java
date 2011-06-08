@@ -20,6 +20,8 @@ import org.mule.api.source.MessageSource;
 import org.mule.construct.SimpleFlowConstruct;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.ExchangePattern.ONE_WAY;
+import static org.mule.config.dsl.ExchangePattern.REQUEST_RESPONSE;
 
 public class TestInboundEndpoint {
 
@@ -61,7 +63,7 @@ public class TestInboundEndpoint {
             @Override
             public void configure() {
                 flow("MyFlow")
-                        .from("file:///Users/porcelli/test").asOneWay();
+                        .from("file:///Users/porcelli/test", ONE_WAY);
             }
         });
 
@@ -93,7 +95,7 @@ public class TestInboundEndpoint {
             @Override
             public void configure() {
                 flow("MyFlow")
-                        .from("file:///Users/porcelli/test").asRequestResponse();
+                        .from("file:///Users/porcelli/test", REQUEST_RESPONSE);
             }
         });
     }

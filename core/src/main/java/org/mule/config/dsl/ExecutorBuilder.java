@@ -9,9 +9,20 @@
 
 package org.mule.config.dsl;
 
-public interface ExecutorBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<P> {
-    P asSingleton();
+import java.lang.annotation.Annotation;
 
-    P asPrototype();
+public interface ExecutorBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<P> {
+
+    InnerArgsExecutorBuilder<P> methodAnnotatedWith(Class<? extends Annotation> annotationType);
+
+    InnerArgsExecutorBuilder<P> methodAnnotatedWith(Annotation annotation);
+
+    P withoutArgs();
+
+    public static interface InnerArgsExecutorBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<InnerArgsExecutorBuilder<P>> {
+        P withoutArgs();
+
+        <E extends ExpressionEvaluatorBuilder> P args(E... args);
+    }
 }
 
