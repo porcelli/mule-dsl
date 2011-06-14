@@ -10,7 +10,6 @@
 package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
-import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.routing.filter.Filter;
@@ -141,7 +140,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     }
 
     @Override
-    public InnerWhenChoiceBuilder<P> send(String uri, MessageExchangePattern pattern) {
+    public InnerWhenChoiceBuilder<P> send(String uri, ExchangePattern pattern) {
         pipeline.send(uri, pattern);
         return this;
     }
@@ -385,7 +384,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         }
 
         @Override
-        public OtherwiseChoiceBuilder<P> send(String uri, MessageExchangePattern pattern) {
+        public OtherwiseChoiceBuilder<P> send(String uri, ExchangePattern pattern) {
             ChoiceRouterBuilderImpl.this.send(uri, pattern);
             return this;
         }

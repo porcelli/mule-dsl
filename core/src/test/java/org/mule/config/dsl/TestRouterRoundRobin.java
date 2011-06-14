@@ -168,7 +168,7 @@ public class TestRouterRoundRobin {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .roundRobin()
-                            .send("file:///Users/porcelli/out", MessageExchangePattern.ONE_WAY)
+                            .send("file:///Users/porcelli/out", ExchangePattern.ONE_WAY)
                         .endRoundRobin();
             }
         });

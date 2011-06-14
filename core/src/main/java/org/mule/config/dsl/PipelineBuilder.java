@@ -9,7 +9,6 @@
 
 package org.mule.config.dsl;
 
-import org.mule.MessageExchangePattern;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
 import org.mule.config.dsl.expression.CoreExpr;
@@ -44,7 +43,7 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> {
     /* outbound */
     P send(String uri);
 
-    P send(String uri, MessageExchangePattern pattern);
+    P send(String uri, ExchangePattern pattern);
 
     /* transform */
 

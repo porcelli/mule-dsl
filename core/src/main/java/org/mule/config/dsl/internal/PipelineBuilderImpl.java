@@ -10,7 +10,6 @@
 package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
-import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.routing.filter.Filter;
@@ -136,7 +135,7 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
     }
 
     @Override
-    public P send(String uri, MessageExchangePattern pattern) {
+    public P send(String uri, ExchangePattern pattern) {
         if (parentScope != null) {
             return parentScope.send(uri);
         }
