@@ -183,7 +183,7 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
     }
 
     @Override
-    public P withoutArgs() {
+    public P withDefaultArg() {
         return parentScope;
     }
 
@@ -201,7 +201,7 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
         @Override
         @SuppressWarnings("unchecked")
         public P withoutArgs() {
-            return (P) ExecutorBuilderImpl.this.withoutArgs();
+            return (P) ExecutorBuilderImpl.this.withDefaultArg();
         }
 
         @Override

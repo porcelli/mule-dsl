@@ -12,7 +12,6 @@ package org.mule.config.dsl.internal;
 import com.google.inject.Injector;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
-import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
@@ -117,12 +116,6 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         pipeline.addToProcessorList(builder);
 
         return builder;
-    }
-
-    @Override
-    public InnerWhenChoiceBuilder<P> execute(Callable obj) {
-        pipeline.execute(obj);
-        return this;
     }
 
     @Override
@@ -367,12 +360,6 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
             pipeline.addToProcessorList(builder);
 
             return builder;
-        }
-
-        @Override
-        public OtherwiseChoiceBuilder<P> execute(Callable obj) {
-            ChoiceRouterBuilderImpl.this.execute(obj);
-            return this;
         }
 
         @Override

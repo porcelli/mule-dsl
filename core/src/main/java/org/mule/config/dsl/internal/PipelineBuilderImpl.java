@@ -12,7 +12,6 @@ package org.mule.config.dsl.internal;
 import com.google.inject.Injector;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
-import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
@@ -54,17 +53,6 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
         processorList.add(builder);
 
         return builder;
-    }
-
-    @Override
-    public P execute(Callable obj) {
-        if (parentScope != null) {
-            return parentScope.execute(obj);
-        }
-
-        processorList.add(new ExecutorBuilderImpl<P>(getThis(), obj));
-
-        return getThis();
     }
 
     @Override

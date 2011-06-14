@@ -17,7 +17,7 @@ public interface ExecutorBuilder<P extends PipelineBuilder<P>> extends PipelineB
 
     InnerArgsExecutorBuilder<P> methodAnnotatedWith(Annotation annotation);
 
-    P withoutArgs();
+    P withDefaultArg();
 
     public static interface InnerArgsExecutorBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<InnerArgsExecutorBuilder<P>> {
         P withoutArgs();

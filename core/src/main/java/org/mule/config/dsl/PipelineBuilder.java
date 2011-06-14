@@ -10,7 +10,6 @@
 package org.mule.config.dsl;
 
 import org.mule.MessageExchangePattern;
-import org.mule.api.lifecycle.Callable;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
 import org.mule.config.dsl.expression.CoreExpr;
@@ -31,8 +30,6 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> {
     <E extends ExpressionEvaluatorBuilder> P log(E expr, LogLevel level);
 
     P echo();
-
-    P execute(Callable obj);
 
     ExecutorBuilder<P> execute(Object obj);
 

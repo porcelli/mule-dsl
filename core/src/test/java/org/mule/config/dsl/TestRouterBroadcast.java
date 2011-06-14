@@ -214,7 +214,7 @@ public class TestRouterBroadcast {
                         .from("file:///Users/porcelli/test")
                         .broadcast()
                             .execute(Simple.class, Scope.PROTOTYPE)
-                            .execute(Simple.class, Scope.PROTOTYPE).withoutArgs()
+                            .execute(Simple.class, Scope.PROTOTYPE).withDefaultArg()
                         .endBroadcast();
 
                 bind(Simple.class).to(Simple2.class);

@@ -13,6 +13,7 @@ import org.mule.api.lifecycle.Callable;
 
 import static org.mule.MessageExchangePattern.ONE_WAY;
 import static org.mule.config.dsl.Scope.SINGLETON;
+import static org.mule.config.dsl.expression.CoreExpr.regex;
 
 public class TestSyntaxRouterAll {
 
@@ -23,6 +24,23 @@ public class TestSyntaxRouterAll {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
+
+                        .choice()
+                            .when(regex("boo*"))
+                                .send("10.0.0")
+                            .when(regex("xoo*"))
+                                .broadcast()
+                                    .send("aaa")
+                                    .send("bbb")
+                                .endBroadcast()
+                                .choice()
+                                   .when(null)
+                                        .endChoice()
+                            .endChoice()
+
+
+
+
                         .broadcast()
                             .echo()
                                 .broadcast()
@@ -75,7 +93,7 @@ public class TestSyntaxRouterAll {
                         .execute((Class<?>) null)
                         .echo()
                         .broadcast()
-                            .execute((Callable) null)
+                            .execute((Callable) null).withDefaultArg()
                         .endBroadcast();
 
                 flow("MyFlow4")
@@ -83,7 +101,7 @@ public class TestSyntaxRouterAll {
                         .echo()
                         .broadcast()
                             .execute((Callable) null)
-                            .execute(String.class).withoutArgs()
+                            .execute(String.class).withDefaultArg()
                         .endBroadcast();
             }
         });
