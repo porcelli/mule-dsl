@@ -36,7 +36,8 @@ public class TestLog {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .log();
+                        .log()
+                ;
             }
         });
 

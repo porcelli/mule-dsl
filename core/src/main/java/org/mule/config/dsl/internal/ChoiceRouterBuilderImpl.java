@@ -134,6 +134,12 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     }
 
     @Override
+    public InnerWhenChoiceBuilder<P> process(MessageProcessorDefinition process) {
+        pipeline.process(process);
+        return this;
+    }
+
+    @Override
     public InnerWhenChoiceBuilder<P> send(String uri) {
         pipeline.send(uri);
         return this;
@@ -375,6 +381,12 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
             pipeline.addToProcessorList(builder);
 
             return builder;
+        }
+
+        @Override
+        public OtherwiseChoiceBuilder<P> process(MessageProcessorDefinition process) {
+            ChoiceRouterBuilderImpl.this.process(process);
+            return this;
         }
 
         @Override

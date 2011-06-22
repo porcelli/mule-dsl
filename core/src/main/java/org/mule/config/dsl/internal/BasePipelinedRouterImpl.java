@@ -31,6 +31,12 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
     protected abstract P getThis();
 
     @Override
+    public P process(MessageProcessorDefinition process) {
+        pipeline.process(process);
+        return getThis();
+    }
+
+    @Override
     public P log() {
         pipeline.log();
         return getThis();

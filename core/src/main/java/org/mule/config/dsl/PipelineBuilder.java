@@ -38,7 +38,7 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> {
 
     /* typed MP builder */
 
-//    <C extends CustomBuilder<P>> C process(Class<C> clazz);
+    P process(MessageProcessorDefinition process);
 
     /* outbound */
     P send(String uri);

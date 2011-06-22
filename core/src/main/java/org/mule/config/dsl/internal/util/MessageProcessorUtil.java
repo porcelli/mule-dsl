@@ -12,6 +12,7 @@ package org.mule.config.dsl.internal.util;
 import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
+import org.mule.api.context.MuleContextAware;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.processor.MessageProcessorChain;
 import org.mule.config.dsl.internal.Builder;
@@ -42,7 +43,13 @@ public final class MessageProcessorUtil {
         List<MessageProcessor> result = new ArrayList<MessageProcessor>(processorList.size());
 
         for (Builder<?> activeBuilder : processorList) {
-            result.add((MessageProcessor) activeBuilder.build(muleContext, injector, placeholder));
+            MessageProcessor mp = (MessageProcessor) activeBuilder.build(muleContext, injector, placeholder);
+
+            if (mp instanceof MuleContextAware) {
+                ((MuleContextAware) mp).setMuleContext(muleContext);
+            }
+
+            result.add(mp);
         }
 
         return result;

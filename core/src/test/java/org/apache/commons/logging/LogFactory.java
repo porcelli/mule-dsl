@@ -91,6 +91,7 @@ public class LogFactory {
         @Override
         public void trace(Object message, Throwable t) {
             traceExec.add(message.toString());
+            System.out.println("TRACE: " + message.toString());
         }
 
         @Override
@@ -101,6 +102,7 @@ public class LogFactory {
         @Override
         public void debug(Object message, Throwable t) {
             debugExec.add(message.toString());
+            System.out.println("DEBUG: " + message.toString());
         }
 
         @Override
@@ -111,6 +113,7 @@ public class LogFactory {
         @Override
         public void info(Object message, Throwable t) {
             infoExec.add(message.toString());
+            System.out.println("INFO: " + message.toString());
         }
 
         @Override
@@ -121,6 +124,7 @@ public class LogFactory {
         @Override
         public void warn(Object message, Throwable t) {
             warnExec.add(message.toString());
+            System.out.println("WARN: " + message.toString());
         }
 
         @Override
@@ -131,6 +135,7 @@ public class LogFactory {
         @Override
         public void error(Object message, Throwable t) {
             errorExec.add(message.toString());
+            System.out.println("ERROR: " + message.toString());
         }
 
         @Override
@@ -141,6 +146,7 @@ public class LogFactory {
         @Override
         public void fatal(Object message, Throwable t) {
             fatalExec.add(message.toString());
+            System.out.println("FATAL: " + message.toString());
         }
 
 

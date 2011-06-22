@@ -38,9 +38,6 @@ public class TestSyntaxRouterAll {
                                         .endChoice()
                             .endChoice()
 
-
-
-
                         .broadcast()
                             .echo()
                                 .broadcast()

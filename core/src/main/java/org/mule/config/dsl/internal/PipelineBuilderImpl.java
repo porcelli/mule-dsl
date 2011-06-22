@@ -72,6 +72,20 @@ public class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements Pipeli
     }
 
     @Override
+    public P process(MessageProcessorDefinition process) {
+        if (parentScope != null) {
+            return parentScope.process(process);
+        }
+
+        if (!(process instanceof Builder)){
+            throw new IllegalArgumentException();
+        }
+
+        processorList.add((Builder<?>) process);
+        return getThis();
+    }
+
+    @Override
     public P log() {
         return log(LogLevel.INFO);
     }
