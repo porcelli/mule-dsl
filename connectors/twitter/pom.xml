@@ -8,7 +8,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <groupId>org.mule.dsl</groupId>
-    <artifactId>git-connector</artifactId>
+    <artifactId>twitter-connector</artifactId>
     <dependencies>
         <dependency>
             <groupId>org.mule.dsl</groupId>
@@ -17,7 +17,7 @@
 
         <dependency>
             <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-git</artifactId>
+            <artifactId>mule-module-twitter</artifactId>
         </dependency>
 
         <!-- transports -->
