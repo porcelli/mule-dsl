@@ -9,37 +9,13 @@
 
 package org.mule.config.dsl.twitter;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.config.dsl.AbstractModule;
 import org.mule.config.dsl.Mule;
 
-import java.io.File;
-import java.io.IOException;
-
 public class TestTwitter {
-
-    private static final String REMOTE_REPO = "src/test/resources/base-git-repo";
-
-    @Before
-    public void prepareExternalRepo() {
-        try {
-            FileUtils.moveDirectory(new File(REMOTE_REPO, "git"), new File(REMOTE_REPO, ".git"));
-        } catch (IOException ex) {
-        }
-    }
-
-    @After
-    public void releaseExternalRepo() {
-        try {
-            FileUtils.moveDirectory(new File(REMOTE_REPO, ".git"), new File(REMOTE_REPO, "git"));
-        } catch (IOException ex) {
-        }
-    }
 
     @Test
     public void simpleGit() throws InterruptedException, MuleException {

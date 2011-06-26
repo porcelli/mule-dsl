@@ -10,10 +10,7 @@
 package org.mule.config.dsl.twitter;
 
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
-import org.mule.config.dsl.twitter.internal.IBeansTwitterReference;
-import org.mule.config.dsl.twitter.internal.StatusesDestroyMessageProcessorBuilder;
-import org.mule.config.dsl.twitter.internal.StatusesShowMessageProcessorBuilder;
-import org.mule.config.dsl.twitter.internal.StatusesUpdateMessageProcessorBuilder;
+import org.mule.config.dsl.twitter.internal.*;
 import org.mule.ibeans.twitter.TwitterBase;
 
 public class TwitterConnector {
@@ -46,6 +43,50 @@ public class TwitterConnector {
 
     public StatusesDestroyMessageProcessorDefinition statusesDestroy(ExpressionEvaluatorBuilder idExp) {
         return new StatusesDestroyMessageProcessorBuilder(reference, idExp);
+    }
+
+    public SearchMessageProcessorDefinition search(String query) {
+        return new SearchMessageProcessorBuilder(reference, query);
+    }
+
+    public SearchMessageProcessorDefinition search(ExpressionEvaluatorBuilder queryExp) {
+        return new SearchMessageProcessorBuilder(reference, queryExp);
+    }
+
+    public SearchWithJsonCallbackMessageProcessorDefinition searchWithJsonCallback(String query, String callback) {
+        return new SearchWithJsonCallbackMessageProcessorBuilder(reference, query, callback);
+    }
+
+    public SearchWithJsonCallbackMessageProcessorDefinition searchWithJsonCallback(String query, ExpressionEvaluatorBuilder callbackExp) {
+        return new SearchWithJsonCallbackMessageProcessorBuilder(reference, query, callbackExp);
+    }
+
+    public SearchWithJsonCallbackMessageProcessorDefinition searchWithJsonCallback(ExpressionEvaluatorBuilder queryExp, String callback) {
+        return new SearchWithJsonCallbackMessageProcessorBuilder(reference, queryExp, callback);
+    }
+
+    public SearchWithJsonCallbackMessageProcessorDefinition searchWithJsonCallback(ExpressionEvaluatorBuilder queryExp, ExpressionEvaluatorBuilder callbackExp) {
+        return new SearchWithJsonCallbackMessageProcessorBuilder(reference, queryExp, callbackExp);
+    }
+
+    public GetUserMessageProcessorDefinition getUser(String screenName) {
+        return new GetUserMessageProcessorBuilder(reference, screenName);
+    }
+
+    public GetUserMessageProcessorDefinition getUser(ExpressionEvaluatorBuilder screenNameExp) {
+        return new GetUserMessageProcessorBuilder(reference, screenNameExp);
+    }
+
+    public GetUserTimelineMessageProcessorDefinition getUserTimeline() {
+        return new GetUserTimelineMessageProcessorBuilder(reference);
+    }
+
+    public GetMentionsMessageProcessorDefinition getMentions() {
+        return new GetMentionsMessageProcessorBuilder(reference);
+    }
+
+    public GetFriendsTimelineMessageProcessorDefinition getFriendsTimeline() {
+        return new GetFriendsTimelineMessageProcessorBuilder(reference);
     }
 
     public TwitterBase.FORMAT getFormat() {
