@@ -6,16 +6,10 @@
  *  license, a copy of which has been included with this distribution in the
  *  LICENSE.txt file.
  */
-
 package org.mule.config.dsl.module.mongo;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
-public interface MapReduceObjectsMessageProcessorDefinition extends MessageProcessorDefinition {
-
-    MapReduceObjectsMessageProcessorDefinition withOutputCollection(String outputCollection);
-
-    MapReduceObjectsMessageProcessorDefinition withOutputCollection(ExpressionEvaluatorBuilder outputCollectionExp);
+public interface ListIndicesMessageProcessorDefinition extends MessageProcessorDefinition {
 
 }

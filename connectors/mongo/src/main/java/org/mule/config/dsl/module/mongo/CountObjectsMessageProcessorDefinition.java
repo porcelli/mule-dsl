@@ -12,10 +12,16 @@ package org.mule.config.dsl.module.mongo;
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
-public interface MapReduceObjectsMessageProcessorDefinition extends MessageProcessorDefinition {
+import java.util.Map;
 
-    MapReduceObjectsMessageProcessorDefinition withOutputCollection(String outputCollection);
+public interface CountObjectsMessageProcessorDefinition extends MessageProcessorDefinition {
 
-    MapReduceObjectsMessageProcessorDefinition withOutputCollection(ExpressionEvaluatorBuilder outputCollectionExp);
+    CountObjectsMessageProcessorDefinition withQuery(Object query);
+
+    CountObjectsMessageProcessorDefinition withQuery(ExpressionEvaluatorBuilder queryExp);
+
+    CountObjectsMessageProcessorDefinition withQueryAttributes(Map<String, Object> queryAttributes);
+
+    CountObjectsMessageProcessorDefinition withQueryAttributes(ExpressionEvaluatorBuilder queryAttributesExp);
 
 }

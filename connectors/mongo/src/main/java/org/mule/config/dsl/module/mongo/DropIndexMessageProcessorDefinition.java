@@ -11,11 +11,8 @@ package org.mule.config.dsl.module.mongo;
 
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
 import org.mule.config.dsl.MessageProcessorDefinition;
+import org.mule.module.mongo.api.IndexOrder;
 
-public interface MapReduceObjectsMessageProcessorDefinition extends MessageProcessorDefinition {
-
-    MapReduceObjectsMessageProcessorDefinition withOutputCollection(String outputCollection);
-
-    MapReduceObjectsMessageProcessorDefinition withOutputCollection(ExpressionEvaluatorBuilder outputCollectionExp);
+public interface DropIndexMessageProcessorDefinition extends MessageProcessorDefinition {
 
 }

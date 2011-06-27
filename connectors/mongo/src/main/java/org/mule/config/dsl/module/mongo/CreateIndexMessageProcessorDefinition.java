@@ -11,11 +11,12 @@ package org.mule.config.dsl.module.mongo;
 
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
 import org.mule.config.dsl.MessageProcessorDefinition;
+import org.mule.module.mongo.api.IndexOrder;
 
-public interface MapReduceObjectsMessageProcessorDefinition extends MessageProcessorDefinition {
+public interface CreateIndexMessageProcessorDefinition extends MessageProcessorDefinition {
 
-    MapReduceObjectsMessageProcessorDefinition withOutputCollection(String outputCollection);
+    CreateIndexMessageProcessorDefinition withOrder(IndexOrder order);
 
-    MapReduceObjectsMessageProcessorDefinition withOutputCollection(ExpressionEvaluatorBuilder outputCollectionExp);
+    CreateIndexMessageProcessorDefinition withOrder(ExpressionEvaluatorBuilder orderExp);
 
 }

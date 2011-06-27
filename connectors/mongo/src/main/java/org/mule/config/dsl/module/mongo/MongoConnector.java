@@ -121,6 +121,70 @@ public class MongoConnector {
         return new MapReduceObjectsMessageProcessorBuilder(object, collectionExp, mapFunctionExp, reduceFunctionExp);
     }
 
+    public CountObjectsMessageProcessorDefinition countObjects(String collection) {
+        return new CountObjectsMessageProcessorBuilder(object, collection);
+    }
+
+    public CountObjectsMessageProcessorDefinition countObjects(ExpressionEvaluatorBuilder collectionExp) {
+        return new CountObjectsMessageProcessorBuilder(object, collectionExp);
+    }
+
+    public FindObjectsMessageProcessorDefinition findObjects(String collection) {
+        return new FindObjectsMessageProcessorBuilder(object, collection);
+    }
+
+    public FindObjectsMessageProcessorDefinition findObjects(ExpressionEvaluatorBuilder collectionExp) {
+        return new FindObjectsMessageProcessorBuilder(object, collectionExp);
+    }
+
+    public FindOneObjectMessageProcessorDefinition findOneObject(String collection) {
+        return new FindOneObjectMessageProcessorBuilder(object, collection);
+    }
+
+    public FindOneObjectMessageProcessorDefinition findOneObject(ExpressionEvaluatorBuilder collectionExp) {
+        return new FindOneObjectMessageProcessorBuilder(object, collectionExp);
+    }
+
+    public CreateIndexMessageProcessorDefinition createIndex(String collection, String field) {
+        return new CreateIndexMessageProcessorBuilder(object, collection, field);
+    }
+
+    public CreateIndexMessageProcessorDefinition createIndex(ExpressionEvaluatorBuilder collectionExp, String field) {
+        return new CreateIndexMessageProcessorBuilder(object, collectionExp, field);
+    }
+
+    public CreateIndexMessageProcessorDefinition createIndex(String collection, ExpressionEvaluatorBuilder fieldExp) {
+        return new CreateIndexMessageProcessorBuilder(object, collection, fieldExp);
+    }
+
+    public CreateIndexMessageProcessorDefinition createIndex(ExpressionEvaluatorBuilder collectionExp, ExpressionEvaluatorBuilder fieldExp) {
+        return new CreateIndexMessageProcessorBuilder(object, collectionExp, fieldExp);
+    }
+
+    public DropIndexMessageProcessorDefinition dropIndex(String collection, String index) {
+        return new DropIndexMessageProcessorBuilder(object, collection, index);
+    }
+
+    public DropIndexMessageProcessorDefinition dropIndex(ExpressionEvaluatorBuilder collectionExp, String index) {
+        return new DropIndexMessageProcessorBuilder(object, collectionExp, index);
+    }
+
+    public DropIndexMessageProcessorDefinition dropIndex(String collection, ExpressionEvaluatorBuilder indexExp) {
+        return new DropIndexMessageProcessorBuilder(object, collection, indexExp);
+    }
+
+    public DropIndexMessageProcessorDefinition dropIndex(ExpressionEvaluatorBuilder collectionExp, ExpressionEvaluatorBuilder indexExp) {
+        return new DropIndexMessageProcessorBuilder(object, collectionExp, indexExp);
+    }
+
+    public ListIndicesMessageProcessorDefinition listIndices(String collection) {
+        return new ListIndicesMessageProcessorBuilder(object, collection);
+    }
+
+    public ListIndicesMessageProcessorDefinition listIndices(ExpressionEvaluatorBuilder collectionExp) {
+        return new ListIndicesMessageProcessorBuilder(object, collectionExp);
+    }
+
     public MongoClient getClient() {
         return client;
     }
