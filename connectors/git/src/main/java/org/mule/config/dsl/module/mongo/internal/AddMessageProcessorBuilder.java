@@ -55,6 +55,7 @@ public class AddMessageProcessorBuilder implements AddMessageProcessorDefinition
     public AddMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         AddMessageProcessor mp = new AddMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (filePatternExpr != null) {

@@ -87,6 +87,7 @@ public class CreateBranchMessageProcessorBuilder implements CreateBranchMessageP
     public CreateBranchMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         CreateBranchMessageProcessor mp = new CreateBranchMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (nameExp != null) {

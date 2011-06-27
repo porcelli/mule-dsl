@@ -75,6 +75,7 @@ public class CreateIndexMessageProcessorBuilder implements CreateIndexMessagePro
     public CreateIndexMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         CreateIndexMessageProcessor mp = new CreateIndexMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (collectionExp != null) {

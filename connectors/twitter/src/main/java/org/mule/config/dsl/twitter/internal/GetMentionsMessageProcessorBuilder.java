@@ -89,6 +89,7 @@ public class GetMentionsMessageProcessorBuilder implements GetMentionsMessagePro
     public GetMentionsMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         GetMentionsMessageProcessor mp = new GetMentionsMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(reference.getObject(muleContext));
 
         if (countExp != null) {

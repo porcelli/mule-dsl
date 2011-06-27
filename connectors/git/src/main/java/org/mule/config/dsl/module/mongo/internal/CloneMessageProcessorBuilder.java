@@ -100,6 +100,7 @@ public class CloneMessageProcessorBuilder implements CloneMessageProcessorDefini
     public CloneMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         CloneMessageProcessor mp = new CloneMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (uriExp != null) {

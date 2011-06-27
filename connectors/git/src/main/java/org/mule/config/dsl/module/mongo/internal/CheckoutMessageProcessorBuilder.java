@@ -70,6 +70,7 @@ public class CheckoutMessageProcessorBuilder implements CheckoutMessageProcessor
     public CheckoutMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         CheckoutMessageProcessor mp = new CheckoutMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (branchExp != null) {

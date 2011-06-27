@@ -155,6 +155,7 @@ public class SearchWithJsonCallbackMessageProcessorBuilder implements SearchWith
     public SearchWithJsonCallbackMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         SearchWithJsonCallbackMessageProcessor mp = new SearchWithJsonCallbackMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(reference.getObject(muleContext));
 
         if (queryExp != null) {

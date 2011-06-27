@@ -143,6 +143,7 @@ public class UpdateObjectsMessageProcessorBuilder implements UpdateObjectsMessag
     public UpdateObjectsMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         UpdateObjectsMessageProcessor mp = new UpdateObjectsMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (collectionExp != null) {

@@ -40,6 +40,7 @@ public class DropCollectionMessageProcessorBuilder implements DropCollectionMess
     public DropCollectionMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         DropCollectionMessageProcessor mp = new DropCollectionMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (collectionExp != null) {

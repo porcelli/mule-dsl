@@ -72,6 +72,7 @@ public class CountObjectsMessageProcessorBuilder implements CountObjectsMessageP
     public CountObjectsMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         CountObjectsMessageProcessor mp = new CountObjectsMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (collectionExp != null) {

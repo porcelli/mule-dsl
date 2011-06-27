@@ -40,6 +40,7 @@ public class ExistsCollectionMessageProcessorBuilder implements ExistsCollection
     public ExistsCollectionMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         ExistsCollectionMessageProcessor mp = new ExistsCollectionMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (collectionExp != null) {

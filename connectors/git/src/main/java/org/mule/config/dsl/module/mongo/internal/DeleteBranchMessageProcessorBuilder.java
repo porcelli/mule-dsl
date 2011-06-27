@@ -72,6 +72,7 @@ public class DeleteBranchMessageProcessorBuilder implements DeleteBranchMessageP
     public DeleteBranchMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         DeleteBranchMessageProcessor mp = new DeleteBranchMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (nameExp != null) {

@@ -57,6 +57,7 @@ public class DropIndexMessageProcessorBuilder implements DropIndexMessageProcess
     public DropIndexMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         DropIndexMessageProcessor mp = new DropIndexMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (collectionExp != null) {

@@ -29,6 +29,7 @@ public class ListCollectionsMessageProcessorBuilder implements ExistsCollectionM
     public ListCollectionsMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         ListCollectionsMessageProcessor mp = new ListCollectionsMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         return mp;

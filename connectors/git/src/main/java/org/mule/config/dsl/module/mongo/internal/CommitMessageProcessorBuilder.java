@@ -135,6 +135,7 @@ public class CommitMessageProcessorBuilder implements CommitMessageProcessorDefi
     public CommitMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         CommitMessageProcessor mp = new CommitMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (msgExp != null) {

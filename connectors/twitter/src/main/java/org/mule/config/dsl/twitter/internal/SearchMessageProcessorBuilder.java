@@ -166,6 +166,7 @@ public class SearchMessageProcessorBuilder implements SearchMessageProcessorDefi
     public SearchMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         SearchMessageProcessor mp = new SearchMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(reference.getObject(muleContext));
 
         if (queryExp != null) {

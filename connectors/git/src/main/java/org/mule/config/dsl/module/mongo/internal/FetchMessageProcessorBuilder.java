@@ -46,6 +46,7 @@ public class FetchMessageProcessorBuilder implements FetchMessageProcessorDefini
     public FetchMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         FetchMessageProcessor mp = new FetchMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (overrideDirectory != null) {

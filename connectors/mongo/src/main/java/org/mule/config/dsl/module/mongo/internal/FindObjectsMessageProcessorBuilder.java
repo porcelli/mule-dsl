@@ -101,6 +101,7 @@ public class FindObjectsMessageProcessorBuilder implements FindObjectsMessagePro
     public FindObjectsMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         FindObjectsMessageProcessor mp = new FindObjectsMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (collectionExp != null) {

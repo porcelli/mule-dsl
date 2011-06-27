@@ -46,6 +46,7 @@ public class PullMessageProcessorBuilder implements PullMessageProcessorDefiniti
     public PullMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         PullMessageProcessor mp = new PullMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (overrideDirectory != null) {

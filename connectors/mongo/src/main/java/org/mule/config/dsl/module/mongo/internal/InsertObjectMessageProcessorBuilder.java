@@ -88,6 +88,7 @@ public class InsertObjectMessageProcessorBuilder implements InsertObjectMessageP
     public InsertObjectMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         InsertObjectMessageProcessor mp = new InsertObjectMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (collectionExp != null) {

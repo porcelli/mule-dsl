@@ -76,6 +76,7 @@ public class PushMessageProcessorBuilder implements PushMessageProcessorDefiniti
     public PushMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         PushMessageProcessor mp = new PushMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (forceExp != null) {

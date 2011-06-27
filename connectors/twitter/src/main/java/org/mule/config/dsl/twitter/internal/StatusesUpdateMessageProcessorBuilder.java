@@ -126,6 +126,7 @@ public class StatusesUpdateMessageProcessorBuilder implements StatusesUpdateMess
     public StatusesUpdateMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         StatusesUpdateMessageProcessor mp = new StatusesUpdateMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(reference.getObject(muleContext));
 
         if (statusExp != null) {

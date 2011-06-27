@@ -38,6 +38,7 @@ public class GetUserMessageProcessorBuilder implements GetUserMessageProcessorDe
     public GetUserMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         GetUserMessageProcessor mp = new GetUserMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(reference.getObject(muleContext));
 
         if (screenNameExp != null) {

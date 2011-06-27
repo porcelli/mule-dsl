@@ -87,6 +87,7 @@ public class RemoveObjectsMessageProcessorBuilder implements RemoveObjectsMessag
     public RemoveObjectsMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         RemoveObjectsMessageProcessor mp = new RemoveObjectsMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (collectionExp != null) {

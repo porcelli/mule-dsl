@@ -89,6 +89,7 @@ public class GetFriendsTimelineMessageProcessorBuilder implements GetFriendsTime
     public GetFriendsTimelineMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         GetFriendsTimelineMessageProcessor mp = new GetFriendsTimelineMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(reference.getObject(muleContext));
 
         if (countExp != null) {

@@ -38,6 +38,7 @@ public class StatusesShowMessageProcessorBuilder implements StatusesShowMessageP
     public StatusesShowMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         StatusesShowMessageProcessor mp = new StatusesShowMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(reference.getObject(muleContext));
 
         if (idExp != null) {

@@ -38,6 +38,7 @@ public class StatusesDestroyMessageProcessorBuilder implements StatusesDestroyMe
     public StatusesDestroyMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         StatusesDestroyMessageProcessor mp = new StatusesDestroyMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(reference.getObject(muleContext));
 
         if (idExp != null) {

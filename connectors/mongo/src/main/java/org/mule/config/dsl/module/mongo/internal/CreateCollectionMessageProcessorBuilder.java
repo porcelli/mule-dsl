@@ -86,6 +86,7 @@ public class CreateCollectionMessageProcessorBuilder implements CreateCollection
     public CreateCollectionMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         CreateCollectionMessageProcessor mp = new CreateCollectionMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (collectionExp != null) {

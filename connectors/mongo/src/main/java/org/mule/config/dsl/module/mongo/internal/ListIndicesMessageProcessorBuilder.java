@@ -40,6 +40,7 @@ public class ListIndicesMessageProcessorBuilder implements ListIndicesMessagePro
     public ListIndicesMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         ListIndicesMessageProcessor mp = new ListIndicesMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (collectionExp != null) {

@@ -105,6 +105,7 @@ public class MapReduceObjectsMessageProcessorBuilder implements MapReduceObjects
     public MapReduceObjectsMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         MapReduceObjectsMessageProcessor mp = new MapReduceObjectsMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (collectionExp != null) {

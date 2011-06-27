@@ -117,6 +117,7 @@ public class GetUserTimelineMessageProcessorBuilder implements GetUserTimelineMe
     public GetUserTimelineMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         GetUserTimelineMessageProcessor mp = new GetUserTimelineMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(reference.getObject(muleContext));
 
         if (userIdExp != null) {

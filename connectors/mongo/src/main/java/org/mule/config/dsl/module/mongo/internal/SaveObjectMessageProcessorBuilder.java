@@ -88,6 +88,7 @@ public class SaveObjectMessageProcessorBuilder implements SaveObjectMessageProce
     public SaveObjectMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         SaveObjectMessageProcessor mp = new SaveObjectMessageProcessor();
 
+        mp.setMuleContext(muleContext);
         mp.setObject(object);
 
         if (collectionExp != null) {
