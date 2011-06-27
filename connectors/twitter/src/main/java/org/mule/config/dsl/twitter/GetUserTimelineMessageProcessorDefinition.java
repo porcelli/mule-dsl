@@ -10,8 +10,9 @@
 package org.mule.config.dsl.twitter;
 
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.MessageProcessorDefinition;
 
-public interface GetUserTimelineMessageProcessorDefinition {
+public interface GetUserTimelineMessageProcessorDefinition extends MessageProcessorDefinition {
 
     GetUserTimelineMessageProcessorDefinition withUserId(String userId);
 

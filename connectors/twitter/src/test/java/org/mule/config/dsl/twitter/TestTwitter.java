@@ -18,7 +18,7 @@ import org.mule.config.dsl.Mule;
 public class TestTwitter {
 
     @Test
-    public void simpleGit() throws InterruptedException, MuleException {
+    public void simpleTwitter() throws InterruptedException, MuleException {
         MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {

@@ -29,6 +29,16 @@
                 <artifactId>git-connector</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.mule.dsl</groupId>
+                <artifactId>twitter-connector</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.dsl</groupId>
+                <artifactId>mongo-connector</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.mule</groupId>
@@ -65,6 +75,11 @@
 	            <groupId>org.mule.modules</groupId>
 	            <artifactId>mule-module-twitter</artifactId>
                 <version>1.2-SNAPSHOT</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.mule.modules</groupId>
+	            <artifactId>mule-module-mongo</artifactId>
+                <version>1.1-SNAPSHOT</version>
 	        </dependency>
 
             <!-- test dependencies -->

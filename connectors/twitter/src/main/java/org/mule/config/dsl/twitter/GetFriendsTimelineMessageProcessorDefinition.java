@@ -10,8 +10,9 @@
 package org.mule.config.dsl.twitter;
 
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.MessageProcessorDefinition;
 
-public interface GetFriendsTimelineMessageProcessorDefinition {
+public interface GetFriendsTimelineMessageProcessorDefinition extends MessageProcessorDefinition {
 
     GetFriendsTimelineMessageProcessorDefinition withCount(Integer count);
 

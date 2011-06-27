@@ -9,6 +9,8 @@
 
 package org.mule.config.dsl.twitter;
 
-public interface GetUserMessageProcessorDefinition {
+import org.mule.config.dsl.MessageProcessorDefinition;
+
+public interface GetUserMessageProcessorDefinition extends MessageProcessorDefinition {
 
 }

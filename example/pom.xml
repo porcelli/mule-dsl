@@ -20,6 +20,15 @@
             <artifactId>git-connector</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.mule.dsl</groupId>
+            <artifactId>twitter-connector</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.dsl</groupId>
+            <artifactId>mongo-connector</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-file</artifactId>
         </dependency>

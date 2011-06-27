@@ -15,6 +15,7 @@
     <modules>
         <module>git</module>
         <module>twitter</module>
+        <module>mongo</module>
     </modules>
 
 </project>

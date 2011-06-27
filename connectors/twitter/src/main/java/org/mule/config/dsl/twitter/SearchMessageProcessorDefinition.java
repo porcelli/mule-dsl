@@ -10,8 +10,9 @@
 package org.mule.config.dsl.twitter;
 
 import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.MessageProcessorDefinition;
 
-public interface SearchMessageProcessorDefinition {
+public interface SearchMessageProcessorDefinition extends MessageProcessorDefinition {
 
     SearchMessageProcessorDefinition withLang(String lang);
 

@@ -9,6 +9,8 @@
 
 package org.mule.config.dsl.twitter;
 
-public interface StatusesDestroyMessageProcessorDefinition {
+import org.mule.config.dsl.MessageProcessorDefinition;
+
+public interface StatusesDestroyMessageProcessorDefinition extends MessageProcessorDefinition {
 
 }

@@ -1,0 +1,6 @@
+0000000000000000000000000000000000000000 797c429e5f5f317618722071a761f1df792df32a Mariano A. Cortesi <mariano@zaubersoftware.com> 1301691826 -0300	commit (initial): first file
+797c429e5f5f317618722071a761f1df792df32a 797c429e5f5f317618722071a761f1df792df32a Mariano A. Cortesi <mariano@zaubersoftware.com> 1301691967 -0300	checkout: moving from master to test-branch
+797c429e5f5f317618722071a761f1df792df32a 40e8b62921a74a0a30933d4ab4a011e524bd167a Mariano A. Cortesi <mariano@zaubersoftware.com> 1301691998 -0300	commit: second file on branch
+40e8b62921a74a0a30933d4ab4a011e524bd167a 797c429e5f5f317618722071a761f1df792df32a Mariano A. Cortesi <mariano@zaubersoftware.com> 1301692021 -0300	checkout: moving from test-branch to master
+797c429e5f5f317618722071a761f1df792df32a 40e8b62921a74a0a30933d4ab4a011e524bd167a Mariano A. Cortesi <mariano@zaubersoftware.com> 1301695811 -0300	checkout: moving from master to test-branch
+40e8b62921a74a0a30933d4ab4a011e524bd167a 797c429e5f5f317618722071a761f1df792df32a Alexandre Porcelli <alexandre.porcelli@gmail.com> 1308767060 -0300	checkout: moving from test-branch to master
