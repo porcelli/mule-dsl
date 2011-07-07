@@ -19,7 +19,7 @@ public final class ExpressionArgsUtil {
     private ExpressionArgsUtil() {
     }
 
-    public static List<String> toListOfStrings(ExpressionEvaluatorBuilder... args) {
+    public static List<String> toListOfStrings(PropertyPlaceholder placeholder, ExpressionEvaluatorBuilder... args) {
 
         if (args == null) {
             return Collections.emptyList();
@@ -28,7 +28,7 @@ public final class ExpressionArgsUtil {
         final List<String> resultList = new LinkedList<String>();
 
         for (ExpressionEvaluatorBuilder arg : args) {
-            resultList.add(arg.toString());
+            resultList.add(arg.toString(placeholder));
         }
 
         return resultList;

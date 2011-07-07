@@ -121,19 +121,19 @@ public class GetUserTimelineMessageProcessorBuilder implements GetUserTimelineMe
         mp.setObject(reference.getObject(muleContext));
 
         if (userIdExp != null) {
-            mp.setUserId(userIdExp.toString());
+            mp.setUserId(userIdExp.toString(placeholder));
         } else {
             mp.setUserId(userId);
         }
 
         if (screenNameExp != null) {
-            mp.setScreenName(screenNameExp.toString());
+            mp.setScreenName(screenNameExp.toString(placeholder));
         } else {
             mp.setScreenName(screenName);
         }
 
         if (countExp != null) {
-            mp.setCount(countExp.toString());
+            mp.setCount(countExp.toString(placeholder));
         } else if (count != null) {
             mp.setCount(string(count.toString()));
         } else {
@@ -141,19 +141,19 @@ public class GetUserTimelineMessageProcessorBuilder implements GetUserTimelineMe
         }
 
         if (sinceIdExp != null) {
-            mp.setSinceId(sinceIdExp.toString());
+            mp.setSinceId(sinceIdExp.toString(placeholder));
         } else {
             mp.setSinceId(sinceId);
         }
 
         if (maxIdExp != null) {
-            mp.setMaxId(maxIdExp.toString());
+            mp.setMaxId(maxIdExp.toString(placeholder));
         } else {
             mp.setMaxId(maxId);
         }
 
         if (pageExp != null) {
-            mp.setPage(pageExp.toString());
+            mp.setPage(pageExp.toString(placeholder));
         } else if (page != null) {
             mp.setPage(string(page.toString()));
         } else {

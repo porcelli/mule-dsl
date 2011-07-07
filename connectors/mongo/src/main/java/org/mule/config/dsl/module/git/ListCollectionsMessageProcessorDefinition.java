@@ -7,15 +7,10 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.dsl.twitter;
+package org.mule.config.dsl.module.git;
 
-import org.junit.Test;
+import org.mule.config.dsl.MessageProcessorDefinition;
 
-public class TestTwitter {
-
-    @Test
-    public void simpleTwitter() {
-
-    }
+public interface ListCollectionsMessageProcessorDefinition extends MessageProcessorDefinition {
 
 }

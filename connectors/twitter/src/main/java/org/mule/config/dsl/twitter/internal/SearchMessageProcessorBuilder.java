@@ -170,61 +170,61 @@ public class SearchMessageProcessorBuilder implements SearchMessageProcessorDefi
         mp.setObject(reference.getObject(muleContext));
 
         if (queryExp != null) {
-            mp.setQuery(queryExp.toString());
+            mp.setQuery(queryExp.toString(placeholder));
         } else {
             mp.setQuery(query);
         }
 
         if (langExp != null) {
-            mp.setLang(langExp.toString());
+            mp.setLang(langExp.toString(placeholder));
         } else {
             mp.setQuery(lang);
         }
 
         if (localeExp != null) {
-            mp.setLocale(localeExp.toString());
+            mp.setLocale(localeExp.toString(placeholder));
         } else {
             mp.setLocale(locale);
         }
 
         if (rppExp != null) {
-            mp.setRpp(rppExp.toString());
+            mp.setRpp(rppExp.toString(placeholder));
         } else {
             mp.setRpp(rpp);
         }
 
         if (pageExp != null) {
-            mp.setPage(pageExp.toString());
+            mp.setPage(pageExp.toString(placeholder));
         } else {
             mp.setPage(page);
         }
 
         if (sinceIdExp != null) {
-            mp.setSinceId(sinceIdExp.toString());
+            mp.setSinceId(sinceIdExp.toString(placeholder));
         } else {
             mp.setSinceId(sinceId);
         }
 
         if (geocodeExp != null) {
-            mp.setGeocode(geocodeExp.toString());
+            mp.setGeocode(geocodeExp.toString(placeholder));
         } else {
             mp.setGeocode(geocode);
         }
 
         if (showUserExp != null) {
-            mp.setShowUser(showUserExp.toString());
+            mp.setShowUser(showUserExp.toString(placeholder));
         } else {
             mp.setShowUser(showUser);
         }
 
         if (accessTokenExp != null) {
-            mp.setAccessToken(accessTokenExp.toString());
+            mp.setAccessToken(accessTokenExp.toString(placeholder));
         } else {
             mp.setAccessToken(accessToken);
         }
 
         if (accessSecretExp != null) {
-            mp.setAccessSecret(accessSecretExp.toString());
+            mp.setAccessSecret(accessSecretExp.toString(placeholder));
         } else {
             mp.setAccessSecret(accessSecret);
         }

@@ -42,7 +42,7 @@ public class StatusesDestroyMessageProcessorBuilder implements StatusesDestroyMe
         mp.setObject(reference.getObject(muleContext));
 
         if (idExp != null) {
-            mp.setId(idExp.toString());
+            mp.setId(idExp.toString(placeholder));
         } else {
             mp.setId(id);
         }

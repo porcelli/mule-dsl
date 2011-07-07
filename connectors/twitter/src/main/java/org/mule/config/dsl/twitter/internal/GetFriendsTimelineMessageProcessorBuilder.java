@@ -93,7 +93,7 @@ public class GetFriendsTimelineMessageProcessorBuilder implements GetFriendsTime
         mp.setObject(reference.getObject(muleContext));
 
         if (countExp != null) {
-            mp.setCount(countExp.toString());
+            mp.setCount(countExp.toString(placeholder));
         } else if (count != null) {
             mp.setCount(string(count.toString()));
         } else {
@@ -101,19 +101,19 @@ public class GetFriendsTimelineMessageProcessorBuilder implements GetFriendsTime
         }
 
         if (sinceIdExp != null) {
-            mp.setSinceId(sinceIdExp.toString());
+            mp.setSinceId(sinceIdExp.toString(placeholder));
         } else {
             mp.setSinceId(sinceId);
         }
 
         if (maxIdExp != null) {
-            mp.setMaxId(maxIdExp.toString());
+            mp.setMaxId(maxIdExp.toString(placeholder));
         } else {
             mp.setMaxId(maxId);
         }
 
         if (pageExp != null) {
-            mp.setPage(pageExp.toString());
+            mp.setPage(pageExp.toString(placeholder));
         } else if (page != null) {
             mp.setPage(string(page.toString()));
         } else {

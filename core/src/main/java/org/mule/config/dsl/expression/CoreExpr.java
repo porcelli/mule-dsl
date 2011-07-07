@@ -116,12 +116,11 @@ public final class CoreExpr {
             return expression;
         }
 
-        @Override
-        public String toString() {
+        public String toString(PropertyPlaceholder placeholder) {
             if (expression == null) {
                 return "#[" + evaluator + "]";
             }
-            return "#[" + evaluator + ":" + expression + "]";
+            return "#[" + evaluator + ":" + placeholder.replace(expression) + "]";
         }
 
         public Filter getFilter(PropertyPlaceholder placeholder) {

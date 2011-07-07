@@ -20,4 +20,6 @@ public interface ExpressionEvaluatorBuilder {
     String getExpression();
 
     Filter getFilter(PropertyPlaceholder placeholder);
+
+    String toString(PropertyPlaceholder placeholder);
 }

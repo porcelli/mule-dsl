@@ -115,7 +115,7 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
         }
 
         if (args != null) {
-            invoker.setArguments(toListOfStrings(args));
+            invoker.setArguments(toListOfStrings(placeholder, args));
         }
         invoker.setMuleContext(muleContext);
 

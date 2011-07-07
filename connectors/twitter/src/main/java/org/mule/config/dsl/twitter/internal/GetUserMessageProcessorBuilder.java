@@ -42,7 +42,7 @@ public class GetUserMessageProcessorBuilder implements GetUserMessageProcessorDe
         mp.setObject(reference.getObject(muleContext));
 
         if (screenNameExp != null) {
-            mp.setScreenName(screenNameExp.toString());
+            mp.setScreenName(screenNameExp.toString(placeholder));
         } else {
             mp.setScreenName(screenName);
         }

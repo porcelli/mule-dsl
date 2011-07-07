@@ -7,15 +7,14 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.dsl.twitter;
+package org.mule.config.dsl.module.git;
 
 import org.junit.Test;
 
-public class TestTwitter {
+public class TestMongo {
 
     @Test
-    public void simpleTwitter() {
-
+    public void simpleMongo() {
     }
 
 }

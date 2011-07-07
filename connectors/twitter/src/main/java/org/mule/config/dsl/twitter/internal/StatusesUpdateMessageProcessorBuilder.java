@@ -130,37 +130,37 @@ public class StatusesUpdateMessageProcessorBuilder implements StatusesUpdateMess
         mp.setObject(reference.getObject(muleContext));
 
         if (statusExp != null) {
-            mp.setStatus(statusExp.toString());
+            mp.setStatus(statusExp.toString(placeholder));
         } else {
             mp.setStatus(status);
         }
 
         if (replyIdExp != null) {
-            mp.setReplyId(replyIdExp.toString());
+            mp.setReplyId(replyIdExp.toString(placeholder));
         } else {
             mp.setReplyId(replyId);
         }
 
         if (latitudeExp != null) {
-            mp.setLatituide(latitudeExp.toString());
+            mp.setLatituide(latitudeExp.toString(placeholder));
         } else {
             mp.setLatituide(latitude);
         }
 
         if (longitudeExp != null) {
-            mp.setLongitude(longitudeExp.toString());
+            mp.setLongitude(longitudeExp.toString(placeholder));
         } else {
             mp.setLongitude(longitude);
         }
 
         if (placeIdExp != null) {
-            mp.setPlaceId(placeIdExp.toString());
+            mp.setPlaceId(placeIdExp.toString(placeholder));
         } else {
             mp.setPlaceId(placeId);
         }
 
         if (displayCoordinatesExp != null) {
-            mp.setDisplayCoordinates(displayCoordinatesExp.toString());
+            mp.setDisplayCoordinates(displayCoordinatesExp.toString(placeholder));
         } else if (displayCoordinates != null) {
             mp.setDisplayCoordinates(string(placeId.toString()));
         } else {
@@ -168,7 +168,7 @@ public class StatusesUpdateMessageProcessorBuilder implements StatusesUpdateMess
         }
 
         if (trimUserExp != null) {
-            mp.setTrimUser(trimUserExp.toString());
+            mp.setTrimUser(trimUserExp.toString(placeholder));
         } else if (trimUser != null) {
             mp.setTrimUser(string(trimUser.toString()));
         } else {
