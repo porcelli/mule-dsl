@@ -9,16 +9,16 @@
 
 package org.mule.config.dsl.module.git;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
 public interface DeleteBranchMessageProcessorDefinition extends MessageProcessorDefinition {
 
     DeleteBranchMessageProcessorDefinition withForce(boolean force);
 
-    DeleteBranchMessageProcessorDefinition withForce(ExpressionEvaluatorBuilder forceExp);
+    DeleteBranchMessageProcessorDefinition withForce(ExpressionEvaluatorDefinition forceExp);
 
     DeleteBranchMessageProcessorDefinition withOverrideDirectory(String overrideDirectory);
 
-    DeleteBranchMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorBuilder overrideDirectoryExp);
+    DeleteBranchMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorDefinition overrideDirectoryExp);
 }

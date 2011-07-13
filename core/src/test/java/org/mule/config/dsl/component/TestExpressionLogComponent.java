@@ -9,17 +9,22 @@
 
 package org.mule.config.dsl.component;
 
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.LogLevel.DEBUG;
+import static org.mule.config.dsl.LogLevel.ERROR;
+import static org.mule.config.dsl.LogLevel.FATAL;
+import static org.mule.config.dsl.LogLevel.INFO;
+import static org.mule.config.dsl.LogLevel.TRACE;
+import static org.mule.config.dsl.LogLevel.WARN;
+import static org.mule.config.dsl.expression.CoreExpr.string;
+
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.mule.config.dsl.expression.CoreExpr;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mule.config.dsl.LogLevel.*;
-import static org.mule.config.dsl.expression.CoreExpr.string;
-
 public class TestExpressionLogComponent extends BaseComponentTests {
 
-    private static final CoreExpr.StringExpressionEvaluatorBuilder expressionEvaluatorBuilder = string("payload content: #[mule:message.payload()]");
+    private static final CoreExpr.StringExpressionEvaluatorDefinition expressionEvaluatorBuilder = string("payload content: #[mule:message.payload()]");
 
     public TestExpressionLogComponent() {
         super();
@@ -28,11 +33,11 @@ public class TestExpressionLogComponent extends BaseComponentTests {
     @Test
     public void testFatal() throws Exception {
 
-        LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(ExpressionLogComponent.class);
+        final LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(ExpressionLogComponent.class);
 
         testLogger.reset();
 
-        ExpressionLogComponent logFatalComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), FATAL);
+        final ExpressionLogComponent logFatalComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), FATAL);
         logFatalComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isNotEmpty().hasSize(1);
@@ -52,10 +57,10 @@ public class TestExpressionLogComponent extends BaseComponentTests {
     @Test
     public void testError() throws Exception {
 
-        LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(ExpressionLogComponent.class);
+        final LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(ExpressionLogComponent.class);
         testLogger.reset();
 
-        ExpressionLogComponent logErrorComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), ERROR);
+        final ExpressionLogComponent logErrorComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), ERROR);
         logErrorComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isEmpty();
@@ -77,10 +82,10 @@ public class TestExpressionLogComponent extends BaseComponentTests {
     @Test
     public void testWarn() throws Exception {
 
-        LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(ExpressionLogComponent.class);
+        final LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(ExpressionLogComponent.class);
         testLogger.reset();
 
-        ExpressionLogComponent logWarnComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), WARN);
+        final ExpressionLogComponent logWarnComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), WARN);
         logWarnComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isEmpty();
@@ -104,10 +109,10 @@ public class TestExpressionLogComponent extends BaseComponentTests {
     @Test
     public void testInfo() throws Exception {
 
-        LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(ExpressionLogComponent.class);
+        final LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(ExpressionLogComponent.class);
         testLogger.reset();
 
-        ExpressionLogComponent logInfoComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), INFO);
+        final ExpressionLogComponent logInfoComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), INFO);
         logInfoComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isEmpty();
@@ -133,10 +138,10 @@ public class TestExpressionLogComponent extends BaseComponentTests {
     @Test
     public void testDebug() throws Exception {
 
-        LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(ExpressionLogComponent.class);
+        final LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(ExpressionLogComponent.class);
         testLogger.reset();
 
-        ExpressionLogComponent logDebugComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), DEBUG);
+        final ExpressionLogComponent logDebugComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), DEBUG);
         logDebugComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isEmpty();
@@ -164,10 +169,10 @@ public class TestExpressionLogComponent extends BaseComponentTests {
     @Test
     public void testTrace() throws Exception {
 
-        LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(ExpressionLogComponent.class);
+        final LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(ExpressionLogComponent.class);
         testLogger.reset();
 
-        ExpressionLogComponent logTraceComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), TRACE);
+        final ExpressionLogComponent logTraceComponent = new ExpressionLogComponent(expressionEvaluatorBuilder.getExpression(), expressionEvaluatorBuilder.getEvaluator(), TRACE);
         logTraceComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isEmpty();
@@ -194,7 +199,7 @@ public class TestExpressionLogComponent extends BaseComponentTests {
         assertThat(testLogger.getTraceExec().get(2)).isEqualTo(getMessage("payload content: MyContent3"));
     }
 
-    private String getMessage(String content) {
+    private String getMessage(final String content) {
         return content;
     }
 

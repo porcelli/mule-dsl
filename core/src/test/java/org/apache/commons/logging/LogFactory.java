@@ -16,14 +16,14 @@ import java.util.Map;
 
 public class LogFactory {
 
-    private Map<String, Log> loggers = new HashMap<String, Log>();
+    private final Map<String, Log> loggers = new HashMap<String, Log>();
     static LogFactory logFactory = new LogFactory();
 
-    public Log getInstance(Class<?> clazz) throws LogConfigurationException {
+    public Log getInstance(final Class<?> clazz) throws LogConfigurationException {
         return getInstance(clazz.getName());
     }
 
-    public Log getInstance(String name) throws LogConfigurationException {
+    public Log getInstance(final String name) throws LogConfigurationException {
         if (!loggers.containsKey(name)) {
             loggers.put(name, new MyTestLogger());
         }
@@ -31,7 +31,7 @@ public class LogFactory {
         return loggers.get(name);
     }
 
-    public static Log getLog(Class<?> clazz) {
+    public static Log getLog(final Class<?> clazz) {
         return logFactory.getInstance(clazz);
     }
 
@@ -84,69 +84,69 @@ public class LogFactory {
         }
 
         @Override
-        public void trace(Object message) {
+        public void trace(final Object message) {
             trace(message, null);
         }
 
         @Override
-        public void trace(Object message, Throwable t) {
+        public void trace(final Object message, final Throwable t) {
             traceExec.add(message.toString());
-            System.out.println("TRACE: " + message.toString());
+//            System.out.println("TRACE: " + message.toString());
         }
 
         @Override
-        public void debug(Object message) {
+        public void debug(final Object message) {
             debug(message, null);
         }
 
         @Override
-        public void debug(Object message, Throwable t) {
+        public void debug(final Object message, final Throwable t) {
             debugExec.add(message.toString());
-            System.out.println("DEBUG: " + message.toString());
+//            System.out.println("DEBUG: " + message.toString());
         }
 
         @Override
-        public void info(Object message) {
+        public void info(final Object message) {
             info(message, null);
         }
 
         @Override
-        public void info(Object message, Throwable t) {
+        public void info(final Object message, final Throwable t) {
             infoExec.add(message.toString());
-            System.out.println("INFO: " + message.toString());
+//            System.out.println("INFO: " + message.toString());
         }
 
         @Override
-        public void warn(Object message) {
+        public void warn(final Object message) {
             warn(message, null);
         }
 
         @Override
-        public void warn(Object message, Throwable t) {
+        public void warn(final Object message, final Throwable t) {
             warnExec.add(message.toString());
-            System.out.println("WARN: " + message.toString());
+//            System.out.println("WARN: " + message.toString());
         }
 
         @Override
-        public void error(Object message) {
+        public void error(final Object message) {
             error(message, null);
         }
 
         @Override
-        public void error(Object message, Throwable t) {
+        public void error(final Object message, final Throwable t) {
             errorExec.add(message.toString());
-            System.out.println("ERROR: " + message.toString());
+//            System.out.println("ERROR: " + message.toString());
         }
 
         @Override
-        public void fatal(Object message) {
+        public void fatal(final Object message) {
             fatal(message, null);
         }
 
         @Override
-        public void fatal(Object message, Throwable t) {
+        public void fatal(final Object message, final Throwable t) {
             fatalExec.add(message.toString());
-            System.out.println("FATAL: " + message.toString());
+//            System.out.println("FATAL: " + message.toString());
         }
 
 

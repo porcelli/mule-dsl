@@ -9,42 +9,84 @@
 
 package org.mule.config.dsl.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.transformer.Transformer;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.TransformerBuilder;
 import org.mule.config.dsl.TransformerDefinition;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
+import static org.mule.config.dsl.internal.util.Preconditions.*;
 
-public class TransformerBuilderImpl implements TransformerBuilder {
+/**
+ * Internal implementation of {@link TransformerBuilder} interface that, based on its internal state,
+ * builds a {@link Transformer} to be registered as a global tranformer.
+ * <p/>
+ * <b>Note:</b> The build itself is delegated to {@link TransformerDefinitionImpl}, responsible to
+ * hold global transformer configuration.
+ *
+ * @author porcelli
+ * @see org.mule.config.dsl.AbstractModule#filter()
+ * @see org.mule.config.dsl.AbstractModule#filter(String)
+ * @see org.mule.config.dsl.Catalog#newFilter(String)
+ */
+public class TransformerBuilderImpl implements TransformerBuilder, Builder<Transformer> {
 
     private final String name;
-    private TransformerDefinition<? extends Transformer> definition;
+    private TransformerDefinitionImpl definition;
 
-    public TransformerBuilderImpl(String name) {
+    /**
+     * @param name the global transformer name
+     * @throws IllegalArgumentException if {@code name} param is empty or null
+     */
+    public TransformerBuilderImpl(final String name) throws IllegalArgumentException {
         this.name = checkNotEmpty(name, "name");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return name;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <T extends Transformer> TransformerDefinition<T> with(T obj) {
+    public <T extends Transformer> TransformerDefinition with(final T obj) throws NullPointerException {
+        checkNotNull(obj, "obj");
         this.definition = new TransformerDefinitionImpl<T>(name, obj);
-        return (TransformerDefinition<T>) definition;
+        return definition;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <T extends Transformer> TransformerDefinition<T> with(Class<T> clazz) {
+    public <T extends Transformer> TransformerDefinition with(final Class<T> clazz) throws NullPointerException {
+        checkNotNull(clazz, "clazz");
         this.definition = new TransformerDefinitionImpl<T>(name, clazz);
-        return (TransformerDefinition<T>) definition;
+        return definition;
     }
 
-    public Transformer build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
-        return ((TransformerDefinitionImpl) definition).build(muleContext, injector, placeholder);
+    /**
+     * Builds a {@link Transformer} based on builder internal state and the given parameters.
+     *
+     *
+     * @param muleContext the mule context
+     * @param placeholder the property placeholder
+     * @return an instance of message filter
+     * @throws NullPointerException  if {@code muleContext} or {@code placeholder} params are null
+     * @throws IllegalStateException if transformer type or instance is not provided
+     */
+    @Override
+    public Transformer build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+        checkState(this.definition != null, "Can't build without a transformer type or instance.");
+
+        return definition.build(muleContext, placeholder);
     }
 }

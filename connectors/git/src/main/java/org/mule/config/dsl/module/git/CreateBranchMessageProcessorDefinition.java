@@ -9,20 +9,20 @@
 
 package org.mule.config.dsl.module.git;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
 public interface CreateBranchMessageProcessorDefinition extends MessageProcessorDefinition {
 
     CreateBranchMessageProcessorDefinition withForce(boolean force);
 
-    CreateBranchMessageProcessorDefinition withForce(ExpressionEvaluatorBuilder forceExp);
+    CreateBranchMessageProcessorDefinition withForce(ExpressionEvaluatorDefinition forceExp);
 
     CreateBranchMessageProcessorDefinition withStartPoint(String startPoint);
 
-    CreateBranchMessageProcessorDefinition withStartPoint(ExpressionEvaluatorBuilder startPointExp);
+    CreateBranchMessageProcessorDefinition withStartPoint(ExpressionEvaluatorDefinition startPointExp);
 
     CreateBranchMessageProcessorDefinition withOverrideDirectory(String overrideDirectory);
 
-    CreateBranchMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorBuilder overrideDirectoryExp);
+    CreateBranchMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorDefinition overrideDirectoryExp);
 }

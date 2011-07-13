@@ -9,32 +9,34 @@
 
 package org.mule.config.dsl.module.git.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.git.AddMessageProcessorDefinition;
 import org.mule.module.git.config.AddMessageProcessor;
+
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class AddMessageProcessorBuilder implements AddMessageProcessorDefinition, Builder<AddMessageProcessor> {
     private final org.mule.module.git.GitConnector object;
 
     //Required
     private String filePattern = null;
-    private ExpressionEvaluatorBuilder filePatternExp = null;
+    private ExpressionEvaluatorDefinition filePatternExp = null;
 
     //Optional
     private String overrideDirectory = null;
 
-    private ExpressionEvaluatorBuilder overrideDirectoryExp = null;
+    private ExpressionEvaluatorDefinition overrideDirectoryExp = null;
 
     public AddMessageProcessorBuilder(org.mule.module.git.GitConnector object, String filePattern) {
         this.object = object;
         this.filePattern = filePattern;
     }
 
-    public AddMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorBuilder filePatternExp) {
+    public AddMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorDefinition filePatternExp) {
         this.object = object;
         this.filePatternExp = filePatternExp;
     }
@@ -46,13 +48,16 @@ public class AddMessageProcessorBuilder implements AddMessageProcessorDefinition
     }
 
     @Override
-    public AddMessageProcessorBuilder withOverrideDirectory(ExpressionEvaluatorBuilder overrideDirectoryExp) {
+    public AddMessageProcessorBuilder withOverrideDirectory(ExpressionEvaluatorDefinition overrideDirectoryExp) {
         this.overrideDirectoryExp = overrideDirectoryExp;
         return this;
     }
 
     @Override
-    public AddMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public AddMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         AddMessageProcessor mp = new AddMessageProcessor();
 
         mp.setMuleContext(muleContext);

@@ -9,31 +9,32 @@
 
 package org.mule.config.dsl.module.twitter.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.twitter.GetMentionsMessageProcessorDefinition;
 import org.mule.ibeans.twitter.config.GetMentionsMessageProcessor;
 
 import static org.mule.config.dsl.expression.CoreExpr.string;
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class GetMentionsMessageProcessorBuilder implements GetMentionsMessageProcessorDefinition, Builder<GetMentionsMessageProcessor> {
 
-    private final IBeansTwitterReference reference;
+    private final IBeanTwitterReference reference;
 
     private Integer count = null;
     private String sinceId = null;
     private String maxId = null;
     private Integer page = null;
 
-    private ExpressionEvaluatorBuilder countExp = null;
-    private ExpressionEvaluatorBuilder sinceIdExp = null;
-    private ExpressionEvaluatorBuilder maxIdExp = null;
-    private ExpressionEvaluatorBuilder pageExp = null;
+    private ExpressionEvaluatorDefinition countExp = null;
+    private ExpressionEvaluatorDefinition sinceIdExp = null;
+    private ExpressionEvaluatorDefinition maxIdExp = null;
+    private ExpressionEvaluatorDefinition pageExp = null;
 
-    public GetMentionsMessageProcessorBuilder(IBeansTwitterReference reference) {
+    public GetMentionsMessageProcessorBuilder(IBeanTwitterReference reference) {
         this.reference = reference;
     }
 
@@ -44,7 +45,7 @@ public class GetMentionsMessageProcessorBuilder implements GetMentionsMessagePro
     }
 
     @Override
-    public GetMentionsMessageProcessorDefinition withCount(ExpressionEvaluatorBuilder countExp) {
+    public GetMentionsMessageProcessorDefinition withCount(ExpressionEvaluatorDefinition countExp) {
         this.countExp = countExp;
         return this;
     }
@@ -56,7 +57,7 @@ public class GetMentionsMessageProcessorBuilder implements GetMentionsMessagePro
     }
 
     @Override
-    public GetMentionsMessageProcessorDefinition withSinceId(ExpressionEvaluatorBuilder sinceIdExp) {
+    public GetMentionsMessageProcessorDefinition withSinceId(ExpressionEvaluatorDefinition sinceIdExp) {
         this.sinceIdExp = sinceIdExp;
         return this;
     }
@@ -68,7 +69,7 @@ public class GetMentionsMessageProcessorBuilder implements GetMentionsMessagePro
     }
 
     @Override
-    public GetMentionsMessageProcessorDefinition withMaxId(ExpressionEvaluatorBuilder maxIdExp) {
+    public GetMentionsMessageProcessorDefinition withMaxId(ExpressionEvaluatorDefinition maxIdExp) {
         this.maxIdExp = maxIdExp;
         return this;
     }
@@ -80,13 +81,16 @@ public class GetMentionsMessageProcessorBuilder implements GetMentionsMessagePro
     }
 
     @Override
-    public GetMentionsMessageProcessorDefinition withPage(ExpressionEvaluatorBuilder pageExp) {
+    public GetMentionsMessageProcessorDefinition withPage(ExpressionEvaluatorDefinition pageExp) {
         this.pageExp = pageExp;
         return this;
     }
 
     @Override
-    public GetMentionsMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public GetMentionsMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         GetMentionsMessageProcessor mp = new GetMentionsMessageProcessor();
 
         mp.setMuleContext(muleContext);

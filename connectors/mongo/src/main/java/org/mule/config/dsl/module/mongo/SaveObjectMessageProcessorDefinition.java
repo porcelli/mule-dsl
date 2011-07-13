@@ -9,7 +9,7 @@
 
 package org.mule.config.dsl.module.mongo;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 import org.mule.module.mongo.api.WriteConcern;
 
@@ -19,13 +19,13 @@ public interface SaveObjectMessageProcessorDefinition extends MessageProcessorDe
 
     SaveObjectMessageProcessorDefinition withElement(Object element);
 
-    SaveObjectMessageProcessorDefinition withElement(ExpressionEvaluatorBuilder elementExp);
+    SaveObjectMessageProcessorDefinition withElement(ExpressionEvaluatorDefinition elementExp);
 
     SaveObjectMessageProcessorDefinition withElementAttributes(Map<String, Object> elementAttributes);
 
-    SaveObjectMessageProcessorDefinition withElementAttributes(ExpressionEvaluatorBuilder elementAttributesExp);
+    SaveObjectMessageProcessorDefinition withElementAttributes(ExpressionEvaluatorDefinition elementAttributesExp);
 
     SaveObjectMessageProcessorDefinition withWriteConcern(WriteConcern writeConcern);
 
-    SaveObjectMessageProcessorDefinition withWriteConcern(ExpressionEvaluatorBuilder writeConcernExp);
+    SaveObjectMessageProcessorDefinition withWriteConcern(ExpressionEvaluatorDefinition writeConcernExp);
 }

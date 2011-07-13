@@ -9,33 +9,38 @@
 
 package org.mule.config.dsl.module.twitter.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.twitter.GetUserMessageProcessorDefinition;
 import org.mule.ibeans.twitter.config.GetUserMessageProcessor;
 
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+
 public class GetUserMessageProcessorBuilder implements GetUserMessageProcessorDefinition, Builder<GetUserMessageProcessor> {
 
-    private final IBeansTwitterReference reference;
+    private final IBeanTwitterReference reference;
 
     private String screenName = null;
-    private ExpressionEvaluatorBuilder screenNameExp = null;
+    private ExpressionEvaluatorDefinition screenNameExp = null;
 
-    public GetUserMessageProcessorBuilder(IBeansTwitterReference reference, String screenName) {
+    public GetUserMessageProcessorBuilder(IBeanTwitterReference reference, String screenName) {
         this.reference = reference;
         this.screenName = screenName;
     }
 
-    public GetUserMessageProcessorBuilder(IBeansTwitterReference reference, ExpressionEvaluatorBuilder screenNameExp) {
+    public GetUserMessageProcessorBuilder(IBeanTwitterReference reference, ExpressionEvaluatorDefinition screenNameExp) {
         this.reference = reference;
         this.screenNameExp = screenNameExp;
     }
 
     @Override
-    public GetUserMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public GetUserMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         GetUserMessageProcessor mp = new GetUserMessageProcessor();
 
         mp.setMuleContext(muleContext);

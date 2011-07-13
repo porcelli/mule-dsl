@@ -9,16 +9,18 @@
 
 package org.mule.config.dsl.module.mongo.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.mongo.CountObjectsMessageProcessorDefinition;
 import org.mule.module.mongo.MongoCloudConnector;
 import org.mule.module.mongo.config.CountObjectsMessageProcessor;
 
 import java.util.Map;
+
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class CountObjectsMessageProcessorBuilder implements CountObjectsMessageProcessorDefinition, Builder<CountObjectsMessageProcessor> {
 
@@ -26,20 +28,20 @@ public class CountObjectsMessageProcessorBuilder implements CountObjectsMessageP
 
     private String collection = null;
 
-    private ExpressionEvaluatorBuilder collectionExp = null;
+    private ExpressionEvaluatorDefinition collectionExp = null;
 
     private Object query = null;
     private Map<String, Object> queryAttributes = null;
 
-    private ExpressionEvaluatorBuilder queryExp = null;
-    private ExpressionEvaluatorBuilder queryAttributesExp = null;
+    private ExpressionEvaluatorDefinition queryExp = null;
+    private ExpressionEvaluatorDefinition queryAttributesExp = null;
 
     public CountObjectsMessageProcessorBuilder(MongoCloudConnector object, String collection) {
         this.object = object;
         this.collection = collection;
     }
 
-    public CountObjectsMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorBuilder collectionExp) {
+    public CountObjectsMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorDefinition collectionExp) {
         this.object = object;
         this.collectionExp = collectionExp;
     }
@@ -51,7 +53,7 @@ public class CountObjectsMessageProcessorBuilder implements CountObjectsMessageP
     }
 
     @Override
-    public CountObjectsMessageProcessorDefinition withQuery(ExpressionEvaluatorBuilder queryExp) {
+    public CountObjectsMessageProcessorDefinition withQuery(ExpressionEvaluatorDefinition queryExp) {
         this.queryExp = queryExp;
         return this;
     }
@@ -63,13 +65,16 @@ public class CountObjectsMessageProcessorBuilder implements CountObjectsMessageP
     }
 
     @Override
-    public CountObjectsMessageProcessorDefinition withQueryAttributes(ExpressionEvaluatorBuilder queryAttributesExp) {
+    public CountObjectsMessageProcessorDefinition withQueryAttributes(ExpressionEvaluatorDefinition queryAttributesExp) {
         this.queryAttributesExp = queryAttributesExp;
         return this;
     }
 
     @Override
-    public CountObjectsMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public CountObjectsMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         CountObjectsMessageProcessor mp = new CountObjectsMessageProcessor();
 
         mp.setMuleContext(muleContext);

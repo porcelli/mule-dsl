@@ -9,7 +9,7 @@
 
 package org.mule.config.dsl.module.mongo;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
 import java.util.Map;
@@ -18,10 +18,10 @@ public interface CountObjectsMessageProcessorDefinition extends MessageProcessor
 
     CountObjectsMessageProcessorDefinition withQuery(Object query);
 
-    CountObjectsMessageProcessorDefinition withQuery(ExpressionEvaluatorBuilder queryExp);
+    CountObjectsMessageProcessorDefinition withQuery(ExpressionEvaluatorDefinition queryExp);
 
     CountObjectsMessageProcessorDefinition withQueryAttributes(Map<String, Object> queryAttributes);
 
-    CountObjectsMessageProcessorDefinition withQueryAttributes(ExpressionEvaluatorBuilder queryAttributesExp);
+    CountObjectsMessageProcessorDefinition withQueryAttributes(ExpressionEvaluatorDefinition queryAttributesExp);
 
 }

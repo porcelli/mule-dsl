@@ -9,29 +9,29 @@
 
 package org.mule.config.dsl.hack;
 
-import org.fest.util.Collections;
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import org.fest.util.Collections;
 
 /**
  * Provides access to private members in classes.
  */
 public class PrivateAccessor {
 
-    public static Object getPrivateFieldValue(Object object, String fieldName) {
+    public static Object getPrivateFieldValue(final Object object, final String fieldName) {
         checkNotNull(object, "object");
         checkNotNull(fieldName, "fieldName");
 
-        for (Field activeField : getAllFields(object.getClass())) {
+        for (final Field activeField : getAllFields(object.getClass())) {
             if (fieldName.equals(activeField.getName())) {
                 try {
                     activeField.setAccessible(true);
                     return activeField.get(object);
-                } catch (IllegalAccessException ex) {
+                } catch (final IllegalAccessException ex) {
                     throw new RuntimeException("IllegalAccessException accessing " + fieldName, ex);
                 }
             }
@@ -43,12 +43,12 @@ public class PrivateAccessor {
     /**
      * Return the set of fields declared at broadcast level of class hierachy
      */
-    private static Set<Field> getAllFields(Class clazz) {
+    private static Set<Field> getAllFields(final Class clazz) {
         return getAllFieldsRec(clazz, new HashSet<Field>());
     }
 
-    private static Set<Field> getAllFieldsRec(Class clazz, Set<Field> set) {
-        Class superClazz = clazz.getSuperclass();
+    private static Set<Field> getAllFieldsRec(final Class clazz, final Set<Field> set) {
+        final Class superClazz = clazz.getSuperclass();
         if (superClazz != null) {
             getAllFieldsRec(superClazz, set);
         }

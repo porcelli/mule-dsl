@@ -12,17 +12,35 @@ package org.mule.config.dsl.internal.util;
 import org.mule.MessageExchangePattern;
 import org.mule.config.dsl.ExchangePattern;
 
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+
+/**
+ * Utility class that converts {@link ExchangePattern} to mule's core counterpart {@link MessageExchangePattern}.
+ *
+ * @author porcelli
+ */
 public final class ExchangePatternUtil {
 
     private ExchangePatternUtil() {
     }
 
-    public static MessageExchangePattern convert(ExchangePattern exchangePattern) {
+    /**
+     * Converts the given param to mule's core {@link MessageExchangePattern}.
+     *
+     * @param exchangePattern the input exchange pattern
+     * @return the converterd version of input exchange pattern
+     * @throws NullPointerException     if {@code reference} is null
+     * @throws IllegalArgumentException if cannot convert {@code reference}
+     * @see ExchangePattern
+     * @see MessageExchangePattern
+     */
+    public static MessageExchangePattern convert(final ExchangePattern exchangePattern) throws NullPointerException, IllegalArgumentException {
+        checkNotNull(exchangePattern, "exchangePattern");
         if (exchangePattern.equals(ExchangePattern.ONE_WAY)) {
             return MessageExchangePattern.ONE_WAY;
         } else if (exchangePattern.equals(ExchangePattern.REQUEST_RESPONSE)) {
             return MessageExchangePattern.REQUEST_RESPONSE;
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("Can't convert the given exchange pattern.");
     }
 }

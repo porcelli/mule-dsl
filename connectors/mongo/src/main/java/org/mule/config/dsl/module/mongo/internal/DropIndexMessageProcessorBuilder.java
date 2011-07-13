@@ -9,14 +9,16 @@
 
 package org.mule.config.dsl.module.mongo.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.mongo.DropIndexMessageProcessorDefinition;
 import org.mule.module.mongo.MongoCloudConnector;
 import org.mule.module.mongo.config.DropIndexMessageProcessor;
+
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class DropIndexMessageProcessorBuilder implements DropIndexMessageProcessorDefinition, Builder<DropIndexMessageProcessor> {
 
@@ -26,8 +28,8 @@ public class DropIndexMessageProcessorBuilder implements DropIndexMessageProcess
     private String collection = null;
     private String index = null;
 
-    private ExpressionEvaluatorBuilder collectionExp = null;
-    private ExpressionEvaluatorBuilder indexExp = null;
+    private ExpressionEvaluatorDefinition collectionExp = null;
+    private ExpressionEvaluatorDefinition indexExp = null;
 
     public DropIndexMessageProcessorBuilder(MongoCloudConnector object, String collection, String index) {
         this.object = object;
@@ -35,26 +37,29 @@ public class DropIndexMessageProcessorBuilder implements DropIndexMessageProcess
         this.index = index;
     }
 
-    public DropIndexMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorBuilder collectionExp, String index) {
+    public DropIndexMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorDefinition collectionExp, String index) {
         this.object = object;
         this.collectionExp = collectionExp;
         this.index = index;
     }
 
-    public DropIndexMessageProcessorBuilder(MongoCloudConnector object, String collection, ExpressionEvaluatorBuilder indexExp) {
+    public DropIndexMessageProcessorBuilder(MongoCloudConnector object, String collection, ExpressionEvaluatorDefinition indexExp) {
         this.object = object;
         this.collection = collection;
         this.indexExp = indexExp;
     }
 
-    public DropIndexMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorBuilder collectionExp, ExpressionEvaluatorBuilder indexExp) {
+    public DropIndexMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorDefinition collectionExp, ExpressionEvaluatorDefinition indexExp) {
         this.object = object;
         this.collectionExp = collectionExp;
         this.indexExp = indexExp;
     }
 
     @Override
-    public DropIndexMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public DropIndexMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         DropIndexMessageProcessor mp = new DropIndexMessageProcessor();
 
         mp.setMuleContext(muleContext);

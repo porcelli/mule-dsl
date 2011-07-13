@@ -13,15 +13,29 @@ import org.mule.util.UUID;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
+/**
+ * Utility class that provides unique names and expose it thru a static method.
+ *
+ * @author porcelli
+ */
 public class NameGenerator {
 
     private NameGenerator() {
     }
 
-    public static String newName(String prefix) {
+    /**
+     * Returns a unique string based name. If {@code prefix} param provided, prefix it.
+     * <p/>
+     * <b>Note:</b> the generated string is an UUID.
+     *
+     * @param prefix the prefix string, null is allowed or empty
+     * @return a unique string based name
+     * @see UUID
+     */
+    public static String newName(final String prefix) {
         if (isEmpty(prefix)) {
             return UUID.getUUID();
         }
-        return prefix + ":" + UUID.getUUID();
+        return prefix + "-" + UUID.getUUID();
     }
 }

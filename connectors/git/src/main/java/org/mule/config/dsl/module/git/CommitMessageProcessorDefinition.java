@@ -9,20 +9,20 @@
 
 package org.mule.config.dsl.module.git;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
 public interface CommitMessageProcessorDefinition extends MessageProcessorDefinition {
 
     CommitMessageProcessorDefinition withAuthorName(String authorName);
 
-    CommitMessageProcessorDefinition withAuthorName(ExpressionEvaluatorBuilder authorNameExp);
+    CommitMessageProcessorDefinition withAuthorName(ExpressionEvaluatorDefinition authorNameExp);
 
     CommitMessageProcessorDefinition withAuthorEmail(String authorEmail);
 
-    CommitMessageProcessorDefinition withAuthorEmail(ExpressionEvaluatorBuilder authorEmailExp);
+    CommitMessageProcessorDefinition withAuthorEmail(ExpressionEvaluatorDefinition authorEmailExp);
 
     CommitMessageProcessorDefinition withOverrideDirectory(String overrideDirectory);
 
-    CommitMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorBuilder overrideDirectoryExp);
+    CommitMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorDefinition overrideDirectoryExp);
 }

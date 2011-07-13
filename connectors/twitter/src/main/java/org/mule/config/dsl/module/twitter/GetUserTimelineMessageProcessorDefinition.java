@@ -9,33 +9,33 @@
 
 package org.mule.config.dsl.module.twitter;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
 public interface GetUserTimelineMessageProcessorDefinition extends MessageProcessorDefinition {
 
     GetUserTimelineMessageProcessorDefinition withUserId(String userId);
 
-    GetUserTimelineMessageProcessorDefinition withUserId(ExpressionEvaluatorBuilder userIdExp);
+    GetUserTimelineMessageProcessorDefinition withUserId(ExpressionEvaluatorDefinition userIdExp);
 
     GetUserTimelineMessageProcessorDefinition withScreenName(String screenName);
 
-    GetUserTimelineMessageProcessorDefinition withScreenName(ExpressionEvaluatorBuilder screenNameExp);
+    GetUserTimelineMessageProcessorDefinition withScreenName(ExpressionEvaluatorDefinition screenNameExp);
 
     GetUserTimelineMessageProcessorDefinition withCount(Integer count);
 
-    GetUserTimelineMessageProcessorDefinition withCount(ExpressionEvaluatorBuilder countExp);
+    GetUserTimelineMessageProcessorDefinition withCount(ExpressionEvaluatorDefinition countExp);
 
     GetUserTimelineMessageProcessorDefinition withSinceId(String sinceId);
 
-    GetUserTimelineMessageProcessorDefinition withSinceId(ExpressionEvaluatorBuilder sinceIdExp);
+    GetUserTimelineMessageProcessorDefinition withSinceId(ExpressionEvaluatorDefinition sinceIdExp);
 
     GetUserTimelineMessageProcessorDefinition withMaxId(String maxId);
 
-    GetUserTimelineMessageProcessorDefinition withMaxId(ExpressionEvaluatorBuilder maxIdExp);
+    GetUserTimelineMessageProcessorDefinition withMaxId(ExpressionEvaluatorDefinition maxIdExp);
 
     GetUserTimelineMessageProcessorDefinition withPage(Integer page);
 
-    GetUserTimelineMessageProcessorDefinition withPage(ExpressionEvaluatorBuilder pageExp);
+    GetUserTimelineMessageProcessorDefinition withPage(ExpressionEvaluatorDefinition pageExp);
 
 }

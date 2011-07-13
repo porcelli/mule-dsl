@@ -9,13 +9,15 @@
 
 package org.mule.config.dsl.module.git.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.module.git.FetchMessageProcessorDefinition;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.module.git.config.FetchMessageProcessor;
+
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class FetchMessageProcessorBuilder implements FetchMessageProcessorDefinition, Builder<FetchMessageProcessor> {
 
@@ -24,7 +26,7 @@ public class FetchMessageProcessorBuilder implements FetchMessageProcessorDefini
     //Optional
     private String overrideDirectory = null;
 
-    private ExpressionEvaluatorBuilder overrideDirectoryExp = null;
+    private ExpressionEvaluatorDefinition overrideDirectoryExp = null;
 
     public FetchMessageProcessorBuilder(org.mule.module.git.GitConnector object) {
         this.object = object;
@@ -37,13 +39,16 @@ public class FetchMessageProcessorBuilder implements FetchMessageProcessorDefini
     }
 
     @Override
-    public FetchMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorBuilder overrideDirectoryExp) {
+    public FetchMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorDefinition overrideDirectoryExp) {
         this.overrideDirectoryExp = overrideDirectoryExp;
         return this;
     }
 
     @Override
-    public FetchMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public FetchMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         FetchMessageProcessor mp = new FetchMessageProcessor();
 
         mp.setMuleContext(muleContext);

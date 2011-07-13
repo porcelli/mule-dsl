@@ -8,21 +8,21 @@
  */
 package org.mule.config.dsl.module.mongo;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
 public interface CreateCollectionMessageProcessorDefinition extends MessageProcessorDefinition {
 
     CreateCollectionMessageProcessorDefinition withCapped(boolean capped);
 
-    CreateCollectionMessageProcessorDefinition withCapped(ExpressionEvaluatorBuilder cappedExp);
+    CreateCollectionMessageProcessorDefinition withCapped(ExpressionEvaluatorDefinition cappedExp);
 
     CreateCollectionMessageProcessorDefinition withMaxObjects(Integer maxObjects);
 
-    CreateCollectionMessageProcessorDefinition withMaxObjects(ExpressionEvaluatorBuilder maxObjectsExp);
+    CreateCollectionMessageProcessorDefinition withMaxObjects(ExpressionEvaluatorDefinition maxObjectsExp);
 
     CreateCollectionMessageProcessorDefinition withSize(Integer size);
 
-    CreateCollectionMessageProcessorDefinition withSize(ExpressionEvaluatorBuilder sizeExp);
+    CreateCollectionMessageProcessorDefinition withSize(ExpressionEvaluatorDefinition sizeExp);
 
 }

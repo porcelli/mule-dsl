@@ -9,7 +9,7 @@
 
 package org.mule.config.dsl.module.mongo;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
 import java.util.List;
@@ -19,18 +19,18 @@ public interface FindOneObjectMessageProcessorDefinition extends MessageProcesso
 
     FindOneObjectMessageProcessorDefinition withQuery(Object query);
 
-    FindOneObjectMessageProcessorDefinition withQuery(ExpressionEvaluatorBuilder queryExp);
+    FindOneObjectMessageProcessorDefinition withQuery(ExpressionEvaluatorDefinition queryExp);
 
     FindOneObjectMessageProcessorDefinition withQueryAttributes(Map<String, Object> queryAttributes);
 
-    FindOneObjectMessageProcessorDefinition withQueryAttributes(ExpressionEvaluatorBuilder queryAttributesExp);
+    FindOneObjectMessageProcessorDefinition withQueryAttributes(ExpressionEvaluatorDefinition queryAttributesExp);
 
     FindOneObjectMessageProcessorDefinition withFieldsRef(Object fieldsRef);
 
-    FindOneObjectMessageProcessorDefinition withFieldsRef(ExpressionEvaluatorBuilder fieldsRefExp);
+    FindOneObjectMessageProcessorDefinition withFieldsRef(ExpressionEvaluatorDefinition fieldsRefExp);
 
     FindOneObjectMessageProcessorDefinition withFields(List<String> fields);
 
-    FindOneObjectMessageProcessorDefinition withFields(ExpressionEvaluatorBuilder fieldsExp);
+    FindOneObjectMessageProcessorDefinition withFields(ExpressionEvaluatorDefinition fieldsExp);
 
 }

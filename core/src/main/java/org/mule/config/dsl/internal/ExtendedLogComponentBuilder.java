@@ -9,26 +9,44 @@
 
 package org.mule.config.dsl.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
+import org.mule.config.dsl.ConfigurationException;
 import org.mule.config.dsl.LogLevel;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.component.ExtendedLogComponent;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
+/**
+ * Simple {@link ExtendedLogComponent} builder, necessary due the need to use a property plaholder on message.
+ *
+ * @author porcelli
+ * @see org.mule.config.dsl.PipelineBuilder#log(String)
+ * @see org.mule.config.dsl.PipelineBuilder#log(String, org.mule.config.dsl.LogLevel)
+ */
 public class ExtendedLogComponentBuilder implements Builder<ExtendedLogComponent> {
 
     private final LogLevel level;
     private final String message;
 
-    ExtendedLogComponentBuilder(String message, LogLevel level) {
+    /**
+     * @param message the message
+     * @param level   the log level
+     * @throws NullPointerException if {@code message} or {@code level} params are null
+     */
+    ExtendedLogComponentBuilder(final String message, final LogLevel level) throws NullPointerException {
         this.message = checkNotNull(message, "message");
         this.level = checkNotNull(level, "level");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public ExtendedLogComponent build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public ExtendedLogComponent build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         return new ExtendedLogComponent(placeholder.replace(message), level);
     }
 }

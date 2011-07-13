@@ -9,11 +9,11 @@
 
 package org.mule.config.dsl.module.mongo.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.mongo.SaveObjectMessageProcessorDefinition;
 import org.mule.module.mongo.MongoCloudConnector;
 import org.mule.module.mongo.api.WriteConcern;
@@ -21,29 +21,31 @@ import org.mule.module.mongo.config.SaveObjectMessageProcessor;
 
 import java.util.Map;
 
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+
 public class SaveObjectMessageProcessorBuilder implements SaveObjectMessageProcessorDefinition, Builder<SaveObjectMessageProcessor> {
 
     private MongoCloudConnector object;
 
     private String collection = null;
 
-    private ExpressionEvaluatorBuilder collectionExp = null;
+    private ExpressionEvaluatorDefinition collectionExp = null;
 
 
     private Object element = null;
     private Map<String, Object> elementAttributes = null;
     private WriteConcern writeConcern = WriteConcern.DATABASE_DEFAULT;
 
-    private ExpressionEvaluatorBuilder elementExp = null;
-    private ExpressionEvaluatorBuilder elementAttributesExp = null;
-    private ExpressionEvaluatorBuilder writeConcernExp = null;
+    private ExpressionEvaluatorDefinition elementExp = null;
+    private ExpressionEvaluatorDefinition elementAttributesExp = null;
+    private ExpressionEvaluatorDefinition writeConcernExp = null;
 
     public SaveObjectMessageProcessorBuilder(MongoCloudConnector object, String collection) {
         this.object = object;
         this.collection = collection;
     }
 
-    public SaveObjectMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorBuilder collectionExp) {
+    public SaveObjectMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorDefinition collectionExp) {
         this.object = object;
         this.collectionExp = collectionExp;
     }
@@ -55,7 +57,7 @@ public class SaveObjectMessageProcessorBuilder implements SaveObjectMessageProce
     }
 
     @Override
-    public SaveObjectMessageProcessorDefinition withElement(ExpressionEvaluatorBuilder elementExp) {
+    public SaveObjectMessageProcessorDefinition withElement(ExpressionEvaluatorDefinition elementExp) {
         this.elementExp = elementExp;
         return this;
     }
@@ -67,7 +69,7 @@ public class SaveObjectMessageProcessorBuilder implements SaveObjectMessageProce
     }
 
     @Override
-    public SaveObjectMessageProcessorDefinition withElementAttributes(ExpressionEvaluatorBuilder elementAttributesExp) {
+    public SaveObjectMessageProcessorDefinition withElementAttributes(ExpressionEvaluatorDefinition elementAttributesExp) {
         this.elementAttributesExp = elementAttributesExp;
         return this;
     }
@@ -79,13 +81,16 @@ public class SaveObjectMessageProcessorBuilder implements SaveObjectMessageProce
     }
 
     @Override
-    public SaveObjectMessageProcessorDefinition withWriteConcern(ExpressionEvaluatorBuilder writeConcernExp) {
+    public SaveObjectMessageProcessorDefinition withWriteConcern(ExpressionEvaluatorDefinition writeConcernExp) {
         this.writeConcernExp = writeConcernExp;
         return this;
     }
 
     @Override
-    public SaveObjectMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public SaveObjectMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         SaveObjectMessageProcessor mp = new SaveObjectMessageProcessor();
 
         mp.setMuleContext(muleContext);

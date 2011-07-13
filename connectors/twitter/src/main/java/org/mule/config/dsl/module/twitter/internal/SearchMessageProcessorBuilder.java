@@ -9,20 +9,22 @@
 
 package org.mule.config.dsl.module.twitter.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.twitter.SearchMessageProcessorDefinition;
 import org.mule.ibeans.twitter.config.SearchMessageProcessor;
 
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+
 public class SearchMessageProcessorBuilder implements SearchMessageProcessorDefinition, Builder<SearchMessageProcessor> {
 
-    private final IBeansTwitterReference reference;
+    private final IBeanTwitterReference reference;
 
     private String query = null;
-    private ExpressionEvaluatorBuilder queryExp = null;
+    private ExpressionEvaluatorDefinition queryExp = null;
 
     private String lang = null;
     private String locale = null;
@@ -34,22 +36,22 @@ public class SearchMessageProcessorBuilder implements SearchMessageProcessorDefi
     private String accessToken = null;
     private String accessSecret = null;
 
-    private ExpressionEvaluatorBuilder langExp = null;
-    private ExpressionEvaluatorBuilder localeExp = null;
-    private ExpressionEvaluatorBuilder rppExp = null;
-    private ExpressionEvaluatorBuilder pageExp = null;
-    private ExpressionEvaluatorBuilder sinceIdExp = null;
-    private ExpressionEvaluatorBuilder geocodeExp = null;
-    private ExpressionEvaluatorBuilder showUserExp = null;
-    private ExpressionEvaluatorBuilder accessTokenExp = null;
-    private ExpressionEvaluatorBuilder accessSecretExp = null;
+    private ExpressionEvaluatorDefinition langExp = null;
+    private ExpressionEvaluatorDefinition localeExp = null;
+    private ExpressionEvaluatorDefinition rppExp = null;
+    private ExpressionEvaluatorDefinition pageExp = null;
+    private ExpressionEvaluatorDefinition sinceIdExp = null;
+    private ExpressionEvaluatorDefinition geocodeExp = null;
+    private ExpressionEvaluatorDefinition showUserExp = null;
+    private ExpressionEvaluatorDefinition accessTokenExp = null;
+    private ExpressionEvaluatorDefinition accessSecretExp = null;
 
-    public SearchMessageProcessorBuilder(IBeansTwitterReference reference, String query) {
+    public SearchMessageProcessorBuilder(IBeanTwitterReference reference, String query) {
         this.reference = reference;
         this.query = query;
     }
 
-    public SearchMessageProcessorBuilder(IBeansTwitterReference reference, ExpressionEvaluatorBuilder queryExp) {
+    public SearchMessageProcessorBuilder(IBeanTwitterReference reference, ExpressionEvaluatorDefinition queryExp) {
         this.reference = reference;
         this.queryExp = queryExp;
     }
@@ -61,7 +63,7 @@ public class SearchMessageProcessorBuilder implements SearchMessageProcessorDefi
     }
 
     @Override
-    public SearchMessageProcessorDefinition withLang(ExpressionEvaluatorBuilder langExp) {
+    public SearchMessageProcessorDefinition withLang(ExpressionEvaluatorDefinition langExp) {
         this.langExp = langExp;
         return this;
     }
@@ -73,7 +75,7 @@ public class SearchMessageProcessorBuilder implements SearchMessageProcessorDefi
     }
 
     @Override
-    public SearchMessageProcessorDefinition withLocale(ExpressionEvaluatorBuilder localeExp) {
+    public SearchMessageProcessorDefinition withLocale(ExpressionEvaluatorDefinition localeExp) {
         this.localeExp = localeExp;
         return this;
     }
@@ -85,7 +87,7 @@ public class SearchMessageProcessorBuilder implements SearchMessageProcessorDefi
     }
 
     @Override
-    public SearchMessageProcessorDefinition withRpp(ExpressionEvaluatorBuilder rppExp) {
+    public SearchMessageProcessorDefinition withRpp(ExpressionEvaluatorDefinition rppExp) {
         this.rppExp = rppExp;
         return this;
     }
@@ -97,7 +99,7 @@ public class SearchMessageProcessorBuilder implements SearchMessageProcessorDefi
     }
 
     @Override
-    public SearchMessageProcessorDefinition withPage(ExpressionEvaluatorBuilder pageExp) {
+    public SearchMessageProcessorDefinition withPage(ExpressionEvaluatorDefinition pageExp) {
         this.pageExp = pageExp;
         return this;
     }
@@ -109,7 +111,7 @@ public class SearchMessageProcessorBuilder implements SearchMessageProcessorDefi
     }
 
     @Override
-    public SearchMessageProcessorDefinition withSinceId(ExpressionEvaluatorBuilder sinceIdExp) {
+    public SearchMessageProcessorDefinition withSinceId(ExpressionEvaluatorDefinition sinceIdExp) {
         this.sinceIdExp = sinceIdExp;
         return this;
     }
@@ -121,7 +123,7 @@ public class SearchMessageProcessorBuilder implements SearchMessageProcessorDefi
     }
 
     @Override
-    public SearchMessageProcessorDefinition withGeocode(ExpressionEvaluatorBuilder geocodeExp) {
+    public SearchMessageProcessorDefinition withGeocode(ExpressionEvaluatorDefinition geocodeExp) {
         this.geocodeExp = geocodeExp;
         return this;
     }
@@ -133,7 +135,7 @@ public class SearchMessageProcessorBuilder implements SearchMessageProcessorDefi
     }
 
     @Override
-    public SearchMessageProcessorDefinition withShowUser(ExpressionEvaluatorBuilder showUserExp) {
+    public SearchMessageProcessorDefinition withShowUser(ExpressionEvaluatorDefinition showUserExp) {
         this.showUserExp = showUserExp;
         return this;
     }
@@ -145,7 +147,7 @@ public class SearchMessageProcessorBuilder implements SearchMessageProcessorDefi
     }
 
     @Override
-    public SearchMessageProcessorDefinition withAccessToken(ExpressionEvaluatorBuilder accessTokenExp) {
+    public SearchMessageProcessorDefinition withAccessToken(ExpressionEvaluatorDefinition accessTokenExp) {
         this.accessTokenExp = accessTokenExp;
         return this;
     }
@@ -157,13 +159,16 @@ public class SearchMessageProcessorBuilder implements SearchMessageProcessorDefi
     }
 
     @Override
-    public SearchMessageProcessorDefinition withAccessSecret(ExpressionEvaluatorBuilder accessSecretExp) {
+    public SearchMessageProcessorDefinition withAccessSecret(ExpressionEvaluatorDefinition accessSecretExp) {
         this.accessSecretExp = accessSecretExp;
         return this;
     }
 
     @Override
-    public SearchMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public SearchMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         SearchMessageProcessor mp = new SearchMessageProcessor();
 
         mp.setMuleContext(muleContext);

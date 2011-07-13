@@ -9,14 +9,16 @@
 
 package org.mule.config.dsl.module.mongo.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.mongo.CreateCollectionMessageProcessorDefinition;
 import org.mule.module.mongo.MongoCloudConnector;
 import org.mule.module.mongo.config.CreateCollectionMessageProcessor;
+
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class CreateCollectionMessageProcessorBuilder implements CreateCollectionMessageProcessorDefinition, Builder<CreateCollectionMessageProcessor> {
 
@@ -25,23 +27,23 @@ public class CreateCollectionMessageProcessorBuilder implements CreateCollection
     //Required
     private String collection = null;
 
-    private ExpressionEvaluatorBuilder collectionExp = null;
+    private ExpressionEvaluatorDefinition collectionExp = null;
 
     //Optional
     private boolean capped = false;
     private Integer maxObjects = null;
     private Integer size = null;
 
-    private ExpressionEvaluatorBuilder cappedExp = null;
-    private ExpressionEvaluatorBuilder maxObjectsExp = null;
-    private ExpressionEvaluatorBuilder sizeExp = null;
+    private ExpressionEvaluatorDefinition cappedExp = null;
+    private ExpressionEvaluatorDefinition maxObjectsExp = null;
+    private ExpressionEvaluatorDefinition sizeExp = null;
 
     public CreateCollectionMessageProcessorBuilder(MongoCloudConnector object, String collection) {
         this.object = object;
         this.collection = collection;
     }
 
-    public CreateCollectionMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorBuilder collectionExp) {
+    public CreateCollectionMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorDefinition collectionExp) {
         this.object = object;
         this.collectionExp = collectionExp;
     }
@@ -53,7 +55,7 @@ public class CreateCollectionMessageProcessorBuilder implements CreateCollection
     }
 
     @Override
-    public CreateCollectionMessageProcessorDefinition withCapped(ExpressionEvaluatorBuilder cappedExp) {
+    public CreateCollectionMessageProcessorDefinition withCapped(ExpressionEvaluatorDefinition cappedExp) {
         this.cappedExp = cappedExp;
         return this;
     }
@@ -65,7 +67,7 @@ public class CreateCollectionMessageProcessorBuilder implements CreateCollection
     }
 
     @Override
-    public CreateCollectionMessageProcessorDefinition withMaxObjects(ExpressionEvaluatorBuilder maxObjectsExp) {
+    public CreateCollectionMessageProcessorDefinition withMaxObjects(ExpressionEvaluatorDefinition maxObjectsExp) {
         this.maxObjectsExp = maxObjectsExp;
         return this;
     }
@@ -77,13 +79,16 @@ public class CreateCollectionMessageProcessorBuilder implements CreateCollection
     }
 
     @Override
-    public CreateCollectionMessageProcessorDefinition withSize(ExpressionEvaluatorBuilder sizeExp) {
+    public CreateCollectionMessageProcessorDefinition withSize(ExpressionEvaluatorDefinition sizeExp) {
         this.sizeExp = sizeExp;
         return this;
     }
 
     @Override
-    public CreateCollectionMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public CreateCollectionMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         CreateCollectionMessageProcessor mp = new CreateCollectionMessageProcessor();
 
         mp.setMuleContext(muleContext);

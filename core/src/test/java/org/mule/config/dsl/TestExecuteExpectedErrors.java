@@ -9,14 +9,19 @@
 
 package org.mule.config.dsl;
 
-import com.google.inject.name.Named;
-import com.google.inject.name.Names;
+import static org.mule.config.dsl.expression.CoreExpr.payload;
+
+import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import org.junit.Test;
 import org.mule.api.lifecycle.Callable;
 
-import java.lang.annotation.*;
-
-import static org.mule.config.dsl.expression.CoreExpr.payload;
+import com.google.inject.name.Named;
+import com.google.inject.name.Names;
 
 public class TestExecuteExpectedErrors {
 
@@ -155,7 +160,7 @@ public class TestExecuteExpectedErrors {
 
     public static class Complex {
         @Named("ToExecute")
-        void execute(String string) {
+        void execute(final String string) {
 
         }
 
@@ -168,7 +173,7 @@ public class TestExecuteExpectedErrors {
 
     public static class Complex2 {
         @ToExecute
-        void execute(String string) {
+        void execute(final String string) {
 
         }
 

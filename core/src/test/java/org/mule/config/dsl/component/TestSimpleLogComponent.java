@@ -9,13 +9,18 @@
 
 package org.mule.config.dsl.component;
 
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.LogLevel.DEBUG;
+import static org.mule.config.dsl.LogLevel.ERROR;
+import static org.mule.config.dsl.LogLevel.FATAL;
+import static org.mule.config.dsl.LogLevel.INFO;
+import static org.mule.config.dsl.LogLevel.TRACE;
+import static org.mule.config.dsl.LogLevel.WARN;
+
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.lifecycle.InitialisationException;
-
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mule.config.dsl.LogLevel.*;
 
 public class TestSimpleLogComponent extends BaseComponentTests {
 
@@ -26,11 +31,11 @@ public class TestSimpleLogComponent extends BaseComponentTests {
     @Test
     public void testFatal() throws Exception {
 
-        LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(SimpleLogComponent.class);
+        final LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(SimpleLogComponent.class);
 
         testLogger.reset();
 
-        SimpleLogComponent logFatalComponent = new SimpleLogComponent(FATAL);
+        final SimpleLogComponent logFatalComponent = new SimpleLogComponent(FATAL);
         logFatalComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isNotEmpty().hasSize(1);
@@ -50,10 +55,10 @@ public class TestSimpleLogComponent extends BaseComponentTests {
     @Test
     public void testError() throws Exception {
 
-        LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(SimpleLogComponent.class);
+        final LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(SimpleLogComponent.class);
         testLogger.reset();
 
-        SimpleLogComponent logErrorComponent = new SimpleLogComponent(ERROR);
+        final SimpleLogComponent logErrorComponent = new SimpleLogComponent(ERROR);
         logErrorComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isEmpty();
@@ -75,10 +80,10 @@ public class TestSimpleLogComponent extends BaseComponentTests {
     @Test
     public void testWarn() throws Exception {
 
-        LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(SimpleLogComponent.class);
+        final LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(SimpleLogComponent.class);
         testLogger.reset();
 
-        SimpleLogComponent logWarnComponent = new SimpleLogComponent(WARN);
+        final SimpleLogComponent logWarnComponent = new SimpleLogComponent(WARN);
         logWarnComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isEmpty();
@@ -102,10 +107,10 @@ public class TestSimpleLogComponent extends BaseComponentTests {
     @Test
     public void testInfo() throws Exception {
 
-        LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(SimpleLogComponent.class);
+        final LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(SimpleLogComponent.class);
         testLogger.reset();
 
-        SimpleLogComponent logInfoComponent = new SimpleLogComponent(INFO);
+        final SimpleLogComponent logInfoComponent = new SimpleLogComponent(INFO);
         logInfoComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isEmpty();
@@ -131,10 +136,10 @@ public class TestSimpleLogComponent extends BaseComponentTests {
     @Test
     public void testDebug() throws Exception {
 
-        LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(SimpleLogComponent.class);
+        final LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(SimpleLogComponent.class);
         testLogger.reset();
 
-        SimpleLogComponent logDebugComponent = new SimpleLogComponent(DEBUG);
+        final SimpleLogComponent logDebugComponent = new SimpleLogComponent(DEBUG);
         logDebugComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isEmpty();
@@ -162,10 +167,10 @@ public class TestSimpleLogComponent extends BaseComponentTests {
     @Test
     public void testTrace() throws Exception {
 
-        LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(SimpleLogComponent.class);
+        final LogFactory.MyTestLogger testLogger = (LogFactory.MyTestLogger) LogFactory.getLog(SimpleLogComponent.class);
         testLogger.reset();
 
-        SimpleLogComponent logTraceComponent = new SimpleLogComponent(TRACE);
+        final SimpleLogComponent logTraceComponent = new SimpleLogComponent(TRACE);
         logTraceComponent.onCall(getEventContext("MyContent1"));
 
         assertThat(testLogger.getFatalExec()).isEmpty();
@@ -192,8 +197,8 @@ public class TestSimpleLogComponent extends BaseComponentTests {
         assertThat(testLogger.getTraceExec().get(2)).isEqualTo(getMessage("MyContent3"));
     }
 
-    private String getMessage(String content) {
-        StringBuilder sb = new StringBuilder("\n");
+    private String getMessage(final String content) {
+        final StringBuilder sb = new StringBuilder("\n");
 
         sb.append("********************************************************************************")
                 .append("\n")

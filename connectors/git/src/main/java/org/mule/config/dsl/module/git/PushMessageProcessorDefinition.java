@@ -9,20 +9,20 @@
 
 package org.mule.config.dsl.module.git;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
 public interface PushMessageProcessorDefinition extends MessageProcessorDefinition {
 
     PushMessageProcessorDefinition withRemote(String remote);
 
-    PushMessageProcessorDefinition withRemote(ExpressionEvaluatorBuilder remoteExp);
+    PushMessageProcessorDefinition withRemote(ExpressionEvaluatorDefinition remoteExp);
 
     PushMessageProcessorDefinition withForce(boolean force);
 
-    PushMessageProcessorDefinition withForce(ExpressionEvaluatorBuilder forceExp);
+    PushMessageProcessorDefinition withForce(ExpressionEvaluatorDefinition forceExp);
 
     PushMessageProcessorDefinition withOverrideDirectory(String overrideDirectory);
 
-    PushMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorBuilder overrideDirectoryExp);
+    PushMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorDefinition overrideDirectoryExp);
 }

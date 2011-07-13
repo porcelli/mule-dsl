@@ -9,6 +9,10 @@
 
 package org.mule.config.dsl;
 
+import static org.fest.assertions.Assertions.assertThat;
+
+import java.util.Iterator;
+
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -19,15 +23,11 @@ import org.mule.api.processor.MessageProcessor;
 import org.mule.api.source.MessageSource;
 import org.mule.construct.SimpleFlowConstruct;
 
-import java.util.Iterator;
-
-import static org.fest.assertions.Assertions.assertThat;
-
 public class TestSend {
 
     @Test
     public void simpleBridge() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -38,16 +38,16 @@ public class TestSend {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -57,11 +57,11 @@ public class TestSend {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
 
-        OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+        final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
 
         assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -72,7 +72,7 @@ public class TestSend {
 
     @Test
     public void simpleEchoBridge() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -84,16 +84,16 @@ public class TestSend {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -103,13 +103,13 @@ public class TestSend {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor endpointProcessor1 = iterator.next();
+        final MessageProcessor endpointProcessor1 = iterator.next();
 
         assertThat(endpointProcessor1).isNotNull().isInstanceOf(OutboundEndpoint.class);
 
-        OutboundEndpoint outboundEndpoint1 = (OutboundEndpoint) endpointProcessor1;
+        final OutboundEndpoint outboundEndpoint1 = (OutboundEndpoint) endpointProcessor1;
 
         assertThat(outboundEndpoint1.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -117,11 +117,11 @@ public class TestSend {
 
         assertThat(outboundEndpoint1.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/out");
 
-        MessageProcessor endpointProcessor2 = iterator.next();
+        final MessageProcessor endpointProcessor2 = iterator.next();
 
         assertThat(endpointProcessor2).isNotNull().isInstanceOf(OutboundEndpoint.class);
 
-        OutboundEndpoint outboundEndpoint2 = (OutboundEndpoint) endpointProcessor2;
+        final OutboundEndpoint outboundEndpoint2 = (OutboundEndpoint) endpointProcessor2;
 
         assertThat(outboundEndpoint2.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 

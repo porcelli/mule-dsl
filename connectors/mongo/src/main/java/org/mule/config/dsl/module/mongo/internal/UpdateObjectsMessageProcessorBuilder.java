@@ -9,11 +9,11 @@
 
 package org.mule.config.dsl.module.mongo.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.mongo.UpdateObjectsMessageProcessorDefinition;
 import org.mule.module.mongo.MongoCloudConnector;
 import org.mule.module.mongo.api.WriteConcern;
@@ -21,13 +21,15 @@ import org.mule.module.mongo.config.UpdateObjectsMessageProcessor;
 
 import java.util.Map;
 
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+
 public class UpdateObjectsMessageProcessorBuilder implements UpdateObjectsMessageProcessorDefinition, Builder<UpdateObjectsMessageProcessor> {
 
     private MongoCloudConnector object;
 
     private String collection = null;
 
-    private ExpressionEvaluatorBuilder collectionExp = null;
+    private ExpressionEvaluatorDefinition collectionExp = null;
 
     private Object query = null;
     private Map<String, Object> queryAttributes = null;
@@ -37,20 +39,20 @@ public class UpdateObjectsMessageProcessorBuilder implements UpdateObjectsMessag
     private boolean multi = true;
     private WriteConcern writeConcern = WriteConcern.DATABASE_DEFAULT;
 
-    private ExpressionEvaluatorBuilder queryExp = null;
-    private ExpressionEvaluatorBuilder queryAttributesExp = null;
-    private ExpressionEvaluatorBuilder elementExp = null;
-    private ExpressionEvaluatorBuilder elementAttributesExp = null;
-    private ExpressionEvaluatorBuilder upsertExp = null;
-    private ExpressionEvaluatorBuilder multiExp = null;
-    private ExpressionEvaluatorBuilder writeConcernExp = null;
+    private ExpressionEvaluatorDefinition queryExp = null;
+    private ExpressionEvaluatorDefinition queryAttributesExp = null;
+    private ExpressionEvaluatorDefinition elementExp = null;
+    private ExpressionEvaluatorDefinition elementAttributesExp = null;
+    private ExpressionEvaluatorDefinition upsertExp = null;
+    private ExpressionEvaluatorDefinition multiExp = null;
+    private ExpressionEvaluatorDefinition writeConcernExp = null;
 
     public UpdateObjectsMessageProcessorBuilder(MongoCloudConnector object, String collection) {
         this.object = object;
         this.collection = collection;
     }
 
-    public UpdateObjectsMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorBuilder collectionExp) {
+    public UpdateObjectsMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorDefinition collectionExp) {
         this.object = object;
         this.collectionExp = collectionExp;
     }
@@ -62,7 +64,7 @@ public class UpdateObjectsMessageProcessorBuilder implements UpdateObjectsMessag
     }
 
     @Override
-    public UpdateObjectsMessageProcessorDefinition withQuery(ExpressionEvaluatorBuilder queryExp) {
+    public UpdateObjectsMessageProcessorDefinition withQuery(ExpressionEvaluatorDefinition queryExp) {
         this.queryExp = queryExp;
         return this;
     }
@@ -74,7 +76,7 @@ public class UpdateObjectsMessageProcessorBuilder implements UpdateObjectsMessag
     }
 
     @Override
-    public UpdateObjectsMessageProcessorDefinition withQueryAttributes(ExpressionEvaluatorBuilder queryAttributesExp) {
+    public UpdateObjectsMessageProcessorDefinition withQueryAttributes(ExpressionEvaluatorDefinition queryAttributesExp) {
         this.queryAttributesExp = queryAttributesExp;
         return this;
     }
@@ -86,7 +88,7 @@ public class UpdateObjectsMessageProcessorBuilder implements UpdateObjectsMessag
     }
 
     @Override
-    public UpdateObjectsMessageProcessorDefinition withElement(ExpressionEvaluatorBuilder elementExp) {
+    public UpdateObjectsMessageProcessorDefinition withElement(ExpressionEvaluatorDefinition elementExp) {
         this.elementExp = elementExp;
         return this;
     }
@@ -98,7 +100,7 @@ public class UpdateObjectsMessageProcessorBuilder implements UpdateObjectsMessag
     }
 
     @Override
-    public UpdateObjectsMessageProcessorDefinition withElementAttributes(ExpressionEvaluatorBuilder elementAttributesExp) {
+    public UpdateObjectsMessageProcessorDefinition withElementAttributes(ExpressionEvaluatorDefinition elementAttributesExp) {
         this.elementAttributesExp = elementAttributesExp;
         return this;
     }
@@ -110,7 +112,7 @@ public class UpdateObjectsMessageProcessorBuilder implements UpdateObjectsMessag
     }
 
     @Override
-    public UpdateObjectsMessageProcessorDefinition withUpsert(ExpressionEvaluatorBuilder upsertExp) {
+    public UpdateObjectsMessageProcessorDefinition withUpsert(ExpressionEvaluatorDefinition upsertExp) {
         this.upsertExp = upsertExp;
         return this;
     }
@@ -122,7 +124,7 @@ public class UpdateObjectsMessageProcessorBuilder implements UpdateObjectsMessag
     }
 
     @Override
-    public UpdateObjectsMessageProcessorDefinition withMulti(ExpressionEvaluatorBuilder multiExp) {
+    public UpdateObjectsMessageProcessorDefinition withMulti(ExpressionEvaluatorDefinition multiExp) {
         this.multiExp = multiExp;
         return this;
     }
@@ -134,13 +136,16 @@ public class UpdateObjectsMessageProcessorBuilder implements UpdateObjectsMessag
     }
 
     @Override
-    public UpdateObjectsMessageProcessorDefinition withWriteConcern(ExpressionEvaluatorBuilder writeConcernExp) {
+    public UpdateObjectsMessageProcessorDefinition withWriteConcern(ExpressionEvaluatorDefinition writeConcernExp) {
         this.writeConcernExp = writeConcernExp;
         return this;
     }
 
     @Override
-    public UpdateObjectsMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public UpdateObjectsMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         UpdateObjectsMessageProcessor mp = new UpdateObjectsMessageProcessor();
 
         mp.setMuleContext(muleContext);

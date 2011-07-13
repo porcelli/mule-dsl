@@ -9,12 +9,12 @@
 
 package org.mule.config.dsl.module.git;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
 public interface AddMessageProcessorDefinition extends MessageProcessorDefinition {
 
     AddMessageProcessorDefinition withOverrideDirectory(String overrideDirectory);
 
-    AddMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorBuilder overrideDirectoryExp);
+    AddMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorDefinition overrideDirectoryExp);
 }

@@ -9,14 +9,16 @@
 
 package org.mule.config.dsl.module.mongo.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.mongo.MapReduceObjectsMessageProcessorDefinition;
 import org.mule.module.mongo.MongoCloudConnector;
 import org.mule.module.mongo.config.MapReduceObjectsMessageProcessor;
+
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class MapReduceObjectsMessageProcessorBuilder implements MapReduceObjectsMessageProcessorDefinition, Builder<MapReduceObjectsMessageProcessor> {
 
@@ -26,12 +28,12 @@ public class MapReduceObjectsMessageProcessorBuilder implements MapReduceObjects
     private String mapFunction = null;
     private String reduceFunction = null;
 
-    private ExpressionEvaluatorBuilder collectionExp = null;
-    private ExpressionEvaluatorBuilder mapFunctionExp = null;
-    private ExpressionEvaluatorBuilder reduceFunctionExp = null;
+    private ExpressionEvaluatorDefinition collectionExp = null;
+    private ExpressionEvaluatorDefinition mapFunctionExp = null;
+    private ExpressionEvaluatorDefinition reduceFunctionExp = null;
 
     private String outputCollection = null;
-    private ExpressionEvaluatorBuilder outputCollectionExp = null;
+    private ExpressionEvaluatorDefinition outputCollectionExp = null;
 
     public MapReduceObjectsMessageProcessorBuilder(MongoCloudConnector object, String collection, String mapFunction, String reduceFunction) {
         this.object = object;
@@ -40,49 +42,49 @@ public class MapReduceObjectsMessageProcessorBuilder implements MapReduceObjects
         this.reduceFunction = reduceFunction;
     }
 
-    public MapReduceObjectsMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorBuilder collectionExp, String mapFunction, String reduceFunction) {
+    public MapReduceObjectsMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorDefinition collectionExp, String mapFunction, String reduceFunction) {
         this.object = object;
         this.collectionExp = collectionExp;
         this.mapFunction = mapFunction;
         this.reduceFunction = reduceFunction;
     }
 
-    public MapReduceObjectsMessageProcessorBuilder(MongoCloudConnector object, String collection, ExpressionEvaluatorBuilder mapFunctionExp, String reduceFunction) {
+    public MapReduceObjectsMessageProcessorBuilder(MongoCloudConnector object, String collection, ExpressionEvaluatorDefinition mapFunctionExp, String reduceFunction) {
         this.object = object;
         this.collection = collection;
         this.mapFunctionExp = mapFunctionExp;
         this.reduceFunction = reduceFunction;
     }
 
-    public MapReduceObjectsMessageProcessorBuilder(MongoCloudConnector object, String collection, String mapFunction, ExpressionEvaluatorBuilder reduceFunctionExp) {
+    public MapReduceObjectsMessageProcessorBuilder(MongoCloudConnector object, String collection, String mapFunction, ExpressionEvaluatorDefinition reduceFunctionExp) {
         this.object = object;
         this.collection = collection;
         this.mapFunction = mapFunction;
         this.reduceFunctionExp = reduceFunctionExp;
     }
 
-    public MapReduceObjectsMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorBuilder collectionExp, ExpressionEvaluatorBuilder mapFunctionExp, String reduceFunction) {
+    public MapReduceObjectsMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorDefinition collectionExp, ExpressionEvaluatorDefinition mapFunctionExp, String reduceFunction) {
         this.object = object;
         this.collectionExp = collectionExp;
         this.mapFunctionExp = mapFunctionExp;
         this.reduceFunction = reduceFunction;
     }
 
-    public MapReduceObjectsMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorBuilder collectionExp, String mapFunction, ExpressionEvaluatorBuilder reduceFunctionExp) {
+    public MapReduceObjectsMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorDefinition collectionExp, String mapFunction, ExpressionEvaluatorDefinition reduceFunctionExp) {
         this.object = object;
         this.collectionExp = collectionExp;
         this.mapFunction = mapFunction;
         this.reduceFunctionExp = reduceFunctionExp;
     }
 
-    public MapReduceObjectsMessageProcessorBuilder(MongoCloudConnector object, String collection, ExpressionEvaluatorBuilder mapFunctionExp, ExpressionEvaluatorBuilder reduceFunctionExp) {
+    public MapReduceObjectsMessageProcessorBuilder(MongoCloudConnector object, String collection, ExpressionEvaluatorDefinition mapFunctionExp, ExpressionEvaluatorDefinition reduceFunctionExp) {
         this.object = object;
         this.collection = collection;
         this.mapFunctionExp = mapFunctionExp;
         this.reduceFunctionExp = reduceFunctionExp;
     }
 
-    public MapReduceObjectsMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorBuilder collectionExp, ExpressionEvaluatorBuilder mapFunctionExp, ExpressionEvaluatorBuilder reduceFunctionExp) {
+    public MapReduceObjectsMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorDefinition collectionExp, ExpressionEvaluatorDefinition mapFunctionExp, ExpressionEvaluatorDefinition reduceFunctionExp) {
         this.object = object;
         this.collectionExp = collectionExp;
         this.mapFunctionExp = mapFunctionExp;
@@ -96,13 +98,16 @@ public class MapReduceObjectsMessageProcessorBuilder implements MapReduceObjects
     }
 
     @Override
-    public MapReduceObjectsMessageProcessorDefinition withOutputCollection(ExpressionEvaluatorBuilder outputCollectionExp) {
+    public MapReduceObjectsMessageProcessorDefinition withOutputCollection(ExpressionEvaluatorDefinition outputCollectionExp) {
         this.outputCollectionExp = outputCollectionExp;
         return this;
     }
 
     @Override
-    public MapReduceObjectsMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public MapReduceObjectsMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         MapReduceObjectsMessageProcessor mp = new MapReduceObjectsMessageProcessor();
 
         mp.setMuleContext(muleContext);

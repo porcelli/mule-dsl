@@ -9,7 +9,7 @@
 
 package org.mule.config.dsl.module.mongo;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 import org.mule.module.mongo.api.WriteConcern;
 
@@ -19,15 +19,15 @@ public interface RemoveObjectsMessageProcessorDefinition extends MessageProcesso
 
     RemoveObjectsMessageProcessorDefinition withQuery(Object query);
 
-    RemoveObjectsMessageProcessorDefinition withQuery(ExpressionEvaluatorBuilder queryExp);
+    RemoveObjectsMessageProcessorDefinition withQuery(ExpressionEvaluatorDefinition queryExp);
 
     RemoveObjectsMessageProcessorDefinition withQueryAttributes(Map<String, Object> queryAttributes);
 
-    RemoveObjectsMessageProcessorDefinition withQueryAttributes(ExpressionEvaluatorBuilder queryAttributesExp);
+    RemoveObjectsMessageProcessorDefinition withQueryAttributes(ExpressionEvaluatorDefinition queryAttributesExp);
 
     RemoveObjectsMessageProcessorDefinition withWriteConcern(WriteConcern writeConcern);
 
-    RemoveObjectsMessageProcessorDefinition withWriteConcern(ExpressionEvaluatorBuilder writeConcernExp);
+    RemoveObjectsMessageProcessorDefinition withWriteConcern(ExpressionEvaluatorDefinition writeConcernExp);
 
 
 }

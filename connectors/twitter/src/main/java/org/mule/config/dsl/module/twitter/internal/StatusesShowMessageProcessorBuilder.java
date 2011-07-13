@@ -9,33 +9,38 @@
 
 package org.mule.config.dsl.module.twitter.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.twitter.StatusesShowMessageProcessorDefinition;
 import org.mule.ibeans.twitter.config.StatusesShowMessageProcessor;
 
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+
 public class StatusesShowMessageProcessorBuilder implements StatusesShowMessageProcessorDefinition, Builder<StatusesShowMessageProcessor> {
 
-    private final IBeansTwitterReference reference;
+    private final IBeanTwitterReference reference;
 
     private String id = null;
-    private ExpressionEvaluatorBuilder idExp = null;
+    private ExpressionEvaluatorDefinition idExp = null;
 
-    public StatusesShowMessageProcessorBuilder(IBeansTwitterReference reference, String id) {
+    public StatusesShowMessageProcessorBuilder(IBeanTwitterReference reference, String id) {
         this.reference = reference;
         this.id = id;
     }
 
-    public StatusesShowMessageProcessorBuilder(IBeansTwitterReference reference, ExpressionEvaluatorBuilder idExp) {
+    public StatusesShowMessageProcessorBuilder(IBeanTwitterReference reference, ExpressionEvaluatorDefinition idExp) {
         this.reference = reference;
         this.idExp = idExp;
     }
 
     @Override
-    public StatusesShowMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public StatusesShowMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         StatusesShowMessageProcessor mp = new StatusesShowMessageProcessor();
 
         mp.setMuleContext(muleContext);

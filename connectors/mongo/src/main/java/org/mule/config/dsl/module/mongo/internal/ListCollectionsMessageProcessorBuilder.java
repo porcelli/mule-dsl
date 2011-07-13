@@ -9,13 +9,15 @@
 
 package org.mule.config.dsl.module.mongo.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.mongo.ExistsCollectionMessageProcessorDefinition;
 import org.mule.module.mongo.MongoCloudConnector;
 import org.mule.module.mongo.config.ListCollectionsMessageProcessor;
+
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class ListCollectionsMessageProcessorBuilder implements ExistsCollectionMessageProcessorDefinition, Builder<ListCollectionsMessageProcessor> {
 
@@ -26,7 +28,10 @@ public class ListCollectionsMessageProcessorBuilder implements ExistsCollectionM
     }
 
     @Override
-    public ListCollectionsMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public ListCollectionsMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         ListCollectionsMessageProcessor mp = new ListCollectionsMessageProcessor();
 
         mp.setMuleContext(muleContext);

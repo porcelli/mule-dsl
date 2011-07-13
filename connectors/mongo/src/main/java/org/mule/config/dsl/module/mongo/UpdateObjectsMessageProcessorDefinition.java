@@ -9,7 +9,7 @@
 
 package org.mule.config.dsl.module.mongo;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 import org.mule.module.mongo.api.WriteConcern;
 
@@ -19,31 +19,31 @@ public interface UpdateObjectsMessageProcessorDefinition extends MessageProcesso
 
     UpdateObjectsMessageProcessorDefinition withQuery(Object query);
 
-    UpdateObjectsMessageProcessorDefinition withQuery(ExpressionEvaluatorBuilder queryExp);
+    UpdateObjectsMessageProcessorDefinition withQuery(ExpressionEvaluatorDefinition queryExp);
 
     UpdateObjectsMessageProcessorDefinition withQueryAttributes(Map<String, Object> queryAttributes);
 
-    UpdateObjectsMessageProcessorDefinition withQueryAttributes(ExpressionEvaluatorBuilder queryAttributesExp);
+    UpdateObjectsMessageProcessorDefinition withQueryAttributes(ExpressionEvaluatorDefinition queryAttributesExp);
 
     UpdateObjectsMessageProcessorDefinition withElement(Object element);
 
-    UpdateObjectsMessageProcessorDefinition withElement(ExpressionEvaluatorBuilder elementExp);
+    UpdateObjectsMessageProcessorDefinition withElement(ExpressionEvaluatorDefinition elementExp);
 
     UpdateObjectsMessageProcessorDefinition withElementAttributes(Map<String, Object> elementAttributes);
 
-    UpdateObjectsMessageProcessorDefinition withElementAttributes(ExpressionEvaluatorBuilder elementAttributesExp);
+    UpdateObjectsMessageProcessorDefinition withElementAttributes(ExpressionEvaluatorDefinition elementAttributesExp);
 
     UpdateObjectsMessageProcessorDefinition withUpsert(boolean upsert);
 
-    UpdateObjectsMessageProcessorDefinition withUpsert(ExpressionEvaluatorBuilder upsertExp);
+    UpdateObjectsMessageProcessorDefinition withUpsert(ExpressionEvaluatorDefinition upsertExp);
 
     UpdateObjectsMessageProcessorDefinition withMulti(boolean multi);
 
-    UpdateObjectsMessageProcessorDefinition withMulti(ExpressionEvaluatorBuilder multiExp);
+    UpdateObjectsMessageProcessorDefinition withMulti(ExpressionEvaluatorDefinition multiExp);
 
     UpdateObjectsMessageProcessorDefinition withWriteConcern(WriteConcern writeConcern);
 
-    UpdateObjectsMessageProcessorDefinition withWriteConcern(ExpressionEvaluatorBuilder writeConcernExp);
+    UpdateObjectsMessageProcessorDefinition withWriteConcern(ExpressionEvaluatorDefinition writeConcernExp);
 
 
 }

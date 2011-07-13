@@ -12,29 +12,42 @@ package org.mule.config.dsl.internal;
 import com.google.inject.Injector;
 import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleContext;
-import org.mule.api.component.Component;
 import org.mule.api.lifecycle.Callable;
+import org.mule.api.processor.MessageProcessor;
 import org.mule.component.DefaultJavaComponent;
 import org.mule.component.SimpleCallableJavaComponent;
-import org.mule.config.dsl.ExecutorBuilder;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
-import org.mule.config.dsl.PipelineBuilder;
-import org.mule.config.dsl.Scope;
-import org.mule.config.dsl.component.InvokerMessageProcessorGuiceAdaptor;
+import org.mule.config.dsl.*;
+import org.mule.config.dsl.component.InvokerMessageProcessorAdaptor;
 import org.mule.config.dsl.internal.util.InjectorUtil;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.object.PrototypeObjectFactory;
 import org.mule.object.SingletonObjectFactory;
 import org.mule.processor.InvokerMessageProcessor;
+import org.mule.util.ClassUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-import static org.mule.config.dsl.internal.util.EntryPointResolverSetUtil.createDefaultResolverSet;
+import static org.mule.config.dsl.internal.GuiceRegistry.GUICE_INJECTOR_REF;
+import static org.mule.config.dsl.internal.util.EntryPointResolverSetUtil.getDefaultResolverSet;
 import static org.mule.config.dsl.internal.util.ExpressionArgsUtil.toListOfStrings;
+import static org.mule.config.dsl.internal.util.Preconditions.checkContentsNotNull;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderImpl<P> implements ExecutorBuilder<P>, Builder<Object> {
+/**
+ * Internal implementation of {@link org.mule.config.dsl.ExecutorBuilder} interface that, based on its internal state,
+ * builds:
+ * <ul>
+ * <li>InvokerMessageProcessor - if a method name or an annotation is provided</li>
+ * <li>SimpleCallableJavaComponent - if component type or instance is a {@link Callable}</li>
+ * <li>DefaultJavaComponent - otherwise</li>
+ * </ul>
+ *
+ * @author porcelli
+ * @see org.mule.config.dsl.PipelineBuilder#execute(Object)
+ * @see org.mule.config.dsl.PipelineBuilder#execute(Class)
+ * @see org.mule.config.dsl.PipelineBuilder#execute(Class, org.mule.config.dsl.Scope)
+ */
+class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderImpl<P> implements ExecutorBuilder<P>, Builder<MessageProcessor> {
 
     private Object obj;
     private final Class<?> clazz;
@@ -43,9 +56,15 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
 
     private Annotation methodAnnotatedWith = null;
     private Class<? extends Annotation> methodAnnotatedWithCustomType = null;
-    private ExpressionEvaluatorBuilder[] args = null;
+    private ExpressionEvaluatorDefinition[] args = null;
 
-    public ExecutorBuilderImpl(final P parentScope, Class<?> clazz, Scope scope) {
+    /**
+     * @param parentScope the parent scope, null is allowed
+     * @param clazz       the type to be executed, Mule will instantiate it at runtime
+     * @param scope       the type scope
+     * @throws NullPointerException if {@code clazz} or {@code scope} params are null
+     */
+    public ExecutorBuilderImpl(final P parentScope, final Class<?> clazz, final Scope scope) throws NullPointerException {
         super(parentScope);
         this.clazz = checkNotNull(clazz, "clazz");
         this.scope = checkNotNull(scope, "scope");
@@ -53,7 +72,12 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
         this.builder = null;
     }
 
-    public ExecutorBuilderImpl(final P parentScope, Object obj) {
+    /**
+     * @param parentScope the parent scope, null is allowed
+     * @param obj         the object to be executed
+     * @throws NullPointerException if {@code obj} param is null
+     */
+    public ExecutorBuilderImpl(final P parentScope, final Object obj) throws NullPointerException {
         super(parentScope);
         this.obj = checkNotNull(obj, "obj");
         this.scope = Scope.PROTOTYPE;
@@ -61,7 +85,12 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
         this.builder = null;
     }
 
-    public ExecutorBuilderImpl(final P parentScope, Builder<?> builder) {
+    /**
+     * @param parentScope the parent scope, null is allowed
+     * @param builder     the object builder
+     * @throws NullPointerException if {@code builder} param is null
+     */
+    public ExecutorBuilderImpl(final P parentScope, final Builder<?> builder) throws NullPointerException {
         super(parentScope);
         this.builder = checkNotNull(builder, "builder");
         this.scope = Scope.PROTOTYPE;
@@ -69,18 +98,23 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
         this.obj = null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Object build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public MessageProcessor build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
 
         if (methodAnnotatedWith != null || methodAnnotatedWithCustomType != null) {
-            return buildInvokerMessage(muleContext, injector, placeholder);
+            return buildInvokerMessage(muleContext, placeholder);
         }
 
-        return buildComponent(muleContext, injector, placeholder);
+        return buildComponent(muleContext, placeholder);
     }
 
-    private InvokerMessageProcessor buildInvokerMessage(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
-        InvokerMessageProcessorGuiceAdaptor invoker = null;
+    private InvokerMessageProcessor buildInvokerMessage(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws IllegalStateException {
+        InvokerMessageProcessorAdaptor invoker = null;
 
         final Class<?> type;
         if (clazz != null) {
@@ -88,21 +122,21 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
         } else if (obj != null) {
             type = obj.getClass();
         } else {
-            throw new RuntimeException();
+            throw new IllegalStateException("Type or object instance should be provided");
         }
 
         find_method:
-        for (Method method : type.getMethods()) {
+        for (final Method method : type.getMethods()) {
             if (methodAnnotatedWithCustomType != null) {
                 if (method.isAnnotationPresent(methodAnnotatedWithCustomType)) {
-                    invoker = new InvokerMessageProcessorGuiceAdaptor(injector);
+                    invoker = new InvokerMessageProcessorAdaptor();
                     invoker.setMethodName(method.getName());
                     break find_method;
                 }
             } else {
-                for (Annotation annotation : method.getAnnotations()) {
+                for (final Annotation annotation : method.getAnnotations()) {
                     if (annotation.equals(methodAnnotatedWith)) {
-                        invoker = new InvokerMessageProcessorGuiceAdaptor(injector);
+                        invoker = new InvokerMessageProcessorAdaptor();
                         invoker.setMethodName(method.getName());
                         break find_method;
                     }
@@ -111,7 +145,7 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
         }
 
         if (invoker == null) {
-            throw new RuntimeException();
+            throw new IllegalStateException("Can't find method to be executed.");
         }
 
         if (args != null) {
@@ -125,70 +159,93 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
         return invoker;
     }
 
-    private Component buildComponent(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    private MessageProcessor buildComponent(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws ConfigurationException {
         if (clazz != null) {
             if (Callable.class.isAssignableFrom(clazz)) {
                 try {
-                    if (InjectorUtil.hasProvider(injector, clazz)) {
-                        return new SimpleCallableJavaComponent(new GuiceLookup(injector, clazz));
+                    if (InjectorUtil.hasProvider(muleContext.getRegistry().<Injector>get(GUICE_INJECTOR_REF), clazz)) {
+                        return new SimpleCallableJavaComponent(new MuleContextLookup(clazz, scope, muleContext));
                     }
                     return new SimpleCallableJavaComponent(clazz);
-                } catch (DefaultMuleException e) {
-                    //todo improve
-                    throw new RuntimeException(e);
+                } catch (final DefaultMuleException e) {
+                    throw new ConfigurationException("Failed to configure a SimpleCallableJavaComponent.", e);
+                }
+            } else if (MessageProcessor.class.isAssignableFrom(clazz)) {
+                try {
+                    if (InjectorUtil.hasProvider(muleContext.getRegistry().<Injector>get(GUICE_INJECTOR_REF), clazz)) {
+                        return (MessageProcessor) muleContext.getRegistry().lookupObject(clazz);
+                    } else {
+                        return (MessageProcessor) ClassUtils.instanciateClass(clazz);
+                    }
+                } catch (final Exception e) {
+                    throw new ConfigurationException("Failed to configure a MessageProcessor.", e);
                 }
             } else {
-                if (InjectorUtil.hasProvider(injector, clazz)) {
-                    return new DefaultJavaComponent(new GuiceLookup(injector, clazz), createDefaultResolverSet(), null);
+                if (InjectorUtil.hasProvider(muleContext.getRegistry().<Injector>get(GUICE_INJECTOR_REF), clazz)) {
+                    return new DefaultJavaComponent(new MuleContextLookup(clazz, scope, muleContext), getDefaultResolverSet(), null);
                 } else {
                     if (scope.equals(Scope.PROTOTYPE)) {
-                        return new DefaultJavaComponent(new PrototypeObjectFactory(clazz), createDefaultResolverSet(), null);
+                        return new DefaultJavaComponent(new PrototypeObjectFactory(clazz), getDefaultResolverSet(), null);
                     } else if (scope.equals(Scope.SINGLETON)) {
-                        return new DefaultJavaComponent(new SingletonObjectFactory(clazz), createDefaultResolverSet(), null);
+                        return new DefaultJavaComponent(new SingletonObjectFactory(clazz), getDefaultResolverSet(), null);
                     }
                 }
             }
         }
 
         if (builder != null) {
-            obj = builder.build(muleContext, injector, placeholder);
+            obj = builder.build(muleContext, placeholder);
         }
 
         if (obj instanceof Callable) {
             return new SimpleCallableJavaComponent((Callable) obj);
+        } else if (obj instanceof MessageProcessor) {
+            return (MessageProcessor) obj;
         }
 
-        return new DefaultJavaComponent(new SingletonObjectFactory(obj), createDefaultResolverSet(), null);
+        return new DefaultJavaComponent(new SingletonObjectFactory(obj), getDefaultResolverSet(), null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @SuppressWarnings("unchecked")
     protected P getThis() {
         if (parentScope != null) {
-            return (P) parentScope;
+            return parentScope;
         }
         return (P) this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public InnerArgsExecutorBuilder<P> methodAnnotatedWith(Class<? extends Annotation> annotationType) {
+    public InnerArgsExecutorBuilder<P> methodAnnotatedWith(final Class<? extends Annotation> annotationType) throws NullPointerException {
         this.methodAnnotatedWithCustomType = checkNotNull(annotationType, "annotationType");
         return new InnerArgsExecutorBuilderImpl<P>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public InnerArgsExecutorBuilder<P> methodAnnotatedWith(Annotation annotation) {
+    public InnerArgsExecutorBuilder<P> methodAnnotatedWith(final Annotation annotation) throws NullPointerException {
         this.methodAnnotatedWith = checkNotNull(annotation, "annotation");
         return new InnerArgsExecutorBuilderImpl<P>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public P withDefaultArg() {
         return parentScope;
     }
 
-    private <E extends ExpressionEvaluatorBuilder> P args(E... args) {
-        this.args = checkNotNull(args, "args");
+    private <E extends ExpressionEvaluatorDefinition> P args(final E... args) throws NullPointerException {
+        this.args = checkContentsNotNull(args, "args");
         return parentScope;
     }
 
@@ -198,15 +255,21 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
             super(null);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         @SuppressWarnings("unchecked")
         public P withoutArgs() {
             return (P) ExecutorBuilderImpl.this.withDefaultArg();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         @SuppressWarnings("unchecked")
-        public <E extends ExpressionEvaluatorBuilder> P args(E... args) {
+        public <E extends ExpressionEvaluatorDefinition> P args(final E... args) throws NullPointerException {
             return (P) ExecutorBuilderImpl.this.args(args);
         }
     }

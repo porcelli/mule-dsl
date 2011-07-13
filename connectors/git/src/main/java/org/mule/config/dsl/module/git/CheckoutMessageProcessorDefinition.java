@@ -9,16 +9,16 @@
 
 package org.mule.config.dsl.module.git;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
 public interface CheckoutMessageProcessorDefinition extends MessageProcessorDefinition {
 
     CheckoutMessageProcessorDefinition withStartPoint(String startPoint);
 
-    CheckoutMessageProcessorDefinition withStartPoint(ExpressionEvaluatorBuilder startPointExp);
+    CheckoutMessageProcessorDefinition withStartPoint(ExpressionEvaluatorDefinition startPointExp);
 
     CheckoutMessageProcessorDefinition withOverrideDirectory(String overrideDirectory);
 
-    CheckoutMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorBuilder overrideDirectoryExp);
+    CheckoutMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorDefinition overrideDirectoryExp);
 }

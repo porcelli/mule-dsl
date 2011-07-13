@@ -9,24 +9,41 @@
 
 package org.mule.config.dsl.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.api.transformer.Transformer;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.transformer.simple.AutoTransformer;
 import org.mule.transformer.types.SimpleDataType;
 
-public class TypeBasedTransformerBuilderImpl<T> implements Builder<Transformer> {
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+
+/**
+ * Internal class that builds a {@link AutoTransformer} based on given type.
+ *
+ * @author porcelli
+ * @see {@link org.mule.config.dsl.PipelineBuilder#transformTo(Class)}
+ */
+public class TypeBasedTransformerBuilderImpl<T> implements Builder<AutoTransformer> {
 
     private final Class<T> clazz;
 
-    public TypeBasedTransformerBuilderImpl(Class<T> clazz) {
-        this.clazz = clazz;
+    /**
+     * @param clazz the type to be trasformed to
+     * @throws NullPointerException if {@code clazz} param is null
+     */
+    public TypeBasedTransformerBuilderImpl(final Class<T> clazz) throws NullPointerException {
+        this.clazz = checkNotNull(clazz, "clazz");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Transformer build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
-        Transformer transformer = new AutoTransformer();
+    public AutoTransformer build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
+        final AutoTransformer transformer = new AutoTransformer();
         transformer.setReturnDataType(new SimpleDataType<T>(clazz));
         return transformer;
     }

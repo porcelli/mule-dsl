@@ -9,50 +9,72 @@
 
 package org.mule.config.dsl.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
+import org.mule.config.dsl.ConfigurationException;
 import org.mule.config.dsl.PipelineBuilder;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.RoundRobinRouterBuilder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.routing.RoundRobin;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
+/**
+ * Internal implementation of {@link org.mule.config.dsl.RoundRobinRouterBuilder} interfaces that,
+ * based on its internal state, builds a {@link RoundRobin}.
+ *
+ * @author porcelli
+ * @see org.mule.config.dsl.PipelineBuilder#roundRobin()
+ */
 public class RoundRobinRouterBuilderImpl<P extends PipelineBuilder<P>> extends BasePipelinedRouterImpl<RoundRobinRouterBuilder<P>> implements RoundRobinRouterBuilder<P>, Builder<RoundRobin> {
 
     private final P parentScope;
 
-    public RoundRobinRouterBuilderImpl(P parentScope) {
+    /**
+     * @param parentScope the parent scope
+     * @throws NullPointerException if {@code parentScope} param is null
+     */
+    public RoundRobinRouterBuilderImpl(final P parentScope) throws NullPointerException {
         super();
         this.parentScope = checkNotNull(parentScope, "parentScope");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public P endRoundRobin() {
         return parentScope;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected RoundRobinRouterBuilder<P> getThis() {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public RoundRobin build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
-        if (!pipeline.isProcessorListEmpty()) {
+    public RoundRobin build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
+        if (!pipeline.isBuilderListEmpty()) {
             try {
-                RoundRobin router = new RoundRobin();
+                final RoundRobin router = new RoundRobin();
                 router.setMuleContext(muleContext);
-                router.setRoutes(pipeline.buildProcessorList(muleContext, injector, placeholder));
+                router.setRoutes(pipeline.buildMessageProcessorList(muleContext, placeholder));
                 return router;
-            } catch (MuleException e) {
-                //TODO handle
-                throw new RuntimeException(e);
+            } catch (final MuleException e) {
+                throw new ConfigurationException("Failed to configure a RoundRobin.", e);
             }
         }
 
-        throw new RuntimeException();
+        throw new IllegalStateException("Router is empty, it's necessary to have at least one operation inside it.");
     }
 
 }

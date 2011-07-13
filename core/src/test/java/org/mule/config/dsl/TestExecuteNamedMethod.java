@@ -9,17 +9,8 @@
 
 package org.mule.config.dsl;
 
-import com.google.inject.name.Named;
-import com.google.inject.name.Names;
-import org.junit.Test;
-import org.mule.MessageExchangePattern;
-import org.mule.api.MuleContext;
-import org.mule.api.construct.FlowConstruct;
-import org.mule.api.endpoint.InboundEndpoint;
-import org.mule.api.processor.MessageProcessor;
-import org.mule.api.source.MessageSource;
-import org.mule.config.dsl.component.InvokerMessageProcessorGuiceAdaptor;
-import org.mule.construct.SimpleFlowConstruct;
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.expression.CoreExpr.payload;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -27,15 +18,25 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Iterator;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mule.config.dsl.expression.CoreExpr.payload;
+import org.junit.Test;
+import org.mule.MessageExchangePattern;
+import org.mule.api.MuleContext;
+import org.mule.api.construct.FlowConstruct;
+import org.mule.api.endpoint.InboundEndpoint;
+import org.mule.api.processor.MessageProcessor;
+import org.mule.api.source.MessageSource;
+import org.mule.config.dsl.component.InvokerMessageProcessorAdaptor;
+import org.mule.construct.SimpleFlowConstruct;
+
+import com.google.inject.name.Named;
+import com.google.inject.name.Names;
 
 public class TestExecuteNamedMethod {
 
     @Test
     public void simpleObjectNamedAnnotation() {
         final Simple mySimple = new Simple();
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -46,17 +47,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -67,14 +68,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute");
 
@@ -86,7 +87,7 @@ public class TestExecuteNamedMethod {
 
     @Test
     public void simpleTypeNamedAnnotation() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -97,17 +98,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -118,14 +119,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute");
 
@@ -141,7 +142,7 @@ public class TestExecuteNamedMethod {
     public void simpleInjectedNamedAnnotation() {
         final Simple2 mySimple2 = new Simple2(null);
 
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -154,17 +155,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -175,14 +176,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute");
 
@@ -198,7 +199,7 @@ public class TestExecuteNamedMethod {
     @Test
     public void simpleObjectNamedAnnotationWithDefaultArgs() {
         final Simple mySimple = new Simple();
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -209,17 +210,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -230,14 +231,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute");
 
@@ -249,7 +250,7 @@ public class TestExecuteNamedMethod {
 
     @Test
     public void simpleTypeNamedAnnotationWithDefaultArgs() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -260,17 +261,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -281,14 +282,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute");
 
@@ -304,7 +305,7 @@ public class TestExecuteNamedMethod {
     public void simpleInjectedNamedAnnotationWithDefaultArgs() {
         final Simple2 mySimple2 = new Simple2(null);
 
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -317,17 +318,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -338,14 +339,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute");
 
@@ -360,7 +361,7 @@ public class TestExecuteNamedMethod {
     @Test
     public void simpleObjectNamedAnnotationWithArgs() {
         final Simple mySimple = new Simple();
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -371,17 +372,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -392,14 +393,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute2");
 
@@ -413,7 +414,7 @@ public class TestExecuteNamedMethod {
 
     @Test
     public void simpleTypeNamedAnnotationWithArgs() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -424,17 +425,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -445,14 +446,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute2");
 
@@ -470,7 +471,7 @@ public class TestExecuteNamedMethod {
     public void simpleInjectedNamedAnnotationWithArgs() {
         final Simple2 mySimple2 = new Simple2(null);
 
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -483,17 +484,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -504,14 +505,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute2");
 
@@ -528,7 +529,7 @@ public class TestExecuteNamedMethod {
     @Test
     public void simpleObjectTypedAnnotation() {
         final Complex myComplex = new Complex();
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -539,17 +540,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -560,14 +561,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute");
 
@@ -579,7 +580,7 @@ public class TestExecuteNamedMethod {
 
     @Test
     public void simpleTypeTypedAnnotation() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -590,17 +591,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -611,14 +612,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute");
 
@@ -634,7 +635,7 @@ public class TestExecuteNamedMethod {
     public void simpleInjectedTypedAnnotation() {
         final Complex2 myComplex2 = new Complex2(null);
 
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -647,17 +648,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -668,14 +669,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute");
 
@@ -691,7 +692,7 @@ public class TestExecuteNamedMethod {
     @Test
     public void simpleObjectTypedAnnotationWithDefaultArgs() {
         final Complex myComplex = new Complex();
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -702,17 +703,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -723,14 +724,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute");
 
@@ -742,7 +743,7 @@ public class TestExecuteNamedMethod {
 
     @Test
     public void simpleTypeTypedAnnotationWithDefaultArgs() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -753,17 +754,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -774,14 +775,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute");
 
@@ -797,7 +798,7 @@ public class TestExecuteNamedMethod {
     public void simpleInjectedTypedAnnotationWithDefaultArgs() {
         final Complex2 myComplex2 = new Complex2(null);
 
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -810,17 +811,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -831,14 +832,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute");
 
@@ -853,7 +854,7 @@ public class TestExecuteNamedMethod {
     @Test
     public void simpleObjectTypedAnnotationWithArgs() {
         final Complex myComplex = new Complex();
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -864,17 +865,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -885,14 +886,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute2");
 
@@ -906,7 +907,7 @@ public class TestExecuteNamedMethod {
 
     @Test
     public void simpleTypeTypedAnnotationWithArgs() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -917,17 +918,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -938,14 +939,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute2");
 
@@ -963,7 +964,7 @@ public class TestExecuteNamedMethod {
     public void simpleInjectedTypedAnnotationWithArgs() {
         final Complex2 myComplex2 = new Complex2(null);
 
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -976,17 +977,17 @@ public class TestExecuteNamedMethod {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -997,14 +998,14 @@ public class TestExecuteNamedMethod {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor executeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorGuiceAdaptor.class);
+            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            InvokerMessageProcessorGuiceAdaptor execute = (InvokerMessageProcessorGuiceAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
 
             assertThat(execute.getMethodName()).isEqualTo("execute2");
 
@@ -1025,13 +1026,13 @@ public class TestExecuteNamedMethod {
         }
 
         @Named("ToExecute2")
-        public void execute2(String value) {
+        public void execute2(final String value) {
             System.out.println("SIMPLE 2! : " + value);
         }
     }
 
     public static class Simple2 extends Simple {
-        public Simple2(String value) {
+        public Simple2(final String value) {
         }
     }
 
@@ -1042,13 +1043,13 @@ public class TestExecuteNamedMethod {
         }
 
         @ToExecute2
-        public void execute2(String value) {
+        public void execute2(final String value) {
             System.out.println("SIMPLE 2! : " + value);
         }
     }
 
     public static class Complex2 extends Complex {
-        public Complex2(String value) {
+        public Complex2(final String value) {
         }
     }
 

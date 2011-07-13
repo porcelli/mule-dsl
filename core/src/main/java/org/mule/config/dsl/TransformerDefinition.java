@@ -9,11 +9,17 @@
 
 package org.mule.config.dsl;
 
-import org.mule.api.transformer.Transformer;
+/**
+ * Interface that holds the global transformer definition.
+ *
+ * @author porcelli
+ */
+public interface TransformerDefinition extends Definition {
 
-public interface TransformerDefinition<T extends Transformer> {
-
+    /**
+     * Getter of global transformer name
+     *
+     * @return the global transformer name
+     */
     String getName();
-
-    Class<T> getType();
 }

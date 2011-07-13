@@ -9,15 +9,16 @@
 
 package org.mule.config.dsl.module.git.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.module.git.CreateBranchMessageProcessorDefinition;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.module.git.config.CreateBranchMessageProcessor;
 
 import static org.mule.config.dsl.expression.CoreExpr.string;
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class CreateBranchMessageProcessorBuilder implements CreateBranchMessageProcessorDefinition, Builder<CreateBranchMessageProcessor> {
 
@@ -25,23 +26,23 @@ public class CreateBranchMessageProcessorBuilder implements CreateBranchMessageP
 
     //Required
     private String name = null;
-    private ExpressionEvaluatorBuilder nameExp = null;
+    private ExpressionEvaluatorDefinition nameExp = null;
 
     //Optional
     private boolean force = false;
     private String startPoint = "HEAD";
     private String overrideDirectory = null;
 
-    private ExpressionEvaluatorBuilder forceExp = null;
-    private ExpressionEvaluatorBuilder startPointExp = null;
-    private ExpressionEvaluatorBuilder overrideDirectoryExp = null;
+    private ExpressionEvaluatorDefinition forceExp = null;
+    private ExpressionEvaluatorDefinition startPointExp = null;
+    private ExpressionEvaluatorDefinition overrideDirectoryExp = null;
 
     public CreateBranchMessageProcessorBuilder(org.mule.module.git.GitConnector object, String name) {
         this.object = object;
         this.name = name;
     }
 
-    public CreateBranchMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorBuilder nameExp) {
+    public CreateBranchMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorDefinition nameExp) {
         this.object = object;
         this.nameExp = nameExp;
     }
@@ -54,7 +55,7 @@ public class CreateBranchMessageProcessorBuilder implements CreateBranchMessageP
     }
 
     @Override
-    public CreateBranchMessageProcessorDefinition withForce(ExpressionEvaluatorBuilder forceExp) {
+    public CreateBranchMessageProcessorDefinition withForce(ExpressionEvaluatorDefinition forceExp) {
         this.forceExp = forceExp;
         return this;
     }
@@ -66,7 +67,7 @@ public class CreateBranchMessageProcessorBuilder implements CreateBranchMessageP
     }
 
     @Override
-    public CreateBranchMessageProcessorDefinition withStartPoint(ExpressionEvaluatorBuilder startPointExp) {
+    public CreateBranchMessageProcessorDefinition withStartPoint(ExpressionEvaluatorDefinition startPointExp) {
         this.startPointExp = startPointExp;
         return this;
     }
@@ -78,13 +79,16 @@ public class CreateBranchMessageProcessorBuilder implements CreateBranchMessageP
     }
 
     @Override
-    public CreateBranchMessageProcessorBuilder withOverrideDirectory(ExpressionEvaluatorBuilder overrideDirectoryExp) {
+    public CreateBranchMessageProcessorBuilder withOverrideDirectory(ExpressionEvaluatorDefinition overrideDirectoryExp) {
         this.overrideDirectoryExp = overrideDirectoryExp;
         return this;
     }
 
     @Override
-    public CreateBranchMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public CreateBranchMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         CreateBranchMessageProcessor mp = new CreateBranchMessageProcessor();
 
         mp.setMuleContext(muleContext);

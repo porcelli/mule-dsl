@@ -9,7 +9,18 @@
 
 package org.mule.config.dsl;
 
+/**
+ * Interface that extends {@link PipelineBuilder} and just adds a
+ * way to delimit the end of the async block.
+ *
+ * @author porcelli
+ */
 public interface AsyncRouterBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<AsyncRouterBuilder<P>> {
 
+    /**
+     * Delimits the current block and returns back to outer block.
+     *
+     * @return the parameterized builder
+     */
     P endAsync();
 }

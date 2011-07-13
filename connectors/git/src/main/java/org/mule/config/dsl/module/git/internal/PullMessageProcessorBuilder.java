@@ -9,13 +9,15 @@
 
 package org.mule.config.dsl.module.git.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.module.git.PullMessageProcessorDefinition;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.module.git.config.PullMessageProcessor;
+
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class PullMessageProcessorBuilder implements PullMessageProcessorDefinition, Builder<PullMessageProcessor> {
 
@@ -24,7 +26,7 @@ public class PullMessageProcessorBuilder implements PullMessageProcessorDefiniti
     //Optional
     private String overrideDirectory = null;
 
-    private ExpressionEvaluatorBuilder overrideDirectoryExp = null;
+    private ExpressionEvaluatorDefinition overrideDirectoryExp = null;
 
     public PullMessageProcessorBuilder(org.mule.module.git.GitConnector object) {
         this.object = object;
@@ -37,13 +39,16 @@ public class PullMessageProcessorBuilder implements PullMessageProcessorDefiniti
     }
 
     @Override
-    public PullMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorBuilder overrideDirectoryExp) {
+    public PullMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorDefinition overrideDirectoryExp) {
         this.overrideDirectoryExp = overrideDirectoryExp;
         return this;
     }
 
     @Override
-    public PullMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public PullMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         PullMessageProcessor mp = new PullMessageProcessor();
 
         mp.setMuleContext(muleContext);

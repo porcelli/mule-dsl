@@ -9,23 +9,25 @@
 
 package org.mule.config.dsl.module.twitter.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.twitter.SearchWithJsonCallbackMessageProcessorDefinition;
 import org.mule.ibeans.twitter.config.SearchWithJsonCallbackMessageProcessor;
 
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+
 public class SearchWithJsonCallbackMessageProcessorBuilder implements SearchWithJsonCallbackMessageProcessorDefinition, Builder<SearchWithJsonCallbackMessageProcessor> {
 
-    private final IBeansTwitterReference reference;
+    private final IBeanTwitterReference reference;
 
     private String query = null;
     private String callback = null;
 
-    private ExpressionEvaluatorBuilder queryExp = null;
-    private ExpressionEvaluatorBuilder callbackExp = null;
+    private ExpressionEvaluatorDefinition queryExp = null;
+    private ExpressionEvaluatorDefinition callbackExp = null;
 
     private String lang = null;
     private String locale = null;
@@ -35,33 +37,33 @@ public class SearchWithJsonCallbackMessageProcessorBuilder implements SearchWith
     private String geocode = null;
     private String showUser = null;
 
-    private ExpressionEvaluatorBuilder langExp = null;
-    private ExpressionEvaluatorBuilder localeExp = null;
-    private ExpressionEvaluatorBuilder rppExp = null;
-    private ExpressionEvaluatorBuilder pageExp = null;
-    private ExpressionEvaluatorBuilder sinceIdExp = null;
-    private ExpressionEvaluatorBuilder geocodeExp = null;
-    private ExpressionEvaluatorBuilder showUserExp = null;
+    private ExpressionEvaluatorDefinition langExp = null;
+    private ExpressionEvaluatorDefinition localeExp = null;
+    private ExpressionEvaluatorDefinition rppExp = null;
+    private ExpressionEvaluatorDefinition pageExp = null;
+    private ExpressionEvaluatorDefinition sinceIdExp = null;
+    private ExpressionEvaluatorDefinition geocodeExp = null;
+    private ExpressionEvaluatorDefinition showUserExp = null;
 
-    public SearchWithJsonCallbackMessageProcessorBuilder(IBeansTwitterReference reference, String query, String callback) {
+    public SearchWithJsonCallbackMessageProcessorBuilder(IBeanTwitterReference reference, String query, String callback) {
         this.reference = reference;
         this.query = query;
         this.callback = callback;
     }
 
-    public SearchWithJsonCallbackMessageProcessorBuilder(IBeansTwitterReference reference, String query, ExpressionEvaluatorBuilder callbackExp) {
+    public SearchWithJsonCallbackMessageProcessorBuilder(IBeanTwitterReference reference, String query, ExpressionEvaluatorDefinition callbackExp) {
         this.reference = reference;
         this.query = query;
         this.callbackExp = callbackExp;
     }
 
-    public SearchWithJsonCallbackMessageProcessorBuilder(IBeansTwitterReference reference, ExpressionEvaluatorBuilder queryExp, String callback) {
+    public SearchWithJsonCallbackMessageProcessorBuilder(IBeanTwitterReference reference, ExpressionEvaluatorDefinition queryExp, String callback) {
         this.reference = reference;
         this.queryExp = queryExp;
         this.callback = callback;
     }
 
-    public SearchWithJsonCallbackMessageProcessorBuilder(IBeansTwitterReference reference, ExpressionEvaluatorBuilder queryExp, ExpressionEvaluatorBuilder callbackExp) {
+    public SearchWithJsonCallbackMessageProcessorBuilder(IBeanTwitterReference reference, ExpressionEvaluatorDefinition queryExp, ExpressionEvaluatorDefinition callbackExp) {
         this.reference = reference;
         this.queryExp = queryExp;
         this.callbackExp = callbackExp;
@@ -74,7 +76,7 @@ public class SearchWithJsonCallbackMessageProcessorBuilder implements SearchWith
     }
 
     @Override
-    public SearchWithJsonCallbackMessageProcessorDefinition withLang(ExpressionEvaluatorBuilder langExp) {
+    public SearchWithJsonCallbackMessageProcessorDefinition withLang(ExpressionEvaluatorDefinition langExp) {
         this.langExp = langExp;
         return this;
     }
@@ -86,7 +88,7 @@ public class SearchWithJsonCallbackMessageProcessorBuilder implements SearchWith
     }
 
     @Override
-    public SearchWithJsonCallbackMessageProcessorDefinition withLocale(ExpressionEvaluatorBuilder localeExp) {
+    public SearchWithJsonCallbackMessageProcessorDefinition withLocale(ExpressionEvaluatorDefinition localeExp) {
         this.localeExp = localeExp;
         return this;
     }
@@ -98,7 +100,7 @@ public class SearchWithJsonCallbackMessageProcessorBuilder implements SearchWith
     }
 
     @Override
-    public SearchWithJsonCallbackMessageProcessorDefinition withRpp(ExpressionEvaluatorBuilder rppExp) {
+    public SearchWithJsonCallbackMessageProcessorDefinition withRpp(ExpressionEvaluatorDefinition rppExp) {
         this.rppExp = rppExp;
         return this;
     }
@@ -110,7 +112,7 @@ public class SearchWithJsonCallbackMessageProcessorBuilder implements SearchWith
     }
 
     @Override
-    public SearchWithJsonCallbackMessageProcessorDefinition withPage(ExpressionEvaluatorBuilder pageExp) {
+    public SearchWithJsonCallbackMessageProcessorDefinition withPage(ExpressionEvaluatorDefinition pageExp) {
         this.pageExp = pageExp;
         return this;
     }
@@ -122,7 +124,7 @@ public class SearchWithJsonCallbackMessageProcessorBuilder implements SearchWith
     }
 
     @Override
-    public SearchWithJsonCallbackMessageProcessorDefinition withSinceId(ExpressionEvaluatorBuilder sinceIdExp) {
+    public SearchWithJsonCallbackMessageProcessorDefinition withSinceId(ExpressionEvaluatorDefinition sinceIdExp) {
         this.sinceIdExp = sinceIdExp;
         return this;
     }
@@ -134,7 +136,7 @@ public class SearchWithJsonCallbackMessageProcessorBuilder implements SearchWith
     }
 
     @Override
-    public SearchWithJsonCallbackMessageProcessorDefinition withGeocode(ExpressionEvaluatorBuilder geocodeExp) {
+    public SearchWithJsonCallbackMessageProcessorDefinition withGeocode(ExpressionEvaluatorDefinition geocodeExp) {
         this.geocodeExp = geocodeExp;
         return this;
     }
@@ -146,13 +148,16 @@ public class SearchWithJsonCallbackMessageProcessorBuilder implements SearchWith
     }
 
     @Override
-    public SearchWithJsonCallbackMessageProcessorDefinition withShowUser(ExpressionEvaluatorBuilder showUserExp) {
+    public SearchWithJsonCallbackMessageProcessorDefinition withShowUser(ExpressionEvaluatorDefinition showUserExp) {
         this.showUserExp = showUserExp;
         return this;
     }
 
     @Override
-    public SearchWithJsonCallbackMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public SearchWithJsonCallbackMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         SearchWithJsonCallbackMessageProcessor mp = new SearchWithJsonCallbackMessageProcessor();
 
         mp.setMuleContext(muleContext);

@@ -9,7 +9,7 @@
 
 package org.mule.config.dsl.module.twitter;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.module.twitter.internal.*;
 import org.mule.ibeans.twitter.TwitterBase;
 
@@ -18,10 +18,10 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class TwitterConnector {
 
-    private IBeansTwitterReference reference;
+    private IBeanTwitterReference reference;
 
     public TwitterConnector() {
-        reference = new IBeansTwitterReference();
+        reference = new IBeanTwitterReference();
     }
 
     public StatusesUpdateMessageProcessorDefinition statusesUpdate(String status) {
@@ -29,7 +29,7 @@ public class TwitterConnector {
         return new StatusesUpdateMessageProcessorBuilder(reference, status);
     }
 
-    public StatusesUpdateMessageProcessorDefinition statusesUpdate(ExpressionEvaluatorBuilder statusExp) {
+    public StatusesUpdateMessageProcessorDefinition statusesUpdate(ExpressionEvaluatorDefinition statusExp) {
         checkNotNull(statusExp, "status expression");
         return new StatusesUpdateMessageProcessorBuilder(reference, statusExp);
     }
@@ -39,7 +39,7 @@ public class TwitterConnector {
         return new StatusesShowMessageProcessorBuilder(reference, id);
     }
 
-    public StatusesShowMessageProcessorDefinition statusesShow(ExpressionEvaluatorBuilder idExp) {
+    public StatusesShowMessageProcessorDefinition statusesShow(ExpressionEvaluatorDefinition idExp) {
         checkNotNull(idExp, "id expression");
         return new StatusesShowMessageProcessorBuilder(reference, idExp);
     }
@@ -49,7 +49,7 @@ public class TwitterConnector {
         return new StatusesDestroyMessageProcessorBuilder(reference, id);
     }
 
-    public StatusesDestroyMessageProcessorDefinition statusesDestroy(ExpressionEvaluatorBuilder idExp) {
+    public StatusesDestroyMessageProcessorDefinition statusesDestroy(ExpressionEvaluatorDefinition idExp) {
         checkNotNull(idExp, "id expression");
         return new StatusesDestroyMessageProcessorBuilder(reference, idExp);
     }
@@ -59,7 +59,7 @@ public class TwitterConnector {
         return new SearchMessageProcessorBuilder(reference, query);
     }
 
-    public SearchMessageProcessorDefinition search(ExpressionEvaluatorBuilder queryExp) {
+    public SearchMessageProcessorDefinition search(ExpressionEvaluatorDefinition queryExp) {
         checkNotNull(queryExp, "query expression");
         return new SearchMessageProcessorBuilder(reference, queryExp);
     }
@@ -70,19 +70,19 @@ public class TwitterConnector {
         return new SearchWithJsonCallbackMessageProcessorBuilder(reference, query, callback);
     }
 
-    public SearchWithJsonCallbackMessageProcessorDefinition searchWithJsonCallback(String query, ExpressionEvaluatorBuilder callbackExp) {
+    public SearchWithJsonCallbackMessageProcessorDefinition searchWithJsonCallback(String query, ExpressionEvaluatorDefinition callbackExp) {
         checkNotEmpty(query, "query");
         checkNotNull(callbackExp, "callback expression");
         return new SearchWithJsonCallbackMessageProcessorBuilder(reference, query, callbackExp);
     }
 
-    public SearchWithJsonCallbackMessageProcessorDefinition searchWithJsonCallback(ExpressionEvaluatorBuilder queryExp, String callback) {
+    public SearchWithJsonCallbackMessageProcessorDefinition searchWithJsonCallback(ExpressionEvaluatorDefinition queryExp, String callback) {
         checkNotNull(queryExp, "query expression");
         checkNotEmpty(callback, "callback");
         return new SearchWithJsonCallbackMessageProcessorBuilder(reference, queryExp, callback);
     }
 
-    public SearchWithJsonCallbackMessageProcessorDefinition searchWithJsonCallback(ExpressionEvaluatorBuilder queryExp, ExpressionEvaluatorBuilder callbackExp) {
+    public SearchWithJsonCallbackMessageProcessorDefinition searchWithJsonCallback(ExpressionEvaluatorDefinition queryExp, ExpressionEvaluatorDefinition callbackExp) {
         checkNotNull(queryExp, "query expression");
         checkNotNull(callbackExp, "callback expression");
         return new SearchWithJsonCallbackMessageProcessorBuilder(reference, queryExp, callbackExp);
@@ -93,7 +93,7 @@ public class TwitterConnector {
         return new GetUserMessageProcessorBuilder(reference, screenName);
     }
 
-    public GetUserMessageProcessorDefinition getUser(ExpressionEvaluatorBuilder screenNameExp) {
+    public GetUserMessageProcessorDefinition getUser(ExpressionEvaluatorDefinition screenNameExp) {
         checkNotNull(screenNameExp, "screenName expression");
         return new GetUserMessageProcessorBuilder(reference, screenNameExp);
     }

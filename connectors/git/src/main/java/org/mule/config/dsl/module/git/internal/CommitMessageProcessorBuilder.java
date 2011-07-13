@@ -9,13 +9,15 @@
 
 package org.mule.config.dsl.module.git.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.module.git.CommitMessageProcessorDefinition;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.module.git.config.CommitMessageProcessor;
+
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class CommitMessageProcessorBuilder implements CommitMessageProcessorDefinition, Builder<CommitMessageProcessor> {
 
@@ -26,18 +28,18 @@ public class CommitMessageProcessorBuilder implements CommitMessageProcessorDefi
     private String committerName = null;
     private String committerEmail = null;
 
-    private ExpressionEvaluatorBuilder msgExp = null;
-    private ExpressionEvaluatorBuilder committerNameExp = null;
-    private ExpressionEvaluatorBuilder committerEmailExp = null;
+    private ExpressionEvaluatorDefinition msgExp = null;
+    private ExpressionEvaluatorDefinition committerNameExp = null;
+    private ExpressionEvaluatorDefinition committerEmailExp = null;
 
     //Optional
     private String overrideDirectory = null;
     private String authorName = null;
     private String authorEmail = null;
 
-    private ExpressionEvaluatorBuilder overrideDirectoryExp = null;
-    private ExpressionEvaluatorBuilder authorNameExp = null;
-    private ExpressionEvaluatorBuilder authorEmailExp = null;
+    private ExpressionEvaluatorDefinition overrideDirectoryExp = null;
+    private ExpressionEvaluatorDefinition authorNameExp = null;
+    private ExpressionEvaluatorDefinition authorEmailExp = null;
 
     public CommitMessageProcessorBuilder(org.mule.module.git.GitConnector object, String msg, String committerName, String committerEmail) {
         this.object = object;
@@ -46,49 +48,49 @@ public class CommitMessageProcessorBuilder implements CommitMessageProcessorDefi
         this.committerEmail = committerEmail;
     }
 
-    public CommitMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorBuilder msgExp, ExpressionEvaluatorBuilder committerNameExp, ExpressionEvaluatorBuilder committerEmailExp) {
+    public CommitMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorDefinition msgExp, ExpressionEvaluatorDefinition committerNameExp, ExpressionEvaluatorDefinition committerEmailExp) {
         this.object = object;
         this.msgExp = msgExp;
         this.committerNameExp = committerNameExp;
         this.committerEmailExp = committerEmailExp;
     }
 
-    public CommitMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorBuilder msgExp, String committerName, String committerEmail) {
+    public CommitMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorDefinition msgExp, String committerName, String committerEmail) {
         this.object = object;
         this.msgExp = msgExp;
         this.committerName = committerName;
         this.committerEmail = committerEmail;
     }
 
-    public CommitMessageProcessorBuilder(org.mule.module.git.GitConnector object, String msg, ExpressionEvaluatorBuilder committerNameExp, String committerEmail) {
+    public CommitMessageProcessorBuilder(org.mule.module.git.GitConnector object, String msg, ExpressionEvaluatorDefinition committerNameExp, String committerEmail) {
         this.object = object;
         this.msg = msg;
         this.committerNameExp = committerNameExp;
         this.committerEmail = committerEmail;
     }
 
-    public CommitMessageProcessorBuilder(org.mule.module.git.GitConnector object, String msg, String committerName, ExpressionEvaluatorBuilder committerEmailExp) {
+    public CommitMessageProcessorBuilder(org.mule.module.git.GitConnector object, String msg, String committerName, ExpressionEvaluatorDefinition committerEmailExp) {
         this.object = object;
         this.msg = msg;
         this.committerName = committerName;
         this.committerEmailExp = committerEmailExp;
     }
 
-    public CommitMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorBuilder msgExp, ExpressionEvaluatorBuilder committerNameExp, String committerEmail) {
+    public CommitMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorDefinition msgExp, ExpressionEvaluatorDefinition committerNameExp, String committerEmail) {
         this.object = object;
         this.msgExp = msgExp;
         this.committerNameExp = committerNameExp;
         this.committerEmail = committerEmail;
     }
 
-    public CommitMessageProcessorBuilder(org.mule.module.git.GitConnector object, String msg, ExpressionEvaluatorBuilder committerNameExp, ExpressionEvaluatorBuilder committerEmailExp) {
+    public CommitMessageProcessorBuilder(org.mule.module.git.GitConnector object, String msg, ExpressionEvaluatorDefinition committerNameExp, ExpressionEvaluatorDefinition committerEmailExp) {
         this.object = object;
         this.msg = msg;
         this.committerNameExp = committerNameExp;
         this.committerEmailExp = committerEmailExp;
     }
 
-    public CommitMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorBuilder msgExp, String committerName, ExpressionEvaluatorBuilder committerEmailExp) {
+    public CommitMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorDefinition msgExp, String committerName, ExpressionEvaluatorDefinition committerEmailExp) {
         this.object = object;
         this.msgExp = msgExp;
         this.committerName = committerName;
@@ -102,7 +104,7 @@ public class CommitMessageProcessorBuilder implements CommitMessageProcessorDefi
     }
 
     @Override
-    public CommitMessageProcessorBuilder withAuthorName(ExpressionEvaluatorBuilder authorNameExp) {
+    public CommitMessageProcessorBuilder withAuthorName(ExpressionEvaluatorDefinition authorNameExp) {
         this.authorNameExp = authorNameExp;
         return this;
     }
@@ -114,7 +116,7 @@ public class CommitMessageProcessorBuilder implements CommitMessageProcessorDefi
     }
 
     @Override
-    public CommitMessageProcessorBuilder withAuthorEmail(ExpressionEvaluatorBuilder authorEmailExp) {
+    public CommitMessageProcessorBuilder withAuthorEmail(ExpressionEvaluatorDefinition authorEmailExp) {
         this.authorEmailExp = authorEmailExp;
         return this;
     }
@@ -126,13 +128,16 @@ public class CommitMessageProcessorBuilder implements CommitMessageProcessorDefi
     }
 
     @Override
-    public CommitMessageProcessorBuilder withOverrideDirectory(ExpressionEvaluatorBuilder overrideDirectoryExp) {
+    public CommitMessageProcessorBuilder withOverrideDirectory(ExpressionEvaluatorDefinition overrideDirectoryExp) {
         this.overrideDirectoryExp = overrideDirectoryExp;
         return this;
     }
 
     @Override
-    public CommitMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public CommitMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         CommitMessageProcessor mp = new CommitMessageProcessor();
 
         mp.setMuleContext(muleContext);

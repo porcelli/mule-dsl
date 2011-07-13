@@ -9,27 +9,45 @@
 
 package org.mule.config.dsl.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.LogLevel;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.component.ExpressionLogComponent;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
+/**
+ * Simple {@link ExpressionLogComponent} builder, necessary due the need to use a property plaholder on expression message.
+ *
+ * @author porcelli
+ * @see org.mule.config.dsl.PipelineBuilder#log(org.mule.config.dsl.ExpressionEvaluatorDefinition)
+ * @see org.mule.config.dsl.PipelineBuilder#log(org.mule.config.dsl.ExpressionEvaluatorDefinition, org.mule.config.dsl.LogLevel)
+ */
 public class ExpressionLogComponentBuilder implements Builder<ExpressionLogComponent> {
 
     private final LogLevel level;
-    private final ExpressionEvaluatorBuilder message;
+    private final ExpressionEvaluatorDefinition message;
 
-    ExpressionLogComponentBuilder(ExpressionEvaluatorBuilder message, LogLevel level) {
+    /**
+     * @param message the message expresison
+     * @param level   the log level
+     * @throws NullPointerException if {@code message} or {@code level} params are null
+     */
+    ExpressionLogComponentBuilder(final ExpressionEvaluatorDefinition message, final LogLevel level) throws NullPointerException {
         this.message = checkNotNull(message, "message");
         this.level = checkNotNull(level, "level");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public ExpressionLogComponent build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public ExpressionLogComponent build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         return new ExpressionLogComponent(placeholder.replace(message.getExpression()), message.getEvaluator(), level);
     }
 

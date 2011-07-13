@@ -9,6 +9,10 @@
 
 package org.mule.config.dsl;
 
+import static org.fest.assertions.Assertions.assertThat;
+
+import java.util.Iterator;
+
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -20,15 +24,11 @@ import org.mule.api.transformer.Transformer;
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.transformer.types.SimpleDataType;
 
-import java.util.Iterator;
-
-import static org.fest.assertions.Assertions.assertThat;
-
 public class TestTypeBasedTransformer {
 
     @Test
     public void simpleToString() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -39,16 +39,16 @@ public class TestTypeBasedTransformer {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -58,13 +58,13 @@ public class TestTypeBasedTransformer {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor transformerProcessor = iterator.next();
+        final MessageProcessor transformerProcessor = iterator.next();
 
         assertThat(transformerProcessor).isNotNull().isInstanceOf(Transformer.class);
 
-        Transformer transformer = (Transformer) transformerProcessor;
+        final Transformer transformer = (Transformer) transformerProcessor;
 
         assertThat(transformer.getReturnDataType()).isEqualTo(new SimpleDataType<String>(String.class));
     }
@@ -72,7 +72,7 @@ public class TestTypeBasedTransformer {
 
     @Test
     public void simpleChainToStringToByteArray() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -84,16 +84,16 @@ public class TestTypeBasedTransformer {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -103,21 +103,21 @@ public class TestTypeBasedTransformer {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor transformerProcessor = iterator.next();
+        final MessageProcessor transformerProcessor = iterator.next();
 
         assertThat(transformerProcessor).isNotNull().isInstanceOf(Transformer.class);
 
-        Transformer transformer = (Transformer) transformerProcessor;
+        final Transformer transformer = (Transformer) transformerProcessor;
 
         assertThat(transformer.getReturnDataType()).isEqualTo(new SimpleDataType<String>(String.class));
 
-        MessageProcessor transformer2Processor = iterator.next();
+        final MessageProcessor transformer2Processor = iterator.next();
 
         assertThat(transformer2Processor).isNotNull().isInstanceOf(Transformer.class);
 
-        Transformer transformer2 = (Transformer) transformer2Processor;
+        final Transformer transformer2 = (Transformer) transformer2Processor;
 
         assertThat(transformer2.getReturnDataType()).isEqualTo(new SimpleDataType<String>(byte[].class));
 

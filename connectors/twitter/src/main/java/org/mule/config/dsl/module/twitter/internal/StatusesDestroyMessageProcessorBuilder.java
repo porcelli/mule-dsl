@@ -9,33 +9,38 @@
 
 package org.mule.config.dsl.module.twitter.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.twitter.StatusesDestroyMessageProcessorDefinition;
 import org.mule.ibeans.twitter.config.StatusesDestroyMessageProcessor;
 
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+
 public class StatusesDestroyMessageProcessorBuilder implements StatusesDestroyMessageProcessorDefinition, Builder<StatusesDestroyMessageProcessor> {
 
-    private final IBeansTwitterReference reference;
+    private final IBeanTwitterReference reference;
 
     private String id = null;
-    private ExpressionEvaluatorBuilder idExp = null;
+    private ExpressionEvaluatorDefinition idExp = null;
 
-    public StatusesDestroyMessageProcessorBuilder(IBeansTwitterReference reference, String id) {
+    public StatusesDestroyMessageProcessorBuilder(IBeanTwitterReference reference, String id) {
         this.reference = reference;
         this.id = id;
     }
 
-    public StatusesDestroyMessageProcessorBuilder(IBeansTwitterReference reference, ExpressionEvaluatorBuilder idExp) {
+    public StatusesDestroyMessageProcessorBuilder(IBeanTwitterReference reference, ExpressionEvaluatorDefinition idExp) {
         this.reference = reference;
         this.idExp = idExp;
     }
 
     @Override
-    public StatusesDestroyMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public StatusesDestroyMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         StatusesDestroyMessageProcessor mp = new StatusesDestroyMessageProcessor();
 
         mp.setMuleContext(muleContext);

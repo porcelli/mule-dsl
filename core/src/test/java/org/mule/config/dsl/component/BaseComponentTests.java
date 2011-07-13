@@ -9,6 +9,8 @@
 
 package org.mule.config.dsl.component;
 
+import static org.fest.assertions.Fail.fail;
+
 import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleEventContext;
 import org.mule.DefaultMuleMessage;
@@ -18,15 +20,13 @@ import org.mule.context.DefaultMuleContextFactory;
 import org.mule.model.seda.SedaService;
 import org.mule.session.DefaultMuleSession;
 
-import static org.fest.assertions.Fail.fail;
-
 public abstract class BaseComponentTests {
     protected MuleContext muleContext;
 
     public BaseComponentTests() {
         try {
             this.muleContext = new DefaultMuleContextFactory().createMuleContext();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             fail("Can't initialize muleContext.", e);
         }
     }
@@ -36,7 +36,7 @@ public abstract class BaseComponentTests {
     }
 
 
-    protected MuleEventContext getEventContext(Object messageContent) {
+    protected MuleEventContext getEventContext(final Object messageContent) {
         return new DefaultMuleEventContext(new DefaultMuleEvent(new DefaultMuleMessage(messageContent, muleContext), null, new DefaultMuleSession(new SedaService(muleContext), muleContext)));
     }
 

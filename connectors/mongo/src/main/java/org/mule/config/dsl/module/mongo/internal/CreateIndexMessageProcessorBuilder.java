@@ -9,15 +9,17 @@
 
 package org.mule.config.dsl.module.mongo.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.mongo.CreateIndexMessageProcessorDefinition;
 import org.mule.module.mongo.MongoCloudConnector;
 import org.mule.module.mongo.api.IndexOrder;
 import org.mule.module.mongo.config.CreateIndexMessageProcessor;
+
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class CreateIndexMessageProcessorBuilder implements CreateIndexMessageProcessorDefinition, Builder<CreateIndexMessageProcessor> {
 
@@ -27,13 +29,13 @@ public class CreateIndexMessageProcessorBuilder implements CreateIndexMessagePro
     private String collection = null;
     private String field = null;
 
-    private ExpressionEvaluatorBuilder collectionExp = null;
-    private ExpressionEvaluatorBuilder fieldExp = null;
+    private ExpressionEvaluatorDefinition collectionExp = null;
+    private ExpressionEvaluatorDefinition fieldExp = null;
 
 
     private IndexOrder order = IndexOrder.ASC;
 
-    private ExpressionEvaluatorBuilder orderExp = null;
+    private ExpressionEvaluatorDefinition orderExp = null;
 
     public CreateIndexMessageProcessorBuilder(MongoCloudConnector object, String collection, String field) {
         this.object = object;
@@ -41,19 +43,19 @@ public class CreateIndexMessageProcessorBuilder implements CreateIndexMessagePro
         this.field = field;
     }
 
-    public CreateIndexMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorBuilder collectionExp, String field) {
+    public CreateIndexMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorDefinition collectionExp, String field) {
         this.object = object;
         this.collectionExp = collectionExp;
         this.field = field;
     }
 
-    public CreateIndexMessageProcessorBuilder(MongoCloudConnector object, String collection, ExpressionEvaluatorBuilder fieldExp) {
+    public CreateIndexMessageProcessorBuilder(MongoCloudConnector object, String collection, ExpressionEvaluatorDefinition fieldExp) {
         this.object = object;
         this.collection = collection;
         this.fieldExp = fieldExp;
     }
 
-    public CreateIndexMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorBuilder collectionExp, ExpressionEvaluatorBuilder fieldExp) {
+    public CreateIndexMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorDefinition collectionExp, ExpressionEvaluatorDefinition fieldExp) {
         this.object = object;
         this.collectionExp = collectionExp;
         this.fieldExp = fieldExp;
@@ -66,13 +68,16 @@ public class CreateIndexMessageProcessorBuilder implements CreateIndexMessagePro
     }
 
     @Override
-    public CreateIndexMessageProcessorDefinition withOrder(ExpressionEvaluatorBuilder orderExp) {
+    public CreateIndexMessageProcessorDefinition withOrder(ExpressionEvaluatorDefinition orderExp) {
         this.orderExp = orderExp;
         return this;
     }
 
     @Override
-    public CreateIndexMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public CreateIndexMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         CreateIndexMessageProcessor mp = new CreateIndexMessageProcessor();
 
         mp.setMuleContext(muleContext);

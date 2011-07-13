@@ -9,36 +9,36 @@
 
 package org.mule.config.dsl.module.twitter;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
 public interface SearchWithJsonCallbackMessageProcessorDefinition extends MessageProcessorDefinition {
 
     SearchWithJsonCallbackMessageProcessorDefinition withLang(String lang);
 
-    SearchWithJsonCallbackMessageProcessorDefinition withLang(ExpressionEvaluatorBuilder langExp);
+    SearchWithJsonCallbackMessageProcessorDefinition withLang(ExpressionEvaluatorDefinition langExp);
 
     SearchWithJsonCallbackMessageProcessorDefinition withLocale(String locale);
 
-    SearchWithJsonCallbackMessageProcessorDefinition withLocale(ExpressionEvaluatorBuilder localeExp);
+    SearchWithJsonCallbackMessageProcessorDefinition withLocale(ExpressionEvaluatorDefinition localeExp);
 
     SearchWithJsonCallbackMessageProcessorDefinition withRpp(String rpp);
 
-    SearchWithJsonCallbackMessageProcessorDefinition withRpp(ExpressionEvaluatorBuilder rppExp);
+    SearchWithJsonCallbackMessageProcessorDefinition withRpp(ExpressionEvaluatorDefinition rppExp);
 
     SearchWithJsonCallbackMessageProcessorDefinition withPage(String page);
 
-    SearchWithJsonCallbackMessageProcessorDefinition withPage(ExpressionEvaluatorBuilder pageExp);
+    SearchWithJsonCallbackMessageProcessorDefinition withPage(ExpressionEvaluatorDefinition pageExp);
 
     SearchWithJsonCallbackMessageProcessorDefinition withSinceId(String sinceId);
 
-    SearchWithJsonCallbackMessageProcessorDefinition withSinceId(ExpressionEvaluatorBuilder sinceIdExp);
+    SearchWithJsonCallbackMessageProcessorDefinition withSinceId(ExpressionEvaluatorDefinition sinceIdExp);
 
     SearchWithJsonCallbackMessageProcessorDefinition withGeocode(String geocode);
 
-    SearchWithJsonCallbackMessageProcessorDefinition withGeocode(ExpressionEvaluatorBuilder geocodeExp);
+    SearchWithJsonCallbackMessageProcessorDefinition withGeocode(ExpressionEvaluatorDefinition geocodeExp);
 
     SearchWithJsonCallbackMessageProcessorDefinition withShowUser(String showUser);
 
-    SearchWithJsonCallbackMessageProcessorDefinition withShowUser(ExpressionEvaluatorBuilder showUserExp);
+    SearchWithJsonCallbackMessageProcessorDefinition withShowUser(ExpressionEvaluatorDefinition showUserExp);
 }

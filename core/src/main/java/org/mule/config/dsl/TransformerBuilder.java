@@ -11,11 +11,47 @@ package org.mule.config.dsl;
 
 import org.mule.api.transformer.Transformer;
 
-public interface TransformerBuilder {
+/**
+ * Builder interface to configure Global Transformers.
+ *
+ * @author porcelli
+ */
+public interface TransformerBuilder extends Builder {
 
+    /**
+     * Getter of global transformer name
+     *
+     * @return the global transformer name
+     */
     String getName();
 
-    <T extends Transformer> TransformerDefinition<T> with(T obj);
+    /**
+     * Sets global transformer to use the given transformer object.
+     *
+     * @param obj the transformer instance
+     * @return the already configured transformer definition
+     * @throws NullPointerException if {@code obj} param is null
+     * @see org.mule.config.dsl.AbstractModule#transformer()
+     * @see org.mule.config.dsl.AbstractModule#transformer(String)
+     * @see org.mule.config.dsl.Catalog#newTransformer(String)
+     * @see Transformer
+     * @see Builder
+     * @see Definition
+     */
+    <T extends Transformer> TransformerDefinition with(T obj) throws NullPointerException;
 
-    <T extends Transformer> TransformerDefinition<T> with(Class<T> obj);
+    /**
+     * Sets global transformer to use the given transformer type.
+     *
+     * @param clazz the transformer type, Mule will instantiate an object at runtime
+     * @return the already configured transformer definition
+     * @throws NullPointerException if {@code clazz} param is null
+     * @see org.mule.config.dsl.AbstractModule#transformer()
+     * @see org.mule.config.dsl.AbstractModule#transformer(String)
+     * @see org.mule.config.dsl.Catalog#newTransformer(String)
+     * @see Transformer
+     * @see Builder
+     * @see Definition
+     */
+    <T extends Transformer> TransformerDefinition with(Class<T> clazz) throws NullPointerException;
 }

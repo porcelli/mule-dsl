@@ -9,10 +9,32 @@
 
 package org.mule.config.dsl;
 
+/**
+ * Interface that extends {@link PipelineBuilder} and adds inbound endpoints.
+ *
+ * @author porcelli
+ */
 public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
 
-    PipelineBuilder<FlowBuilder> from(String uri);
+    /**
+     * Creates an inbound endpoint based on given uri parameter.
+     *
+     * @param uri the inbound endpoint uri
+     * @return the pipeline builder
+     * @throws IllegalArgumentException if {@code uri} is null or empty
+     * @see org.mule.api.endpoint.InboundEndpoint
+     */
+    PipelineBuilder<FlowBuilder> from(String uri) throws IllegalArgumentException;
 
-    PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern);
+    /**
+     * Creates an inbound endpoint based on uri parameter using given exchange pattern.
+     *
+     * @param uri     the inbound endpoint uri
+     * @param pattern the exchange pattern, null is allowed
+     * @return the pipeline builder
+     * @throws IllegalArgumentException if {@code uri} is null or empty
+     * @see org.mule.api.endpoint.InboundEndpoint
+     */
+    PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern) throws IllegalArgumentException;
 
 }

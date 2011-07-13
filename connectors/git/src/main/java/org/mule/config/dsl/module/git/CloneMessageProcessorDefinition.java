@@ -9,24 +9,24 @@
 
 package org.mule.config.dsl.module.git;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
 public interface CloneMessageProcessorDefinition extends MessageProcessorDefinition {
 
     CloneMessageProcessorDefinition withBare(boolean bare);
 
-    CloneMessageProcessorDefinition withBare(ExpressionEvaluatorBuilder bareExp);
+    CloneMessageProcessorDefinition withBare(ExpressionEvaluatorDefinition bareExp);
 
     CloneMessageProcessorDefinition withRemote(String remote);
 
-    CloneMessageProcessorDefinition withRemote(ExpressionEvaluatorBuilder remoteExp);
+    CloneMessageProcessorDefinition withRemote(ExpressionEvaluatorDefinition remoteExp);
 
     CloneMessageProcessorDefinition withBranch(String branch);
 
-    CloneMessageProcessorDefinition withBranch(ExpressionEvaluatorBuilder branchExp);
+    CloneMessageProcessorDefinition withBranch(ExpressionEvaluatorDefinition branchExp);
 
     CloneMessageProcessorDefinition withOverrideDirectory(String overrideDirectory);
 
-    CloneMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorBuilder overrideDirectoryExp);
+    CloneMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorDefinition overrideDirectoryExp);
 }

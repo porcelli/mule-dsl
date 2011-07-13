@@ -9,91 +9,161 @@
 
 package org.mule.config.dsl;
 
-import org.junit.Test;
+import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.File;
 
-import static org.fest.assertions.Assertions.assertThat;
+import org.junit.Test;
 
 public class TestInputStreamAccessBuilders {
 
     @Test
     public void testClasspathResource() {
-        AbstractModule.ClasspathBuilder classpathBuilder = new AbstractModule.ClasspathBuilder("test-resource.properties");
-        assertThat(classpathBuilder.get()).isNotNull();
+        new AbstractModule() {
+            @Override
+            protected void configure() {
+                final AbstractModule.ClasspathBuilder classpathBuilder = classpath("test-resource.properties");
+                assertThat(classpathBuilder.get()).isNotNull();
+            }
+        }.configure();
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = IOException.class)
     public void testClasspathResourceNotFound() {
-        AbstractModule.ClasspathBuilder classpathBuilder = new AbstractModule.ClasspathBuilder("test-does-not-exists.properties");
-        classpathBuilder.get();
+        new AbstractModule() {
+            @Override
+            protected void configure() {
+                final AbstractModule.ClasspathBuilder classpathBuilder = classpath("test-does-not-exists.properties");
+                classpathBuilder.get();
+            }
+        }.configure();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testClasspathEmptyParam() {
-        new AbstractModule.ClasspathBuilder("");
+        new AbstractModule() {
+            @Override
+            protected void configure() {
+                classpath("");
+            }
+        }.configure();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testClasspathNullParam() {
-        new AbstractModule.ClasspathBuilder(null);
+        new AbstractModule() {
+            @Override
+            protected void configure() {
+                classpath(null);
+            }
+        }.configure();
     }
 
 
     @Test
     public void testFileAsStringResource() {
-        AbstractModule.FileRefBuilder fileRefBuilder = new AbstractModule.FileRefBuilder("./src/test/resources/test-resource.properties");
-        assertThat(fileRefBuilder.get()).isNotNull();
+        new AbstractModule() {
+            @Override
+            protected void configure() {
+                final AbstractModule.FileRefBuilder fileRefBuilder = file("./src/test/resources/test-resource.properties");
+                assertThat(fileRefBuilder.get()).isNotNull();
+            }
+        }.configure();
     }
 
     @Test
     public void testFileAsFileResource() {
-        AbstractModule.FileRefBuilder fileRefBuilder = new AbstractModule.FileRefBuilder(new File("./src/test/resources/test-resource.properties"));
-        assertThat(fileRefBuilder.get()).isNotNull();
+        new AbstractModule() {
+            @Override
+            protected void configure() {
+                final AbstractModule.FileRefBuilder fileRefBuilder = file(new File("./src/test/resources/test-resource.properties"));
+                assertThat(fileRefBuilder.get()).isNotNull();
+            }
+        }.configure();
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = IOException.class)
     public void testFileAsStringResourceNotFound() {
-        AbstractModule.FileRefBuilder fileRefBuilder = new AbstractModule.FileRefBuilder("./src/test/resources/test-does-not-exists.properties");
-        fileRefBuilder.get();
+        new AbstractModule() {
+            @Override
+            protected void configure() {
+                final AbstractModule.FileRefBuilder fileRefBuilder = file("./src/test/resources/test-does-not-exists.properties");
+                fileRefBuilder.get();
+            }
+        }.configure();
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = IOException.class)
     public void testFileAsFileResourceNotFound() {
-        AbstractModule.FileRefBuilder fileRefBuilder = new AbstractModule.FileRefBuilder(new File("./src/test/resources/test-does-not-exists.properties"));
-        fileRefBuilder.get();
+        new AbstractModule() {
+            @Override
+            protected void configure() {
+                final AbstractModule.FileRefBuilder fileRefBuilder = file(new File("./src/test/resources/test-does-not-exists.properties"));
+                fileRefBuilder.get();
+            }
+        }.configure();
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = IOException.class)
     public void testFileAsStringResourceButDirectory() {
-        AbstractModule.FileRefBuilder fileRefBuilder = new AbstractModule.FileRefBuilder("./src/test/resources/");
-        fileRefBuilder.get();
+        new AbstractModule() {
+            @Override
+            protected void configure() {
+                final AbstractModule.FileRefBuilder fileRefBuilder = file("./src/test/resources/");
+                fileRefBuilder.get();
+            }
+        }.configure();
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = IOException.class)
     public void testFileAsFileResourceButDirectory() {
-        AbstractModule.FileRefBuilder fileRefBuilder = new AbstractModule.FileRefBuilder(new File("./src/test/resources/"));
-        fileRefBuilder.get();
+        new AbstractModule() {
+            @Override
+            protected void configure() {
+                final AbstractModule.FileRefBuilder fileRefBuilder = file(new File("./src/test/resources/"));
+                fileRefBuilder.get();
+            }
+        }.configure();
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testFileAsStringEmptyParam() {
-        new AbstractModule.FileRefBuilder("");
+        new AbstractModule() {
+            @Override
+            protected void configure() {
+                file("");
+            }
+        }.configure();
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testFileAsStringNullParam() {
-        new AbstractModule.FileRefBuilder((String) null);
+        new AbstractModule() {
+            @Override
+            protected void configure() {
+                file((String) null);
+            }
+        }.configure();
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = NullPointerException.class)
     public void testFileAsFileEmptyParam() {
-        new AbstractModule.FileRefBuilder(new File((String) null));
+        new AbstractModule() {
+            @Override
+            protected void configure() {
+                file(new File((String) null));
+            }
+        }.configure();
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = NullPointerException.class)
     public void testFileAsFileNullParam() {
-        new AbstractModule.FileRefBuilder((File) null);
+        new AbstractModule() {
+            @Override
+            protected void configure() {
+                file((File) null);
+            }
+        }.configure();
     }
 
 }

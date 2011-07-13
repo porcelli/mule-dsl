@@ -9,13 +9,15 @@
 
 package org.mule.config.dsl.module.git.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.module.git.CheckoutMessageProcessorDefinition;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.module.git.config.CheckoutMessageProcessor;
+
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class CheckoutMessageProcessorBuilder implements CheckoutMessageProcessorDefinition, Builder<CheckoutMessageProcessor> {
 
@@ -23,21 +25,21 @@ public class CheckoutMessageProcessorBuilder implements CheckoutMessageProcessor
 
     //Required
     private String branch = null;
-    private ExpressionEvaluatorBuilder branchExp = null;
+    private ExpressionEvaluatorDefinition branchExp = null;
 
     //Optional
     private String startPoint = null;
     private String overrideDirectory = null;
 
-    private ExpressionEvaluatorBuilder startPointExp = null;
-    private ExpressionEvaluatorBuilder overrideDirectoryExp = null;
+    private ExpressionEvaluatorDefinition startPointExp = null;
+    private ExpressionEvaluatorDefinition overrideDirectoryExp = null;
 
     public CheckoutMessageProcessorBuilder(org.mule.module.git.GitConnector object, String branch) {
         this.object = object;
         this.branch = branch;
     }
 
-    public CheckoutMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorBuilder branchExp) {
+    public CheckoutMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorDefinition branchExp) {
         this.object = object;
         this.branchExp = branchExp;
     }
@@ -49,7 +51,7 @@ public class CheckoutMessageProcessorBuilder implements CheckoutMessageProcessor
     }
 
     @Override
-    public CheckoutMessageProcessorDefinition withStartPoint(ExpressionEvaluatorBuilder startPointExp) {
+    public CheckoutMessageProcessorDefinition withStartPoint(ExpressionEvaluatorDefinition startPointExp) {
         this.startPointExp = startPointExp;
         return this;
     }
@@ -61,13 +63,16 @@ public class CheckoutMessageProcessorBuilder implements CheckoutMessageProcessor
     }
 
     @Override
-    public CheckoutMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorBuilder overrideDirectoryExp) {
+    public CheckoutMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorDefinition overrideDirectoryExp) {
         this.overrideDirectoryExp = overrideDirectoryExp;
         return this;
     }
 
     @Override
-    public CheckoutMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public CheckoutMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         CheckoutMessageProcessor mp = new CheckoutMessageProcessor();
 
         mp.setMuleContext(muleContext);

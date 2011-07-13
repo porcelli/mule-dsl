@@ -13,13 +13,33 @@ import org.mule.api.model.EntryPointResolverSet;
 import org.mule.model.resolvers.DefaultEntryPointResolverSet;
 import org.mule.model.resolvers.ReflectionEntryPointResolver;
 
+/**
+ * Utility class that provides a generic entrypoint resolver set and expose it thru a static method.
+ *
+ * @author porcelli
+ * @see EntryPointResolverSet
+ * @see org.mule.api.model.EntryPointResolver
+ */
 public final class EntryPointResolverSetUtil {
+
+    static final EntryPointResolverSet resolverSet = new DefaultEntryPointResolverSet();
+
+    static {
+        resolverSet.addEntryPointResolver(new ReflectionEntryPointResolver());
+    }
+
     private EntryPointResolverSetUtil() {
     }
 
-    public static EntryPointResolverSet createDefaultResolverSet() {
-        final EntryPointResolverSet resolverSet = new DefaultEntryPointResolverSet();
-        resolverSet.addEntryPointResolver(new ReflectionEntryPointResolver());
+    /**
+     * Returns the default entrypoint resolver set, that is composed by {@link ReflectionEntryPointResolver}.
+     *
+     * @return the default entrypoint resolver set
+     * @see EntryPointResolverSet
+     * @see ReflectionEntryPointResolver
+     * @see org.mule.api.model.EntryPointResolver
+     */
+    public static EntryPointResolverSet getDefaultResolverSet() {
         return resolverSet;
     }
 }

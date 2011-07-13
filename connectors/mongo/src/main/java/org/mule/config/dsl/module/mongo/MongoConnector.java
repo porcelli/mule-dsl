@@ -9,7 +9,7 @@
 
 package org.mule.config.dsl.module.mongo;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.module.mongo.internal.*;
 import org.mule.module.mongo.MongoCloudConnector;
 import org.mule.module.mongo.api.MongoClient;
@@ -37,7 +37,7 @@ public class MongoConnector {
         return new ExistsCollectionMessageProcessorBuilder(object, collection);
     }
 
-    public ExistsCollectionMessageProcessorDefinition existsCollection(ExpressionEvaluatorBuilder collectionExp) {
+    public ExistsCollectionMessageProcessorDefinition existsCollection(ExpressionEvaluatorDefinition collectionExp) {
         checkNotNull(collectionExp, "collection expression");
         return new ExistsCollectionMessageProcessorBuilder(object, collectionExp);
     }
@@ -47,7 +47,7 @@ public class MongoConnector {
         return new DropCollectionMessageProcessorBuilder(object, collection);
     }
 
-    public DropCollectionMessageProcessorDefinition dropCollection(ExpressionEvaluatorBuilder collectionExp) {
+    public DropCollectionMessageProcessorDefinition dropCollection(ExpressionEvaluatorDefinition collectionExp) {
         checkNotNull(collectionExp, "collection expression");
         return new DropCollectionMessageProcessorBuilder(object, collectionExp);
     }
@@ -57,7 +57,7 @@ public class MongoConnector {
         return new CreateCollectionMessageProcessorBuilder(object, collection);
     }
 
-    public CreateCollectionMessageProcessorDefinition createCollection(ExpressionEvaluatorBuilder collectionExp) {
+    public CreateCollectionMessageProcessorDefinition createCollection(ExpressionEvaluatorDefinition collectionExp) {
         checkNotNull(collectionExp, "collection expression");
         return new CreateCollectionMessageProcessorBuilder(object, collectionExp);
     }
@@ -67,7 +67,7 @@ public class MongoConnector {
         return new InsertObjectMessageProcessorBuilder(object, collection);
     }
 
-    public InsertObjectMessageProcessorDefinition insertObject(ExpressionEvaluatorBuilder collectionExp) {
+    public InsertObjectMessageProcessorDefinition insertObject(ExpressionEvaluatorDefinition collectionExp) {
         checkNotNull(collectionExp, "collection expression");
         return new InsertObjectMessageProcessorBuilder(object, collectionExp);
     }
@@ -77,7 +77,7 @@ public class MongoConnector {
         return new UpdateObjectsMessageProcessorBuilder(object, collection);
     }
 
-    public UpdateObjectsMessageProcessorDefinition updateObjects(ExpressionEvaluatorBuilder collectionExp) {
+    public UpdateObjectsMessageProcessorDefinition updateObjects(ExpressionEvaluatorDefinition collectionExp) {
         checkNotNull(collectionExp, "collection expression");
         return new UpdateObjectsMessageProcessorBuilder(object, collectionExp);
     }
@@ -87,7 +87,7 @@ public class MongoConnector {
         return new SaveObjectMessageProcessorBuilder(object, collection);
     }
 
-    public SaveObjectMessageProcessorDefinition saveObject(ExpressionEvaluatorBuilder collectionExp) {
+    public SaveObjectMessageProcessorDefinition saveObject(ExpressionEvaluatorDefinition collectionExp) {
         checkNotNull(collectionExp, "collection expression");
         return new SaveObjectMessageProcessorBuilder(object, collectionExp);
     }
@@ -97,7 +97,7 @@ public class MongoConnector {
         return new RemoveObjectsMessageProcessorBuilder(object, collection);
     }
 
-    public RemoveObjectsMessageProcessorDefinition removeObjects(ExpressionEvaluatorBuilder collectionExp) {
+    public RemoveObjectsMessageProcessorDefinition removeObjects(ExpressionEvaluatorDefinition collectionExp) {
         checkNotNull(collectionExp, "collection expression");
         return new RemoveObjectsMessageProcessorBuilder(object, collectionExp);
     }
@@ -109,49 +109,49 @@ public class MongoConnector {
         return new MapReduceObjectsMessageProcessorBuilder(object, collection, mapFunction, reduceFunction);
     }
 
-    public MapReduceObjectsMessageProcessorDefinition mapReduceObjects(ExpressionEvaluatorBuilder collectionExp, String mapFunction, String reduceFunction) {
+    public MapReduceObjectsMessageProcessorDefinition mapReduceObjects(ExpressionEvaluatorDefinition collectionExp, String mapFunction, String reduceFunction) {
         checkNotNull(collectionExp, "collection expression");
         checkNotEmpty(mapFunction, "mapFunction");
         checkNotEmpty(reduceFunction, "reduceFunction");
         return new MapReduceObjectsMessageProcessorBuilder(object, collectionExp, mapFunction, reduceFunction);
     }
 
-    public MapReduceObjectsMessageProcessorDefinition mapReduceObjects(String collection, ExpressionEvaluatorBuilder mapFunctionExp, String reduceFunction) {
+    public MapReduceObjectsMessageProcessorDefinition mapReduceObjects(String collection, ExpressionEvaluatorDefinition mapFunctionExp, String reduceFunction) {
         checkNotEmpty(collection, "collection");
         checkNotNull(mapFunctionExp, "mapFunction expression");
         checkNotEmpty(reduceFunction, "reduceFunction");
         return new MapReduceObjectsMessageProcessorBuilder(object, collection, mapFunctionExp, reduceFunction);
     }
 
-    public MapReduceObjectsMessageProcessorDefinition mapReduceObjects(String collection, String mapFunction, ExpressionEvaluatorBuilder reduceFunctionExp) {
+    public MapReduceObjectsMessageProcessorDefinition mapReduceObjects(String collection, String mapFunction, ExpressionEvaluatorDefinition reduceFunctionExp) {
         checkNotEmpty(collection, "collection");
         checkNotEmpty(mapFunction, "mapFunction");
         checkNotNull(reduceFunctionExp, "reduceFunction expression");
         return new MapReduceObjectsMessageProcessorBuilder(object, collection, mapFunction, reduceFunctionExp);
     }
 
-    public MapReduceObjectsMessageProcessorDefinition mapReduceObjects(ExpressionEvaluatorBuilder collectionExp, ExpressionEvaluatorBuilder mapFunctionExp, String reduceFunction) {
+    public MapReduceObjectsMessageProcessorDefinition mapReduceObjects(ExpressionEvaluatorDefinition collectionExp, ExpressionEvaluatorDefinition mapFunctionExp, String reduceFunction) {
         checkNotNull(collectionExp, "collection expression");
         checkNotNull(mapFunctionExp, "mapFunction expression");
         checkNotEmpty(reduceFunction, "reduceFunction");
         return new MapReduceObjectsMessageProcessorBuilder(object, collectionExp, mapFunctionExp, reduceFunction);
     }
 
-    public MapReduceObjectsMessageProcessorDefinition mapReduceObjects(ExpressionEvaluatorBuilder collectionExp, String mapFunction, ExpressionEvaluatorBuilder reduceFunctionExp) {
+    public MapReduceObjectsMessageProcessorDefinition mapReduceObjects(ExpressionEvaluatorDefinition collectionExp, String mapFunction, ExpressionEvaluatorDefinition reduceFunctionExp) {
         checkNotNull(collectionExp, "collection expression");
         checkNotEmpty(mapFunction, "mapFunction");
         checkNotNull(reduceFunctionExp, "reduceFunction expression");
         return new MapReduceObjectsMessageProcessorBuilder(object, collectionExp, mapFunction, reduceFunctionExp);
     }
 
-    public MapReduceObjectsMessageProcessorDefinition mapReduceObjects(String collection, ExpressionEvaluatorBuilder mapFunctionExp, ExpressionEvaluatorBuilder reduceFunctionExp) {
+    public MapReduceObjectsMessageProcessorDefinition mapReduceObjects(String collection, ExpressionEvaluatorDefinition mapFunctionExp, ExpressionEvaluatorDefinition reduceFunctionExp) {
         checkNotEmpty(collection, "collection");
         checkNotNull(mapFunctionExp, "mapFunction expression");
         checkNotNull(reduceFunctionExp, "reduceFunction expression");
         return new MapReduceObjectsMessageProcessorBuilder(object, collection, mapFunctionExp, reduceFunctionExp);
     }
 
-    public MapReduceObjectsMessageProcessorDefinition mapReduceObjects(ExpressionEvaluatorBuilder collectionExp, ExpressionEvaluatorBuilder mapFunctionExp, ExpressionEvaluatorBuilder reduceFunctionExp) {
+    public MapReduceObjectsMessageProcessorDefinition mapReduceObjects(ExpressionEvaluatorDefinition collectionExp, ExpressionEvaluatorDefinition mapFunctionExp, ExpressionEvaluatorDefinition reduceFunctionExp) {
         checkNotNull(collectionExp, "collection expression");
         checkNotNull(mapFunctionExp, "mapFunction expression");
         checkNotNull(reduceFunctionExp, "reduceFunction expression");
@@ -163,7 +163,7 @@ public class MongoConnector {
         return new CountObjectsMessageProcessorBuilder(object, collection);
     }
 
-    public CountObjectsMessageProcessorDefinition countObjects(ExpressionEvaluatorBuilder collectionExp) {
+    public CountObjectsMessageProcessorDefinition countObjects(ExpressionEvaluatorDefinition collectionExp) {
         checkNotNull(collectionExp, "collection expression");
         return new CountObjectsMessageProcessorBuilder(object, collectionExp);
     }
@@ -173,7 +173,7 @@ public class MongoConnector {
         return new FindObjectsMessageProcessorBuilder(object, collection);
     }
 
-    public FindObjectsMessageProcessorDefinition findObjects(ExpressionEvaluatorBuilder collectionExp) {
+    public FindObjectsMessageProcessorDefinition findObjects(ExpressionEvaluatorDefinition collectionExp) {
         checkNotNull(collectionExp, "collection expression");
         return new FindObjectsMessageProcessorBuilder(object, collectionExp);
     }
@@ -183,7 +183,7 @@ public class MongoConnector {
         return new FindOneObjectMessageProcessorBuilder(object, collection);
     }
 
-    public FindOneObjectMessageProcessorDefinition findOneObject(ExpressionEvaluatorBuilder collectionExp) {
+    public FindOneObjectMessageProcessorDefinition findOneObject(ExpressionEvaluatorDefinition collectionExp) {
         checkNotNull(collectionExp, "collection expression");
         return new FindOneObjectMessageProcessorBuilder(object, collectionExp);
     }
@@ -194,19 +194,19 @@ public class MongoConnector {
         return new CreateIndexMessageProcessorBuilder(object, collection, field);
     }
 
-    public CreateIndexMessageProcessorDefinition createIndex(ExpressionEvaluatorBuilder collectionExp, String field) {
+    public CreateIndexMessageProcessorDefinition createIndex(ExpressionEvaluatorDefinition collectionExp, String field) {
         checkNotNull(collectionExp, "collection expression");
         checkNotEmpty(field, "field");
         return new CreateIndexMessageProcessorBuilder(object, collectionExp, field);
     }
 
-    public CreateIndexMessageProcessorDefinition createIndex(String collection, ExpressionEvaluatorBuilder fieldExp) {
+    public CreateIndexMessageProcessorDefinition createIndex(String collection, ExpressionEvaluatorDefinition fieldExp) {
         checkNotEmpty(collection, "collection");
         checkNotNull(fieldExp, "field expression");
         return new CreateIndexMessageProcessorBuilder(object, collection, fieldExp);
     }
 
-    public CreateIndexMessageProcessorDefinition createIndex(ExpressionEvaluatorBuilder collectionExp, ExpressionEvaluatorBuilder fieldExp) {
+    public CreateIndexMessageProcessorDefinition createIndex(ExpressionEvaluatorDefinition collectionExp, ExpressionEvaluatorDefinition fieldExp) {
         checkNotNull(collectionExp, "collection expression");
         checkNotNull(fieldExp, "field expression");
         return new CreateIndexMessageProcessorBuilder(object, collectionExp, fieldExp);
@@ -218,19 +218,19 @@ public class MongoConnector {
         return new DropIndexMessageProcessorBuilder(object, collection, index);
     }
 
-    public DropIndexMessageProcessorDefinition dropIndex(ExpressionEvaluatorBuilder collectionExp, String index) {
+    public DropIndexMessageProcessorDefinition dropIndex(ExpressionEvaluatorDefinition collectionExp, String index) {
         checkNotNull(collectionExp, "collection expression");
         checkNotEmpty(index, "index");
         return new DropIndexMessageProcessorBuilder(object, collectionExp, index);
     }
 
-    public DropIndexMessageProcessorDefinition dropIndex(String collection, ExpressionEvaluatorBuilder indexExp) {
+    public DropIndexMessageProcessorDefinition dropIndex(String collection, ExpressionEvaluatorDefinition indexExp) {
         checkNotEmpty(collection, "collection");
         checkNotNull(indexExp, "index expression");
         return new DropIndexMessageProcessorBuilder(object, collection, indexExp);
     }
 
-    public DropIndexMessageProcessorDefinition dropIndex(ExpressionEvaluatorBuilder collectionExp, ExpressionEvaluatorBuilder indexExp) {
+    public DropIndexMessageProcessorDefinition dropIndex(ExpressionEvaluatorDefinition collectionExp, ExpressionEvaluatorDefinition indexExp) {
         checkNotNull(collectionExp, "collection expression");
         checkNotNull(indexExp, "index expression");
         return new DropIndexMessageProcessorBuilder(object, collectionExp, indexExp);
@@ -241,7 +241,7 @@ public class MongoConnector {
         return new ListIndicesMessageProcessorBuilder(object, collection);
     }
 
-    public ListIndicesMessageProcessorDefinition listIndices(ExpressionEvaluatorBuilder collectionExp) {
+    public ListIndicesMessageProcessorDefinition listIndices(ExpressionEvaluatorDefinition collectionExp) {
         checkNotNull(collectionExp, "collection expression");
         return new ListIndicesMessageProcessorBuilder(object, collectionExp);
     }

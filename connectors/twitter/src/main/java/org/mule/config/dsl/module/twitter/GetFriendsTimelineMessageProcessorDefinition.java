@@ -9,25 +9,25 @@
 
 package org.mule.config.dsl.module.twitter;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
 public interface GetFriendsTimelineMessageProcessorDefinition extends MessageProcessorDefinition {
 
     GetFriendsTimelineMessageProcessorDefinition withCount(Integer count);
 
-    GetFriendsTimelineMessageProcessorDefinition withCount(ExpressionEvaluatorBuilder countExp);
+    GetFriendsTimelineMessageProcessorDefinition withCount(ExpressionEvaluatorDefinition countExp);
 
     GetFriendsTimelineMessageProcessorDefinition withSinceId(String sinceId);
 
-    GetFriendsTimelineMessageProcessorDefinition withSinceId(ExpressionEvaluatorBuilder sinceIdExp);
+    GetFriendsTimelineMessageProcessorDefinition withSinceId(ExpressionEvaluatorDefinition sinceIdExp);
 
     GetFriendsTimelineMessageProcessorDefinition withMaxId(String maxId);
 
-    GetFriendsTimelineMessageProcessorDefinition withMaxId(ExpressionEvaluatorBuilder maxIdExp);
+    GetFriendsTimelineMessageProcessorDefinition withMaxId(ExpressionEvaluatorDefinition maxIdExp);
 
     GetFriendsTimelineMessageProcessorDefinition withPage(Integer page);
 
-    GetFriendsTimelineMessageProcessorDefinition withPage(ExpressionEvaluatorBuilder pageExp);
+    GetFriendsTimelineMessageProcessorDefinition withPage(ExpressionEvaluatorDefinition pageExp);
 
 }

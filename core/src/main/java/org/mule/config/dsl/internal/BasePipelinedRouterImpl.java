@@ -9,18 +9,23 @@
 
 package org.mule.config.dsl.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
 import org.mule.config.dsl.*;
-import org.mule.config.dsl.expression.CoreExpr;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 
 import java.util.List;
 
-public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> implements PipelineBuilder<P>, MessageProcessorListBuilder {
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+
+/**
+ * Abstract class that provised basic implementation to routers that provides nesting scope and
+ * needs handle multiple message processors.
+ *
+ * @author porcelli
+ */
+public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> implements PipelineBuilder<P>, MessageProcessorBuilderList {
 
     protected final PipelineBuilderImpl<P> pipeline;
 
@@ -28,228 +33,337 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
         this.pipeline = new PipelineBuilderImpl<P>(null);
     }
 
+    /**
+     * Defines the getThis trick.
+     *
+     * @return the this parameterized type
+     * @see <a href="http://www.angelikalanger.com/GenericsFAQ/FAQSections/ProgrammingIdioms.html#What is the getThis trick?">More about getThis trick</a>
+     */
     protected abstract P getThis();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public P process(MessageProcessorDefinition process) {
-        pipeline.process(process);
+    public P process(final MessageProcessorDefinition messageProcessor) throws NullPointerException, IllegalArgumentException {
+        pipeline.process(messageProcessor);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public P log() {
         pipeline.log();
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public P log(LogLevel level) {
+    public P log(final LogLevel level) throws NullPointerException {
         pipeline.log(level);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public P log(String message) {
+    public P log(final String message) throws IllegalArgumentException {
         pipeline.log(message);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public P log(String message, LogLevel level) {
+    public P log(final String message, final LogLevel level) throws IllegalArgumentException, NullPointerException {
         pipeline.log(message, level);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <E extends ExpressionEvaluatorBuilder> P log(E expr) {
+    public <E extends ExpressionEvaluatorDefinition> P log(final E expr) throws NullPointerException {
         pipeline.log(expr);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <E extends ExpressionEvaluatorBuilder> P log(E expr, LogLevel level) {
+    public <E extends ExpressionEvaluatorDefinition> P log(final E expr, final LogLevel level) throws NullPointerException {
         pipeline.log(expr, level);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public P echo() {
         pipeline.echo();
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public ExecutorBuilder<P> execute(Object obj) {
-        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), obj);
-        pipeline.addToProcessorList(builder);
+    public <B> ExecutorBuilder<P> execute(final B obj) throws NullPointerException {
+        checkNotNull(obj, "obj");
+        final ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), obj);
+        pipeline.addBuilder(builder);
 
         return builder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public ExecutorBuilder<P> execute(Class<?> clazz) {
-        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), clazz);
-        pipeline.addToProcessorList(builder);
+    public <B> ExecutorBuilder<P> execute(final Class<B> clazz) throws NullPointerException {
+        checkNotNull(clazz, "clazz");
+        final ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), clazz);
+        pipeline.addBuilder(builder);
 
         return builder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public ExecutorBuilder<P> execute(Class<?> clazz, Scope scope) {
-        ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), clazz, scope);
-        pipeline.addToProcessorList(builder);
+    public <B> ExecutorBuilder<P> execute(final Class<B> clazz, final Scope scope) throws NullPointerException {
+        checkNotNull(clazz, "clazz");
+        checkNotNull(scope, "scope");
+        final ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), clazz, scope);
+        pipeline.addBuilder(builder);
 
         return builder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public P send(String uri) {
+    public P send(final String uri) throws IllegalArgumentException {
         pipeline.send(uri);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public P send(String uri, ExchangePattern pattern) {
+    public P send(final String uri, final ExchangePattern pattern) throws IllegalArgumentException {
         pipeline.send(uri, pattern);
         return getThis();
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <E extends ExpressionEvaluatorBuilder> P transform(E expr) {
+    public <E extends ExpressionEvaluatorDefinition> P transform(final E expr) throws NullPointerException {
         pipeline.transform(expr);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <T> P transformTo(Class<T> clazz) {
+    public <T> P transformTo(final Class<T> clazz) throws NullPointerException {
         pipeline.transformTo(clazz);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <T extends Transformer> P transformWith(Class<T> clazz) {
+    public <T extends Transformer> P transformWith(final Class<T> clazz) throws NullPointerException {
         pipeline.transformWith(clazz);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <T extends Transformer> P transformWith(T obj) {
+    public <T extends Transformer> P transformWith(final T obj) throws NullPointerException {
         pipeline.transformWith(obj);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <T extends Transformer> P transformWith(TransformerDefinition<T> obj) {
+    public P transformWith(final TransformerDefinition obj) throws NullPointerException {
         pipeline.transformWith(obj);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public P transformWith(String ref) {
+    public P transformWith(final String ref) {
         pipeline.transformWith(ref);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public P filter(CoreExpr.GenericExpressionFilterEvaluatorBuilder expr) {
+    public <E extends ExpressionEvaluatorDefinition> P filter(final E expr) throws NullPointerException {
         pipeline.filter(expr);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <E extends ExpressionEvaluatorBuilder> P filter(E expr) {
-        pipeline.filter(expr);
-        return getThis();
-    }
-
-    @Override
-    public <T> P filterBy(Class<T> clazz) {
+    public <T> P filterBy(final Class<T> clazz) throws NullPointerException {
         pipeline.filterBy(clazz);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <F extends Filter> P filterWith(Class<F> clazz) {
+    public <F extends Filter> P filterWith(final Class<F> clazz) throws NullPointerException {
         pipeline.filterWith(clazz);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <F extends Filter> P filterWith(F obj) {
+    public <F extends Filter> P filterWith(final F obj) throws NullPointerException {
         pipeline.filterWith(obj);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <F extends Filter> P filterWith(FilterDefinition<F> obj) {
+    public P filterWith(final FilterDefinition obj) throws NullPointerException {
         pipeline.filterWith(obj);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public P filterWith(String ref) {
+    public P filterWith(final String ref) throws IllegalArgumentException {
         pipeline.filterWith(ref);
         return getThis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BroadcastRouterBuilder<P> broadcast() {
-        BroadcastRouterBuilderImpl<P> builder = new BroadcastRouterBuilderImpl<P>(getThis());
-        pipeline.addToProcessorList(builder);
+        final BroadcastRouterBuilderImpl<P> builder = new BroadcastRouterBuilderImpl<P>(getThis());
+        pipeline.addBuilder(builder);
 
         return builder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ChoiceRouterBuilder<P> choice() {
-        ChoiceRouterBuilderImpl<P> builder = new ChoiceRouterBuilderImpl<P>(getThis());
-        pipeline.addToProcessorList(builder);
+        final ChoiceRouterBuilderImpl<P> builder = new ChoiceRouterBuilderImpl<P>(getThis());
+        pipeline.addBuilder(builder);
 
         return builder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AsyncRouterBuilder<P> async() {
-        AsyncRouterBuilderImpl<P> builder = new AsyncRouterBuilderImpl<P>(getThis());
-        pipeline.addToProcessorList(builder);
+        final AsyncRouterBuilderImpl<P> builder = new AsyncRouterBuilderImpl<P>(getThis());
+        pipeline.addBuilder(builder);
 
         return builder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public FirstSuccessfulRouterBuilder<P> firstSuccessful() {
-        FirstSuccessfulRouterBuilderImpl<P> builder = new FirstSuccessfulRouterBuilderImpl<P>(getThis());
-        pipeline.addToProcessorList(builder);
+        final FirstSuccessfulRouterBuilderImpl<P> builder = new FirstSuccessfulRouterBuilderImpl<P>(getThis());
+        pipeline.addBuilder(builder);
 
         return builder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RoundRobinRouterBuilder<P> roundRobin() {
-        RoundRobinRouterBuilderImpl<P> builder = new RoundRobinRouterBuilderImpl<P>(getThis());
-        pipeline.addToProcessorList(builder);
+        final RoundRobinRouterBuilderImpl<P> builder = new RoundRobinRouterBuilderImpl<P>(getThis());
+        pipeline.addBuilder(builder);
 
         return builder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void addToProcessorList(Builder<?> builder) {
-        pipeline.addToProcessorList(builder);
+    public void addBuilder(final Builder<? extends MessageProcessor> builder) throws NullPointerException {
+        checkNotNull(builder, "builder");
+        pipeline.addBuilder(builder);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public List<MessageProcessor> buildProcessorList(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
-        return pipeline.buildProcessorList(muleContext, injector, placeholder);
+    public List<MessageProcessor> buildMessageProcessorList(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+        return pipeline.buildMessageProcessorList(muleContext, placeholder);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean isProcessorListEmpty() {
-        return pipeline.isProcessorListEmpty();
+    public boolean isBuilderListEmpty() {
+        return pipeline.isBuilderListEmpty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public List<Builder<?>> getProcessorList() {
-        return pipeline.getProcessorList();
+    public List<Builder<? extends MessageProcessor>> getBuilders() {
+        return pipeline.getBuilders();
     }
 }

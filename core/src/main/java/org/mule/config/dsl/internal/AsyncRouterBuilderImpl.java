@@ -9,48 +9,69 @@
 
 package org.mule.config.dsl.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.config.dsl.AsyncRouterBuilder;
+import org.mule.config.dsl.ConfigurationException;
 import org.mule.config.dsl.PipelineBuilder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.spring.factories.AsyncMessageProcessorsFactoryBean;
 import org.mule.processor.AsyncDelegateMessageProcessor;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-
+/**
+ * Internal implementation of {@link AsyncRouterBuilder} interface that, based on its internal state,
+ * builds a {@link AsyncDelegateMessageProcessor}.
+ *
+ * @author porcelli
+ * @see org.mule.config.dsl.PipelineBuilder#async()
+ */
 public class AsyncRouterBuilderImpl<P extends PipelineBuilder<P>> extends BasePipelinedRouterImpl<AsyncRouterBuilder<P>> implements AsyncRouterBuilder<P>, Builder<AsyncDelegateMessageProcessor> {
 
     private final P parentScope;
 
-    public AsyncRouterBuilderImpl(P parentScope) {
+    /**
+     * @param parentScope the parent scope
+     * @throws NullPointerException if {@code parentScope} param is null
+     */
+    public AsyncRouterBuilderImpl(final P parentScope) throws NullPointerException {
         super();
         this.parentScope = checkNotNull(parentScope, "parentScope");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public P endAsync() {
         return parentScope;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public AsyncDelegateMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
-        if (!pipeline.isProcessorListEmpty()) {
+    public AsyncDelegateMessageProcessor build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
+        if (!pipeline.isBuilderListEmpty()) {
             try {
-                AsyncMessageProcessorsFactoryBean factoryBean = new AsyncMessageProcessorsFactoryBean();
+                final AsyncMessageProcessorsFactoryBean factoryBean = new AsyncMessageProcessorsFactoryBean();
                 factoryBean.setMuleContext(muleContext);
-                factoryBean.setMessageProcessors(pipeline.buildProcessorList(muleContext, injector, placeholder));
+                factoryBean.setMessageProcessors(pipeline.buildMessageProcessorList(muleContext, placeholder));
                 return (AsyncDelegateMessageProcessor) factoryBean.getObject();
-            } catch (Exception e) {
-                //TODO handle
-                throw new RuntimeException(e);
+            } catch (final Exception e) {
+                throw new ConfigurationException("Failed to configure an AsyncDelegateMessageProcessor.", e);
             }
         }
 
-        throw new RuntimeException();
+        throw new IllegalStateException("Router is empty, it's necessary to have at least one operation inside it.");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected AsyncRouterBuilderImpl<P> getThis() {
         return this;

@@ -9,33 +9,33 @@
 
 package org.mule.config.dsl.module.twitter;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
 public interface StatusesUpdateMessageProcessorDefinition extends MessageProcessorDefinition {
 
     StatusesUpdateMessageProcessorDefinition withReplyId(String replyId);
 
-    StatusesUpdateMessageProcessorDefinition withReplyId(ExpressionEvaluatorBuilder replyIdExp);
+    StatusesUpdateMessageProcessorDefinition withReplyId(ExpressionEvaluatorDefinition replyIdExp);
 
     StatusesUpdateMessageProcessorDefinition withLatitude(double latitude);
 
-    StatusesUpdateMessageProcessorDefinition withLatitude(ExpressionEvaluatorBuilder latitudeExp);
+    StatusesUpdateMessageProcessorDefinition withLatitude(ExpressionEvaluatorDefinition latitudeExp);
 
     StatusesUpdateMessageProcessorDefinition withLongitude(double longitude);
 
-    StatusesUpdateMessageProcessorDefinition withLongitude(ExpressionEvaluatorBuilder longitudeExp);
+    StatusesUpdateMessageProcessorDefinition withLongitude(ExpressionEvaluatorDefinition longitudeExp);
 
     StatusesUpdateMessageProcessorDefinition withPlaceId(String placeId);
 
-    StatusesUpdateMessageProcessorDefinition withPlaceId(ExpressionEvaluatorBuilder placeIdExp);
+    StatusesUpdateMessageProcessorDefinition withPlaceId(ExpressionEvaluatorDefinition placeIdExp);
 
     StatusesUpdateMessageProcessorDefinition withDisplayCoordinates(boolean displayCoordinates);
 
-    StatusesUpdateMessageProcessorDefinition withDisplayCoordinates(ExpressionEvaluatorBuilder displayCoordinatesExp);
+    StatusesUpdateMessageProcessorDefinition withDisplayCoordinates(ExpressionEvaluatorDefinition displayCoordinatesExp);
 
     StatusesUpdateMessageProcessorDefinition withTrimUser(boolean trimUser);
 
-    StatusesUpdateMessageProcessorDefinition withTrimUser(ExpressionEvaluatorBuilder trimUserExp);
+    StatusesUpdateMessageProcessorDefinition withTrimUser(ExpressionEvaluatorDefinition trimUserExp);
 
 }

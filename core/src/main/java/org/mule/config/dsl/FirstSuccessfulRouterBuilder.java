@@ -9,7 +9,18 @@
 
 package org.mule.config.dsl;
 
+/**
+ * Interface that extends {@link PipelineBuilder} and just adds a
+ * way to delimits the end of the first successful block.
+ *
+ * @author porcelli
+ */
 public interface FirstSuccessfulRouterBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<FirstSuccessfulRouterBuilder<P>> {
 
+    /**
+     * Delimits the current block and returns back to outer block.
+     *
+     * @return the parameterized builder
+     */
     P endFirstSuccessful();
 }

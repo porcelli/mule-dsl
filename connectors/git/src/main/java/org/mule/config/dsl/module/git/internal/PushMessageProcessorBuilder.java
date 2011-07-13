@@ -9,15 +9,16 @@
 
 package org.mule.config.dsl.module.git.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.module.git.PushMessageProcessorDefinition;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.module.git.config.PushMessageProcessor;
 
 import static org.mule.config.dsl.expression.CoreExpr.string;
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class PushMessageProcessorBuilder implements PushMessageProcessorDefinition, Builder<PushMessageProcessor> {
 
@@ -28,9 +29,9 @@ public class PushMessageProcessorBuilder implements PushMessageProcessorDefiniti
     private String remote = "origin";
     private String overrideDirectory = null;
 
-    private ExpressionEvaluatorBuilder forceExp = null;
-    private ExpressionEvaluatorBuilder remoteExp = null;
-    private ExpressionEvaluatorBuilder overrideDirectoryExp = null;
+    private ExpressionEvaluatorDefinition forceExp = null;
+    private ExpressionEvaluatorDefinition remoteExp = null;
+    private ExpressionEvaluatorDefinition overrideDirectoryExp = null;
 
     public PushMessageProcessorBuilder(org.mule.module.git.GitConnector object) {
         this.object = object;
@@ -43,7 +44,7 @@ public class PushMessageProcessorBuilder implements PushMessageProcessorDefiniti
     }
 
     @Override
-    public PushMessageProcessorDefinition withForce(ExpressionEvaluatorBuilder forceExp) {
+    public PushMessageProcessorDefinition withForce(ExpressionEvaluatorDefinition forceExp) {
         this.forceExp = forceExp;
         return this;
     }
@@ -55,7 +56,7 @@ public class PushMessageProcessorBuilder implements PushMessageProcessorDefiniti
     }
 
     @Override
-    public PushMessageProcessorDefinition withRemote(ExpressionEvaluatorBuilder remoteExp) {
+    public PushMessageProcessorDefinition withRemote(ExpressionEvaluatorDefinition remoteExp) {
         this.remoteExp = remoteExp;
         return this;
     }
@@ -67,13 +68,16 @@ public class PushMessageProcessorBuilder implements PushMessageProcessorDefiniti
     }
 
     @Override
-    public PushMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorBuilder overrideDirectoryExp) {
+    public PushMessageProcessorDefinition withOverrideDirectory(ExpressionEvaluatorDefinition overrideDirectoryExp) {
         this.overrideDirectoryExp = overrideDirectoryExp;
         return this;
     }
 
     @Override
-    public PushMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public PushMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         PushMessageProcessor mp = new PushMessageProcessor();
 
         mp.setMuleContext(muleContext);

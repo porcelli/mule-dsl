@@ -14,7 +14,9 @@ import org.mule.ibeans.twitter.TwitterBase;
 import org.mule.ibeans.twitter.TwitterIBean;
 import org.mule.ibeans.twitter.TwitterIBeanFactoryBean;
 
-public class IBeansTwitterReference {
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+
+public class IBeanTwitterReference {
 
     private TwitterIBean object = null;
 
@@ -24,7 +26,9 @@ public class IBeansTwitterReference {
     private String oathToken;
     private String oathTokenSecret;
 
-    public TwitterIBean getObject(MuleContext muleContext) {
+    public TwitterIBean getObject(MuleContext muleContext) throws NullPointerException {
+        checkNotNull(muleContext, "muleContext");
+
         if (object == null) {
             TwitterIBeanFactoryBean ibeanFactoryBean = new TwitterIBeanFactoryBean();
             ibeanFactoryBean.setMuleContext(muleContext);

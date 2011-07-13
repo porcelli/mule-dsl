@@ -9,11 +9,11 @@
 
 package org.mule.config.dsl.module.mongo.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.mongo.FindOneObjectMessageProcessorDefinition;
 import org.mule.module.mongo.MongoCloudConnector;
 import org.mule.module.mongo.config.FindOneObjectMessageProcessor;
@@ -21,30 +21,32 @@ import org.mule.module.mongo.config.FindOneObjectMessageProcessor;
 import java.util.List;
 import java.util.Map;
 
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+
 public class FindOneObjectMessageProcessorBuilder implements FindOneObjectMessageProcessorDefinition, Builder<FindOneObjectMessageProcessor> {
 
     private MongoCloudConnector object;
 
     private String collection = null;
 
-    private ExpressionEvaluatorBuilder collectionExp = null;
+    private ExpressionEvaluatorDefinition collectionExp = null;
 
     private Object query = null;
     private Map<String, Object> queryAttributes = null;
     private List<String> fields = null;
     private Object fieldsRef = null;
 
-    private ExpressionEvaluatorBuilder queryExp = null;
-    private ExpressionEvaluatorBuilder queryAttributesExp = null;
-    private ExpressionEvaluatorBuilder fieldsRefExp = null;
-    private ExpressionEvaluatorBuilder fieldsExp = null;
+    private ExpressionEvaluatorDefinition queryExp = null;
+    private ExpressionEvaluatorDefinition queryAttributesExp = null;
+    private ExpressionEvaluatorDefinition fieldsRefExp = null;
+    private ExpressionEvaluatorDefinition fieldsExp = null;
 
     public FindOneObjectMessageProcessorBuilder(MongoCloudConnector object, String collection) {
         this.object = object;
         this.collection = collection;
     }
 
-    public FindOneObjectMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorBuilder collectionExp) {
+    public FindOneObjectMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorDefinition collectionExp) {
         this.object = object;
         this.collectionExp = collectionExp;
     }
@@ -56,7 +58,7 @@ public class FindOneObjectMessageProcessorBuilder implements FindOneObjectMessag
     }
 
     @Override
-    public FindOneObjectMessageProcessorDefinition withQuery(ExpressionEvaluatorBuilder queryExp) {
+    public FindOneObjectMessageProcessorDefinition withQuery(ExpressionEvaluatorDefinition queryExp) {
         this.queryExp = queryExp;
         return this;
     }
@@ -68,7 +70,7 @@ public class FindOneObjectMessageProcessorBuilder implements FindOneObjectMessag
     }
 
     @Override
-    public FindOneObjectMessageProcessorDefinition withQueryAttributes(ExpressionEvaluatorBuilder queryAttributesExp) {
+    public FindOneObjectMessageProcessorDefinition withQueryAttributes(ExpressionEvaluatorDefinition queryAttributesExp) {
         this.queryAttributesExp = queryAttributesExp;
         return this;
     }
@@ -80,7 +82,7 @@ public class FindOneObjectMessageProcessorBuilder implements FindOneObjectMessag
     }
 
     @Override
-    public FindOneObjectMessageProcessorDefinition withFieldsRef(ExpressionEvaluatorBuilder fieldsRefExp) {
+    public FindOneObjectMessageProcessorDefinition withFieldsRef(ExpressionEvaluatorDefinition fieldsRefExp) {
         this.fieldsRefExp = fieldsRefExp;
         return this;
     }
@@ -92,13 +94,16 @@ public class FindOneObjectMessageProcessorBuilder implements FindOneObjectMessag
     }
 
     @Override
-    public FindOneObjectMessageProcessorDefinition withFields(ExpressionEvaluatorBuilder fieldsExp) {
+    public FindOneObjectMessageProcessorDefinition withFields(ExpressionEvaluatorDefinition fieldsExp) {
         this.fieldsExp = fieldsExp;
         return this;
     }
 
     @Override
-    public FindOneObjectMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public FindOneObjectMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         FindOneObjectMessageProcessor mp = new FindOneObjectMessageProcessor();
 
         mp.setMuleContext(muleContext);

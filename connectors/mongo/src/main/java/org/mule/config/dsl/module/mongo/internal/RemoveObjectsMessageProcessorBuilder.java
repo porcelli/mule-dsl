@@ -9,11 +9,11 @@
 
 package org.mule.config.dsl.module.mongo.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.mongo.RemoveObjectsMessageProcessorDefinition;
 import org.mule.module.mongo.MongoCloudConnector;
 import org.mule.module.mongo.api.WriteConcern;
@@ -21,28 +21,30 @@ import org.mule.module.mongo.config.RemoveObjectsMessageProcessor;
 
 import java.util.Map;
 
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+
 public class RemoveObjectsMessageProcessorBuilder implements RemoveObjectsMessageProcessorDefinition, Builder<RemoveObjectsMessageProcessor> {
 
     private MongoCloudConnector object;
 
     private String collection = null;
 
-    private ExpressionEvaluatorBuilder collectionExp = null;
+    private ExpressionEvaluatorDefinition collectionExp = null;
 
     private Object query = null;
     private Map<String, Object> queryAttributes = null;
     private WriteConcern writeConcern = WriteConcern.DATABASE_DEFAULT;
 
-    private ExpressionEvaluatorBuilder queryExp = null;
-    private ExpressionEvaluatorBuilder queryAttributesExp = null;
-    private ExpressionEvaluatorBuilder writeConcernExp = null;
+    private ExpressionEvaluatorDefinition queryExp = null;
+    private ExpressionEvaluatorDefinition queryAttributesExp = null;
+    private ExpressionEvaluatorDefinition writeConcernExp = null;
 
     public RemoveObjectsMessageProcessorBuilder(MongoCloudConnector object, String collection) {
         this.object = object;
         this.collection = collection;
     }
 
-    public RemoveObjectsMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorBuilder collectionExp) {
+    public RemoveObjectsMessageProcessorBuilder(MongoCloudConnector object, ExpressionEvaluatorDefinition collectionExp) {
         this.object = object;
         this.collectionExp = collectionExp;
     }
@@ -54,7 +56,7 @@ public class RemoveObjectsMessageProcessorBuilder implements RemoveObjectsMessag
     }
 
     @Override
-    public RemoveObjectsMessageProcessorDefinition withQuery(ExpressionEvaluatorBuilder queryExp) {
+    public RemoveObjectsMessageProcessorDefinition withQuery(ExpressionEvaluatorDefinition queryExp) {
         this.queryExp = queryExp;
         return this;
     }
@@ -66,7 +68,7 @@ public class RemoveObjectsMessageProcessorBuilder implements RemoveObjectsMessag
     }
 
     @Override
-    public RemoveObjectsMessageProcessorDefinition withQueryAttributes(ExpressionEvaluatorBuilder queryAttributesExp) {
+    public RemoveObjectsMessageProcessorDefinition withQueryAttributes(ExpressionEvaluatorDefinition queryAttributesExp) {
         this.queryAttributesExp = queryAttributesExp;
         return this;
     }
@@ -78,13 +80,16 @@ public class RemoveObjectsMessageProcessorBuilder implements RemoveObjectsMessag
     }
 
     @Override
-    public RemoveObjectsMessageProcessorDefinition withWriteConcern(ExpressionEvaluatorBuilder writeConcernExp) {
+    public RemoveObjectsMessageProcessorDefinition withWriteConcern(ExpressionEvaluatorDefinition writeConcernExp) {
         this.writeConcernExp = writeConcernExp;
         return this;
     }
 
     @Override
-    public RemoveObjectsMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public RemoveObjectsMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         RemoveObjectsMessageProcessor mp = new RemoveObjectsMessageProcessor();
 
         mp.setMuleContext(muleContext);

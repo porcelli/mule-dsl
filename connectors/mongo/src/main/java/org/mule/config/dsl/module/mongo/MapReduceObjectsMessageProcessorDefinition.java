@@ -9,13 +9,13 @@
 
 package org.mule.config.dsl.module.mongo;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
 public interface MapReduceObjectsMessageProcessorDefinition extends MessageProcessorDefinition {
 
     MapReduceObjectsMessageProcessorDefinition withOutputCollection(String outputCollection);
 
-    MapReduceObjectsMessageProcessorDefinition withOutputCollection(ExpressionEvaluatorBuilder outputCollectionExp);
+    MapReduceObjectsMessageProcessorDefinition withOutputCollection(ExpressionEvaluatorDefinition outputCollectionExp);
 
 }

@@ -9,24 +9,40 @@
 
 package org.mule.config.dsl.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.routing.MessageFilter;
 import org.mule.routing.filters.PayloadTypeFilter;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
+/**
+ * Internal class that wraps a {@link PayloadTypeFilter} inside a {@link MessageFilter}.
+ *
+ * @author porcelli
+ * @see {@link org.mule.config.dsl.PipelineBuilder#filterBy(Class)}
+ */
 public class TypeBasedFilterBuilderImpl implements Builder<MessageFilter> {
 
     private final Class<?> clazz;
 
-    public TypeBasedFilterBuilderImpl(Class<?> clazz) {
+    /**
+     * @param clazz the type to be filtered by
+     * @throws NullPointerException if {@code clazz} param is null
+     */
+    public TypeBasedFilterBuilderImpl(final Class<?> clazz) throws NullPointerException {
         this.clazz = checkNotNull(clazz, "clazz");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public MessageFilter build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public MessageFilter build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         final PayloadTypeFilter filter = new PayloadTypeFilter();
         filter.setExpectedType(clazz);
         return new MessageFilter(filter);

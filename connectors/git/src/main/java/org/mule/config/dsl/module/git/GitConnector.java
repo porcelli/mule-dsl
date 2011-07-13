@@ -9,7 +9,7 @@
 
 package org.mule.config.dsl.module.git;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.module.git.internal.*;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
@@ -28,7 +28,7 @@ public class GitConnector {
         return new CloneMessageProcessorBuilder(object, uri);
     }
 
-    public CloneMessageProcessorDefinition cloneRepository(ExpressionEvaluatorBuilder uriExp) {
+    public CloneMessageProcessorDefinition cloneRepository(ExpressionEvaluatorDefinition uriExp) {
         checkNotNull(uriExp, "uri expression");
         return new CloneMessageProcessorBuilder(object, uriExp);
     }
@@ -38,7 +38,7 @@ public class GitConnector {
         return new AddMessageProcessorBuilder(object, filePattern);
     }
 
-    public AddMessageProcessorDefinition add(ExpressionEvaluatorBuilder filePatternExp) {
+    public AddMessageProcessorDefinition add(ExpressionEvaluatorDefinition filePatternExp) {
         checkNotNull(filePatternExp, "filePattern expression");
         return new AddMessageProcessorBuilder(object, filePatternExp);
     }
@@ -50,49 +50,49 @@ public class GitConnector {
         return new CommitMessageProcessorBuilder(object, msg, committerName, committerEmail);
     }
 
-    public CommitMessageProcessorDefinition commit(ExpressionEvaluatorBuilder msgExp, String committerName, String committerEmail) {
+    public CommitMessageProcessorDefinition commit(ExpressionEvaluatorDefinition msgExp, String committerName, String committerEmail) {
         checkNotNull(msgExp, "msg expression");
         checkNotEmpty(committerName, "committerName");
         checkNotEmpty(committerEmail, "committerEmail");
         return new CommitMessageProcessorBuilder(object, msgExp, committerName, committerEmail);
     }
 
-    public CommitMessageProcessorDefinition commit(String msg, ExpressionEvaluatorBuilder committerNameExp, String committerEmail) {
+    public CommitMessageProcessorDefinition commit(String msg, ExpressionEvaluatorDefinition committerNameExp, String committerEmail) {
         checkNotEmpty(msg, "msg");
         checkNotNull(committerNameExp, "committerName expression");
         checkNotEmpty(committerEmail, "committerEmail");
         return new CommitMessageProcessorBuilder(object, msg, committerNameExp, committerEmail);
     }
 
-    public CommitMessageProcessorDefinition commit(String msg, String committerName, ExpressionEvaluatorBuilder committerEmailExp) {
+    public CommitMessageProcessorDefinition commit(String msg, String committerName, ExpressionEvaluatorDefinition committerEmailExp) {
         checkNotEmpty(msg, "msg");
         checkNotEmpty(committerName, "committerName");
         checkNotNull(committerEmailExp, "committerEmail expression");
         return new CommitMessageProcessorBuilder(object, msg, committerName, committerEmailExp);
     }
 
-    public CommitMessageProcessorDefinition commit(ExpressionEvaluatorBuilder msgExp, ExpressionEvaluatorBuilder committerNameExp, String committerEmail) {
+    public CommitMessageProcessorDefinition commit(ExpressionEvaluatorDefinition msgExp, ExpressionEvaluatorDefinition committerNameExp, String committerEmail) {
         checkNotNull(msgExp, "msg expression");
         checkNotNull(committerNameExp, "committerName expression");
         checkNotEmpty(committerEmail, "committerEmail");
         return new CommitMessageProcessorBuilder(object, msgExp, committerNameExp, committerEmail);
     }
 
-    public CommitMessageProcessorDefinition commit(ExpressionEvaluatorBuilder msgExp, String committerName, ExpressionEvaluatorBuilder committerEmailExp) {
+    public CommitMessageProcessorDefinition commit(ExpressionEvaluatorDefinition msgExp, String committerName, ExpressionEvaluatorDefinition committerEmailExp) {
         checkNotNull(msgExp, "msg expression");
         checkNotEmpty(committerName, "committerName");
         checkNotNull(committerEmailExp, "committerEmail expression");
         return new CommitMessageProcessorBuilder(object, msgExp, committerName, committerEmailExp);
     }
 
-    public CommitMessageProcessorDefinition commit(String msg, ExpressionEvaluatorBuilder committerNameExp, ExpressionEvaluatorBuilder committerEmailExp) {
+    public CommitMessageProcessorDefinition commit(String msg, ExpressionEvaluatorDefinition committerNameExp, ExpressionEvaluatorDefinition committerEmailExp) {
         checkNotEmpty(msg, "msg");
         checkNotNull(committerNameExp, "committerName expression");
         checkNotNull(committerEmailExp, "committerEmail expression");
         return new CommitMessageProcessorBuilder(object, msg, committerNameExp, committerEmailExp);
     }
 
-    public CommitMessageProcessorDefinition commit(ExpressionEvaluatorBuilder msgExp, ExpressionEvaluatorBuilder committerNameExp, ExpressionEvaluatorBuilder committerEmailExp) {
+    public CommitMessageProcessorDefinition commit(ExpressionEvaluatorDefinition msgExp, ExpressionEvaluatorDefinition committerNameExp, ExpressionEvaluatorDefinition committerEmailExp) {
         checkNotNull(msgExp, "msg expression");
         checkNotNull(committerNameExp, "committerName expression");
         checkNotNull(committerEmailExp, "committerEmail expression");
@@ -104,7 +104,7 @@ public class GitConnector {
         return new CreateBranchMessageProcessorBuilder(object, name);
     }
 
-    public CreateBranchMessageProcessorDefinition createBranch(ExpressionEvaluatorBuilder nameExp) {
+    public CreateBranchMessageProcessorDefinition createBranch(ExpressionEvaluatorDefinition nameExp) {
         checkNotNull(nameExp, "name expression");
         return new CreateBranchMessageProcessorBuilder(object, nameExp);
     }
@@ -114,7 +114,7 @@ public class GitConnector {
         return new DeleteBranchMessageProcessorBuilder(object, name);
     }
 
-    public DeleteBranchMessageProcessorDefinition deleteBranch(ExpressionEvaluatorBuilder nameExp) {
+    public DeleteBranchMessageProcessorDefinition deleteBranch(ExpressionEvaluatorDefinition nameExp) {
         checkNotNull(nameExp, "name expression");
         return new DeleteBranchMessageProcessorBuilder(object, nameExp);
     }
@@ -136,7 +136,7 @@ public class GitConnector {
         return new CheckoutMessageProcessorBuilder(object, branchName);
     }
 
-    public CheckoutMessageProcessorDefinition checkout(ExpressionEvaluatorBuilder branchNameExp) {
+    public CheckoutMessageProcessorDefinition checkout(ExpressionEvaluatorDefinition branchNameExp) {
         checkNotNull(branchNameExp, "branchName expression");
         return new CheckoutMessageProcessorBuilder(object, branchNameExp);
     }

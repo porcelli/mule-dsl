@@ -9,15 +9,16 @@
 
 package org.mule.config.dsl.module.git.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.module.git.DeleteBranchMessageProcessorDefinition;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.module.git.config.DeleteBranchMessageProcessor;
 
 import static org.mule.config.dsl.expression.CoreExpr.string;
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class DeleteBranchMessageProcessorBuilder implements DeleteBranchMessageProcessorDefinition, Builder<DeleteBranchMessageProcessor> {
 
@@ -25,21 +26,21 @@ public class DeleteBranchMessageProcessorBuilder implements DeleteBranchMessageP
 
     //Required
     private String name = null;
-    private ExpressionEvaluatorBuilder nameExp = null;
+    private ExpressionEvaluatorDefinition nameExp = null;
 
     //Optional
     private boolean force = false;
     private String overrideDirectory = null;
 
-    private ExpressionEvaluatorBuilder forceExp = null;
-    private ExpressionEvaluatorBuilder overrideDirectoryExp = null;
+    private ExpressionEvaluatorDefinition forceExp = null;
+    private ExpressionEvaluatorDefinition overrideDirectoryExp = null;
 
     public DeleteBranchMessageProcessorBuilder(org.mule.module.git.GitConnector object, String name) {
         this.object = object;
         this.name = name;
     }
 
-    public DeleteBranchMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorBuilder nameExp) {
+    public DeleteBranchMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorDefinition nameExp) {
         this.object = object;
         this.nameExp = nameExp;
     }
@@ -51,7 +52,7 @@ public class DeleteBranchMessageProcessorBuilder implements DeleteBranchMessageP
     }
 
     @Override
-    public DeleteBranchMessageProcessorBuilder withForce(ExpressionEvaluatorBuilder forceExp) {
+    public DeleteBranchMessageProcessorBuilder withForce(ExpressionEvaluatorDefinition forceExp) {
         this.forceExp = forceExp;
         return this;
     }
@@ -63,13 +64,16 @@ public class DeleteBranchMessageProcessorBuilder implements DeleteBranchMessageP
     }
 
     @Override
-    public DeleteBranchMessageProcessorBuilder withOverrideDirectory(ExpressionEvaluatorBuilder overrideDirectoryExp) {
+    public DeleteBranchMessageProcessorBuilder withOverrideDirectory(ExpressionEvaluatorDefinition overrideDirectoryExp) {
         this.overrideDirectoryExp = overrideDirectoryExp;
         return this;
     }
 
     @Override
-    public DeleteBranchMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public DeleteBranchMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         DeleteBranchMessageProcessor mp = new DeleteBranchMessageProcessor();
 
         mp.setMuleContext(muleContext);

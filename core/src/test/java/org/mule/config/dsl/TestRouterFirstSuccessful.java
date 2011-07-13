@@ -9,6 +9,8 @@
 
 package org.mule.config.dsl;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -23,13 +25,11 @@ import org.mule.component.simple.EchoComponent;
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.routing.FirstSuccessful;
 
-import static org.fest.assertions.Assertions.assertThat;
-
 public class TestRouterFirstSuccessful {
 
     @Test
     public void simpleFirstSuccessful() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -43,16 +43,16 @@ public class TestRouterFirstSuccessful {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -62,17 +62,17 @@ public class TestRouterFirstSuccessful {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(FirstSuccessful.class);
 
-        FirstSuccessful firstSuccessfulRouter = (FirstSuccessful) processor;
+        final FirstSuccessful firstSuccessfulRouter = (FirstSuccessful) processor;
 
         assertThat(firstSuccessfulRouter.getRoutes()).isNotEmpty().hasSize(2);
 
         assertThat(firstSuccessfulRouter.getRoutes().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent echo1 = (SimpleCallableJavaComponent) firstSuccessfulRouter.getRoutes().get(0);
+        final SimpleCallableJavaComponent echo1 = (SimpleCallableJavaComponent) firstSuccessfulRouter.getRoutes().get(0);
 
         assertThat(echo1.getObjectType()).isEqualTo(EchoComponent.class);
 
@@ -80,7 +80,7 @@ public class TestRouterFirstSuccessful {
 
         assertThat(firstSuccessfulRouter.getRoutes().get(1)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) firstSuccessfulRouter.getRoutes().get(1);
+        final SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) firstSuccessfulRouter.getRoutes().get(1);
 
         assertThat(echo2.getObjectType()).isEqualTo(EchoComponent.class);
 
@@ -89,7 +89,7 @@ public class TestRouterFirstSuccessful {
 
     @Test
     public void simpleFirstSuccessfulNesting() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -106,16 +106,16 @@ public class TestRouterFirstSuccessful {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -125,17 +125,17 @@ public class TestRouterFirstSuccessful {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(FirstSuccessful.class);
 
-        FirstSuccessful firstSuccessfulRouter = (FirstSuccessful) processor;
+        final FirstSuccessful firstSuccessfulRouter = (FirstSuccessful) processor;
 
         assertThat(firstSuccessfulRouter.getRoutes()).isNotEmpty().hasSize(3);
 
         assertThat(firstSuccessfulRouter.getRoutes().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent echo1 = (SimpleCallableJavaComponent) firstSuccessfulRouter.getRoutes().get(0);
+        final SimpleCallableJavaComponent echo1 = (SimpleCallableJavaComponent) firstSuccessfulRouter.getRoutes().get(0);
 
         assertThat(echo1.getObjectType()).isEqualTo(EchoComponent.class);
 
@@ -144,7 +144,7 @@ public class TestRouterFirstSuccessful {
 
         assertThat(firstSuccessfulRouter.getRoutes().get(1)).isNotNull().isInstanceOf(FirstSuccessful.class);
 
-        FirstSuccessful innerAll = (FirstSuccessful) firstSuccessfulRouter.getRoutes().get(1);
+        final FirstSuccessful innerAll = (FirstSuccessful) firstSuccessfulRouter.getRoutes().get(1);
 
         assertThat(innerAll.getRoutes()).isNotEmpty().hasSize(1);
 
@@ -153,7 +153,7 @@ public class TestRouterFirstSuccessful {
 
         assertThat(firstSuccessfulRouter.getRoutes().get(2)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) firstSuccessfulRouter.getRoutes().get(2);
+        final SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) firstSuccessfulRouter.getRoutes().get(2);
 
         assertThat(echo2.getObjectType()).isEqualTo(EchoComponent.class);
 
@@ -162,7 +162,7 @@ public class TestRouterFirstSuccessful {
 
     @Test
     public void simpleFirstSuccessfulWithSend() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -175,16 +175,16 @@ public class TestRouterFirstSuccessful {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -194,11 +194,11 @@ public class TestRouterFirstSuccessful {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(FirstSuccessful.class);
 
-        FirstSuccessful firstSuccessfulRouter = (FirstSuccessful) processor;
+        final FirstSuccessful firstSuccessfulRouter = (FirstSuccessful) processor;
 
         assertThat(firstSuccessfulRouter.getRoutes()).isNotEmpty().hasSize(1);
 
@@ -207,7 +207,7 @@ public class TestRouterFirstSuccessful {
 
     @Test
     public void simpleFirstSuccessfulWithExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -223,16 +223,16 @@ public class TestRouterFirstSuccessful {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -242,11 +242,11 @@ public class TestRouterFirstSuccessful {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(FirstSuccessful.class);
 
-        FirstSuccessful firstSuccessfulRouter = (FirstSuccessful) processor;
+        final FirstSuccessful firstSuccessfulRouter = (FirstSuccessful) processor;
 
         assertThat(firstSuccessfulRouter.getRoutes()).isNotEmpty().hasSize(2);
 
@@ -260,7 +260,8 @@ public class TestRouterFirstSuccessful {
     }
 
     public static class Simple2 implements Simple {
-        public void execute(String string) {
+        @Override
+		public void execute(final String string) {
             System.out.println("SIMPLE 2! : " + string);
         }
     }

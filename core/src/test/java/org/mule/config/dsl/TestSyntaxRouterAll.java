@@ -9,11 +9,11 @@
 
 package org.mule.config.dsl;
 
-import org.mule.api.lifecycle.Callable;
-
 import static org.mule.config.dsl.ExchangePattern.ONE_WAY;
 import static org.mule.config.dsl.Scope.SINGLETON;
 import static org.mule.config.dsl.expression.CoreExpr.regex;
+
+import org.mule.api.lifecycle.Callable;
 
 public class TestSyntaxRouterAll {
 

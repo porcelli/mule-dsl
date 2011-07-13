@@ -9,19 +9,20 @@
 
 package org.mule.config.dsl.module.twitter.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.twitter.GetUserTimelineMessageProcessorDefinition;
 import org.mule.ibeans.twitter.config.GetUserTimelineMessageProcessor;
 
 import static org.mule.config.dsl.expression.CoreExpr.string;
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class GetUserTimelineMessageProcessorBuilder implements GetUserTimelineMessageProcessorDefinition, Builder<GetUserTimelineMessageProcessor> {
 
-    private final IBeansTwitterReference reference;
+    private final IBeanTwitterReference reference;
 
     private String userId = null;
     private String screenName = null;
@@ -30,14 +31,14 @@ public class GetUserTimelineMessageProcessorBuilder implements GetUserTimelineMe
     private String maxId = null;
     private Integer page = null;
 
-    private ExpressionEvaluatorBuilder userIdExp = null;
-    private ExpressionEvaluatorBuilder screenNameExp = null;
-    private ExpressionEvaluatorBuilder countExp = null;
-    private ExpressionEvaluatorBuilder sinceIdExp = null;
-    private ExpressionEvaluatorBuilder maxIdExp = null;
-    private ExpressionEvaluatorBuilder pageExp = null;
+    private ExpressionEvaluatorDefinition userIdExp = null;
+    private ExpressionEvaluatorDefinition screenNameExp = null;
+    private ExpressionEvaluatorDefinition countExp = null;
+    private ExpressionEvaluatorDefinition sinceIdExp = null;
+    private ExpressionEvaluatorDefinition maxIdExp = null;
+    private ExpressionEvaluatorDefinition pageExp = null;
 
-    public GetUserTimelineMessageProcessorBuilder(IBeansTwitterReference reference) {
+    public GetUserTimelineMessageProcessorBuilder(IBeanTwitterReference reference) {
         this.reference = reference;
     }
 
@@ -48,7 +49,7 @@ public class GetUserTimelineMessageProcessorBuilder implements GetUserTimelineMe
     }
 
     @Override
-    public GetUserTimelineMessageProcessorDefinition withUserId(ExpressionEvaluatorBuilder userIdExp) {
+    public GetUserTimelineMessageProcessorDefinition withUserId(ExpressionEvaluatorDefinition userIdExp) {
         this.userIdExp = userIdExp;
         return this;
     }
@@ -60,7 +61,7 @@ public class GetUserTimelineMessageProcessorBuilder implements GetUserTimelineMe
     }
 
     @Override
-    public GetUserTimelineMessageProcessorDefinition withScreenName(ExpressionEvaluatorBuilder screenNameExp) {
+    public GetUserTimelineMessageProcessorDefinition withScreenName(ExpressionEvaluatorDefinition screenNameExp) {
         this.screenNameExp = screenNameExp;
         return this;
     }
@@ -72,7 +73,7 @@ public class GetUserTimelineMessageProcessorBuilder implements GetUserTimelineMe
     }
 
     @Override
-    public GetUserTimelineMessageProcessorDefinition withCount(ExpressionEvaluatorBuilder countExp) {
+    public GetUserTimelineMessageProcessorDefinition withCount(ExpressionEvaluatorDefinition countExp) {
         this.countExp = countExp;
         return this;
     }
@@ -84,7 +85,7 @@ public class GetUserTimelineMessageProcessorBuilder implements GetUserTimelineMe
     }
 
     @Override
-    public GetUserTimelineMessageProcessorDefinition withSinceId(ExpressionEvaluatorBuilder sinceIdExp) {
+    public GetUserTimelineMessageProcessorDefinition withSinceId(ExpressionEvaluatorDefinition sinceIdExp) {
         this.sinceIdExp = sinceIdExp;
         return this;
     }
@@ -96,7 +97,7 @@ public class GetUserTimelineMessageProcessorBuilder implements GetUserTimelineMe
     }
 
     @Override
-    public GetUserTimelineMessageProcessorDefinition withMaxId(ExpressionEvaluatorBuilder maxIdExp) {
+    public GetUserTimelineMessageProcessorDefinition withMaxId(ExpressionEvaluatorDefinition maxIdExp) {
         this.maxIdExp = maxIdExp;
         return this;
     }
@@ -108,13 +109,16 @@ public class GetUserTimelineMessageProcessorBuilder implements GetUserTimelineMe
     }
 
     @Override
-    public GetUserTimelineMessageProcessorDefinition withPage(ExpressionEvaluatorBuilder pageExp) {
+    public GetUserTimelineMessageProcessorDefinition withPage(ExpressionEvaluatorDefinition pageExp) {
         this.pageExp = pageExp;
         return this;
     }
 
     @Override
-    public GetUserTimelineMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public GetUserTimelineMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         GetUserTimelineMessageProcessor mp = new GetUserTimelineMessageProcessor();
 
         mp.setMuleContext(muleContext);

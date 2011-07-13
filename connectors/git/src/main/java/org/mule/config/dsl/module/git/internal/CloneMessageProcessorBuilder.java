@@ -9,15 +9,16 @@
 
 package org.mule.config.dsl.module.git.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.module.git.CloneMessageProcessorDefinition;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.module.git.config.CloneMessageProcessor;
 
 import static org.mule.config.dsl.expression.CoreExpr.string;
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class CloneMessageProcessorBuilder implements CloneMessageProcessorDefinition, Builder<CloneMessageProcessor> {
 
@@ -25,7 +26,7 @@ public class CloneMessageProcessorBuilder implements CloneMessageProcessorDefini
 
     //Required
     private String uri = null;
-    private ExpressionEvaluatorBuilder uriExp = null;
+    private ExpressionEvaluatorDefinition uriExp = null;
 
     //Optional
     private boolean bare = false;
@@ -33,17 +34,17 @@ public class CloneMessageProcessorBuilder implements CloneMessageProcessorDefini
     private String branch = "HEAD";
     private String overrideDirectory = null;
 
-    private ExpressionEvaluatorBuilder bareExp = null;
-    private ExpressionEvaluatorBuilder remoteExp = null;
-    private ExpressionEvaluatorBuilder branchExp = null;
-    private ExpressionEvaluatorBuilder overrideDirectoryExp = null;
+    private ExpressionEvaluatorDefinition bareExp = null;
+    private ExpressionEvaluatorDefinition remoteExp = null;
+    private ExpressionEvaluatorDefinition branchExp = null;
+    private ExpressionEvaluatorDefinition overrideDirectoryExp = null;
 
     public CloneMessageProcessorBuilder(org.mule.module.git.GitConnector object, String uri) {
         this.object = object;
         this.uri = uri;
     }
 
-    public CloneMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorBuilder uriExp) {
+    public CloneMessageProcessorBuilder(org.mule.module.git.GitConnector object, ExpressionEvaluatorDefinition uriExp) {
         this.object = object;
         this.uriExp = uriExp;
     }
@@ -55,7 +56,7 @@ public class CloneMessageProcessorBuilder implements CloneMessageProcessorDefini
     }
 
     @Override
-    public CloneMessageProcessorBuilder withBare(ExpressionEvaluatorBuilder bareExp) {
+    public CloneMessageProcessorBuilder withBare(ExpressionEvaluatorDefinition bareExp) {
         this.bareExp = bareExp;
         return this;
     }
@@ -67,7 +68,7 @@ public class CloneMessageProcessorBuilder implements CloneMessageProcessorDefini
     }
 
     @Override
-    public CloneMessageProcessorBuilder withRemote(ExpressionEvaluatorBuilder remoteExp) {
+    public CloneMessageProcessorBuilder withRemote(ExpressionEvaluatorDefinition remoteExp) {
         this.remoteExp = remoteExp;
         return this;
     }
@@ -79,7 +80,7 @@ public class CloneMessageProcessorBuilder implements CloneMessageProcessorDefini
     }
 
     @Override
-    public CloneMessageProcessorBuilder withBranch(ExpressionEvaluatorBuilder branchExp) {
+    public CloneMessageProcessorBuilder withBranch(ExpressionEvaluatorDefinition branchExp) {
         this.branchExp = branchExp;
         return this;
     }
@@ -91,13 +92,16 @@ public class CloneMessageProcessorBuilder implements CloneMessageProcessorDefini
     }
 
     @Override
-    public CloneMessageProcessorBuilder withOverrideDirectory(ExpressionEvaluatorBuilder overrideDirectoryExp) {
+    public CloneMessageProcessorBuilder withOverrideDirectory(ExpressionEvaluatorDefinition overrideDirectoryExp) {
         this.overrideDirectoryExp = overrideDirectoryExp;
         return this;
     }
 
     @Override
-    public CloneMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public CloneMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         CloneMessageProcessor mp = new CloneMessageProcessor();
 
         mp.setMuleContext(muleContext);

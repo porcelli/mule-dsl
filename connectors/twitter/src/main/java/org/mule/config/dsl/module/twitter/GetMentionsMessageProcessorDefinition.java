@@ -9,25 +9,25 @@
 
 package org.mule.config.dsl.module.twitter;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
 public interface GetMentionsMessageProcessorDefinition extends MessageProcessorDefinition {
 
     GetMentionsMessageProcessorDefinition withCount(Integer count);
 
-    GetMentionsMessageProcessorDefinition withCount(ExpressionEvaluatorBuilder countExp);
+    GetMentionsMessageProcessorDefinition withCount(ExpressionEvaluatorDefinition countExp);
 
     GetMentionsMessageProcessorDefinition withSinceId(String sinceId);
 
-    GetMentionsMessageProcessorDefinition withSinceId(ExpressionEvaluatorBuilder sinceIdExp);
+    GetMentionsMessageProcessorDefinition withSinceId(ExpressionEvaluatorDefinition sinceIdExp);
 
     GetMentionsMessageProcessorDefinition withMaxId(String maxId);
 
-    GetMentionsMessageProcessorDefinition withMaxId(ExpressionEvaluatorBuilder maxIdExp);
+    GetMentionsMessageProcessorDefinition withMaxId(ExpressionEvaluatorDefinition maxIdExp);
 
     GetMentionsMessageProcessorDefinition withPage(Integer page);
 
-    GetMentionsMessageProcessorDefinition withPage(ExpressionEvaluatorBuilder pageExp);
+    GetMentionsMessageProcessorDefinition withPage(ExpressionEvaluatorDefinition pageExp);
 
 }

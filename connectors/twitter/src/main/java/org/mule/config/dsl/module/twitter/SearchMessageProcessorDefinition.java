@@ -9,45 +9,45 @@
 
 package org.mule.config.dsl.module.twitter;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.MessageProcessorDefinition;
 
 public interface SearchMessageProcessorDefinition extends MessageProcessorDefinition {
 
     SearchMessageProcessorDefinition withLang(String lang);
 
-    SearchMessageProcessorDefinition withLang(ExpressionEvaluatorBuilder langExp);
+    SearchMessageProcessorDefinition withLang(ExpressionEvaluatorDefinition langExp);
 
     SearchMessageProcessorDefinition withLocale(String locale);
 
-    SearchMessageProcessorDefinition withLocale(ExpressionEvaluatorBuilder localeExp);
+    SearchMessageProcessorDefinition withLocale(ExpressionEvaluatorDefinition localeExp);
 
     SearchMessageProcessorDefinition withRpp(String rpp);
 
-    SearchMessageProcessorDefinition withRpp(ExpressionEvaluatorBuilder rppExp);
+    SearchMessageProcessorDefinition withRpp(ExpressionEvaluatorDefinition rppExp);
 
     SearchMessageProcessorDefinition withPage(String page);
 
-    SearchMessageProcessorDefinition withPage(ExpressionEvaluatorBuilder pageExp);
+    SearchMessageProcessorDefinition withPage(ExpressionEvaluatorDefinition pageExp);
 
     SearchMessageProcessorDefinition withSinceId(String sinceId);
 
-    SearchMessageProcessorDefinition withSinceId(ExpressionEvaluatorBuilder sinceIdExp);
+    SearchMessageProcessorDefinition withSinceId(ExpressionEvaluatorDefinition sinceIdExp);
 
     SearchMessageProcessorDefinition withGeocode(String geocode);
 
-    SearchMessageProcessorDefinition withGeocode(ExpressionEvaluatorBuilder geocodeExp);
+    SearchMessageProcessorDefinition withGeocode(ExpressionEvaluatorDefinition geocodeExp);
 
     SearchMessageProcessorDefinition withShowUser(String showUser);
 
-    SearchMessageProcessorDefinition withShowUser(ExpressionEvaluatorBuilder showUserExp);
+    SearchMessageProcessorDefinition withShowUser(ExpressionEvaluatorDefinition showUserExp);
 
     SearchMessageProcessorDefinition withAccessToken(String accessToken);
 
-    SearchMessageProcessorDefinition withAccessToken(ExpressionEvaluatorBuilder accessTokenExp);
+    SearchMessageProcessorDefinition withAccessToken(ExpressionEvaluatorDefinition accessTokenExp);
 
     SearchMessageProcessorDefinition withAccessSecret(String accessSecret);
 
-    SearchMessageProcessorDefinition withAccessSecret(ExpressionEvaluatorBuilder accessSecretExp);
+    SearchMessageProcessorDefinition withAccessSecret(ExpressionEvaluatorDefinition accessSecretExp);
 
 }

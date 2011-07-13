@@ -9,31 +9,32 @@
 
 package org.mule.config.dsl.module.twitter.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.twitter.GetFriendsTimelineMessageProcessorDefinition;
 import org.mule.ibeans.twitter.config.GetFriendsTimelineMessageProcessor;
 
 import static org.mule.config.dsl.expression.CoreExpr.string;
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class GetFriendsTimelineMessageProcessorBuilder implements GetFriendsTimelineMessageProcessorDefinition, Builder<GetFriendsTimelineMessageProcessor> {
 
-    private final IBeansTwitterReference reference;
+    private final IBeanTwitterReference reference;
 
     private Integer count = null;
     private String sinceId = null;
     private String maxId = null;
     private Integer page = null;
 
-    private ExpressionEvaluatorBuilder countExp = null;
-    private ExpressionEvaluatorBuilder sinceIdExp = null;
-    private ExpressionEvaluatorBuilder maxIdExp = null;
-    private ExpressionEvaluatorBuilder pageExp = null;
+    private ExpressionEvaluatorDefinition countExp = null;
+    private ExpressionEvaluatorDefinition sinceIdExp = null;
+    private ExpressionEvaluatorDefinition maxIdExp = null;
+    private ExpressionEvaluatorDefinition pageExp = null;
 
-    public GetFriendsTimelineMessageProcessorBuilder(IBeansTwitterReference reference) {
+    public GetFriendsTimelineMessageProcessorBuilder(IBeanTwitterReference reference) {
         this.reference = reference;
     }
 
@@ -44,7 +45,7 @@ public class GetFriendsTimelineMessageProcessorBuilder implements GetFriendsTime
     }
 
     @Override
-    public GetFriendsTimelineMessageProcessorDefinition withCount(ExpressionEvaluatorBuilder countExp) {
+    public GetFriendsTimelineMessageProcessorDefinition withCount(ExpressionEvaluatorDefinition countExp) {
         this.countExp = countExp;
         return this;
     }
@@ -56,7 +57,7 @@ public class GetFriendsTimelineMessageProcessorBuilder implements GetFriendsTime
     }
 
     @Override
-    public GetFriendsTimelineMessageProcessorDefinition withSinceId(ExpressionEvaluatorBuilder sinceIdExp) {
+    public GetFriendsTimelineMessageProcessorDefinition withSinceId(ExpressionEvaluatorDefinition sinceIdExp) {
         this.sinceIdExp = sinceIdExp;
         return this;
     }
@@ -68,7 +69,7 @@ public class GetFriendsTimelineMessageProcessorBuilder implements GetFriendsTime
     }
 
     @Override
-    public GetFriendsTimelineMessageProcessorDefinition withMaxId(ExpressionEvaluatorBuilder maxIdExp) {
+    public GetFriendsTimelineMessageProcessorDefinition withMaxId(ExpressionEvaluatorDefinition maxIdExp) {
         this.maxIdExp = maxIdExp;
         return this;
     }
@@ -80,13 +81,16 @@ public class GetFriendsTimelineMessageProcessorBuilder implements GetFriendsTime
     }
 
     @Override
-    public GetFriendsTimelineMessageProcessorDefinition withPage(ExpressionEvaluatorBuilder pageExp) {
+    public GetFriendsTimelineMessageProcessorDefinition withPage(ExpressionEvaluatorDefinition pageExp) {
         this.pageExp = pageExp;
         return this;
     }
 
     @Override
-    public GetFriendsTimelineMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public GetFriendsTimelineMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         GetFriendsTimelineMessageProcessor mp = new GetFriendsTimelineMessageProcessor();
 
         mp.setMuleContext(muleContext);

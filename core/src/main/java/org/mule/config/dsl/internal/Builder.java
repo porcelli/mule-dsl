@@ -9,12 +9,27 @@
 
 package org.mule.config.dsl.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.PropertyPlaceholder;
 
-public interface Builder<T> {
+/**
+ * Extends the marker interface {@link org.mule.config.dsl.Builder} and
+ * defines a common contract to build an element (based on parameterized type).
+ *
+ * @author porcelli
+ */
+public interface Builder<T> extends org.mule.config.dsl.Builder {
 
-    T build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder);
-
+    /**
+     * Builds the parameterized type based on builder internal state and the given parameters.
+     *
+     * @param muleContext the mule context
+     * @param placeholder the property placeholder
+     * @return an instance of parameterized type
+     * @throws NullPointerException   if {@code muleContext} or {@code placeholder} params are null
+     * @throws ConfigurationException if theres ay problem building the parameterized type
+     * @throws IllegalStateException  if the actual builder state is invalid
+     */
+    T build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException;
 }

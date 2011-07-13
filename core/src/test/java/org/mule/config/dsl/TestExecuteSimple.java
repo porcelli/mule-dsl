@@ -9,6 +9,14 @@
 
 package org.mule.config.dsl;
 
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.Scope.PROTOTYPE;
+import static org.mule.config.dsl.Scope.SINGLETON;
+
+import java.util.Iterator;
+
+import javax.inject.Singleton;
+
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -22,18 +30,11 @@ import org.mule.component.DefaultJavaComponent;
 import org.mule.component.SimpleCallableJavaComponent;
 import org.mule.construct.SimpleFlowConstruct;
 
-import javax.inject.Singleton;
-import java.util.Iterator;
-
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mule.config.dsl.Scope.PROTOTYPE;
-import static org.mule.config.dsl.Scope.SINGLETON;
-
 public class TestExecuteSimple {
 
     @Test
     public void simpleObjectExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -44,16 +45,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -63,13 +64,13 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor executeProcessor = iterator.next();
 
         assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
+        final DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
 
         assertThat(execute.getObjectType()).isEqualTo(Simple2.class);
 
@@ -79,7 +80,7 @@ public class TestExecuteSimple {
 
     @Test
     public void simpleChainObjectExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -91,16 +92,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -110,23 +111,23 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
+        final DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
 
         assertThat(execute1.getObjectType()).isEqualTo(Simple2.class);
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
+        final DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
 
         assertThat(execute2.getObjectType()).isEqualTo(Simple3.class);
 
@@ -135,7 +136,7 @@ public class TestExecuteSimple {
 
     @Test
     public void simpleCallableObjectExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -146,16 +147,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -165,13 +166,13 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor executeProcessor = iterator.next();
 
         assertThat(executeProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent execute = (SimpleCallableJavaComponent) executeProcessor;
+        final SimpleCallableJavaComponent execute = (SimpleCallableJavaComponent) executeProcessor;
 
         assertThat(execute.getObjectType()).isEqualTo(SimpleCallable.class);
 
@@ -181,7 +182,7 @@ public class TestExecuteSimple {
 
     @Test
     public void simpleChainCallableObjectExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -193,16 +194,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -212,23 +213,23 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent execute1 = (SimpleCallableJavaComponent) executeProcessor1;
+        final SimpleCallableJavaComponent execute1 = (SimpleCallableJavaComponent) executeProcessor1;
 
         assertThat(execute1.getObjectType()).isEqualTo(SimpleCallable.class);
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent execute2 = (SimpleCallableJavaComponent) executeProcessor2;
+        final SimpleCallableJavaComponent execute2 = (SimpleCallableJavaComponent) executeProcessor2;
 
         assertThat(execute2.getObjectType()).isEqualTo(SimpleCallable.class);
 
@@ -238,7 +239,7 @@ public class TestExecuteSimple {
 
     @Test
     public void simpleCallableClassExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -249,16 +250,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -268,13 +269,13 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor executeProcessor = iterator.next();
 
         assertThat(executeProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent execute = (SimpleCallableJavaComponent) executeProcessor;
+        final SimpleCallableJavaComponent execute = (SimpleCallableJavaComponent) executeProcessor;
 
         assertThat(execute.getObjectType()).isEqualTo(SimpleCallable.class);
 
@@ -283,7 +284,7 @@ public class TestExecuteSimple {
 
     @Test
     public void simpleCallableClassInjectedExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -296,16 +297,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -315,13 +316,13 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor executeProcessor = iterator.next();
 
         assertThat(executeProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent execute = (SimpleCallableJavaComponent) executeProcessor;
+        final SimpleCallableJavaComponent execute = (SimpleCallableJavaComponent) executeProcessor;
 
         assertThat(execute.getObjectType()).isEqualTo(ComplexCallable.class);
 
@@ -330,7 +331,7 @@ public class TestExecuteSimple {
 
     @Test
     public void simpleChainCallableClassExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -342,16 +343,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -361,23 +362,23 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent execute1 = (SimpleCallableJavaComponent) executeProcessor1;
+        final SimpleCallableJavaComponent execute1 = (SimpleCallableJavaComponent) executeProcessor1;
 
         assertThat(execute1.getObjectType()).isEqualTo(SimpleCallable.class);
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(false);
 
-        MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent execute2 = (SimpleCallableJavaComponent) executeProcessor2;
+        final SimpleCallableJavaComponent execute2 = (SimpleCallableJavaComponent) executeProcessor2;
 
         assertThat(execute2.getObjectType()).isEqualTo(SimpleCallable.class);
 
@@ -386,7 +387,7 @@ public class TestExecuteSimple {
 
     @Test
     public void simpleClassExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -397,16 +398,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -416,13 +417,13 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor executeProcessor = iterator.next();
 
         assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
+        final DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
 
         assertThat(execute.getObjectType()).isEqualTo(Simple2.class);
 
@@ -432,7 +433,7 @@ public class TestExecuteSimple {
 
     @Test
     public void simpleChainClassExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -444,16 +445,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -463,23 +464,23 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
+        final DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
 
         assertThat(execute1.getObjectType()).isEqualTo(Simple2.class);
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(false);
 
-        MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
+        final DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
 
         assertThat(execute2.getObjectType()).isEqualTo(Simple3.class);
 
@@ -488,7 +489,7 @@ public class TestExecuteSimple {
 
     @Test
     public void simpleClassPrototypeExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -499,16 +500,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -518,13 +519,13 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor executeProcessor = iterator.next();
 
         assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
+        final DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
 
         assertThat(execute.getObjectType()).isEqualTo(Complex2.class);
 
@@ -534,7 +535,7 @@ public class TestExecuteSimple {
 
     @Test
     public void simpleChainClassPrototypeExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -546,16 +547,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -565,23 +566,23 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
+        final DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
 
         assertThat(execute1.getObjectType()).isEqualTo(Complex2.class);
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(false);
 
-        MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
+        final DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
 
         assertThat(execute2.getObjectType()).isEqualTo(Complex2.class);
 
@@ -590,7 +591,7 @@ public class TestExecuteSimple {
 
     @Test
     public void simpleClassSingletonExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -601,16 +602,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -620,13 +621,13 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor executeProcessor = iterator.next();
 
         assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
+        final DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
 
         assertThat(execute.getObjectType()).isEqualTo(Complex2.class);
 
@@ -636,7 +637,7 @@ public class TestExecuteSimple {
 
     @Test
     public void simpleChainClassSingletonExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -648,16 +649,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -667,23 +668,23 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
+        final DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
 
         assertThat(execute1.getObjectType()).isEqualTo(Complex2.class);
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
+        final DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
 
         assertThat(execute2.getObjectType()).isEqualTo(Complex2.class);
 
@@ -693,7 +694,7 @@ public class TestExecuteSimple {
 
     @Test
     public void simpleClassGuiceProvidedExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -706,16 +707,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -725,13 +726,13 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor executeProcessor = iterator.next();
 
         assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
+        final DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
 
         assertThat(execute.getObjectType()).isEqualTo(Simple.class);
 
@@ -741,7 +742,7 @@ public class TestExecuteSimple {
 
     @Test
     public void simpleChainGuiceClassExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -755,16 +756,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -774,23 +775,23 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
+        final DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
 
         assertThat(execute1.getObjectType()).isEqualTo(Simple.class);
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(false);
 
-        MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
+        final DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
 
         assertThat(execute2.getObjectType()).isEqualTo(Simple.class);
 
@@ -800,7 +801,7 @@ public class TestExecuteSimple {
 
     @Test
     public void simpleClassGuiceSingletonProvidedExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -813,16 +814,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -832,13 +833,13 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor executeProcessor = iterator.next();
 
         assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
+        final DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
 
         assertThat(execute.getObjectType()).isEqualTo(Simple.class);
 
@@ -848,7 +849,7 @@ public class TestExecuteSimple {
 
     @Test
     public void simpleChainGuiceSingletonClassExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -862,16 +863,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -881,23 +882,23 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
+        final DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
 
         assertThat(execute1.getObjectType()).isEqualTo(Simple.class);
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
+        final DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
 
         assertThat(execute2.getObjectType()).isEqualTo(Simple.class);
 
@@ -906,7 +907,7 @@ public class TestExecuteSimple {
 
     @Test
     public void complexChainExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -924,16 +925,16 @@ public class TestExecuteSimple {
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -943,63 +944,63 @@ public class TestExecuteSimple {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(6);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor executeProcessor1 = iterator.next();
 
         assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
+        final DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
 
         assertThat(execute1.getObjectType()).isEqualTo(Simple.class);
 
         assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor executeProcessor2 = iterator.next();
 
         assertThat(executeProcessor2).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent execute2 = (SimpleCallableJavaComponent) executeProcessor2;
+        final SimpleCallableJavaComponent execute2 = (SimpleCallableJavaComponent) executeProcessor2;
 
         assertThat(execute2.getObjectType()).isEqualTo(SimpleCallable.class);
 
         assertThat(execute2.getObjectFactory().isSingleton()).isEqualTo(false);
 
-        MessageProcessor executeProcessor3 = iterator.next();
+        final MessageProcessor executeProcessor3 = iterator.next();
 
         assertThat(executeProcessor3).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute3 = (DefaultJavaComponent) executeProcessor3;
+        final DefaultJavaComponent execute3 = (DefaultJavaComponent) executeProcessor3;
 
         assertThat(execute3.getObjectType()).isEqualTo(Complex2.class);
 
         assertThat(execute3.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        MessageProcessor executeProcessor4 = iterator.next();
+        final MessageProcessor executeProcessor4 = iterator.next();
 
         assertThat(executeProcessor4).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute4 = (DefaultJavaComponent) executeProcessor4;
+        final DefaultJavaComponent execute4 = (DefaultJavaComponent) executeProcessor4;
 
         assertThat(execute4.getObjectType()).isEqualTo(Simple3.class);
 
         assertThat(execute4.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        MessageProcessor executeProcessor5 = iterator.next();
+        final MessageProcessor executeProcessor5 = iterator.next();
 
         assertThat(executeProcessor5).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        DefaultJavaComponent execute5 = (DefaultJavaComponent) executeProcessor5;
+        final DefaultJavaComponent execute5 = (DefaultJavaComponent) executeProcessor5;
 
         assertThat(execute5.getObjectType()).isEqualTo(Complex2.class);
 
         assertThat(execute5.getObjectFactory().isSingleton()).isEqualTo(false);
 
-        MessageProcessor executeProcessor6 = iterator.next();
+        final MessageProcessor executeProcessor6 = iterator.next();
 
         assertThat(executeProcessor6).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent execute6 = (SimpleCallableJavaComponent) executeProcessor6;
+        final SimpleCallableJavaComponent execute6 = (SimpleCallableJavaComponent) executeProcessor6;
 
         assertThat(execute6.getObjectType()).isEqualTo(SimpleCallable.class);
 
@@ -1008,7 +1009,7 @@ public class TestExecuteSimple {
 
     public static class SimpleCallable implements Callable {
         @Override
-        public Object onCall(MuleEventContext muleEventContext) throws Exception {
+        public Object onCall(final MuleEventContext muleEventContext) throws Exception {
             System.out.println("HERE!");
             return muleEventContext.getMessage().getPayload();
         }
@@ -1016,12 +1017,12 @@ public class TestExecuteSimple {
 
     public static class ComplexCallable implements Callable {
 
-        public ComplexCallable(String none) {
+        public ComplexCallable(final String none) {
 
         }
 
         @Override
-        public Object onCall(MuleEventContext muleEventContext) throws Exception {
+        public Object onCall(final MuleEventContext muleEventContext) throws Exception {
             System.out.println("HERE!");
             return muleEventContext.getMessage().getPayload();
         }
@@ -1033,24 +1034,27 @@ public class TestExecuteSimple {
     }
 
     public static class Simple2 implements Simple {
-        public void execute(String string) {
+        @Override
+		public void execute(final String string) {
             System.out.println("SIMPLE 2! : " + string);
         }
     }
 
     public static class Complex2 implements Simple {
 
-        public Complex2(String value, String value2) {
+        public Complex2(final String value, final String value2) {
 
         }
 
-        public void execute(String string) {
+        @Override
+		public void execute(final String string) {
             System.out.println("SIMPLE 2! : " + string);
         }
     }
 
     public static class Simple3 implements Simple {
-        public void execute(String string) {
+        @Override
+		public void execute(final String string) {
             System.out.println("SIMPLE 3! : " + string);
         }
     }

@@ -9,22 +9,23 @@
 
 package org.mule.config.dsl.module.twitter.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.internal.Builder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.config.dsl.module.twitter.StatusesUpdateMessageProcessorDefinition;
 import org.mule.ibeans.twitter.config.StatusesUpdateMessageProcessor;
 
 import static org.mule.config.dsl.expression.CoreExpr.string;
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 public class StatusesUpdateMessageProcessorBuilder implements StatusesUpdateMessageProcessorDefinition, Builder<StatusesUpdateMessageProcessor> {
 
-    private final IBeansTwitterReference reference;
+    private final IBeanTwitterReference reference;
 
     private String status = null;
-    private ExpressionEvaluatorBuilder statusExp = null;
+    private ExpressionEvaluatorDefinition statusExp = null;
 
     private String replyId = null;
     private Double latitude = null;
@@ -33,19 +34,19 @@ public class StatusesUpdateMessageProcessorBuilder implements StatusesUpdateMess
     private Boolean displayCoordinates = null;
     private Boolean trimUser = null;
 
-    private ExpressionEvaluatorBuilder replyIdExp = null;
-    private ExpressionEvaluatorBuilder latitudeExp = null;
-    private ExpressionEvaluatorBuilder longitudeExp = null;
-    private ExpressionEvaluatorBuilder placeIdExp = null;
-    private ExpressionEvaluatorBuilder displayCoordinatesExp = null;
-    private ExpressionEvaluatorBuilder trimUserExp = null;
+    private ExpressionEvaluatorDefinition replyIdExp = null;
+    private ExpressionEvaluatorDefinition latitudeExp = null;
+    private ExpressionEvaluatorDefinition longitudeExp = null;
+    private ExpressionEvaluatorDefinition placeIdExp = null;
+    private ExpressionEvaluatorDefinition displayCoordinatesExp = null;
+    private ExpressionEvaluatorDefinition trimUserExp = null;
 
-    public StatusesUpdateMessageProcessorBuilder(IBeansTwitterReference reference, String status) {
+    public StatusesUpdateMessageProcessorBuilder(IBeanTwitterReference reference, String status) {
         this.reference = reference;
         this.status = status;
     }
 
-    public StatusesUpdateMessageProcessorBuilder(IBeansTwitterReference reference, ExpressionEvaluatorBuilder statusExp) {
+    public StatusesUpdateMessageProcessorBuilder(IBeanTwitterReference reference, ExpressionEvaluatorDefinition statusExp) {
         this.reference = reference;
         this.statusExp = statusExp;
     }
@@ -57,7 +58,7 @@ public class StatusesUpdateMessageProcessorBuilder implements StatusesUpdateMess
     }
 
     @Override
-    public StatusesUpdateMessageProcessorDefinition withReplyId(ExpressionEvaluatorBuilder replyIdExp) {
+    public StatusesUpdateMessageProcessorDefinition withReplyId(ExpressionEvaluatorDefinition replyIdExp) {
         this.replyIdExp = replyIdExp;
         return this;
     }
@@ -69,7 +70,7 @@ public class StatusesUpdateMessageProcessorBuilder implements StatusesUpdateMess
     }
 
     @Override
-    public StatusesUpdateMessageProcessorDefinition withLatitude(ExpressionEvaluatorBuilder latitudeExp) {
+    public StatusesUpdateMessageProcessorDefinition withLatitude(ExpressionEvaluatorDefinition latitudeExp) {
         this.latitudeExp = latitudeExp;
         return this;
     }
@@ -81,7 +82,7 @@ public class StatusesUpdateMessageProcessorBuilder implements StatusesUpdateMess
     }
 
     @Override
-    public StatusesUpdateMessageProcessorDefinition withLongitude(ExpressionEvaluatorBuilder longitudeExp) {
+    public StatusesUpdateMessageProcessorDefinition withLongitude(ExpressionEvaluatorDefinition longitudeExp) {
         this.longitudeExp = longitudeExp;
         return this;
     }
@@ -93,7 +94,7 @@ public class StatusesUpdateMessageProcessorBuilder implements StatusesUpdateMess
     }
 
     @Override
-    public StatusesUpdateMessageProcessorDefinition withPlaceId(ExpressionEvaluatorBuilder placeIdExp) {
+    public StatusesUpdateMessageProcessorDefinition withPlaceId(ExpressionEvaluatorDefinition placeIdExp) {
         this.placeIdExp = placeIdExp;
         return this;
     }
@@ -105,7 +106,7 @@ public class StatusesUpdateMessageProcessorBuilder implements StatusesUpdateMess
     }
 
     @Override
-    public StatusesUpdateMessageProcessorDefinition withDisplayCoordinates(ExpressionEvaluatorBuilder displayCoordinatesExp) {
+    public StatusesUpdateMessageProcessorDefinition withDisplayCoordinates(ExpressionEvaluatorDefinition displayCoordinatesExp) {
         this.displayCoordinatesExp = displayCoordinatesExp;
         return this;
     }
@@ -117,13 +118,16 @@ public class StatusesUpdateMessageProcessorBuilder implements StatusesUpdateMess
     }
 
     @Override
-    public StatusesUpdateMessageProcessorDefinition withTrimUser(ExpressionEvaluatorBuilder trimUserExp) {
+    public StatusesUpdateMessageProcessorDefinition withTrimUser(ExpressionEvaluatorDefinition trimUserExp) {
         this.trimUserExp = trimUserExp;
         return this;
     }
 
     @Override
-    public StatusesUpdateMessageProcessor build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public StatusesUpdateMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         StatusesUpdateMessageProcessor mp = new StatusesUpdateMessageProcessor();
 
         mp.setMuleContext(muleContext);
