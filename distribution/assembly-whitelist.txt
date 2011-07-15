@@ -1,0 +1,36 @@
+/mule-dsl-${productVersion}
+/mule-dsl-${productVersion}/example
+/mule-dsl-${productVersion}/example/+
+
+# dsl
+/mule-dsl-${productVersion}/lib/commons-discovery-0.5.jar
+/mule-dsl-${productVersion}/lib/dsl-core-${productVersion}.jar
+/mule-dsl-${productVersion}/lib/guice-3.0.jar
+/mule-dsl-${productVersion}/lib/javax.inject-1.jar
+
+
+# mule-core
+/mule-dsl-${productVersion}/lib
+/mule-dsl-${productVersion}/lib/activation-1.1-osgi.jar
+/mule-dsl-${productVersion}/lib/aopalliance-1.0.jar
+/mule-dsl-${productVersion}/lib/asm-3.1.jar
+/mule-dsl-${productVersion}/lib/asm-commons-3.1.jar
+/mule-dsl-${productVersion}/lib/asm-tree-3.1.jar
+/mule-dsl-${productVersion}/lib/backport-util-concurrent-3.1-osgi.jar
+/mule-dsl-${productVersion}/lib/commons-beanutils-1.8.0.jar
+/mule-dsl-${productVersion}/lib/commons-collections-3.2.1.jar
+/mule-dsl-${productVersion}/lib/commons-io-1.4.jar
+/mule-dsl-${productVersion}/lib/commons-lang-2.6.jar
+/mule-dsl-${productVersion}/lib/commons-pool-1.5.3.jar
+/mule-dsl-${productVersion}/lib/geronimo-j2ee-connector_1.5_spec-1.1-osgi.jar
+/mule-dsl-${productVersion}/lib/geronimo-jta_1.0.1B_spec-1.1-osgi.jar
+/mule-dsl-${productVersion}/lib/jcl-over-slf4j-1.6.1.jar
+/mule-dsl-${productVersion}/lib/jsr250-api-1.0.jar
+/mule-dsl-${productVersion}/lib/jug-2.0.0-asl.jar
+/mule-dsl-${productVersion}/lib/log4j-1.2.14.jar
+/mule-dsl-${productVersion}/lib/mule-core-3.1.2.jar
+/mule-dsl-${productVersion}/lib/slf4j-api-1.6.1.jar
+/mule-dsl-${productVersion}/lib/slf4j-log4j12-1.6.1.jar
+
+# transports
+/mule-dsl-${productVersion}/lib/mule-transport-file-3.1.2.jar
