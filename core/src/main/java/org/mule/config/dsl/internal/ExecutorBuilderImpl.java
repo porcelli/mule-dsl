@@ -12,8 +12,8 @@ package org.mule.config.dsl.internal;
 import com.google.inject.Injector;
 import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleContext;
-import org.mule.api.component.Component;
 import org.mule.api.lifecycle.Callable;
+import org.mule.api.processor.MessageProcessor;
 import org.mule.component.DefaultJavaComponent;
 import org.mule.component.SimpleCallableJavaComponent;
 import org.mule.config.dsl.ExecutorBuilder;
@@ -26,6 +26,7 @@ import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.object.PrototypeObjectFactory;
 import org.mule.object.SingletonObjectFactory;
 import org.mule.processor.InvokerMessageProcessor;
+import org.mule.util.ClassUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -125,7 +126,7 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
         return invoker;
     }
 
-    private Component buildComponent(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    private MessageProcessor buildComponent(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         if (clazz != null) {
             if (Callable.class.isAssignableFrom(clazz)) {
                 try {
@@ -134,6 +135,17 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
                     }
                     return new SimpleCallableJavaComponent(clazz);
                 } catch (DefaultMuleException e) {
+                    //todo improve
+                    throw new RuntimeException(e);
+                }
+            } else if (MessageProcessor.class.isAssignableFrom(clazz)) {
+                try {
+                    if (InjectorUtil.hasProvider(injector, clazz)) {
+                        return (MessageProcessor) injector.getInstance(clazz);
+                    } else {
+                        return (MessageProcessor) ClassUtils.instanciateClass(clazz);
+                    }
+                } catch (Exception e) {
                     //todo improve
                     throw new RuntimeException(e);
                 }
@@ -156,6 +168,8 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
 
         if (obj instanceof Callable) {
             return new SimpleCallableJavaComponent((Callable) obj);
+        } else if (obj instanceof MessageProcessor) {
+            return (MessageProcessor) obj;
         }
 
         return new DefaultJavaComponent(new SingletonObjectFactory(obj), createDefaultResolverSet(), null);
