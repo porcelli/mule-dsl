@@ -8,6 +8,8 @@
 	</parent>
 	<groupId>org.mule.dsl</groupId>
 	<artifactId>dsl-core</artifactId>
+	<name>Mule DSL core</name>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.mule</groupId>

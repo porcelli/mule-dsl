@@ -4,15 +4,20 @@
 	<groupId>org.mule.dsl</groupId>
 	<artifactId>dsl-parent</artifactId>
 	<version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+	<packaging>pom</packaging>
+	<name>Mule DSL</name>
+	
 	<properties>
+		<mule.version>3.1.2</mule.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<powermock.version>1.4.9</powermock.version>
 	</properties>
+	
 	<modules>
 		<module>core</module>
 		<module>example</module>
 	</modules>
+	
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -24,12 +29,12 @@
 			<dependency>
 				<groupId>org.mule</groupId>
 				<artifactId>mule-core</artifactId>
-				<version>3.1.2</version>
+				<version>${mule.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mule.modules</groupId>
 				<artifactId>mule-module-scripting</artifactId>
-				<version>3.1.2</version>
+				<version>${mule.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.inject</groupId>
@@ -50,17 +55,12 @@
 			<dependency>
 				<groupId>org.mule.transports</groupId>
 				<artifactId>mule-transport-file</artifactId>
-				<version>3.1.2</version>
+				<version>${mule.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mule.transports</groupId>
 				<artifactId>mule-transport-http</artifactId>
-				<version>3.1.2</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mule.transports</groupId>
-				<artifactId>mule-transport-http</artifactId>
-				<version>3.1.2</version>
+				<version>${mule.version}</version>
 			</dependency>
 			<!-- test frameworks -->
 			<dependency>
@@ -75,6 +75,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	
 	<build>
 		<plugins>
 			<plugin>
