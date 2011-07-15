@@ -16,6 +16,7 @@
 	<modules>
 		<module>core</module>
 		<module>example</module>
+		<module>distribution</module>
 	</modules>
 	
 	<dependencyManagement>
