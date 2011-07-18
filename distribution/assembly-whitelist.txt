@@ -43,3 +43,9 @@
 /mule-dsl-${productVersion}/lib/mule-transport-tcp-3.1.2.jar
 /mule-dsl-${productVersion}/lib/tomcat-apr-5.5.23.jar
 /mule-dsl-${productVersion}/lib/tomcat-util-5.5.23.jar
+
+# stdio transport
+/mule-dsl-${productVersion}/lib/mule-transport-stdio-3.1.2.jar
+
+# vm transport
+/mule-dsl-${productVersion}/lib/mule-transport-vm-3.1.2.jar
