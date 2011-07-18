@@ -45,6 +45,17 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-http</artifactId>
+			<version>${mule.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.mule.modules</groupId>
+					<artifactId>mule-module-spring-config</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 	</dependencies>
 	
 	<build>

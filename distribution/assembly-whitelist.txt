@@ -32,5 +32,14 @@
 /mule-dsl-${productVersion}/lib/slf4j-api-1.6.1.jar
 /mule-dsl-${productVersion}/lib/slf4j-log4j12-1.6.1.jar
 
-# transports
+# file transport
 /mule-dsl-${productVersion}/lib/mule-transport-file-3.1.2.jar
+
+# http transport
+/mule-dsl-${productVersion}/lib/commons-codec-1.3-osgi.jar
+/mule-dsl-${productVersion}/lib/commons-httpclient-3.1-osgi.jar
+/mule-dsl-${productVersion}/lib/mule-transport-http-3.1.2.jar
+/mule-dsl-${productVersion}/lib/mule-transport-ssl-3.1.2.jar
+/mule-dsl-${productVersion}/lib/mule-transport-tcp-3.1.2.jar
+/mule-dsl-${productVersion}/lib/tomcat-apr-5.5.23.jar
+/mule-dsl-${productVersion}/lib/tomcat-util-5.5.23.jar
