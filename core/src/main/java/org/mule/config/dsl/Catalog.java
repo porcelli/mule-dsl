@@ -37,6 +37,16 @@ public interface Catalog {
     PropertyPlaceholder getPropertyPlaceholder();
 
     /**
+     * Register the given compoenent on DSL catalog. Registered components are available
+     * on MuleContext after its configuraton.
+     *
+     * @param name name that identifies uniquely the component
+     * @throws IllegalArgumentException if {@code name} param is null, empty or already exists in catalog
+     * @throws NullPointerException     if {@code obj} param is null
+     */
+    <O> void newRegistry(String name, O obj) throws IllegalArgumentException, NullPointerException;
+
+    /**
      * Creates a global flow entry into catalog using {@code flowName} as
      * an unique identifier, returning an instance of a {@link FlowBuilder} that
      * should be configured.

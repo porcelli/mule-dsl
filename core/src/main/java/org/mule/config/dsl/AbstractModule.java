@@ -127,6 +127,20 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule im
         catalog.addToPropertyPlaceholder(properties);
     }
 
+    /* global register */
+
+    /**
+     * @param name the name of the component to be registered
+     * @param obj  the object to be registered
+     * @throws IllegalArgumentException if {@code name} param is null or empty
+     * @throws NullPointerException     if {@code obj} param is null
+     */
+    public <O> void register(final String name, O obj) throws IllegalArgumentException, NullPointerException {
+        checkNotEmpty(name, "name");
+        checkNotNull(name, "obj");
+        catalog.newRegistry(name, obj);
+    }
+
     /* global transformar and filters */
 
     /**

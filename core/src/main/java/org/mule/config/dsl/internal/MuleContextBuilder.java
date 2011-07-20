@@ -12,12 +12,18 @@ package org.mule.config.dsl.internal;
 import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
+import org.mule.api.NamedObject;
+import org.mule.api.agent.Agent;
 import org.mule.api.construct.FlowConstruct;
 import org.mule.api.transformer.Transformer;
+import org.mule.api.transport.Connector;
 import org.mule.config.dsl.ConfigurationException;
 import org.mule.context.DefaultMuleContextFactory;
 import org.mule.routing.MessageFilter;
 
+import java.util.Map;
+
+import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.mule.config.dsl.internal.GuiceRegistry.GUICE_INJECTOR_REF;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
@@ -72,6 +78,24 @@ public class MuleContextBuilder implements org.mule.config.dsl.Builder {
      * @throws ConfigurationException if fails to register any configuration from catalog
      */
     private MuleContext config(final MuleContext muleContext) throws ConfigurationException {
+
+        for (final Map.Entry<String, Object> entry : catalog.getComponents().entrySet()) {
+            try {
+                if (entry.getValue() instanceof NamedObject && isEmpty(((NamedObject) entry.getValue()).getName())) {
+                    ((NamedObject) entry.getValue()).setName(entry.getKey());
+                }
+                if (entry.getValue() instanceof Connector) {
+                    muleContext.getRegistry().registerConnector((Connector) entry.getValue());
+                } else if (entry.getValue() instanceof Agent) {
+                    muleContext.getRegistry().registerAgent((Agent) entry.getValue());
+                } else {
+                    muleContext.getRegistry().registerObject(entry.getKey(), entry.getValue());
+                }
+            } catch (MuleException e) {
+                throw new ConfigurationException("Failed to configure a Component.", e);
+            }
+        }
+
         for (final TransformerBuilderImpl transformerBuilder : catalog.getGlobalTransformers().values()) {
             final Transformer transformer = transformerBuilder.build(muleContext, catalog.getPropertyPlaceholder());
             if (transformer != null) {

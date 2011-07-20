@@ -30,14 +30,30 @@ public class DefaultCatalogImpl implements Catalog {
     private final Map<String, FlowBuilderImpl> flows;
     private final Map<String, TransformerBuilderImpl> globalTransformers;
     private final Map<String, FilterBuilderImpl> globalFilters;
+    private final Map<String, Object> globalComponents;
     private final PropertyPlaceholder placeholder;
 
     public DefaultCatalogImpl() {
         this.flows = new HashMap<String, FlowBuilderImpl>();
         this.globalTransformers = new HashMap<String, TransformerBuilderImpl>();
         this.globalFilters = new HashMap<String, FilterBuilderImpl>();
+        this.globalComponents = new HashMap<String, Object>();
         this.properties = new Properties();
         this.placeholder = new PropertyPlaceholderImpl(properties);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void newRegistry(String name, Object obj) throws IllegalArgumentException, NullPointerException {
+        checkNotEmpty(name, "name");
+        if (globalComponents.containsKey(name)) {
+            throw new IllegalArgumentException("Component name already registered.");
+        }
+        checkNotNull(obj, "obj");
+
+        globalComponents.put(name, obj);
     }
 
     /**
@@ -105,6 +121,16 @@ public class DefaultCatalogImpl implements Catalog {
     @Override
     public PropertyPlaceholder getPropertyPlaceholder() {
         return placeholder;
+    }
+
+    /**
+     * Returns an unmodifiable map of registered components
+     *
+     * @return the unmodifiable map of registered components
+     * @see java.util.Collections#unmodifiableMap(java.util.Map)
+     */
+    Map<String, Object> getComponents() {
+        return unmodifiableMap(globalComponents);
     }
 
     /**
