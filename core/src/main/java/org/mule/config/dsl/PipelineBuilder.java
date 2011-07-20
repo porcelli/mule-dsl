@@ -22,52 +22,6 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> extends Builder {
     /* debug & output */
 
     /**
-     * Prints on System.out the payload content.
-     *
-     * @return the parameterized builder
-     */
-//TODO     P sysout();
-
-    /**
-     * Prints on System.out the {@code message} parameter.
-     *
-     * @return the parameterized builder
-     * @throws IllegalArgumentException if {@code message} param is null or empty
-     */
-//TODO     P sysout(String message) throws IllegalArgumentException;
-
-    /**
-     * Prints on System.out the {@code expr} parameter.
-     *
-     * @return the parameterized builder
-     * @throws NullPointerException if {@code expr} param is null
-     */
-//TODO     <E extends ExpressionEvaluatorDefinition> P sysout(E expr) throws NullPointerException;
-
-    /**
-     * Prints on System.err the payload content.
-     *
-     * @return the parameterized builder
-     */
-//TODO     P syserr();
-
-    /**
-     * Prints on System.err the {@code message} parameter.
-     *
-     * @return the parameterized builder
-     * @throws IllegalArgumentException if {@code message} param is null or empty
-     */
-//TODO     P syserr(String message) throws IllegalArgumentException;
-
-    /**
-     * Prints on System.err the {@code expr} parameter.
-     *
-     * @return the parameterized builder
-     * @throws NullPointerException if {@code expr} param is null
-     */
-//TODO     <E extends ExpressionEvaluatorDefinition> P syserr(E expr) throws NullPointerException;
-
-    /**
      * Logs the payload content at INFO level.
      *
      * @return the parameterized builder
@@ -148,7 +102,7 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> extends Builder {
      * @throws NullPointerException if {@code obj} param is null
      * @see org.mule.model.resolvers.ReflectionEntryPointResolver
      */
-    <B> ExecutorBuilder<P> execute(B obj) throws NullPointerException;
+    <B> InvokeBuilder<P> invoke(B obj) throws NullPointerException;
 
     /**
      * Executes the most appropriate {@code clazz}'s method.
@@ -158,7 +112,7 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> extends Builder {
      * @throws NullPointerException if {@code clazz} param is null
      * @see org.mule.model.resolvers.ReflectionEntryPointResolver
      */
-    <B> ExecutorBuilder<P> execute(Class<B> clazz) throws NullPointerException;
+    <B> InvokeBuilder<P> invoke(Class<B> clazz) throws NullPointerException;
 
     /**
      * Executes the most appropriate {@code clazz}'s method.
@@ -169,7 +123,7 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> extends Builder {
      * @throws NullPointerException if {@code clazz} or {@code scope} params are null
      * @see org.mule.model.resolvers.ReflectionEntryPointResolver
      */
-    <B> ExecutorBuilder<P> execute(Class<B> clazz, Scope scope) throws NullPointerException;
+    <B> InvokeBuilder<P> invoke(Class<B> clazz, Scope scope) throws NullPointerException;
 
 
     //TODO P executeFlow(String flowName) throws IllegalArgumentException;

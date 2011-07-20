@@ -9,8 +9,6 @@
 
 package org.mule.config.dsl;
 
-import static org.fest.assertions.Assertions.assertThat;
-
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -23,6 +21,8 @@ import org.mule.api.processor.MessageProcessor;
 import org.mule.api.source.MessageSource;
 import org.mule.construct.SimpleFlowConstruct;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 public class TestSimpleServiceFlow {
 
     @Test
@@ -32,7 +32,7 @@ public class TestSimpleServiceFlow {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(SimpleCallable.class);
+                        .invoke(SimpleCallable.class);
             }
         });
 

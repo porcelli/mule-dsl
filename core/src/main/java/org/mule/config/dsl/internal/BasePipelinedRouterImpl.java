@@ -117,9 +117,9 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
      * {@inheritDoc}
      */
     @Override
-    public <B> ExecutorBuilder<P> execute(final B obj) throws NullPointerException {
+    public <B> InvokeBuilder<P> invoke(final B obj) throws NullPointerException {
         checkNotNull(obj, "obj");
-        final ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), obj);
+        final InvokeBuilderImpl<P> builder = new InvokeBuilderImpl<P>(getThis(), obj);
         pipeline.addBuilder(builder);
 
         return builder;
@@ -129,9 +129,9 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
      * {@inheritDoc}
      */
     @Override
-    public <B> ExecutorBuilder<P> execute(final Class<B> clazz) throws NullPointerException {
+    public <B> InvokeBuilder<P> invoke(final Class<B> clazz) throws NullPointerException {
         checkNotNull(clazz, "clazz");
-        final ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), clazz);
+        final InvokeBuilderImpl<P> builder = new InvokeBuilderImpl<P>(getThis(), clazz);
         pipeline.addBuilder(builder);
 
         return builder;
@@ -141,10 +141,10 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
      * {@inheritDoc}
      */
     @Override
-    public <B> ExecutorBuilder<P> execute(final Class<B> clazz, final Scope scope) throws NullPointerException {
+    public <B> InvokeBuilder<P> invoke(final Class<B> clazz, final Scope scope) throws NullPointerException {
         checkNotNull(clazz, "clazz");
         checkNotNull(scope, "scope");
-        final ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), clazz, scope);
+        final InvokeBuilderImpl<P> builder = new InvokeBuilderImpl<P>(getThis(), clazz, scope);
         pipeline.addBuilder(builder);
 
         return builder;

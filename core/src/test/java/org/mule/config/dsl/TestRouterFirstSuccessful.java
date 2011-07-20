@@ -9,8 +9,6 @@
 
 package org.mule.config.dsl;
 
-import static org.fest.assertions.Assertions.assertThat;
-
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -24,6 +22,8 @@ import org.mule.component.SimpleCallableJavaComponent;
 import org.mule.component.simple.EchoComponent;
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.routing.FirstSuccessful;
+
+import static org.fest.assertions.Assertions.assertThat;
 
 public class TestRouterFirstSuccessful {
 
@@ -206,15 +206,15 @@ public class TestRouterFirstSuccessful {
     }
 
     @Test
-    public void simpleFirstSuccessfulWithExecute() {
+    public void simpleFirstSuccessfulWithInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .firstSuccessful()
-                            .execute(Simple.class, Scope.PROTOTYPE)
-                            .execute(Simple.class, Scope.PROTOTYPE).withDefaultArg()
+                            .invoke(Simple.class, Scope.PROTOTYPE)
+                            .invoke(Simple.class, Scope.PROTOTYPE).withDefaultArg()
                         .endFirstSuccessful();
 
                 bind(Simple.class).to(Simple2.class);

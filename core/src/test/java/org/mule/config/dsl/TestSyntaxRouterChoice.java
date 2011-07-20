@@ -41,7 +41,7 @@ public class TestSyntaxRouterChoice {
                         .endChoice();
 
                 flow("MyFlow2")
-                        .execute((Class<?>)null)
+                        .invoke((Class<?>) null)
                         .choice()
                             .when(string(""))
                                 .echo()
@@ -64,7 +64,7 @@ public class TestSyntaxRouterChoice {
                         .endChoice();
 
                 flow("MyFlow2")
-                        .execute((Class<?>)null)
+                        .invoke((Class<?>) null)
                         .choice()
                             .when(string(""))
                                 .echo()

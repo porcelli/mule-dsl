@@ -12,38 +12,38 @@ package org.mule.config.dsl;
 import java.lang.annotation.Annotation;
 
 /**
- * Interface that extends {@link PipelineBuilder} and adds some additional executor specific configuration.
+ * Interface that extends {@link PipelineBuilder} and adds some additional invoke specific configuration.
  *
  * @author porcelli
  */
-public interface ExecutorBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<P> {
+public interface InvokeBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<P> {
 
     /**
-     * Defines the method to be executed that should be annotated by given annotation type.
+     * Defines the method to be invoked that should be annotated by given annotation type.
      *
      * @param annotationType the annotation type that method should be annotated by
-     * @return the inner executor builder
+     * @return the inner invoker builder
      * @throws NullPointerException if {@code annotationType} param is null
      */
-    InnerArgsExecutorBuilder<P> methodAnnotatedWith(Class<? extends Annotation> annotationType) throws NullPointerException;
+    InnerArgsInvokeBuilder<P> methodAnnotatedWith(Class<? extends Annotation> annotationType) throws NullPointerException;
 
     /**
-     * Defines the method to be executed that should be annotated by given annotation.
+     * Defines the method to be invoked that should be annotated by given annotation.
      *
      * @param annotation the annotation that method should be annotated by
-     * @return the inner executor builder
+     * @return the inner invoker builder
      * @throws NullPointerException if {@code annotation} param is null
      */
-    InnerArgsExecutorBuilder<P> methodAnnotatedWith(Annotation annotation) throws NullPointerException;
+    InnerArgsInvokeBuilder<P> methodAnnotatedWith(Annotation annotation) throws NullPointerException;
 
     /**
-     * Defines the method to be executed.
+     * Defines the method to be invoked.
      *
-     * @param name the method name to be executed
-     * @return the inner executor builder
+     * @param name the method name to be invoked
+     * @return the inner invoker builder
      * @throws IllegalArgumentException if {@code name} param is empty or null
      */
-//TODO    InnerArgsExecutorBuilder<P> methodName(String name) throws IllegalArgumentException;
+    InnerArgsInvokeBuilder<P> methodName(String name) throws IllegalArgumentException;
 
     /**
      * Points that the choosen method will get the default arg.
@@ -60,7 +60,7 @@ public interface ExecutorBuilder<P extends PipelineBuilder<P>> extends PipelineB
      *
      * @author porcelli
      */
-    public interface InnerArgsExecutorBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<InnerArgsExecutorBuilder<P>> {
+    public interface InnerArgsInvokeBuilder<P extends PipelineBuilder<P>> extends PipelineBuilder<InnerArgsInvokeBuilder<P>> {
 
         /**
          * Points that the choosen method will not get any args.
@@ -73,7 +73,7 @@ public interface ExecutorBuilder<P extends PipelineBuilder<P>> extends PipelineB
         P withoutArgs();
 
         /**
-         * Defines the argument list to be used on method execution.
+         * Defines the argument list to be used on method invoke.
          *
          * @param args the argument list
          * @return the parameterized builder

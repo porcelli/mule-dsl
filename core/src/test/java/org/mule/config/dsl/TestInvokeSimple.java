@@ -9,14 +9,6 @@
 
 package org.mule.config.dsl;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mule.config.dsl.Scope.PROTOTYPE;
-import static org.mule.config.dsl.Scope.SINGLETON;
-
-import java.util.Iterator;
-
-import javax.inject.Singleton;
-
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -30,16 +22,23 @@ import org.mule.component.DefaultJavaComponent;
 import org.mule.component.SimpleCallableJavaComponent;
 import org.mule.construct.SimpleFlowConstruct;
 
-public class TestExecuteSimple {
+import javax.inject.Singleton;
+import java.util.Iterator;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.Scope.PROTOTYPE;
+import static org.mule.config.dsl.Scope.SINGLETON;
+
+public class TestInvokeSimple {
 
     @Test
-    public void simpleObjectExecute() {
+    public void simpleObjectInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(new Simple2());
+                        .invoke(new Simple2());
             }
         });
 
@@ -66,27 +65,27 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor invokeProcessor = iterator.next();
 
-        assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
+        final DefaultJavaComponent invoke = (DefaultJavaComponent) invokeProcessor;
 
-        assertThat(execute.getObjectType()).isEqualTo(Simple2.class);
+        assertThat(invoke.getObjectType()).isEqualTo(Simple2.class);
 
-        assertThat(execute.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(invoke.getObjectFactory().isSingleton()).isEqualTo(true);
     }
 
 
     @Test
-    public void simpleChainObjectExecute() {
+    public void simpleChainObjectInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(new Simple2())
-                        .execute(new Simple3());
+                        .invoke(new Simple2())
+                        .invoke(new Simple3());
             }
         });
 
@@ -113,35 +112,35 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor invokeProcessor1 = iterator.next();
 
-        assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
+        final DefaultJavaComponent invoke1 = (DefaultJavaComponent) invokeProcessor1;
 
-        assertThat(execute1.getObjectType()).isEqualTo(Simple2.class);
+        assertThat(invoke1.getObjectType()).isEqualTo(Simple2.class);
 
-        assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(invoke1.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        final MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor invokeProcessor2 = iterator.next();
 
-        assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
+        final DefaultJavaComponent invoke2 = (DefaultJavaComponent) invokeProcessor2;
 
-        assertThat(execute2.getObjectType()).isEqualTo(Simple3.class);
+        assertThat(invoke2.getObjectType()).isEqualTo(Simple3.class);
 
-        assertThat(execute2.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(invoke2.getObjectFactory().isSingleton()).isEqualTo(true);
     }
 
     @Test
-    public void simpleCallableObjectExecute() {
+    public void simpleCallableObjectInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(new SimpleCallable());
+                        .invoke(new SimpleCallable());
             }
         });
 
@@ -168,27 +167,27 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor invokeProcessor = iterator.next();
 
-        assertThat(executeProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+        assertThat(invokeProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        final SimpleCallableJavaComponent execute = (SimpleCallableJavaComponent) executeProcessor;
+        final SimpleCallableJavaComponent invoke = (SimpleCallableJavaComponent) invokeProcessor;
 
-        assertThat(execute.getObjectType()).isEqualTo(SimpleCallable.class);
+        assertThat(invoke.getObjectType()).isEqualTo(SimpleCallable.class);
 
-        assertThat(execute.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(invoke.getObjectFactory().isSingleton()).isEqualTo(true);
     }
 
 
     @Test
-    public void simpleChainCallableObjectExecute() {
+    public void simpleChainCallableObjectInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(new SimpleCallable())
-                        .execute(new SimpleCallable());
+                        .invoke(new SimpleCallable())
+                        .invoke(new SimpleCallable());
             }
         });
 
@@ -215,36 +214,36 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor invokeProcessor1 = iterator.next();
 
-        assertThat(executeProcessor1).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+        assertThat(invokeProcessor1).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        final SimpleCallableJavaComponent execute1 = (SimpleCallableJavaComponent) executeProcessor1;
+        final SimpleCallableJavaComponent invoke1 = (SimpleCallableJavaComponent) invokeProcessor1;
 
-        assertThat(execute1.getObjectType()).isEqualTo(SimpleCallable.class);
+        assertThat(invoke1.getObjectType()).isEqualTo(SimpleCallable.class);
 
-        assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(invoke1.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        final MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor invokeProcessor2 = iterator.next();
 
-        assertThat(executeProcessor2).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+        assertThat(invokeProcessor2).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        final SimpleCallableJavaComponent execute2 = (SimpleCallableJavaComponent) executeProcessor2;
+        final SimpleCallableJavaComponent invoke2 = (SimpleCallableJavaComponent) invokeProcessor2;
 
-        assertThat(execute2.getObjectType()).isEqualTo(SimpleCallable.class);
+        assertThat(invoke2.getObjectType()).isEqualTo(SimpleCallable.class);
 
-        assertThat(execute2.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(invoke2.getObjectFactory().isSingleton()).isEqualTo(true);
     }
 
 
     @Test
-    public void simpleCallableClassExecute() {
+    public void simpleCallableClassInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(SimpleCallable.class);
+                        .invoke(SimpleCallable.class);
             }
         });
 
@@ -271,25 +270,25 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor invokeProcessor = iterator.next();
 
-        assertThat(executeProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+        assertThat(invokeProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        final SimpleCallableJavaComponent execute = (SimpleCallableJavaComponent) executeProcessor;
+        final SimpleCallableJavaComponent invoke = (SimpleCallableJavaComponent) invokeProcessor;
 
-        assertThat(execute.getObjectType()).isEqualTo(SimpleCallable.class);
+        assertThat(invoke.getObjectType()).isEqualTo(SimpleCallable.class);
 
-        assertThat(execute.getObjectFactory().isSingleton()).isEqualTo(false);
+        assertThat(invoke.getObjectFactory().isSingleton()).isEqualTo(false);
     }
 
     @Test
-    public void simpleCallableClassInjectedExecute() {
+    public void simpleCallableClassInjectedInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(ComplexCallable.class);
+                        .invoke(ComplexCallable.class);
 
                 bind(ComplexCallable.class).toInstance(new ComplexCallable(null));
             }
@@ -318,26 +317,26 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor invokeProcessor = iterator.next();
 
-        assertThat(executeProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+        assertThat(invokeProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        final SimpleCallableJavaComponent execute = (SimpleCallableJavaComponent) executeProcessor;
+        final SimpleCallableJavaComponent invoke = (SimpleCallableJavaComponent) invokeProcessor;
 
-        assertThat(execute.getObjectType()).isEqualTo(ComplexCallable.class);
+        assertThat(invoke.getObjectType()).isEqualTo(ComplexCallable.class);
 
-        assertThat(execute.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(invoke.getObjectFactory().isSingleton()).isEqualTo(true);
     }
 
     @Test
-    public void simpleChainCallableClassExecute() {
+    public void simpleChainCallableClassInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(SimpleCallable.class)
-                        .execute(SimpleCallable.class);
+                        .invoke(SimpleCallable.class)
+                        .invoke(SimpleCallable.class);
             }
         });
 
@@ -364,35 +363,35 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor invokeProcessor1 = iterator.next();
 
-        assertThat(executeProcessor1).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+        assertThat(invokeProcessor1).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        final SimpleCallableJavaComponent execute1 = (SimpleCallableJavaComponent) executeProcessor1;
+        final SimpleCallableJavaComponent invoke1 = (SimpleCallableJavaComponent) invokeProcessor1;
 
-        assertThat(execute1.getObjectType()).isEqualTo(SimpleCallable.class);
+        assertThat(invoke1.getObjectType()).isEqualTo(SimpleCallable.class);
 
-        assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(false);
+        assertThat(invoke1.getObjectFactory().isSingleton()).isEqualTo(false);
 
-        final MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor invokeProcessor2 = iterator.next();
 
-        assertThat(executeProcessor2).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+        assertThat(invokeProcessor2).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        final SimpleCallableJavaComponent execute2 = (SimpleCallableJavaComponent) executeProcessor2;
+        final SimpleCallableJavaComponent invoke2 = (SimpleCallableJavaComponent) invokeProcessor2;
 
-        assertThat(execute2.getObjectType()).isEqualTo(SimpleCallable.class);
+        assertThat(invoke2.getObjectType()).isEqualTo(SimpleCallable.class);
 
-        assertThat(execute2.getObjectFactory().isSingleton()).isEqualTo(false);
+        assertThat(invoke2.getObjectFactory().isSingleton()).isEqualTo(false);
     }
 
     @Test
-    public void simpleClassExecute() {
+    public void simpleClassInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Simple2.class);
+                        .invoke(Simple2.class);
             }
         });
 
@@ -419,27 +418,27 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor invokeProcessor = iterator.next();
 
-        assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
+        final DefaultJavaComponent invoke = (DefaultJavaComponent) invokeProcessor;
 
-        assertThat(execute.getObjectType()).isEqualTo(Simple2.class);
+        assertThat(invoke.getObjectType()).isEqualTo(Simple2.class);
 
-        assertThat(execute.getObjectFactory().isSingleton()).isEqualTo(false);
+        assertThat(invoke.getObjectFactory().isSingleton()).isEqualTo(false);
     }
 
 
     @Test
-    public void simpleChainClassExecute() {
+    public void simpleChainClassInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Simple2.class)
-                        .execute(Simple3.class);
+                        .invoke(Simple2.class)
+                        .invoke(Simple3.class);
             }
         });
 
@@ -466,35 +465,35 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor invokeProcessor1 = iterator.next();
 
-        assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
+        final DefaultJavaComponent invoke1 = (DefaultJavaComponent) invokeProcessor1;
 
-        assertThat(execute1.getObjectType()).isEqualTo(Simple2.class);
+        assertThat(invoke1.getObjectType()).isEqualTo(Simple2.class);
 
-        assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(false);
+        assertThat(invoke1.getObjectFactory().isSingleton()).isEqualTo(false);
 
-        final MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor invokeProcessor2 = iterator.next();
 
-        assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
+        final DefaultJavaComponent invoke2 = (DefaultJavaComponent) invokeProcessor2;
 
-        assertThat(execute2.getObjectType()).isEqualTo(Simple3.class);
+        assertThat(invoke2.getObjectType()).isEqualTo(Simple3.class);
 
-        assertThat(execute2.getObjectFactory().isSingleton()).isEqualTo(false);
+        assertThat(invoke2.getObjectFactory().isSingleton()).isEqualTo(false);
     }
 
     @Test
-    public void simpleClassPrototypeExecute() {
+    public void simpleClassPrototypeInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class, PROTOTYPE);
+                        .invoke(Complex2.class, PROTOTYPE);
             }
         });
 
@@ -521,27 +520,27 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor invokeProcessor = iterator.next();
 
-        assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
+        final DefaultJavaComponent invoke = (DefaultJavaComponent) invokeProcessor;
 
-        assertThat(execute.getObjectType()).isEqualTo(Complex2.class);
+        assertThat(invoke.getObjectType()).isEqualTo(Complex2.class);
 
-        assertThat(execute.getObjectFactory().isSingleton()).isEqualTo(false);
+        assertThat(invoke.getObjectFactory().isSingleton()).isEqualTo(false);
     }
 
 
     @Test
-    public void simpleChainClassPrototypeExecute() {
+    public void simpleChainClassPrototypeInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class, PROTOTYPE)
-                        .execute(Complex2.class, PROTOTYPE);
+                        .invoke(Complex2.class, PROTOTYPE)
+                        .invoke(Complex2.class, PROTOTYPE);
             }
         });
 
@@ -568,35 +567,35 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor invokeProcessor1 = iterator.next();
 
-        assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
+        final DefaultJavaComponent invoke1 = (DefaultJavaComponent) invokeProcessor1;
 
-        assertThat(execute1.getObjectType()).isEqualTo(Complex2.class);
+        assertThat(invoke1.getObjectType()).isEqualTo(Complex2.class);
 
-        assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(false);
+        assertThat(invoke1.getObjectFactory().isSingleton()).isEqualTo(false);
 
-        final MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor invokeProcessor2 = iterator.next();
 
-        assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
+        final DefaultJavaComponent invoke2 = (DefaultJavaComponent) invokeProcessor2;
 
-        assertThat(execute2.getObjectType()).isEqualTo(Complex2.class);
+        assertThat(invoke2.getObjectType()).isEqualTo(Complex2.class);
 
-        assertThat(execute2.getObjectFactory().isSingleton()).isEqualTo(false);
+        assertThat(invoke2.getObjectFactory().isSingleton()).isEqualTo(false);
     }
 
     @Test
-    public void simpleClassSingletonExecute() {
+    public void simpleClassSingletonInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class, SINGLETON);
+                        .invoke(Complex2.class, SINGLETON);
             }
         });
 
@@ -623,27 +622,27 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor invokeProcessor = iterator.next();
 
-        assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
+        final DefaultJavaComponent invoke = (DefaultJavaComponent) invokeProcessor;
 
-        assertThat(execute.getObjectType()).isEqualTo(Complex2.class);
+        assertThat(invoke.getObjectType()).isEqualTo(Complex2.class);
 
-        assertThat(execute.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(invoke.getObjectFactory().isSingleton()).isEqualTo(true);
     }
 
 
     @Test
-    public void simpleChainClassSingletonExecute() {
+    public void simpleChainClassSingletonInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class, SINGLETON)
-                        .execute(Complex2.class, SINGLETON);
+                        .invoke(Complex2.class, SINGLETON)
+                        .invoke(Complex2.class, SINGLETON);
             }
         });
 
@@ -670,36 +669,36 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor invokeProcessor1 = iterator.next();
 
-        assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
+        final DefaultJavaComponent invoke1 = (DefaultJavaComponent) invokeProcessor1;
 
-        assertThat(execute1.getObjectType()).isEqualTo(Complex2.class);
+        assertThat(invoke1.getObjectType()).isEqualTo(Complex2.class);
 
-        assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(invoke1.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        final MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor invokeProcessor2 = iterator.next();
 
-        assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
+        final DefaultJavaComponent invoke2 = (DefaultJavaComponent) invokeProcessor2;
 
-        assertThat(execute2.getObjectType()).isEqualTo(Complex2.class);
+        assertThat(invoke2.getObjectType()).isEqualTo(Complex2.class);
 
-        assertThat(execute2.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(invoke2.getObjectFactory().isSingleton()).isEqualTo(true);
     }
 
 
     @Test
-    public void simpleClassGuiceProvidedExecute() {
+    public void simpleClassGuiceProvidedInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Simple.class);
+                        .invoke(Simple.class);
 
                 bind(Simple.class).to(Simple2.class);
             }
@@ -728,27 +727,27 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor invokeProcessor = iterator.next();
 
-        assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
+        final DefaultJavaComponent invoke = (DefaultJavaComponent) invokeProcessor;
 
-        assertThat(execute.getObjectType()).isEqualTo(Simple.class);
+        assertThat(invoke.getObjectType()).isEqualTo(Simple.class);
 
-        assertThat(execute.getObjectFactory().isSingleton()).isEqualTo(false);
+        assertThat(invoke.getObjectFactory().isSingleton()).isEqualTo(false);
     }
 
 
     @Test
-    public void simpleChainGuiceClassExecute() {
+    public void simpleChainGuiceClassInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Simple.class)
-                        .execute(Simple.class);
+                        .invoke(Simple.class)
+                        .invoke(Simple.class);
 
                 bind(Simple.class).to(Simple2.class);
             }
@@ -777,36 +776,36 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor invokeProcessor1 = iterator.next();
 
-        assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
+        final DefaultJavaComponent invoke1 = (DefaultJavaComponent) invokeProcessor1;
 
-        assertThat(execute1.getObjectType()).isEqualTo(Simple.class);
+        assertThat(invoke1.getObjectType()).isEqualTo(Simple.class);
 
-        assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(false);
+        assertThat(invoke1.getObjectFactory().isSingleton()).isEqualTo(false);
 
-        final MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor invokeProcessor2 = iterator.next();
 
-        assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
+        final DefaultJavaComponent invoke2 = (DefaultJavaComponent) invokeProcessor2;
 
-        assertThat(execute2.getObjectType()).isEqualTo(Simple.class);
+        assertThat(invoke2.getObjectType()).isEqualTo(Simple.class);
 
-        assertThat(execute2.getObjectFactory().isSingleton()).isEqualTo(false);
+        assertThat(invoke2.getObjectFactory().isSingleton()).isEqualTo(false);
     }
 
 
     @Test
-    public void simpleClassGuiceSingletonProvidedExecute() {
+    public void simpleClassGuiceSingletonProvidedInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Simple.class);
+                        .invoke(Simple.class);
 
                 bind(Simple.class).to(Simple2.class).in(Singleton.class);
             }
@@ -835,27 +834,27 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor invokeProcessor = iterator.next();
 
-        assertThat(executeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute = (DefaultJavaComponent) executeProcessor;
+        final DefaultJavaComponent invoke = (DefaultJavaComponent) invokeProcessor;
 
-        assertThat(execute.getObjectType()).isEqualTo(Simple.class);
+        assertThat(invoke.getObjectType()).isEqualTo(Simple.class);
 
-        assertThat(execute.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(invoke.getObjectFactory().isSingleton()).isEqualTo(true);
     }
 
 
     @Test
-    public void simpleChainGuiceSingletonClassExecute() {
+    public void simpleChainGuiceSingletonClassInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Simple.class)
-                        .execute(Simple.class);
+                        .invoke(Simple.class)
+                        .invoke(Simple.class);
 
                 bind(Simple.class).to(Simple2.class).in(Singleton.class);
             }
@@ -884,40 +883,40 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor invokeProcessor1 = iterator.next();
 
-        assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
+        final DefaultJavaComponent invoke1 = (DefaultJavaComponent) invokeProcessor1;
 
-        assertThat(execute1.getObjectType()).isEqualTo(Simple.class);
+        assertThat(invoke1.getObjectType()).isEqualTo(Simple.class);
 
-        assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(invoke1.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        final MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor invokeProcessor2 = iterator.next();
 
-        assertThat(executeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor2).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute2 = (DefaultJavaComponent) executeProcessor2;
+        final DefaultJavaComponent invoke2 = (DefaultJavaComponent) invokeProcessor2;
 
-        assertThat(execute2.getObjectType()).isEqualTo(Simple.class);
+        assertThat(invoke2.getObjectType()).isEqualTo(Simple.class);
 
-        assertThat(execute2.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(invoke2.getObjectFactory().isSingleton()).isEqualTo(true);
     }
 
     @Test
-    public void complexChainExecute() {
+    public void complexChainInvoke() {
         final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Simple.class)
-                        .execute(SimpleCallable.class)
-                        .execute(Complex2.class, SINGLETON)
-                        .execute(new Simple3())
-                        .execute(Complex2.class, PROTOTYPE)
-                        .execute(new SimpleCallable());
+                        .invoke(Simple.class)
+                        .invoke(SimpleCallable.class)
+                        .invoke(Complex2.class, SINGLETON)
+                        .invoke(new Simple3())
+                        .invoke(Complex2.class, PROTOTYPE)
+                        .invoke(new SimpleCallable());
 
                 bind(Simple.class).to(Simple2.class).in(Singleton.class);
             }
@@ -946,65 +945,65 @@ public class TestExecuteSimple {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor1 = iterator.next();
+        final MessageProcessor invokeProcessor1 = iterator.next();
 
-        assertThat(executeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor1).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute1 = (DefaultJavaComponent) executeProcessor1;
+        final DefaultJavaComponent invoke1 = (DefaultJavaComponent) invokeProcessor1;
 
-        assertThat(execute1.getObjectType()).isEqualTo(Simple.class);
+        assertThat(invoke1.getObjectType()).isEqualTo(Simple.class);
 
-        assertThat(execute1.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(invoke1.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        final MessageProcessor executeProcessor2 = iterator.next();
+        final MessageProcessor invokeProcessor2 = iterator.next();
 
-        assertThat(executeProcessor2).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+        assertThat(invokeProcessor2).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        final SimpleCallableJavaComponent execute2 = (SimpleCallableJavaComponent) executeProcessor2;
+        final SimpleCallableJavaComponent invoke2 = (SimpleCallableJavaComponent) invokeProcessor2;
 
-        assertThat(execute2.getObjectType()).isEqualTo(SimpleCallable.class);
+        assertThat(invoke2.getObjectType()).isEqualTo(SimpleCallable.class);
 
-        assertThat(execute2.getObjectFactory().isSingleton()).isEqualTo(false);
+        assertThat(invoke2.getObjectFactory().isSingleton()).isEqualTo(false);
 
-        final MessageProcessor executeProcessor3 = iterator.next();
+        final MessageProcessor invokeProcessor3 = iterator.next();
 
-        assertThat(executeProcessor3).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor3).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute3 = (DefaultJavaComponent) executeProcessor3;
+        final DefaultJavaComponent invoke3 = (DefaultJavaComponent) invokeProcessor3;
 
-        assertThat(execute3.getObjectType()).isEqualTo(Complex2.class);
+        assertThat(invoke3.getObjectType()).isEqualTo(Complex2.class);
 
-        assertThat(execute3.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(invoke3.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        final MessageProcessor executeProcessor4 = iterator.next();
+        final MessageProcessor invokeProcessor4 = iterator.next();
 
-        assertThat(executeProcessor4).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor4).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute4 = (DefaultJavaComponent) executeProcessor4;
+        final DefaultJavaComponent invoke4 = (DefaultJavaComponent) invokeProcessor4;
 
-        assertThat(execute4.getObjectType()).isEqualTo(Simple3.class);
+        assertThat(invoke4.getObjectType()).isEqualTo(Simple3.class);
 
-        assertThat(execute4.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(invoke4.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        final MessageProcessor executeProcessor5 = iterator.next();
+        final MessageProcessor invokeProcessor5 = iterator.next();
 
-        assertThat(executeProcessor5).isNotNull().isInstanceOf(DefaultJavaComponent.class);
+        assertThat(invokeProcessor5).isNotNull().isInstanceOf(DefaultJavaComponent.class);
 
-        final DefaultJavaComponent execute5 = (DefaultJavaComponent) executeProcessor5;
+        final DefaultJavaComponent invoke5 = (DefaultJavaComponent) invokeProcessor5;
 
-        assertThat(execute5.getObjectType()).isEqualTo(Complex2.class);
+        assertThat(invoke5.getObjectType()).isEqualTo(Complex2.class);
 
-        assertThat(execute5.getObjectFactory().isSingleton()).isEqualTo(false);
+        assertThat(invoke5.getObjectFactory().isSingleton()).isEqualTo(false);
 
-        final MessageProcessor executeProcessor6 = iterator.next();
+        final MessageProcessor invokeProcessor6 = iterator.next();
 
-        assertThat(executeProcessor6).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
+        assertThat(invokeProcessor6).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        final SimpleCallableJavaComponent execute6 = (SimpleCallableJavaComponent) executeProcessor6;
+        final SimpleCallableJavaComponent invoke6 = (SimpleCallableJavaComponent) invokeProcessor6;
 
-        assertThat(execute6.getObjectType()).isEqualTo(SimpleCallable.class);
+        assertThat(invoke6.getObjectType()).isEqualTo(SimpleCallable.class);
 
-        assertThat(execute6.getObjectFactory().isSingleton()).isEqualTo(true);
+        assertThat(invoke6.getObjectFactory().isSingleton()).isEqualTo(true);
     }
 
     public static class SimpleCallable implements Callable {
@@ -1030,12 +1029,12 @@ public class TestExecuteSimple {
 
 
     public static interface Simple {
-        void execute(String string);
+        void invoke(String string);
     }
 
     public static class Simple2 implements Simple {
         @Override
-		public void execute(final String string) {
+		public void invoke(final String string) {
             System.out.println("SIMPLE 2! : " + string);
         }
     }
@@ -1047,14 +1046,14 @@ public class TestExecuteSimple {
         }
 
         @Override
-		public void execute(final String string) {
+		public void invoke(final String string) {
             System.out.println("SIMPLE 2! : " + string);
         }
     }
 
     public static class Simple3 implements Simple {
         @Override
-		public void execute(final String string) {
+		public void invoke(final String string) {
             System.out.println("SIMPLE 3! : " + string);
         }
     }

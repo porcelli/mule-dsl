@@ -9,10 +9,6 @@
 
 package org.mule.config.dsl;
 
-import static org.fest.assertions.Assertions.assertThat;
-
-import java.util.Iterator;
-
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -24,7 +20,11 @@ import org.mule.api.processor.MessageProcessor;
 import org.mule.api.source.MessageSource;
 import org.mule.construct.SimpleFlowConstruct;
 
-public class TestExecuteCustomMP {
+import java.util.Iterator;
+
+import static org.fest.assertions.Assertions.assertThat;
+
+public class TestInvokeCustomMP {
 
     @Test
     public void simpleAnonymousMP() {
@@ -40,7 +40,7 @@ public class TestExecuteCustomMP {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(mp);
+                        .invoke(mp);
             }
         });
 
@@ -67,9 +67,9 @@ public class TestExecuteCustomMP {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor invokeProcessor = iterator.next();
 
-        assertThat(executeProcessor).isEqualTo(mp);
+        assertThat(invokeProcessor).isEqualTo(mp);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class TestExecuteCustomMP {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(MyCustomMP.class);
+                        .invoke(MyCustomMP.class);
             }
         });
 
@@ -106,9 +106,9 @@ public class TestExecuteCustomMP {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor invokeProcessor = iterator.next();
 
-        assertThat(executeProcessor).isNotNull().isInstanceOf(MyCustomMP.class);
+        assertThat(invokeProcessor).isNotNull().isInstanceOf(MyCustomMP.class);
     }
 
     @Test
@@ -119,7 +119,7 @@ public class TestExecuteCustomMP {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(myCustomMP);
+                        .invoke(myCustomMP);
             }
         });
 
@@ -146,11 +146,11 @@ public class TestExecuteCustomMP {
 
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        final MessageProcessor executeProcessor = iterator.next();
+        final MessageProcessor invokeProcessor = iterator.next();
 
-        assertThat(executeProcessor).isNotNull().isInstanceOf(MyCustomMP.class);
+        assertThat(invokeProcessor).isNotNull().isInstanceOf(MyCustomMP.class);
 
-        assertThat(executeProcessor).isEqualTo(myCustomMP);
+        assertThat(invokeProcessor).isEqualTo(myCustomMP);
     }
 
     public static class MyCustomMP implements MessageProcessor {

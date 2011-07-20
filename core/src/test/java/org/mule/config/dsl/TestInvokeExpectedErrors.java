@@ -9,21 +9,16 @@
 
 package org.mule.config.dsl;
 
-import static org.mule.config.dsl.expression.CoreExpr.payload;
-
-import java.lang.annotation.Annotation;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
+import com.google.inject.name.Named;
+import com.google.inject.name.Names;
 import org.junit.Test;
 import org.mule.api.lifecycle.Callable;
 
-import com.google.inject.name.Named;
-import com.google.inject.name.Names;
+import java.lang.annotation.*;
 
-public class TestExecuteExpectedErrors {
+import static org.mule.config.dsl.expression.CoreExpr.payload;
+
+public class TestInvokeExpectedErrors {
 
     @Test(expected = RuntimeException.class)
     public void nullCallable() {
@@ -32,7 +27,7 @@ public class TestExecuteExpectedErrors {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute((Callable) null);
+                        .invoke((Callable) null);
             }
         });
     }
@@ -44,7 +39,7 @@ public class TestExecuteExpectedErrors {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute((Object) null);
+                        .invoke((Object) null);
             }
         });
     }
@@ -56,7 +51,7 @@ public class TestExecuteExpectedErrors {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute((Class<?>) null);
+                        .invoke((Class<?>) null);
             }
         });
     }
@@ -68,7 +63,7 @@ public class TestExecuteExpectedErrors {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex.class).methodAnnotatedWith((Class<? extends Annotation>) null);
+                        .invoke(Complex.class).methodAnnotatedWith((Class<? extends Annotation>) null);
             }
         });
     }
@@ -80,7 +75,7 @@ public class TestExecuteExpectedErrors {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex.class).methodAnnotatedWith((Annotation) null);
+                        .invoke(Complex.class).methodAnnotatedWith((Annotation) null);
             }
         });
     }
@@ -92,7 +87,7 @@ public class TestExecuteExpectedErrors {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex.class).methodAnnotatedWith(Names.named("ToExecute")).withoutArgs();
+                        .invoke(Complex.class).methodAnnotatedWith(Names.named("ToInvoke")).withoutArgs();
             }
         });
     }
@@ -104,7 +99,7 @@ public class TestExecuteExpectedErrors {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class).methodAnnotatedWith(ToExecute.class).withoutArgs();
+                        .invoke(Complex2.class).methodAnnotatedWith(ToInvoke.class).withoutArgs();
             }
         });
     }
@@ -116,7 +111,7 @@ public class TestExecuteExpectedErrors {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class).methodAnnotatedWith(ToExecute2.class).withoutArgs();
+                        .invoke(Complex2.class).methodAnnotatedWith(ToInvoke2.class).withoutArgs();
             }
         });
     }
@@ -128,7 +123,7 @@ public class TestExecuteExpectedErrors {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class).methodAnnotatedWith(Names.named("XXX")).withoutArgs();
+                        .invoke(Complex2.class).methodAnnotatedWith(Names.named("XXX")).withoutArgs();
             }
         });
     }
@@ -140,7 +135,7 @@ public class TestExecuteExpectedErrors {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class).methodAnnotatedWith(ToExecute2.class).args(payload());
+                        .invoke(Complex2.class).methodAnnotatedWith(ToInvoke2.class).args(payload());
             }
         });
     }
@@ -152,19 +147,19 @@ public class TestExecuteExpectedErrors {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex.class).methodAnnotatedWith(Names.named("ToExecute2")).args(payload());
+                        .invoke(Complex.class).methodAnnotatedWith(Names.named("ToInvoke2")).args(payload());
             }
         });
     }
 
 
     public static class Complex {
-        @Named("ToExecute")
+        @Named("ToInvoke")
         void execute(final String string) {
 
         }
 
-        @Named("ToExecute2")
+        @Named("ToInvoke2")
         void execute2() {
 
         }
@@ -172,12 +167,12 @@ public class TestExecuteExpectedErrors {
     }
 
     public static class Complex2 {
-        @ToExecute
+        @ToInvoke
         void execute(final String string) {
 
         }
 
-        @ToExecute2
+        @ToInvoke2
         void execute2() {
 
         }
@@ -186,12 +181,12 @@ public class TestExecuteExpectedErrors {
 
     @Target({ElementType.METHOD})
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface ToExecute2 {
+    public @interface ToInvoke2 {
     }
 
     @Target({ElementType.METHOD})
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface ToExecute {
+    public @interface ToInvoke {
     }
 
 }

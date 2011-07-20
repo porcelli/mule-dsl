@@ -60,12 +60,12 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
      * {@inheritDoc}
      */
     @Override
-    public <B> ExecutorBuilder<P> execute(final B obj) throws NullPointerException {
+    public <B> InvokeBuilder<P> invoke(final B obj) throws NullPointerException {
         checkNotNull(obj, "obj");
         if (parentScope != null) {
-            return parentScope.execute(obj);
+            return parentScope.invoke(obj);
         }
-        final ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), obj);
+        final InvokeBuilderImpl<P> builder = new InvokeBuilderImpl<P>(getThis(), obj);
         processorList.add(builder);
 
         return builder;
@@ -75,22 +75,22 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
      * {@inheritDoc}
      */
     @Override
-    public <B> ExecutorBuilder<P> execute(final Class<B> clazz) throws NullPointerException {
-        return execute(clazz, Scope.PROTOTYPE);
+    public <B> InvokeBuilder<P> invoke(final Class<B> clazz) throws NullPointerException {
+        return invoke(clazz, Scope.PROTOTYPE);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public <B> ExecutorBuilder<P> execute(final Class<B> clazz, final Scope scope) throws NullPointerException {
+    public <B> InvokeBuilder<P> invoke(final Class<B> clazz, final Scope scope) throws NullPointerException {
         checkNotNull(clazz, "clazz");
         checkNotNull(scope, "scope");
         if (parentScope != null) {
-            return parentScope.execute(clazz, scope);
+            return parentScope.invoke(clazz, scope);
         }
 
-        final ExecutorBuilderImpl<P> builder = new ExecutorBuilderImpl<P>(getThis(), clazz, scope);
+        final InvokeBuilderImpl<P> builder = new InvokeBuilderImpl<P>(getThis(), clazz, scope);
         processorList.add(builder);
 
         return builder;
@@ -132,7 +132,7 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
             return parentScope.log(level);
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(getThis(), new SimpleLogComponent(level)));
+        processorList.add(new InvokeBuilderImpl<P>(getThis(), new SimpleLogComponent(level)));
         return getThis();
     }
 
@@ -157,7 +157,7 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
             return parentScope.log(message, level);
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(getThis(), new ExtendedLogComponentBuilder(message, level)));
+        processorList.add(new InvokeBuilderImpl<P>(getThis(), new ExtendedLogComponentBuilder(message, level)));
         return getThis();
     }
 
@@ -181,7 +181,7 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
             return parentScope.log(expr, level);
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(getThis(), new ExpressionLogComponentBuilder(expr, level)));
+        processorList.add(new InvokeBuilderImpl<P>(getThis(), new ExpressionLogComponentBuilder(expr, level)));
 
         return getThis();
     }
@@ -195,7 +195,7 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
             return parentScope.echo();
         }
 
-        processorList.add(new ExecutorBuilderImpl<P>(getThis(), new EchoComponent()));
+        processorList.add(new InvokeBuilderImpl<P>(getThis(), new EchoComponent()));
         return getThis();
     }
 

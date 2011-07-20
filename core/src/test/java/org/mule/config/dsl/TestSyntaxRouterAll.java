@@ -9,11 +9,11 @@
 
 package org.mule.config.dsl;
 
+import org.mule.api.lifecycle.Callable;
+
 import static org.mule.config.dsl.ExchangePattern.ONE_WAY;
 import static org.mule.config.dsl.Scope.SINGLETON;
 import static org.mule.config.dsl.expression.CoreExpr.regex;
-
-import org.mule.api.lifecycle.Callable;
 
 public class TestSyntaxRouterAll {
 
@@ -44,7 +44,7 @@ public class TestSyntaxRouterAll {
                                     .echo()
                                         .broadcast()
                                             .echo()
-                                            .execute((Class<?>) null, SINGLETON)
+                                            .invoke((Class<?>) null, SINGLETON)
                                             .send(null, ONE_WAY)
                                         .endBroadcast()
                                         .broadcast()
@@ -87,18 +87,18 @@ public class TestSyntaxRouterAll {
                     .endBroadcast();
 
                 flow("MyFlow3")
-                        .execute((Class<?>) null)
+                        .invoke((Class<?>) null)
                         .echo()
                         .broadcast()
-                            .execute((Callable) null).withDefaultArg()
+                            .invoke((Callable) null).withDefaultArg()
                         .endBroadcast();
 
                 flow("MyFlow4")
                         .send(null)
                         .echo()
                         .broadcast()
-                            .execute((Callable) null)
-                            .execute(String.class).withDefaultArg()
+                            .invoke((Callable) null)
+                            .invoke(String.class).withDefaultArg()
                         .endBroadcast();
             }
         });

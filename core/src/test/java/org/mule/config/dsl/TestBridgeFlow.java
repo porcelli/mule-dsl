@@ -136,7 +136,7 @@ public class TestBridgeFlow {
                 final SimpleCallable myCallable = new SimpleCallable();
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(myCallable)
+                        .invoke(myCallable)
                         .echo()
                         .send("file:///Users/porcelli/out", ExchangePattern.ONE_WAY)
                         .send("file:///Users/porcelli/out2", ExchangePattern.ONE_WAY);

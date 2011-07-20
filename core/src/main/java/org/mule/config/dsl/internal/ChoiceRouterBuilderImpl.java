@@ -151,9 +151,9 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
      * {@inheritDoc}
      */
     @Override
-    public <B> ExecutorBuilder<InnerWhenChoiceBuilder<P>> execute(final B obj) throws NullPointerException {
+    public <B> InvokeBuilder<InnerWhenChoiceBuilder<P>> invoke(final B obj) throws NullPointerException {
         checkNotNull(obj, "obj");
-        final ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>>(this, obj);
+        final InvokeBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new InvokeBuilderImpl<InnerWhenChoiceBuilder<P>>(this, obj);
         pipeline.addBuilder(builder);
 
         return builder;
@@ -163,9 +163,9 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
      * {@inheritDoc}
      */
     @Override
-    public <B> ExecutorBuilder<InnerWhenChoiceBuilder<P>> execute(final Class<B> clazz) throws NullPointerException {
+    public <B> InvokeBuilder<InnerWhenChoiceBuilder<P>> invoke(final Class<B> clazz) throws NullPointerException {
         checkNotNull(clazz, "clazz");
-        final ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>>(this, clazz);
+        final InvokeBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new InvokeBuilderImpl<InnerWhenChoiceBuilder<P>>(this, clazz);
         pipeline.addBuilder(builder);
 
         return builder;
@@ -175,10 +175,10 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
      * {@inheritDoc}
      */
     @Override
-    public <B> ExecutorBuilder<InnerWhenChoiceBuilder<P>> execute(final Class<B> clazz, final Scope scope) throws NullPointerException {
+    public <B> InvokeBuilder<InnerWhenChoiceBuilder<P>> invoke(final Class<B> clazz, final Scope scope) throws NullPointerException {
         checkNotNull(clazz, "clazz");
         checkNotNull(scope, "scope");
-        final ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>>(this, clazz, scope);
+        final InvokeBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new InvokeBuilderImpl<InnerWhenChoiceBuilder<P>>(this, clazz, scope);
         pipeline.addBuilder(builder);
 
         return builder;
@@ -513,9 +513,9 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
          * {@inheritDoc}
          */
         @Override
-        public <B> ExecutorBuilder<OtherwiseChoiceBuilder<P>> execute(final B obj) throws NullPointerException {
+        public <B> InvokeBuilder<OtherwiseChoiceBuilder<P>> invoke(final B obj) throws NullPointerException {
             checkNotNull(obj, "obj");
-            final ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>>(this, obj);
+            final InvokeBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new InvokeBuilderImpl<OtherwiseChoiceBuilder<P>>(this, obj);
             pipeline.addBuilder(builder);
 
             return builder;
@@ -525,9 +525,9 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
          * {@inheritDoc}
          */
         @Override
-        public <B> ExecutorBuilder<OtherwiseChoiceBuilder<P>> execute(final Class<B> clazz) throws NullPointerException {
+        public <B> InvokeBuilder<OtherwiseChoiceBuilder<P>> invoke(final Class<B> clazz) throws NullPointerException {
             checkNotNull(clazz, "clazz");
-            final ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>>(this, clazz);
+            final InvokeBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new InvokeBuilderImpl<OtherwiseChoiceBuilder<P>>(this, clazz);
             pipeline.addBuilder(builder);
 
             return builder;
@@ -537,10 +537,10 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
          * {@inheritDoc}
          */
         @Override
-        public <B> ExecutorBuilder<OtherwiseChoiceBuilder<P>> execute(final Class<B> clazz, final Scope scope) throws NullPointerException {
+        public <B> InvokeBuilder<OtherwiseChoiceBuilder<P>> invoke(final Class<B> clazz, final Scope scope) throws NullPointerException {
             checkNotNull(clazz, "clazz");
             checkNotNull(scope, "scope");
-            final ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>>(this, clazz, scope);
+            final InvokeBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new InvokeBuilderImpl<OtherwiseChoiceBuilder<P>>(this, clazz, scope);
             pipeline.addBuilder(builder);
 
             return builder;

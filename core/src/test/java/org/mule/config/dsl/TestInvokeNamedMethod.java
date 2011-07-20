@@ -9,15 +9,8 @@
 
 package org.mule.config.dsl;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mule.config.dsl.expression.CoreExpr.payload;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.Iterator;
-
+import com.google.inject.name.Named;
+import com.google.inject.name.Names;
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -28,10 +21,16 @@ import org.mule.api.source.MessageSource;
 import org.mule.config.dsl.component.InvokerMessageProcessorAdaptor;
 import org.mule.construct.SimpleFlowConstruct;
 
-import com.google.inject.name.Named;
-import com.google.inject.name.Names;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.Iterator;
 
-public class TestExecuteNamedMethod {
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.expression.CoreExpr.payload;
+
+public class TestInvokeNamedMethod {
 
     @Test
     public void simpleObjectNamedAnnotation() {
@@ -41,7 +40,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(mySimple).methodAnnotatedWith(Names.named("ToExecute"));
+                        .invoke(mySimple).methodAnnotatedWith(Names.named("ToInvoke"));
             }
         });
 
@@ -71,17 +70,17 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke");
 
-            assertThat(execute.getObject()).isEqualTo(mySimple).isInstanceOf(Simple.class);
+            assertThat(invoke.getObject()).isEqualTo(mySimple).isInstanceOf(Simple.class);
 
-            assertThat(execute.getArguments()).isEmpty();
+            assertThat(invoke.getArguments()).isEmpty();
         }
     }
 
@@ -92,7 +91,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Simple.class).methodAnnotatedWith(Names.named("ToExecute"));
+                        .invoke(Simple.class).methodAnnotatedWith(Names.named("ToInvoke"));
             }
         });
 
@@ -122,19 +121,19 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke");
 
-            assertThat(execute.getObjectType()).isEqualTo(Simple.class);
+            assertThat(invoke.getObjectType()).isEqualTo(Simple.class);
 
-            assertThat(execute.getObject()).isInstanceOf(Simple.class);
+            assertThat(invoke.getObject()).isInstanceOf(Simple.class);
 
-            assertThat(execute.getArguments()).isEmpty();
+            assertThat(invoke.getArguments()).isEmpty();
         }
     }
 
@@ -147,7 +146,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Simple2.class).methodAnnotatedWith(Names.named("ToExecute"));
+                        .invoke(Simple2.class).methodAnnotatedWith(Names.named("ToInvoke"));
 
                 bind(Simple2.class).toInstance(mySimple2);
             }
@@ -179,19 +178,19 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke");
 
-            assertThat(execute.getObjectType()).isEqualTo(Simple2.class);
+            assertThat(invoke.getObjectType()).isEqualTo(Simple2.class);
 
-            assertThat(execute.getObject()).isInstanceOf(Simple2.class);
+            assertThat(invoke.getObject()).isInstanceOf(Simple2.class);
 
-            assertThat(execute.getArguments()).isEmpty();
+            assertThat(invoke.getArguments()).isEmpty();
         }
     }
 
@@ -204,7 +203,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(mySimple).methodAnnotatedWith(Names.named("ToExecute")).withoutArgs();
+                        .invoke(mySimple).methodAnnotatedWith(Names.named("ToInvoke")).withoutArgs();
             }
         });
 
@@ -234,17 +233,17 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke");
 
-            assertThat(execute.getObject()).isEqualTo(mySimple).isInstanceOf(Simple.class);
+            assertThat(invoke.getObject()).isEqualTo(mySimple).isInstanceOf(Simple.class);
 
-            assertThat(execute.getArguments()).isEmpty();
+            assertThat(invoke.getArguments()).isEmpty();
         }
     }
 
@@ -255,7 +254,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Simple.class).methodAnnotatedWith(Names.named("ToExecute")).withoutArgs();
+                        .invoke(Simple.class).methodAnnotatedWith(Names.named("ToInvoke")).withoutArgs();
             }
         });
 
@@ -285,19 +284,19 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke");
 
-            assertThat(execute.getObjectType()).isEqualTo(Simple.class);
+            assertThat(invoke.getObjectType()).isEqualTo(Simple.class);
 
-            assertThat(execute.getObject()).isInstanceOf(Simple.class);
+            assertThat(invoke.getObject()).isInstanceOf(Simple.class);
 
-            assertThat(execute.getArguments()).isEmpty();
+            assertThat(invoke.getArguments()).isEmpty();
         }
     }
 
@@ -310,7 +309,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Simple2.class).methodAnnotatedWith(Names.named("ToExecute")).withoutArgs();
+                        .invoke(Simple2.class).methodAnnotatedWith(Names.named("ToInvoke")).withoutArgs();
 
                 bind(Simple2.class).toInstance(mySimple2);
             }
@@ -342,19 +341,19 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke");
 
-            assertThat(execute.getObjectType()).isEqualTo(Simple2.class);
+            assertThat(invoke.getObjectType()).isEqualTo(Simple2.class);
 
-            assertThat(execute.getObject()).isInstanceOf(Simple2.class);
+            assertThat(invoke.getObject()).isInstanceOf(Simple2.class);
 
-            assertThat(execute.getArguments()).isEmpty();
+            assertThat(invoke.getArguments()).isEmpty();
         }
     }
 
@@ -366,7 +365,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(mySimple).methodAnnotatedWith(Names.named("ToExecute2")).args(payload());
+                        .invoke(mySimple).methodAnnotatedWith(Names.named("ToInvoke2")).args(payload());
             }
         });
 
@@ -396,19 +395,19 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute2");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke2");
 
-            assertThat(execute.getObject()).isEqualTo(mySimple).isInstanceOf(Simple.class);
+            assertThat(invoke.getObject()).isEqualTo(mySimple).isInstanceOf(Simple.class);
 
-            assertThat(execute.getArguments()).hasSize(1);
+            assertThat(invoke.getArguments()).hasSize(1);
 
-            assertThat(execute.getArguments().get(0)).isEqualTo("#[payload]");
+            assertThat(invoke.getArguments().get(0)).isEqualTo("#[payload]");
         }
     }
 
@@ -419,7 +418,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Simple.class).methodAnnotatedWith(Names.named("ToExecute2")).args(payload());
+                        .invoke(Simple.class).methodAnnotatedWith(Names.named("ToInvoke2")).args(payload());
             }
         });
 
@@ -449,21 +448,21 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute2");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke2");
 
-            assertThat(execute.getObjectType()).isEqualTo(Simple.class);
+            assertThat(invoke.getObjectType()).isEqualTo(Simple.class);
 
-            assertThat(execute.getObject()).isInstanceOf(Simple.class);
+            assertThat(invoke.getObject()).isInstanceOf(Simple.class);
 
-            assertThat(execute.getArguments()).hasSize(1);
+            assertThat(invoke.getArguments()).hasSize(1);
 
-            assertThat(execute.getArguments().get(0)).isEqualTo("#[payload]");
+            assertThat(invoke.getArguments().get(0)).isEqualTo("#[payload]");
         }
     }
 
@@ -476,7 +475,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Simple2.class).methodAnnotatedWith(Names.named("ToExecute2")).args(payload());
+                        .invoke(Simple2.class).methodAnnotatedWith(Names.named("ToInvoke2")).args(payload());
 
                 bind(Simple2.class).toInstance(mySimple2);
             }
@@ -508,21 +507,21 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute2");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke2");
 
-            assertThat(execute.getObjectType()).isEqualTo(Simple2.class);
+            assertThat(invoke.getObjectType()).isEqualTo(Simple2.class);
 
-            assertThat(execute.getObject()).isInstanceOf(Simple2.class);
+            assertThat(invoke.getObject()).isInstanceOf(Simple2.class);
 
-            assertThat(execute.getArguments()).hasSize(1);
+            assertThat(invoke.getArguments()).hasSize(1);
 
-            assertThat(execute.getArguments().get(0)).isEqualTo("#[payload]");
+            assertThat(invoke.getArguments().get(0)).isEqualTo("#[payload]");
         }
     }
 
@@ -534,7 +533,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(myComplex).methodAnnotatedWith(ToExecute.class);
+                        .invoke(myComplex).methodAnnotatedWith(ToInvoke.class);
             }
         });
 
@@ -564,17 +563,17 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke");
 
-            assertThat(execute.getObject()).isEqualTo(myComplex).isInstanceOf(Complex.class);
+            assertThat(invoke.getObject()).isEqualTo(myComplex).isInstanceOf(Complex.class);
 
-            assertThat(execute.getArguments()).isEmpty();
+            assertThat(invoke.getArguments()).isEmpty();
         }
     }
 
@@ -585,7 +584,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex.class).methodAnnotatedWith(ToExecute.class);
+                        .invoke(Complex.class).methodAnnotatedWith(ToInvoke.class);
             }
         });
 
@@ -615,19 +614,19 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke");
 
-            assertThat(execute.getObjectType()).isEqualTo(Complex.class);
+            assertThat(invoke.getObjectType()).isEqualTo(Complex.class);
 
-            assertThat(execute.getObject()).isInstanceOf(Complex.class);
+            assertThat(invoke.getObject()).isInstanceOf(Complex.class);
 
-            assertThat(execute.getArguments()).isEmpty();
+            assertThat(invoke.getArguments()).isEmpty();
         }
     }
 
@@ -640,7 +639,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class).methodAnnotatedWith(ToExecute.class);
+                        .invoke(Complex2.class).methodAnnotatedWith(ToInvoke.class);
 
                 bind(Complex2.class).toInstance(myComplex2);
             }
@@ -672,19 +671,19 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke");
 
-            assertThat(execute.getObjectType()).isEqualTo(Complex2.class);
+            assertThat(invoke.getObjectType()).isEqualTo(Complex2.class);
 
-            assertThat(execute.getObject()).isInstanceOf(Complex2.class);
+            assertThat(invoke.getObject()).isInstanceOf(Complex2.class);
 
-            assertThat(execute.getArguments()).isEmpty();
+            assertThat(invoke.getArguments()).isEmpty();
         }
     }
 
@@ -697,7 +696,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(myComplex).methodAnnotatedWith(ToExecute.class).withoutArgs();
+                        .invoke(myComplex).methodAnnotatedWith(ToInvoke.class).withoutArgs();
             }
         });
 
@@ -727,17 +726,17 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke");
 
-            assertThat(execute.getObject()).isEqualTo(myComplex).isInstanceOf(Complex.class);
+            assertThat(invoke.getObject()).isEqualTo(myComplex).isInstanceOf(Complex.class);
 
-            assertThat(execute.getArguments()).isEmpty();
+            assertThat(invoke.getArguments()).isEmpty();
         }
     }
 
@@ -748,7 +747,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex.class).methodAnnotatedWith(ToExecute.class).withoutArgs();
+                        .invoke(Complex.class).methodAnnotatedWith(ToInvoke.class).withoutArgs();
             }
         });
 
@@ -778,19 +777,19 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke");
 
-            assertThat(execute.getObjectType()).isEqualTo(Complex.class);
+            assertThat(invoke.getObjectType()).isEqualTo(Complex.class);
 
-            assertThat(execute.getObject()).isInstanceOf(Complex.class);
+            assertThat(invoke.getObject()).isInstanceOf(Complex.class);
 
-            assertThat(execute.getArguments()).isEmpty();
+            assertThat(invoke.getArguments()).isEmpty();
         }
     }
 
@@ -803,7 +802,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class).methodAnnotatedWith(ToExecute.class).withoutArgs();
+                        .invoke(Complex2.class).methodAnnotatedWith(ToInvoke.class).withoutArgs();
 
                 bind(Complex2.class).toInstance(myComplex2);
             }
@@ -835,19 +834,19 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke");
 
-            assertThat(execute.getObjectType()).isEqualTo(Complex2.class);
+            assertThat(invoke.getObjectType()).isEqualTo(Complex2.class);
 
-            assertThat(execute.getObject()).isInstanceOf(Complex2.class);
+            assertThat(invoke.getObject()).isInstanceOf(Complex2.class);
 
-            assertThat(execute.getArguments()).isEmpty();
+            assertThat(invoke.getArguments()).isEmpty();
         }
     }
 
@@ -859,7 +858,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(myComplex).methodAnnotatedWith(ToExecute2.class).args(payload());
+                        .invoke(myComplex).methodAnnotatedWith(ToInvoke2.class).args(payload());
             }
         });
 
@@ -889,19 +888,19 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute2");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke2");
 
-            assertThat(execute.getObject()).isEqualTo(myComplex).isInstanceOf(Complex.class);
+            assertThat(invoke.getObject()).isEqualTo(myComplex).isInstanceOf(Complex.class);
 
-            assertThat(execute.getArguments()).hasSize(1);
+            assertThat(invoke.getArguments()).hasSize(1);
 
-            assertThat(execute.getArguments().get(0)).isEqualTo("#[payload]");
+            assertThat(invoke.getArguments().get(0)).isEqualTo("#[payload]");
         }
     }
 
@@ -912,7 +911,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex.class).methodAnnotatedWith(ToExecute2.class).args(payload());
+                        .invoke(Complex.class).methodAnnotatedWith(ToInvoke2.class).args(payload());
             }
         });
 
@@ -942,21 +941,21 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute2");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke2");
 
-            assertThat(execute.getObjectType()).isEqualTo(Complex.class);
+            assertThat(invoke.getObjectType()).isEqualTo(Complex.class);
 
-            assertThat(execute.getObject()).isInstanceOf(Complex.class);
+            assertThat(invoke.getObject()).isInstanceOf(Complex.class);
 
-            assertThat(execute.getArguments()).hasSize(1);
+            assertThat(invoke.getArguments()).hasSize(1);
 
-            assertThat(execute.getArguments().get(0)).isEqualTo("#[payload]");
+            assertThat(invoke.getArguments().get(0)).isEqualTo("#[payload]");
         }
     }
 
@@ -969,7 +968,7 @@ public class TestExecuteNamedMethod {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(Complex2.class).methodAnnotatedWith(ToExecute2.class).args(payload());
+                        .invoke(Complex2.class).methodAnnotatedWith(ToInvoke2.class).args(payload());
 
                 bind(Complex2.class).toInstance(myComplex2);
             }
@@ -1001,32 +1000,32 @@ public class TestExecuteNamedMethod {
         final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            final MessageProcessor executeProcessor = iterator.next();
+            final MessageProcessor invokeProcessor = iterator.next();
 
-            assertThat(executeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
+            assertThat(invokeProcessor).isNotNull().isInstanceOf(InvokerMessageProcessorAdaptor.class);
 
-            final InvokerMessageProcessorAdaptor execute = (InvokerMessageProcessorAdaptor) executeProcessor;
+            final InvokerMessageProcessorAdaptor invoke = (InvokerMessageProcessorAdaptor) invokeProcessor;
 
-            assertThat(execute.getMethodName()).isEqualTo("execute2");
+            assertThat(invoke.getMethodName()).isEqualTo("invoke2");
 
-            assertThat(execute.getObjectType()).isEqualTo(Complex2.class);
+            assertThat(invoke.getObjectType()).isEqualTo(Complex2.class);
 
-            assertThat(execute.getObject()).isInstanceOf(Complex2.class);
+            assertThat(invoke.getObject()).isInstanceOf(Complex2.class);
 
-            assertThat(execute.getArguments()).hasSize(1);
+            assertThat(invoke.getArguments()).hasSize(1);
 
-            assertThat(execute.getArguments().get(0)).isEqualTo("#[payload]");
+            assertThat(invoke.getArguments().get(0)).isEqualTo("#[payload]");
         }
     }
 
     public static class Simple {
-        @Named("ToExecute")
-        public void execute() {
+        @Named("ToInvoke")
+        public void invoke() {
             System.out.println("SIMPLE! : ");
         }
 
-        @Named("ToExecute2")
-        public void execute2(final String value) {
+        @Named("ToInvoke2")
+        public void invoke2(final String value) {
             System.out.println("SIMPLE 2! : " + value);
         }
     }
@@ -1037,13 +1036,13 @@ public class TestExecuteNamedMethod {
     }
 
     public static class Complex {
-        @ToExecute
-        public void execute() {
+        @ToInvoke
+        public void invoke() {
             System.out.println("SIMPLE! : ");
         }
 
-        @ToExecute2
-        public void execute2(final String value) {
+        @ToInvoke2
+        public void invoke2(final String value) {
             System.out.println("SIMPLE 2! : " + value);
         }
     }
@@ -1055,12 +1054,12 @@ public class TestExecuteNamedMethod {
 
     @Target({ElementType.METHOD})
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface ToExecute2 {
+    public @interface ToInvoke2 {
     }
 
     @Target({ElementType.METHOD})
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface ToExecute {
+    public @interface ToInvoke {
     }
 
 }

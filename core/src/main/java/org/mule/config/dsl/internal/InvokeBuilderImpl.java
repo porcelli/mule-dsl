@@ -34,7 +34,7 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkContentsNotNu
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 /**
- * Internal implementation of {@link org.mule.config.dsl.ExecutorBuilder} interface that, based on its internal state,
+ * Internal implementation of {@link org.mule.config.dsl.InvokeBuilder} interface that, based on its internal state,
  * builds:
  * <ul>
  * <li>InvokerMessageProcessor - if a method name or an annotation is provided</li>
@@ -43,11 +43,11 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
  * </ul>
  *
  * @author porcelli
- * @see org.mule.config.dsl.PipelineBuilder#execute(Object)
- * @see org.mule.config.dsl.PipelineBuilder#execute(Class)
- * @see org.mule.config.dsl.PipelineBuilder#execute(Class, org.mule.config.dsl.Scope)
+ * @see org.mule.config.dsl.PipelineBuilder#invoke(Object)
+ * @see org.mule.config.dsl.PipelineBuilder#invoke(Class)
+ * @see org.mule.config.dsl.PipelineBuilder#invoke(Class, org.mule.config.dsl.Scope)
  */
-class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderImpl<P> implements ExecutorBuilder<P>, Builder<MessageProcessor> {
+public class InvokeBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderImpl<P> implements InvokeBuilder<P>, Builder<MessageProcessor> {
 
     private Object obj;
     private final Class<?> clazz;
@@ -55,16 +55,17 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
     private final Scope scope;
 
     private Annotation methodAnnotatedWith = null;
+    private String methodName = null;
     private Class<? extends Annotation> methodAnnotatedWithCustomType = null;
     private ExpressionEvaluatorDefinition[] args = null;
 
     /**
      * @param parentScope the parent scope, null is allowed
-     * @param clazz       the type to be executed, Mule will instantiate it at runtime
+     * @param clazz       the type to be invoked, Mule will instantiate it at runtime
      * @param scope       the type scope
      * @throws NullPointerException if {@code clazz} or {@code scope} params are null
      */
-    public ExecutorBuilderImpl(final P parentScope, final Class<?> clazz, final Scope scope) throws NullPointerException {
+    public InvokeBuilderImpl(final P parentScope, final Class<?> clazz, final Scope scope) throws NullPointerException {
         super(parentScope);
         this.clazz = checkNotNull(clazz, "clazz");
         this.scope = checkNotNull(scope, "scope");
@@ -74,10 +75,10 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
 
     /**
      * @param parentScope the parent scope, null is allowed
-     * @param obj         the object to be executed
+     * @param obj         the object to be invoked
      * @throws NullPointerException if {@code obj} param is null
      */
-    public ExecutorBuilderImpl(final P parentScope, final Object obj) throws NullPointerException {
+    public InvokeBuilderImpl(final P parentScope, final Object obj) throws NullPointerException {
         super(parentScope);
         this.obj = checkNotNull(obj, "obj");
         this.scope = Scope.PROTOTYPE;
@@ -90,7 +91,7 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
      * @param builder     the object builder
      * @throws NullPointerException if {@code builder} param is null
      */
-    public ExecutorBuilderImpl(final P parentScope, final Builder<?> builder) throws NullPointerException {
+    public InvokeBuilderImpl(final P parentScope, final Builder<?> builder) throws NullPointerException {
         super(parentScope);
         this.builder = checkNotNull(builder, "builder");
         this.scope = Scope.PROTOTYPE;
@@ -127,7 +128,11 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
 
         find_method:
         for (final Method method : type.getMethods()) {
-            if (methodAnnotatedWithCustomType != null) {
+            if (methodName != null && method.getName().equals(methodName)) {
+                invoker = new InvokerMessageProcessorAdaptor();
+                invoker.setMethodName(method.getName());
+                break find_method;
+            } else if (methodAnnotatedWithCustomType != null) {
                 if (method.isAnnotationPresent(methodAnnotatedWithCustomType)) {
                     invoker = new InvokerMessageProcessorAdaptor();
                     invoker.setMethodName(method.getName());
@@ -145,7 +150,7 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
         }
 
         if (invoker == null) {
-            throw new IllegalStateException("Can't find method to be executed.");
+            throw new IllegalStateException("Can't find method to be invoked.");
         }
 
         if (args != null) {
@@ -222,18 +227,27 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
      * {@inheritDoc}
      */
     @Override
-    public InnerArgsExecutorBuilder<P> methodAnnotatedWith(final Class<? extends Annotation> annotationType) throws NullPointerException {
+    public InnerArgsInvokeBuilder<P> methodAnnotatedWith(final Class<? extends Annotation> annotationType) throws NullPointerException {
         this.methodAnnotatedWithCustomType = checkNotNull(annotationType, "annotationType");
-        return new InnerArgsExecutorBuilderImpl<P>();
+        return new InnerArgsInvokeBuilderImpl<P>();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public InnerArgsExecutorBuilder<P> methodAnnotatedWith(final Annotation annotation) throws NullPointerException {
+    public InnerArgsInvokeBuilder<P> methodAnnotatedWith(final Annotation annotation) throws NullPointerException {
         this.methodAnnotatedWith = checkNotNull(annotation, "annotation");
-        return new InnerArgsExecutorBuilderImpl<P>();
+        return new InnerArgsInvokeBuilderImpl<P>();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerArgsInvokeBuilder<P> methodName(String methodName) throws IllegalArgumentException {
+        this.methodName = checkNotNull(methodName, "methodName");
+        return new InnerArgsInvokeBuilderImpl<P>();
     }
 
     /**
@@ -249,9 +263,9 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
         return parentScope;
     }
 
-    public class InnerArgsExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderImpl<InnerArgsExecutorBuilder<P>> implements InnerArgsExecutorBuilder<P> {
+    public class InnerArgsInvokeBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderImpl<InnerArgsInvokeBuilder<P>> implements InnerArgsInvokeBuilder<P> {
 
-        InnerArgsExecutorBuilderImpl() {
+        InnerArgsInvokeBuilderImpl() {
             super(null);
         }
 
@@ -261,7 +275,7 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
         @Override
         @SuppressWarnings("unchecked")
         public P withoutArgs() {
-            return (P) ExecutorBuilderImpl.this.withDefaultArg();
+            return (P) InvokeBuilderImpl.this.withDefaultArg();
         }
 
         /**
@@ -270,7 +284,7 @@ class ExecutorBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderI
         @Override
         @SuppressWarnings("unchecked")
         public <E extends ExpressionEvaluatorDefinition> P args(final E... args) throws NullPointerException {
-            return (P) ExecutorBuilderImpl.this.args(args);
+            return (P) InvokeBuilderImpl.this.args(args);
         }
     }
 
