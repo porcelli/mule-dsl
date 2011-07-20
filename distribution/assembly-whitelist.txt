@@ -57,6 +57,17 @@
 /mule-dsl-${productVersion}/lib/tomcat-apr-5.5.23.jar
 /mule-dsl-${productVersion}/lib/tomcat-util-5.5.23.jar
 
+# jersey module
+/mule-dsl-${productVersion}/lib/mule-module-jersey-3.1.2.jar
+/mule-dsl-${productVersion}/lib/jersey-core-1.6.jar
+/mule-dsl-${productVersion}/lib/jersey-json-1.6.jar
+/mule-dsl-${productVersion}/lib/jersey-server-1.6.jar
+/mule-dsl-${productVersion}/lib/jackson-core-asl-1.8.0.jar
+/mule-dsl-${productVersion}/lib/jackson-jaxrs-1.8.0.jar
+/mule-dsl-${productVersion}/lib/jackson-mapper-asl-1.7.1.jar
+/mule-dsl-${productVersion}/lib/jackson-xc-1.7.1.jar
+
+
 # stdio transport
 /mule-dsl-${productVersion}/lib/mule-transport-stdio-3.1.2.jar
 
