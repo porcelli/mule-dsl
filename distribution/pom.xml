@@ -128,6 +128,45 @@
 		</dependency>
 		<dependency>
 			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-ajax</artifactId>
+			<version>${mule.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.mule.modules</groupId>
+					<artifactId>mule-module-spring-config</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.mule.modules</groupId>
+					<artifactId>mule-module-annotations</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>jetty-annotations</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>annotations-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>jasper-el</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>jasper</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>jsp-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>juli</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.transports</groupId>
 			<artifactId>mule-transport-file</artifactId>
 			<version>${mule.version}</version>
 			<exclusions>

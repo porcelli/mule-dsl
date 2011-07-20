@@ -8,7 +8,6 @@
 /mule-dsl-${productVersion}/lib/guice-3.0.jar
 /mule-dsl-${productVersion}/lib/javax.inject-1.jar
 
-
 # mule-core
 /mule-dsl-${productVersion}/lib
 /mule-dsl-${productVersion}/lib/activation-1.1-osgi.jar
@@ -43,7 +42,15 @@
 /mule-dsl-${productVersion}/lib/axiom-impl-1.2.5.jar
 
 # ajax transport
-#/mule-dsl-${productVersion}/lib/mule-transport-ajax-3.1.2.jar
+/mule-dsl-${productVersion}/lib/cometd-api-1.1.1.jar
+/mule-dsl-${productVersion}/lib/cometd-server-6.1.26.jar
+/mule-dsl-${productVersion}/lib/jetty-6.1.26.jar
+/mule-dsl-${productVersion}/lib/jetty-util-6.1.26.jar
+/mule-dsl-${productVersion}/lib/jetty-util5-6.1.26.jar
+/mule-dsl-${productVersion}/lib/servlet-api-2.5-20081211.jar
+/mule-dsl-${productVersion}/lib/mule-transport-ajax-3.1.2.jar
+/mule-dsl-${productVersion}/lib/mule-transport-jetty-3.1.2.jar
+/mule-dsl-${productVersion}/lib/mule-transport-servlet-3.1.2.jar
 
 # file transport
 /mule-dsl-${productVersion}/lib/mule-transport-file-3.1.2.jar
