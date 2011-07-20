@@ -70,6 +70,11 @@
 # json
 /mule-dsl-${productVersion}/lib/mule-module-json-3.1.2.jar
 
+# rss module
+/mule-dsl-${productVersion}/lib/mule-module-rss-3.1.2.jar
+/mule-dsl-${productVersion}/lib/rome-0.9.jar
+/mule-dsl-${productVersion}/lib/jdom-1.0.jar
+
 # stdio transport
 /mule-dsl-${productVersion}/lib/mule-transport-stdio-3.1.2.jar
 
