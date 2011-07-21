@@ -107,7 +107,7 @@ public class InvokeBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBui
         checkNotNull(muleContext, "muleContext");
         checkNotNull(placeholder, "placeholder");
 
-        if (methodAnnotatedWith != null || methodAnnotatedWithCustomType != null) {
+        if (methodAnnotatedWith != null || methodAnnotatedWithCustomType != null || methodName != null) {
             return buildInvokerMessage(muleContext, placeholder);
         }
 

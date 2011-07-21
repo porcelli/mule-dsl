@@ -9,8 +9,6 @@
 
 package org.mule.config.dsl;
 
-import static org.fest.assertions.Assertions.assertThat;
-
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -21,9 +19,11 @@ import org.mule.api.processor.MessageProcessorChain;
 import org.mule.api.source.MessageSource;
 import org.mule.component.SimpleCallableJavaComponent;
 import org.mule.component.simple.EchoComponent;
-import org.mule.config.dsl.hack.PrivateAccessor;
+import org.mule.config.dsl.internal.util.PrivateAccessorHack;
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.processor.AsyncDelegateMessageProcessor;
+
+import static org.fest.assertions.Assertions.assertThat;
 
 public class TestRouterAsync {
 
@@ -71,7 +71,7 @@ public class TestRouterAsync {
         {
             final AsyncDelegateMessageProcessor asyncRouter = (AsyncDelegateMessageProcessor) processor;
 
-            final MessageProcessorChain chain = (MessageProcessorChain) PrivateAccessor.getPrivateFieldValue(asyncRouter, "delegate");
+            final MessageProcessorChain chain = (MessageProcessorChain) PrivateAccessorHack.getPrivateFieldValue(asyncRouter, "delegate");
 
             assertThat(chain.getMessageProcessors()).isNotEmpty().hasSize(2);
 
@@ -141,7 +141,7 @@ public class TestRouterAsync {
         {
             final AsyncDelegateMessageProcessor asyncRouter = (AsyncDelegateMessageProcessor) processor;
 
-            final MessageProcessorChain chain = (MessageProcessorChain) PrivateAccessor.getPrivateFieldValue(asyncRouter, "delegate");
+            final MessageProcessorChain chain = (MessageProcessorChain) PrivateAccessorHack.getPrivateFieldValue(asyncRouter, "delegate");
 
             assertThat(chain.getMessageProcessors()).isNotEmpty().hasSize(3);
 
@@ -160,7 +160,7 @@ public class TestRouterAsync {
 
                 final AsyncDelegateMessageProcessor innerAsync = (AsyncDelegateMessageProcessor) chain.getMessageProcessors().get(1);
 
-                final MessageProcessorChain innerChain = (MessageProcessorChain) PrivateAccessor.getPrivateFieldValue(innerAsync, "delegate");
+                final MessageProcessorChain innerChain = (MessageProcessorChain) PrivateAccessorHack.getPrivateFieldValue(innerAsync, "delegate");
 
                 assertThat(innerChain.getMessageProcessors()).isNotEmpty().hasSize(1);
 

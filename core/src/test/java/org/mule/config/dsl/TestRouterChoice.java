@@ -9,12 +9,6 @@
 
 package org.mule.config.dsl;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mule.config.dsl.expression.CoreExpr.wildcard;
-import static org.mule.config.dsl.hack.PrivateAccessor.getPrivateFieldValue;
-
-import java.util.List;
-
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -31,6 +25,12 @@ import org.mule.construct.SimpleFlowConstruct;
 import org.mule.routing.ChoiceRouter;
 import org.mule.routing.MessageProcessorFilterPair;
 import org.mule.routing.filters.WildcardFilter;
+
+import java.util.List;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.expression.CoreExpr.wildcard;
+import static org.mule.config.dsl.internal.util.PrivateAccessorHack.getPrivateFieldValue;
 
 public class TestRouterChoice {
 

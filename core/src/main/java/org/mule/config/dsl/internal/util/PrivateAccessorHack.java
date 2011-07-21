@@ -7,20 +7,40 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.dsl.hack;
-
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+package org.mule.config.dsl.internal.util;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.fest.util.Collections;
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 /**
  * Provides access to private members in classes.
  */
-public class PrivateAccessor {
+public class PrivateAccessorHack {
+
+    public static Object setPrivateFieldValue(final Class<?> type, final Object object, final String fieldName, final Object value) {
+        checkNotNull(type, "type");
+        checkNotNull(object, "object");
+        checkNotEmpty(fieldName, "fieldName");
+        checkNotNull(value, "value");
+
+        try {
+            Field f = type.getDeclaredField(fieldName);
+            f.setAccessible(true);
+            f.set(object, value);
+
+            return object;
+        } catch (NoSuchFieldException ex) {
+            throw new RuntimeException("Field '" + fieldName + "' not found.");
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("Can't set field '" + fieldName + "' value.");
+        }
+    }
+
 
     public static Object getPrivateFieldValue(final Object object, final String fieldName) {
         checkNotNull(object, "object");
@@ -52,7 +72,7 @@ public class PrivateAccessor {
         if (superClazz != null) {
             getAllFieldsRec(superClazz, set);
         }
-        set.addAll(Collections.set(clazz.getDeclaredFields()));
+        set.addAll(Arrays.asList(clazz.getDeclaredFields()));
         return set;
     }
 
