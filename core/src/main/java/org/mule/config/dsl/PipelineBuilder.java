@@ -95,9 +95,9 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> extends Builder {
     //TODO improve docs here!
 
     /**
-     * Executes the most appropriate {@code obj}'s method.
+     * Invokes the most appropriate {@code obj}'s method.
      *
-     * @param obj the object to be executed
+     * @param obj the object to be invoked
      * @return the executor builder
      * @throws NullPointerException if {@code obj} param is null
      * @see org.mule.model.resolvers.ReflectionEntryPointResolver
@@ -105,9 +105,9 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> extends Builder {
     <B> InvokeBuilder<P> invoke(B obj) throws NullPointerException;
 
     /**
-     * Executes the most appropriate {@code clazz}'s method.
+     * Invokes the most appropriate {@code clazz}'s method.
      *
-     * @param clazz the class type to be executed, Mule will instantiate an object at runtime
+     * @param clazz the class type to be invoked, Mule will instantiate an object at runtime
      * @return the executor builder
      * @throws NullPointerException if {@code clazz} param is null
      * @see org.mule.model.resolvers.ReflectionEntryPointResolver
@@ -115,9 +115,9 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> extends Builder {
     <B> InvokeBuilder<P> invoke(Class<B> clazz) throws NullPointerException;
 
     /**
-     * Executes the most appropriate {@code clazz}'s method.
+     * Invokes the most appropriate {@code clazz}'s method.
      *
-     * @param clazz the class type to be executed, Mule will instantiate it at runtime
+     * @param clazz the class type to be invoked, Mule will instantiate it at runtime
      * @param scope the scope that type should be lifeclycled by Mule
      * @return the executor builder
      * @throws NullPointerException if {@code clazz} or {@code scope} params are null
@@ -126,7 +126,15 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> extends Builder {
     <B> InvokeBuilder<P> invoke(Class<B> clazz, Scope scope) throws NullPointerException;
 
 
-    //TODO P executeFlow(String flowName) throws IllegalArgumentException;
+    /**
+     * Invokes a flow.
+     *
+     * @param flowName the flow name to be invoked
+     * @return the parameterized builder
+     * @throws IllegalArgumentException if {@code flowName} param is null or empty
+     * @see org.mule.model.resolvers.ReflectionEntryPointResolver
+     */
+    P invokeFlow(String flowName) throws IllegalArgumentException;
 
     /* typed MP builder */
 
@@ -300,6 +308,16 @@ public interface PipelineBuilder<P extends PipelineBuilder<P>> extends Builder {
      * @see org.mule.config.dsl.AbstractModule#filter(String)
      */
     P filterWith(String ref) throws IllegalArgumentException;
+
+    /* message properties */
+
+    /**
+     * Exposes message properties manipilation, enabling some operations
+     * like {@code put}, {@code remove} and , {@code rename}.
+     *
+     * @return the message properties builder
+     */
+    MessagePropertiesBuilder<P> messageProperties();
 
     /* routers */
 

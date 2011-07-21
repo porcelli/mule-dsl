@@ -20,23 +20,33 @@ public class IOException extends DSLException {
 
     private static final long serialVersionUID = -8390893797284558707L;
 
+    /**
+     * * @param message the exception message
+     */
     public IOException(final Message message) {
         super(message);
     }
 
+    /**
+     * @param message the exception message
+     */
     public IOException(final String message) {
         super(message);
     }
 
-    public IOException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
-
+    /**
+     * @param message the exception message
+     * @param cause   the exception that cause this exception to be thrown
+     */
     public IOException(final Message message, final Throwable cause) {
         super(message, cause);
     }
 
-    public IOException(final Throwable cause) {
-        super(cause);
+    /**
+     * @param message the exception message
+     * @param cause   the exception that cause this exception to be thrown
+     */
+    public IOException(final String message, final Throwable cause) {
+        super(message, cause);
     }
 }

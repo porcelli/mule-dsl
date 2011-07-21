@@ -154,6 +154,15 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
      * {@inheritDoc}
      */
     @Override
+    public P invokeFlow(String flowName) throws IllegalArgumentException {
+        pipeline.invokeFlow(flowName);
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public P send(final String uri) throws IllegalArgumentException {
         pipeline.send(uri);
         return getThis();
@@ -275,6 +284,17 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
     public P filterWith(final String ref) throws IllegalArgumentException {
         pipeline.filterWith(ref);
         return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MessagePropertiesBuilder<P> messageProperties() {
+        final MessagePropertiesBuilderImpl<P> builder = new MessagePropertiesBuilderImpl<P>(getThis());
+        pipeline.addBuilder(builder);
+
+        return builder;
     }
 
     /**

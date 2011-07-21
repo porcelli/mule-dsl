@@ -130,6 +130,9 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule im
     /* global register */
 
     /**
+     * Register the given object into dsl catalog. Registered objects are
+     * later availbale on {@link org.mule.api.MuleContext}.
+     *
      * @param name the name of the component to be registered
      * @param obj  the object to be registered
      * @throws IllegalArgumentException if {@code name} param is null or empty

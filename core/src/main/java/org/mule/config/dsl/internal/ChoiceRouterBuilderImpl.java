@@ -188,6 +188,15 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
      * {@inheritDoc}
      */
     @Override
+    public InnerWhenChoiceBuilder<P> invokeFlow(String flowName) throws IllegalArgumentException {
+        pipeline.invokeFlow(flowName);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public InnerWhenChoiceBuilder<P> process(final MessageProcessorDefinition messageProcessor) throws NullPointerException, IllegalArgumentException {
         pipeline.process(messageProcessor);
         return this;
@@ -317,6 +326,17 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     public InnerWhenChoiceBuilder<P> filterWith(final String ref) throws IllegalArgumentException {
         pipeline.filterWith(ref);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MessagePropertiesBuilder<InnerWhenChoiceBuilder<P>> messageProperties() {
+        final MessagePropertiesBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new MessagePropertiesBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
+        pipeline.addBuilder(builder);
+
+        return builder;
     }
 
     /**
@@ -550,6 +570,15 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
          * {@inheritDoc}
          */
         @Override
+        public OtherwiseChoiceBuilder<P> invokeFlow(String flowName) throws IllegalArgumentException {
+            ChoiceRouterBuilderImpl.this.invokeFlow(flowName);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
         public OtherwiseChoiceBuilder<P> process(final MessageProcessorDefinition messageProcessor) throws NullPointerException, IllegalArgumentException {
             ChoiceRouterBuilderImpl.this.process(messageProcessor);
             return this;
@@ -679,6 +708,17 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         public OtherwiseChoiceBuilder<P> filterWith(final String ref) throws IllegalArgumentException {
             ChoiceRouterBuilderImpl.this.filterWith(ref);
             return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public MessagePropertiesBuilder<OtherwiseChoiceBuilder<P>> messageProperties() {
+            final MessagePropertiesBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new MessagePropertiesBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
+            pipeline.addBuilder(builder);
+
+            return builder;
         }
 
         /**

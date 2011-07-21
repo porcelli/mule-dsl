@@ -38,7 +38,7 @@ public interface Catalog {
 
     /**
      * Register the given compoenent on DSL catalog. Registered components are available
-     * on MuleContext after its configuraton.
+     * on MuleContext after configuraton.
      *
      * @param name name that identifies uniquely the component
      * @throws IllegalArgumentException if {@code name} param is null, empty or already exists in catalog

@@ -15,6 +15,7 @@ import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
 import org.mule.component.simple.EchoComponent;
 import org.mule.config.dsl.*;
+import org.mule.config.dsl.component.InvokerFlowComponent;
 import org.mule.config.dsl.component.SimpleLogComponent;
 import org.mule.config.dsl.internal.util.MessageProcessorUtil;
 
@@ -94,6 +95,20 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
         processorList.add(builder);
 
         return builder;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P invokeFlow(String flowName) throws IllegalArgumentException {
+        checkNotNull(flowName, "flowName");
+        if (parentScope != null) {
+            return parentScope.invokeFlow(flowName);
+        }
+        processorList.add(new InvokeBuilderImpl<P>(getThis(), new InvokerFlowComponent(flowName)));
+
+        return getThis();
     }
 
     /**
@@ -394,6 +409,20 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
 
         processorList.add(new CustomFilterBuilderImpl(ref));
         return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MessagePropertiesBuilder<P> messageProperties() {
+        if (parentScope != null) {
+            return parentScope.messageProperties();
+        }
+        final MessagePropertiesBuilderImpl<P> builder = new MessagePropertiesBuilderImpl<P>(getThis());
+        processorList.add(builder);
+
+        return builder;
     }
 
     /* routers */
