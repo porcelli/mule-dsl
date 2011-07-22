@@ -9,6 +9,8 @@
     </parent>
     <groupId>org.mule.dsl</groupId>
     <artifactId>dsl-example</artifactId>
+    <name>Mule DSL example</name>
+
     <dependencies>
         <dependency>
             <groupId>org.mule.dsl</groupId>

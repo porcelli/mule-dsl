@@ -9,6 +9,8 @@
     </parent>
     <groupId>org.mule.dsl</groupId>
     <artifactId>dsl-core</artifactId>
+    <name>Mule DSL core</name>
+
     <dependencies>
         <dependency>
             <groupId>org.mule</groupId>
@@ -25,6 +27,12 @@
         <dependency>
             <groupId>commons-discovery</groupId>
             <artifactId>commons-discovery</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>

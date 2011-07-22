@@ -1,0 +1,22 @@
+<assembly>
+	<id>distro</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>lib</outputDirectory>
+		</dependencySet>
+	</dependencySets>
+	
+	<fileSets>
+		<fileSet>
+			<directory>../example</directory>
+			<outputDirectory>example</outputDirectory>
+			<excludes>
+				<exclude>target/**</exclude>
+			</excludes>
+		</fileSet>
+	</fileSets>
+</assembly>
