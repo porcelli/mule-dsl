@@ -75,7 +75,4 @@ public final class Mule {
             }
         }
     }
-
-//DefaultMuleMessageFactory
-
 }

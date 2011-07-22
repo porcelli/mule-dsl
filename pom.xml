@@ -22,7 +22,6 @@
                 <artifactId>dsl-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <!-- connectors  -->
             <dependency>
                 <groupId>org.mule.dsl</groupId>

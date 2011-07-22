@@ -9,6 +9,8 @@
 
 package org.mule.config.dsl.internal.util;
 
+import org.mule.config.dsl.ConfigurationException;
+
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -19,10 +21,24 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 /**
  * Provides access to private members in classes.
+ *
+ * @author porcelli
  */
 public class PrivateAccessorHack {
 
-    public static Object setPrivateFieldValue(final Class<?> type, final Object object, final String fieldName, final Object value) {
+    /**
+     * Sets the value for a private field based on given params.
+     *
+     * @param type      the type to query the field
+     * @param object    the object to run the type against
+     * @param fieldName the field name
+     * @param value     the value to be setted
+     * @return the object with field already setted
+     * @throws IllegalArgumentException if {@code fieldName} param is null or empty
+     * @throws NullPointerException     if {@code type}, {@code object} or {@code value} params are null
+     * @throws ConfigurationException   if field not found or unable to access it
+     */
+    public static Object setPrivateFieldValue(final Class<?> type, final Object object, final String fieldName, final Object value) throws IllegalArgumentException, NullPointerException, ConfigurationException {
         checkNotNull(type, "type");
         checkNotNull(object, "object");
         checkNotEmpty(fieldName, "fieldName");
@@ -34,17 +50,27 @@ public class PrivateAccessorHack {
             f.set(object, value);
 
             return object;
-        } catch (NoSuchFieldException ex) {
-            throw new RuntimeException("Field '" + fieldName + "' not found.");
+        } catch (NoSuchFieldException e) {
+            throw new ConfigurationException("Field '" + fieldName + "' not found.", e);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException("Can't set field '" + fieldName + "' value.");
+            throw new ConfigurationException("Can't set field '" + fieldName + "' value.", e);
         }
     }
 
 
-    public static Object getPrivateFieldValue(final Object object, final String fieldName) {
+    /**
+     * Gets the value from a private field  based on given params.
+     *
+     * @param object    the object to be scanned
+     * @param fieldName the field name to get the value from
+     * @return the field value
+     * @throws NullPointerException     if {@code object} param is null
+     * @throws IllegalArgumentException if {@code fieldName} param is null or empty
+     * @throws ConfigurationException   if field not found or unable to access it
+     */
+    public static Object getPrivateFieldValue(final Object object, final String fieldName) throws NullPointerException, IllegalArgumentException, ConfigurationException {
         checkNotNull(object, "object");
-        checkNotNull(fieldName, "fieldName");
+        checkNotEmpty(fieldName, "fieldName");
 
         for (final Field activeField : getAllFields(object.getClass())) {
             if (fieldName.equals(activeField.getName())) {
@@ -52,12 +78,12 @@ public class PrivateAccessorHack {
                     activeField.setAccessible(true);
                     return activeField.get(object);
                 } catch (final IllegalAccessException ex) {
-                    throw new RuntimeException("IllegalAccessException accessing " + fieldName, ex);
+                    throw new ConfigurationException("IllegalAccessException accessing " + fieldName, ex);
                 }
             }
         }
 
-        throw new RuntimeException("Field '" + fieldName + "' not found");
+        throw new ConfigurationException("Field '" + fieldName + "' not found");
     }
 
     /**

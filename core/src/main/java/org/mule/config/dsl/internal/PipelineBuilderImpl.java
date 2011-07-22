@@ -101,15 +101,88 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
      * {@inheritDoc}
      */
     @Override
-    public P invokeFlow(String flowName) throws IllegalArgumentException {
-        checkNotNull(flowName, "flowName");
+    public P executeFlow(String flowName) throws IllegalArgumentException {
+        checkNotEmpty(flowName, "flowName");
         if (parentScope != null) {
-            return parentScope.invokeFlow(flowName);
+            return parentScope.executeFlow(flowName);
         }
         processorList.add(new InvokeBuilderImpl<P>(getThis(), new InvokerFlowComponent(flowName)));
 
         return getThis();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P executeScript(String lang, AbstractModule.FileRefBuilder fileRef) throws IllegalArgumentException, NullPointerException {
+        checkNotEmpty(lang, "lang");
+        checkNotNull(fileRef, "fileRef");
+
+        return executeScript(lang, fileRef.getAsString());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P executeScript(String lang, AbstractModule.ClasspathBuilder classpathRef) throws IllegalArgumentException, NullPointerException {
+        checkNotEmpty(lang, "lang");
+        checkNotNull(classpathRef, "classpathRef");
+
+        return executeScript(lang, classpathRef.getAsString());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P executeScript(ScriptLanguage lang, String script) throws IllegalArgumentException, NullPointerException {
+        checkNotNull(lang, "lang");
+        checkNotNull(script, "script");
+
+        return executeScript(lang.toString(), script);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P executeScript(ScriptLanguage lang, AbstractModule.FileRefBuilder fileRef) throws IllegalArgumentException, NullPointerException {
+        checkNotNull(lang, "lang");
+        checkNotNull(fileRef, "fileRef");
+
+        return executeScript(lang.toString(), fileRef.getAsString());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P executeScript(ScriptLanguage lang, AbstractModule.ClasspathBuilder classpathRef) throws NullPointerException {
+        checkNotNull(lang, "lang");
+        checkNotNull(classpathRef, "classpathRef");
+
+        return executeScript(lang.toString(), classpathRef);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P executeScript(String lang, String script) throws IllegalArgumentException {
+        checkNotEmpty(lang, "lang");
+        checkNotEmpty(script, "script");
+
+        if (parentScope != null) {
+            return parentScope.executeScript(lang, script);
+        }
+
+        processorList.add(new ScriptComponentBuilder(lang, script));
+
+        return getThis();
+    }
+
 
     /**
      * {@inheritDoc}

@@ -154,8 +154,62 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
      * {@inheritDoc}
      */
     @Override
-    public P invokeFlow(String flowName) throws IllegalArgumentException {
-        pipeline.invokeFlow(flowName);
+    public P executeFlow(String flowName) throws IllegalArgumentException {
+        pipeline.executeFlow(flowName);
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P executeScript(String lang, String script) throws IllegalArgumentException {
+        pipeline.executeScript(lang, script);
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P executeScript(String lang, AbstractModule.FileRefBuilder fileRef) throws IllegalArgumentException, NullPointerException {
+        pipeline.executeScript(lang, fileRef);
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P executeScript(String lang, AbstractModule.ClasspathBuilder classpathRef) throws IllegalArgumentException, NullPointerException {
+        pipeline.executeScript(lang, classpathRef);
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P executeScript(ScriptLanguage lang, String script) throws IllegalArgumentException, NullPointerException {
+        pipeline.executeScript(lang, script);
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P executeScript(ScriptLanguage lang, AbstractModule.FileRefBuilder fileRef) throws NullPointerException {
+        pipeline.executeScript(lang, fileRef);
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P executeScript(ScriptLanguage lang, AbstractModule.ClasspathBuilder classpathRef) throws NullPointerException {
+        pipeline.executeScript(lang, classpathRef);
         return getThis();
     }
 

@@ -11,8 +11,10 @@ package org.mule.config.dsl.internal;
 
 import com.google.inject.Injector;
 import org.mule.api.MuleContext;
+import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.registry.RegistrationException;
+import org.mule.lifecycle.RegistryLifecycleManager;
 import org.mule.registry.AbstractRegistry;
 
 import java.util.Collection;
@@ -27,7 +29,7 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
  *
  * @author porcelli
  */
-public class GuiceRegistry extends AbstractRegistry {
+public class GuiceRegistry extends AbstractRegistry implements Initialisable {
 
     public static final String GUICE_INJECTOR_REF = "_guice_injector";
     private final Injector injector;
@@ -41,6 +43,14 @@ public class GuiceRegistry extends AbstractRegistry {
         super("guice_dsl", muleContext);
         checkNotNull(muleContext, "muleContext");
         this.injector = checkNotNull(injector, "injector");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected RegistryLifecycleManager createLifecycleManager() {
+        return new GuiceRegistryLifecycleManager(getRegistryId(), this, muleContext);
     }
 
     /**

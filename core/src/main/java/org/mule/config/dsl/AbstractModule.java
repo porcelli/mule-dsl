@@ -11,6 +11,7 @@ package org.mule.config.dsl;
 
 import org.apache.commons.discovery.Resource;
 import org.apache.commons.discovery.tools.ResourceUtils;
+import org.mule.util.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -281,9 +282,10 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule im
      *
      * @author porcelli
      */
-    class ClasspathBuilder {
+    public static class ClasspathBuilder {
         private final String path;
         private InputStream content = null;
+        private String stringContent = null;
 
         /**
          * Constructor
@@ -312,6 +314,21 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule im
             }
             return content;
         }
+
+        /**
+         * Getter of resource content as string
+         *
+         * @return the resource content as string
+         * @throws IOException if file not found, can't be read or it's not a file
+         * @see InputStream
+         */
+        public String getAsString() throws IOException {
+            if (stringContent == null) {
+                stringContent = IOUtils.toString(get());
+            }
+
+            return stringContent;
+        }
     }
 
     /**
@@ -319,9 +336,10 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule im
      *
      * @author porcelli
      */
-    class FileRefBuilder {
+    public static class FileRefBuilder {
         private final File file;
         private InputStream content = null;
+        private String stringContent = null;
 
         /**
          * Constructor
@@ -371,6 +389,22 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule im
 
             return content;
         }
+
+        /**
+         * Getter of resource content as string
+         *
+         * @return the resource content as string
+         * @throws IOException if file not found, can't be read or it's not a file
+         * @see InputStream
+         */
+        public String getAsString() throws IOException {
+            if (stringContent == null) {
+                stringContent = IOUtils.toString(get());
+            }
+
+            return stringContent;
+        }
+
     }
 
 }

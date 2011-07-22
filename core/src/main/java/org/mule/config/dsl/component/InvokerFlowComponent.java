@@ -16,6 +16,7 @@ import org.mule.api.construct.FlowConstructInvalidException;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.config.i18n.MessageFactory;
 
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 /**
@@ -33,7 +34,16 @@ public class InvokerFlowComponent implements MessageProcessor {
      * @param flowName the name of the flow to be invoked
      */
     public InvokerFlowComponent(final String flowName) {
-        this.flowName = flowName;
+        this.flowName = checkNotEmpty(flowName, "flowName");
+    }
+
+    /**
+     * Getter of flow name
+     *
+     * @return the flow name
+     */
+    public String getFlowName() {
+        return flowName;
     }
 
     /**

@@ -100,6 +100,15 @@ public class InvokeBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBui
     }
 
     /**
+     * Getter of internal component builder
+     *
+     * @return the component builder
+     */
+    public Builder<?> getBuilder() {
+        return builder;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

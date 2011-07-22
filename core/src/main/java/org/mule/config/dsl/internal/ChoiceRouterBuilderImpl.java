@@ -188,8 +188,62 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
      * {@inheritDoc}
      */
     @Override
-    public InnerWhenChoiceBuilder<P> invokeFlow(String flowName) throws IllegalArgumentException {
-        pipeline.invokeFlow(flowName);
+    public InnerWhenChoiceBuilder<P> executeFlow(String flowName) throws IllegalArgumentException {
+        pipeline.executeFlow(flowName);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerWhenChoiceBuilder<P> executeScript(String lang, String script) throws IllegalArgumentException {
+        pipeline.executeScript(lang, script);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerWhenChoiceBuilder<P> executeScript(String lang, AbstractModule.FileRefBuilder fileRef) throws IllegalArgumentException, NullPointerException {
+        pipeline.executeScript(lang, fileRef);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerWhenChoiceBuilder<P> executeScript(String lang, AbstractModule.ClasspathBuilder classpathRef) throws IllegalArgumentException, NullPointerException {
+        pipeline.executeScript(lang, classpathRef);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerWhenChoiceBuilder<P> executeScript(ScriptLanguage lang, String script) throws NullPointerException, IllegalArgumentException {
+        pipeline.executeScript(lang, script);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerWhenChoiceBuilder<P> executeScript(ScriptLanguage lang, AbstractModule.FileRefBuilder fileRef) throws NullPointerException {
+        pipeline.executeScript(lang, fileRef);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerWhenChoiceBuilder<P> executeScript(ScriptLanguage lang, AbstractModule.ClasspathBuilder classpathRef) throws NullPointerException {
+        pipeline.executeScript(lang, classpathRef);
         return this;
     }
 
@@ -570,8 +624,62 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
          * {@inheritDoc}
          */
         @Override
-        public OtherwiseChoiceBuilder<P> invokeFlow(String flowName) throws IllegalArgumentException {
-            ChoiceRouterBuilderImpl.this.invokeFlow(flowName);
+        public OtherwiseChoiceBuilder<P> executeFlow(String flowName) throws IllegalArgumentException {
+            ChoiceRouterBuilderImpl.this.executeFlow(flowName);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public OtherwiseChoiceBuilder<P> executeScript(String lang, String script) throws IllegalArgumentException {
+            ChoiceRouterBuilderImpl.this.executeScript(lang, script);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public OtherwiseChoiceBuilder<P> executeScript(String lang, AbstractModule.FileRefBuilder fileRef) throws IllegalArgumentException, NullPointerException {
+            ChoiceRouterBuilderImpl.this.executeScript(lang, fileRef);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public OtherwiseChoiceBuilder<P> executeScript(String lang, AbstractModule.ClasspathBuilder classpathRef) throws IllegalArgumentException, NullPointerException {
+            ChoiceRouterBuilderImpl.this.executeScript(lang, classpathRef);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public OtherwiseChoiceBuilder<P> executeScript(ScriptLanguage lang, String script) throws NullPointerException, IllegalArgumentException {
+            ChoiceRouterBuilderImpl.this.executeScript(lang, script);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public OtherwiseChoiceBuilder<P> executeScript(ScriptLanguage lang, AbstractModule.FileRefBuilder fileRef) throws NullPointerException {
+            ChoiceRouterBuilderImpl.this.executeScript(lang, fileRef);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public OtherwiseChoiceBuilder<P> executeScript(ScriptLanguage lang, AbstractModule.ClasspathBuilder classpathRef) throws NullPointerException {
+            ChoiceRouterBuilderImpl.this.executeScript(lang, classpathRef);
             return this;
         }
 

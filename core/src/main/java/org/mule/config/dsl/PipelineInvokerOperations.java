@@ -53,14 +53,77 @@ public interface PipelineInvokerOperations<P extends PipelineBuilder<P>> {
 
 
     /**
-     * Invokes a flow.
+     * Executes a flow.
      *
-     * @param flowName the flow name to be invoked
+     * @param flowName the flow name to be executed
      * @return the parameterized builder
      * @throws IllegalArgumentException if {@code flowName} param is null or empty
      * @see org.mule.model.resolvers.ReflectionEntryPointResolver
      */
-    P invokeFlow(String flowName) throws IllegalArgumentException;
+    P executeFlow(String flowName) throws IllegalArgumentException;
+
+    /**
+     * Executes the given script and language.
+     *
+     * @param lang   the script language
+     * @param script the script to be executed
+     * @return the parameterized builder
+     * @throws IllegalArgumentException if {@code flowName} or {@code script} params are null or empty
+     */
+    P executeScript(String lang, String script) throws IllegalArgumentException;
+
+    /**
+     * Executes the given script and language.
+     *
+     * @param lang    the script language
+     * @param fileRef reference to file to be loaded
+     * @return the parameterized builder
+     * @throws IllegalArgumentException if {@code lang} param is null or empty
+     * @throws NullPointerException     if {@code fileRef} param is null
+     */
+    P executeScript(String lang, AbstractModule.FileRefBuilder fileRef) throws IllegalArgumentException, NullPointerException;
+
+    /**
+     * Executes the given script and language.
+     *
+     * @param lang         the script language
+     * @param classpathRef reference to classpath to be loaded
+     * @return the parameterized builder
+     * @throws IllegalArgumentException if {@code lang} param is null or empty
+     * @throws NullPointerException     if {@code classpathRef} param is null
+     */
+    P executeScript(String lang, AbstractModule.ClasspathBuilder classpathRef) throws IllegalArgumentException, NullPointerException;
+
+    /**
+     * Executes the given script and language.
+     *
+     * @param lang   the script language
+     * @param script the script to be executed
+     * @return the parameterized builder
+     * @throws NullPointerException     if {@code lang} param is null or empty
+     * @throws IllegalArgumentException if {@code script} param is null or empty
+     */
+    P executeScript(ScriptLanguage lang, String script) throws NullPointerException, IllegalArgumentException;
+
+    /**
+     * Executes the given script and language.
+     *
+     * @param lang    the script language
+     * @param fileRef reference to file to be loaded
+     * @return the parameterized builder
+     * @throws NullPointerException if {@code lang} or {@code fileRef} params are null or empty
+     */
+    P executeScript(ScriptLanguage lang, AbstractModule.FileRefBuilder fileRef) throws NullPointerException;
+
+    /**
+     * Executes the given script and language.
+     *
+     * @param lang         the script language
+     * @param classpathRef reference to classpath to be loaded
+     * @return the parameterized builder
+     * @throws NullPointerException if {@code lang} or {@code classpathRef} params are null or empty
+     */
+    P executeScript(ScriptLanguage lang, AbstractModule.ClasspathBuilder classpathRef) throws NullPointerException;
 
     /* typed MP builder */
 
