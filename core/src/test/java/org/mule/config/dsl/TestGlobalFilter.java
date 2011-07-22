@@ -9,8 +9,6 @@
 
 package org.mule.config.dsl;
 
-import static org.fest.assertions.Assertions.assertThat;
-
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -24,6 +22,8 @@ import org.mule.api.source.MessageSource;
 import org.mule.config.dsl.internal.FilterDefinitionImpl;
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.routing.MessageFilter;
+
+import static org.fest.assertions.Assertions.assertThat;
 
 public class TestGlobalFilter {
 
@@ -455,6 +455,24 @@ public class TestGlobalFilter {
             }
         });
     }
+
+    @Test(expected = RuntimeException.class)
+    public void testDuplicatedFilters() throws MuleException, InterruptedException {
+        Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
+
+                filter("test").with(MyFilter.class);
+
+                filter("test").with(MyFilter.class);
+
+                flow("MyFlow")
+                        .from("file:///Users/porcelli/test")
+                        .filterWith("test");
+            }
+        });
+    }
+
 
     public static class MyFilter implements Filter {
 

@@ -169,6 +169,18 @@ public class TestRegisterIntoCatalog {
         assertThat(((MyCompleteType) lookupConnector).getName()).isNotNull().isEqualTo("MY_NAME");
     }
 
+    @Test(expected = RuntimeException.class)
+    public void testDuplicateRegister() throws Exception {
+        Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
+                register("sometehing", new Object());
+                register("sometehing", new Object());
+            }
+        });
+    }
+
+
     private class MyContextAwareType implements MuleContextAware {
 
         private MuleContext context;

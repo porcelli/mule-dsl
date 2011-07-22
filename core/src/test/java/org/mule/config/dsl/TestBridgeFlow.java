@@ -199,6 +199,24 @@ public class TestBridgeFlow {
         assertThat(outboundEndpoint2.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/out");
     }
 
+
+    @Test(expected = RuntimeException.class)
+    public void testDucplicatedFlows() {
+        Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
+                final SimpleCallable myCallable = new SimpleCallable();
+                flow("MyFlow")
+                        .from("file:///Users/porcelli/test")
+                        .echo();
+
+                flow("MyFlow")
+                        .from("file:///Users/porcelli/test2")
+                        .log();
+            }
+        });
+    }
+
     public static class SimpleCallable implements Callable {
 
         @Override

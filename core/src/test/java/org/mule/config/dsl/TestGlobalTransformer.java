@@ -9,8 +9,6 @@
 
 package org.mule.config.dsl;
 
-import static org.fest.assertions.Assertions.assertThat;
-
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -24,6 +22,8 @@ import org.mule.api.transformer.TransformerException;
 import org.mule.config.dsl.internal.TransformerDefinitionImpl;
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.transformer.AbstractTransformer;
+
+import static org.fest.assertions.Assertions.assertThat;
 
 public class TestGlobalTransformer {
 
@@ -395,6 +395,24 @@ public class TestGlobalTransformer {
             }
         });
     }
+
+    @Test(expected = RuntimeException.class)
+    public void invalidDuplicateGlobalDefinition() throws MuleException, InterruptedException {
+        Mule.newMuleContext(new AbstractModule() {
+            @Override
+            public void configure() {
+
+                transformer("test").with(MyTransformer.class);
+
+                transformer("test").with(MyTransformer.class);
+
+                flow("MyFlow")
+                        .from("file:///Users/porcelli/test")
+                        .filterWith("test");
+            }
+        });
+    }
+
 
     public static class MyTransformer extends AbstractTransformer {
 
