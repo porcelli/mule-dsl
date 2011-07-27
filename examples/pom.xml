@@ -9,14 +9,12 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>connectors</artifactId>
+    <artifactId>dsl-examples</artifactId>
     <packaging>pom</packaging>
-    <name>Mule DSL Connectors</name>
+    <name>Mule DSL Examples</name>
 
     <modules>
-        <module>git</module>
-        <module>twitter</module>
-        <module>mongo</module>
+        <module>start-here</module>
     </modules>
 
 </project>

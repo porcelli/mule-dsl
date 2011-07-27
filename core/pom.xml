@@ -9,7 +9,7 @@
     </parent>
     <groupId>org.mule.dsl</groupId>
     <artifactId>dsl-core</artifactId>
-    <name>Mule DSL core</name>
+    <name>Mule DSL Core</name>
 
     <dependencies>
         <dependency>

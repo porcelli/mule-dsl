@@ -84,4 +84,14 @@ public interface PipelineTransformerOperations<P extends PipelineBuilder<P>> {
      */
     P transformWith(String ref) throws IllegalArgumentException;
 
+    /* message properties */
+
+    /**
+     * Exposes message properties manipilation, enabling some operations
+     * like {@code put}, {@code remove} and , {@code rename}.
+     *
+     * @return the message properties builder
+     */
+    MessagePropertiesBuilder<P> messageProperties();
+
 }

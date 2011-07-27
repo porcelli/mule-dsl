@@ -17,7 +17,7 @@
         <module>core</module>
         <module>connectors</module>
 		<module>distribution</module>
-        <module>example</module>
+        <module>examples</module>
     </modules>
     <dependencyManagement>
         <dependencies>

@@ -9,6 +9,8 @@
     </parent>
     <groupId>org.mule.dsl</groupId>
     <artifactId>twitter-connector</artifactId>
+    <name>Mule DSL Twitter Connector</name>
+
     <dependencies>
         <dependency>
             <groupId>org.mule.dsl</groupId>

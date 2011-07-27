@@ -9,6 +9,8 @@
     </parent>
     <groupId>org.mule.dsl</groupId>
     <artifactId>git-connector</artifactId>
+    <name>Mule DSL GIT Connector</name>
+
     <dependencies>
         <dependency>
             <groupId>org.mule.dsl</groupId>

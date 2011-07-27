@@ -9,7 +9,7 @@
 	<groupId>org.mule.dsl</groupId>
 	<artifactId>dsl-distribution</artifactId>
 	<packaging>pom</packaging>
-	<name>Mule DSL distribution</name>
+	<name>Mule DSL Distribution</name>
 	
 	<dependencies>
 		<dependency>

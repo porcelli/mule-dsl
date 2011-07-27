@@ -36,10 +36,10 @@ public class TestMessageProperties {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .messageProperties()
-                        .put("key", "value")
-                        .put("key2", "value2")
-                        .remove("key2Remove")
-                        .rename("xxx", "yyy");
+                            .put("key", "value")
+                            .put("key2", "value2")
+                            .remove("key2Remove")
+                            .rename("xxx", "yyy");
             }
         });
 
