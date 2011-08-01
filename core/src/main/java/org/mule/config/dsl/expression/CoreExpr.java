@@ -9,6 +9,7 @@
 
 package org.mule.config.dsl.expression;
 
+import org.mule.api.MuleContext;
 import org.mule.api.routing.filter.Filter;
 import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.routing.filters.RegExFilter;
@@ -112,7 +113,7 @@ public final class CoreExpr {
          * {@inheritDoc}
          */
         @Override
-        public Filter getFilter(final PropertyPlaceholder placeholder) {
+        public Filter getFilter(final MuleContext muleContext, final PropertyPlaceholder placeholder) {
             return new RegExFilter(getExpression(placeholder));
         }
     }
@@ -139,7 +140,7 @@ public final class CoreExpr {
          * {@inheritDoc}
          */
         @Override
-        public Filter getFilter(final PropertyPlaceholder placeholder) {
+        public Filter getFilter(final MuleContext muleContext, final PropertyPlaceholder placeholder) {
             return new WildcardFilter(getExpression(placeholder));
         }
     }

@@ -9,12 +9,6 @@
 
 package org.mule.config.dsl;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mule.config.dsl.expression.CoreExpr.string;
-import static org.mule.config.dsl.expression.CoreExpr.wildcard;
-
-import java.util.Iterator;
-
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -25,6 +19,13 @@ import org.mule.api.source.MessageSource;
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.routing.MessageFilter;
 import org.mule.routing.filters.ExpressionFilter;
+import org.mule.routing.filters.WildcardFilter;
+
+import java.util.Iterator;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.expression.CoreExpr.string;
+import static org.mule.config.dsl.expression.CoreExpr.wildcard;
 
 public class TestExpressionFilter {
 
@@ -69,13 +70,11 @@ public class TestExpressionFilter {
 
         final MessageFilter filter = (MessageFilter) filterProcessor;
 
-        assertThat(filter.getFilter()).isInstanceOf(ExpressionFilter.class);
+        assertThat(filter.getFilter()).isInstanceOf(WildcardFilter.class);
 
-        final ExpressionFilter exprFilter = (ExpressionFilter) filter.getFilter();
+        final WildcardFilter exprFilter = (WildcardFilter) filter.getFilter();
 
-        assertThat(exprFilter.getExpression()).isEqualTo("foo*");
-        assertThat(exprFilter.getEvaluator()).isEqualTo("wildcard");
-        assertThat(exprFilter.getCustomEvaluator()).isNull();
+        assertThat(exprFilter.getPattern()).isEqualTo("foo*");
 
         final MessageProcessor filterProcessor2 = iterator.next();
 

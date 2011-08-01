@@ -48,11 +48,18 @@
                 <artifactId>mule-core</artifactId>
                 <version>${mule.version}</version>
             </dependency>
+            <!-- modules -->
             <dependency>
                 <groupId>org.mule.modules</groupId>
                 <artifactId>mule-module-scripting</artifactId>
                 <version>${mule.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.mule.modules</groupId>
+                <artifactId>mule-module-json</artifactId>
+                <version>${mule.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.google.inject</groupId>
                 <artifactId>guice</artifactId>

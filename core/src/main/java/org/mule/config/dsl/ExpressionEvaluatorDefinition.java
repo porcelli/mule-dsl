@@ -9,6 +9,7 @@
 
 package org.mule.config.dsl;
 
+import org.mule.api.MuleContext;
 import org.mule.api.routing.filter.Filter;
 
 /**
@@ -42,10 +43,11 @@ public interface ExpressionEvaluatorDefinition extends Definition {
     /**
      * Getter of the expression filter.
      *
+     * @param muleContext the mule context
      * @param placeholder the property placeholder
      * @return the expression filter
      */
-    Filter getFilter(PropertyPlaceholder placeholder);
+    Filter getFilter(MuleContext muleContext, PropertyPlaceholder placeholder);
 
     /**
      * A string formatted version of the actual expression definition.

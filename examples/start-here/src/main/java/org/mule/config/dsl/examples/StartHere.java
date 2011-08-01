@@ -7,9 +7,8 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.dsl.example;
+package org.mule.config.dsl.examples;
 
-import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.config.dsl.AbstractModule;
 import org.mule.config.dsl.Mule;
@@ -17,19 +16,14 @@ import org.mule.config.dsl.Mule;
 public class StartHere {
 
     public static void main(String... args) throws MuleException {
-
-        MuleContext context = Mule.newMuleContext(new MyModule());
-        context.start();
-
+        Mule.startMuleContext(new MyModule());
     }
 
     public static class MyModule extends AbstractModule {
 
         @Override
         protected void configure() {
-            flow("mySimpleBridgeFlow")
-                    .from("file://./in")
-                    .send("file://./out");
+            //Define your flows here.
         }
     }
 

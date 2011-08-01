@@ -10,6 +10,8 @@
 package org.mule.config.dsl.internal;
 
 import org.mule.api.MuleContext;
+import org.mule.api.processor.MessageProcessor;
+import org.mule.api.routing.filter.Filter;
 import org.mule.config.dsl.ConfigurationException;
 import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.PropertyPlaceholder;
@@ -24,7 +26,7 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
  * @author porcelli
  * @see org.mule.config.dsl.PipelineBuilder#filter(org.mule.config.dsl.ExpressionEvaluatorDefinition)
  */
-public class ExpressionFilterBuilderImpl implements Builder<MessageFilter> {
+public class ExpressionFilterBuilderImpl implements Builder<MessageProcessor> {
 
     private final ExpressionEvaluatorDefinition objExpr;
 
@@ -40,10 +42,17 @@ public class ExpressionFilterBuilderImpl implements Builder<MessageFilter> {
      * {@inheritDoc}
      */
     @Override
-    public MessageFilter build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+    public MessageProcessor build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
         checkNotNull(muleContext, "muleContext");
         checkNotNull(placeholder, "placeholder");
 
-        return new MessageFilter(new ExpressionFilter(objExpr.getEvaluator(), placeholder.replace(objExpr.getExpression())));
+        Filter filter = objExpr.getFilter(muleContext, placeholder);
+        if (filter == null) {
+            return new MessageFilter(new ExpressionFilter(objExpr.getEvaluator(), placeholder.replace(objExpr.getExpression())));
+        } else if (filter instanceof MessageProcessor) {
+            return (MessageProcessor) filter;
+        }
+
+        return new MessageFilter(filter);
     }
 }

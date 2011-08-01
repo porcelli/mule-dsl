@@ -165,7 +165,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     @Override
     public <B> InvokeBuilder<InnerWhenChoiceBuilder<P>> invoke(final Class<B> clazz) throws NullPointerException {
         checkNotNull(clazz, "clazz");
-        final InvokeBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new InvokeBuilderImpl<InnerWhenChoiceBuilder<P>>(this, clazz);
+        final InvokeBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new InvokeBuilderImpl<InnerWhenChoiceBuilder<P>>(this, clazz, Scope.PROTOTYPE);
         pipeline.addBuilder(builder);
 
         return builder;
@@ -501,7 +501,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         final ChoiceRouter choiceRouter = new ChoiceRouter();
         for (final Route activeRoute : choiceElements) {
             if (activeRoute.getExpr() != null) {
-                choiceRouter.addRoute(buildProcessorChain(activeRoute.getProcessorList(), muleContext, placeholder), activeRoute.getExpr().getFilter(placeholder));
+                choiceRouter.addRoute(buildProcessorChain(activeRoute.getProcessorList(), muleContext, placeholder), activeRoute.getExpr().getFilter(muleContext, placeholder));
             } else {
                 choiceRouter.setDefaultRoute(buildProcessorChain(activeRoute.getProcessorList(), muleContext, placeholder));
             }
@@ -601,7 +601,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         @Override
         public <B> InvokeBuilder<OtherwiseChoiceBuilder<P>> invoke(final Class<B> clazz) throws NullPointerException {
             checkNotNull(clazz, "clazz");
-            final InvokeBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new InvokeBuilderImpl<OtherwiseChoiceBuilder<P>>(this, clazz);
+            final InvokeBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new InvokeBuilderImpl<OtherwiseChoiceBuilder<P>>(this, clazz, Scope.PROTOTYPE);
             pipeline.addBuilder(builder);
 
             return builder;

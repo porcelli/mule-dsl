@@ -9,6 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <groupId>org.mule.dsl.examples</groupId>
     <artifactId>dsl-examples</artifactId>
     <packaging>pom</packaging>
     <name>Mule DSL Examples</name>

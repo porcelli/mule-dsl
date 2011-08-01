@@ -14,6 +14,7 @@ import org.mule.api.MuleContext;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.registry.RegistrationException;
+import org.mule.config.dsl.internal.util.InjectorUtil;
 import org.mule.lifecycle.RegistryLifecycleManager;
 import org.mule.registry.AbstractRegistry;
 
@@ -72,7 +73,10 @@ public class GuiceRegistry extends AbstractRegistry implements Initialisable {
      */
     @Override
     public <T> T lookupObject(final Class<T> type) throws RegistrationException {
-        return injector.getInstance(type);
+        if (InjectorUtil.hasProvider(injector, type)) {
+            return injector.getInstance(type);
+        }
+        return null;
     }
 
     /**

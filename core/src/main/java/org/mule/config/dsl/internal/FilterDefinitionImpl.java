@@ -79,7 +79,11 @@ public class FilterDefinitionImpl<F extends Filter> implements FilterDefinition,
         }
 
         try {
-            return new MessageFilter(muleContext.getRegistry().lookupObject(clazz));
+            Filter filter = muleContext.getRegistry().lookupObject(clazz);
+            if (filter == null) {
+                throw new ConfigurationException("Failed to configure a Global FilterDefinition.");
+            }
+            return new MessageFilter(filter);
         } catch (final Exception e) {
             throw new ConfigurationException("Failed to configure a Global FilterDefinition.", e);
         }

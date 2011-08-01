@@ -9,6 +9,7 @@
 
 package org.mule.config.dsl.expression;
 
+import org.mule.api.MuleContext;
 import org.mule.api.routing.filter.Filter;
 import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.PropertyPlaceholder;
@@ -93,7 +94,7 @@ public abstract class BaseEvaluatorDefinition implements ExpressionEvaluatorDefi
      * {@inheritDoc}
      */
     @Override
-    public Filter getFilter(final PropertyPlaceholder placeholder) {
+    public Filter getFilter(final MuleContext muleContext, final PropertyPlaceholder placeholder) {
         return null;
     }
 }

@@ -9,8 +9,6 @@
 
 package org.mule.config.dsl;
 
-import static org.fest.assertions.Assertions.assertThat;
-
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -23,6 +21,8 @@ import org.mule.api.routing.filter.Filter;
 import org.mule.api.source.MessageSource;
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.routing.MessageFilter;
+
+import static org.fest.assertions.Assertions.assertThat;
 
 public class TestCustomFilter {
 

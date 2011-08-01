@@ -131,7 +131,7 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
     @Override
     public <B> InvokeBuilder<P> invoke(final Class<B> clazz) throws NullPointerException {
         checkNotNull(clazz, "clazz");
-        final InvokeBuilderImpl<P> builder = new InvokeBuilderImpl<P>(getThis(), clazz);
+        final InvokeBuilderImpl<P> builder = new InvokeBuilderImpl<P>(getThis(), clazz, Scope.PROTOTYPE);
         pipeline.addBuilder(builder);
 
         return builder;
