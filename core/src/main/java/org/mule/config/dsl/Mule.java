@@ -19,25 +19,45 @@ import org.mule.api.construct.FlowConstruct;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.transport.MuleMessageFactory;
+import org.mule.api.transport.PropertyScope;
 import org.mule.config.dsl.internal.DefaultCatalogImpl;
 import org.mule.config.dsl.internal.MuleContextBuilder;
+import org.mule.config.dsl.internal.MuleFlowProcessReturnImpl;
 import org.mule.construct.AbstractFlowConstruct;
 import org.mule.session.DefaultMuleSession;
 import org.mule.transport.DefaultMuleMessageFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static org.mule.config.dsl.internal.util.Preconditions.*;
+import static org.mule.config.dsl.internal.util.Preconditions.checkContentsNotNull;
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
 
+/**
+ * {@code Mule} is a simple utility class that helps users
+ * interact with Mule DSL.
+ *
+ * @author porcelli
+ */
 public final class Mule {
 
     private Mule() {
     }
 
-    private static MuleContext muleContext = null;
+    private static MuleContext globalMuleContext = null;
+    private static MuleFlowProcessReturnImpl nullFlowReturn = new MuleFlowProcessReturnImpl(null);
 
-    public static MuleContext newMuleContext(final Module... modules) throws NullPointerException, IllegalArgumentException {
+    /**
+     * Utility method that creates a {@link MuleContext} based on given modules.
+     *
+     * @param modules array of non-null {@link Module}s
+     * @return the mule context properly configured, but not started
+     * @throws NullPointerException     if any of given {@code modules} is null
+     * @throws IllegalArgumentException if {@code modules} is empty
+     */
+    public static synchronized MuleContext newMuleContext(final Module... modules) throws NullPointerException, IllegalArgumentException {
 
         checkContentsNotNull(modules, "modules");
 
@@ -66,21 +86,59 @@ public final class Mule {
         return muleContextBuilder.build();
     }
 
+    /**
+     * Utility method that creates and starts {@link MuleContext} based on given modules.
+     * <p/>
+     * Using this method user's don't need interact directly with {@link MuleContext}, it's up to
+     * {@link Mule} class handle it.
+     *
+     * @param modules array of non-null {@link Module}s
+     * @throws NullPointerException     if any of given {@code modules} is null
+     * @throws IllegalArgumentException if {@code modules} is empty
+     * @throws FailedToStartException   if can't start mule context
+     */
     public static synchronized void startMuleContext(final Module... modules) throws FailedToStartException {
-        if (Mule.muleContext == null) {
-            Mule.muleContext = newMuleContext(modules);
-        }
-        if (Mule.muleContext.isStarted()) {
+        if (Mule.globalMuleContext != null && Mule.globalMuleContext.isStarted()) {
             return;
         }
+
         try {
-            muleContext.start();
+            Mule.globalMuleContext = newMuleContext(modules);
+            globalMuleContext.start();
         } catch (final MuleException e) {
             throw new FailedToStartException("Can't start mule context.", e);
         }
     }
 
+    /**
+     * Utility method that stops mule context.
+     *
+     * @throws FailedToStopException if can't stop mule context
+     */
     public static synchronized void stopMuleContext() throws FailedToStopException {
+        stopMuleContext(globalMuleContext);
+    }
+
+    /**
+     * Utility method that checks if mule is started.
+     *
+     * @return true if started, otherwise false
+     */
+    public static synchronized boolean isStarted() {
+        if (globalMuleContext == null) {
+            return false;
+        }
+        return globalMuleContext.isStarted();
+    }
+
+
+    /**
+     * Utility method that stops the given mule context.
+     *
+     * @param muleContext the mule context
+     * @throws FailedToStopException if can't stop mule context
+     */
+    public static synchronized void stopMuleContext(final MuleContext muleContext) throws FailedToStopException {
         if (muleContext != null && muleContext.isStarted()) {
             try {
                 muleContext.stop();
@@ -90,16 +148,111 @@ public final class Mule {
         }
     }
 
-    public static synchronized void process(String flowName, Object input) throws IllegalArgumentException, NullPointerException {
+    /**
+     * Process a flow based on given parameters.
+     *
+     * @param flowName the name of the flow to be executed
+     * @return an instance of {@link org.mule.api.MuleEvent} wrapped by
+     * @throws IllegalArgumentException if {@code flowName} is empty or null
+     * @throws FlowNotFoundException    if {@code flowName} is not registered or found on mule context
+     * @throws ConfigurationException   if can't configure properly and cereate a {@link MuleMessage}
+     * @throws FlowProcessException     if some problem occurs on flow execution
+     */
+    public static synchronized MuleFlowProcessReturn process(final String flowName)
+            throws IllegalArgumentException, FlowNotFoundException, ConfigurationException, FlowProcessException {
+        return process(globalMuleContext, flowName);
+    }
+
+    /**
+     * Process a flow based on given parameters.
+     *
+     * @param flowName the name of the flow to be executed
+     * @param input    input data to be used as payload
+     * @return an instance of {@link org.mule.api.MuleEvent} wrapped by
+     * @throws IllegalArgumentException if {@code flowName} is empty or null
+     * @throws FlowNotFoundException    if {@code flowName} is not registered or found on mule context
+     * @throws ConfigurationException   if can't configure properly and cereate a {@link MuleMessage}
+     * @throws FlowProcessException     if some problem occurs on flow execution
+     */
+    public static synchronized MuleFlowProcessReturn process(final String flowName, final Object input)
+            throws IllegalArgumentException, FlowNotFoundException, ConfigurationException, FlowProcessException {
+        return process(globalMuleContext, flowName, input);
+    }
+
+    /**
+     * Process a flow based on given parameters.
+     *
+     * @param flowName   the name of the flow to be executed
+     * @param input      input data to be used as payload
+     * @param properties properties to be uset on message payload {@link MuleFlowProcessReturn}
+     * @return an instance of {@link org.mule.api.MuleEvent} wrapped by
+     * @throws IllegalArgumentException if {@code flowName} is empty or null
+     * @throws FlowNotFoundException    if {@code flowName} is not registered or found on mule context
+     * @throws ConfigurationException   if can't configure properly and cereate a {@link MuleMessage}
+     * @throws FlowProcessException     if some problem occurs on flow execution
+     */
+    public static synchronized MuleFlowProcessReturn process(final String flowName, final Object input, Map<String, Object> properties)
+            throws IllegalArgumentException, FlowNotFoundException, ConfigurationException, FlowProcessException {
+        return process(globalMuleContext, flowName, input, properties);
+    }
+
+    /**
+     * Process a flow based on given parameters.
+     *
+     * @param muleContext the mule context
+     * @param flowName    the name of the flow to be executed
+     * @return an instance of {@link org.mule.api.MuleEvent} wrapped by
+     * @throws IllegalArgumentException if {@code flowName} is empty or null
+     * @throws FlowNotFoundException    if {@code flowName} is not registered or found on mule context
+     * @throws ConfigurationException   if can't configure properly and cereate a {@link MuleMessage}
+     * @throws FlowProcessException     if some problem occurs on flow execution
+     */
+    public static synchronized MuleFlowProcessReturn process(final MuleContext muleContext, final String flowName)
+            throws IllegalArgumentException, FlowNotFoundException, ConfigurationException, FlowProcessException {
+        return process(muleContext, flowName, null, null);
+    }
+
+    /**
+     * Process a flow based on given parameters.
+     *
+     * @param muleContext the mule context
+     * @param flowName    the name of the flow to be executed
+     * @param input       input data to be used as payload
+     * @return an instance of {@link org.mule.api.MuleEvent} wrapped by
+     * @throws IllegalArgumentException if {@code flowName} is empty or null
+     * @throws FlowNotFoundException    if {@code flowName} is not registered or found on mule context
+     * @throws ConfigurationException   if can't configure properly and cereate a {@link MuleMessage}
+     * @throws FlowProcessException     if some problem occurs on flow execution
+     */
+    public static synchronized MuleFlowProcessReturn process(final MuleContext muleContext, final String flowName, final Object input)
+            throws IllegalArgumentException, FlowNotFoundException, ConfigurationException, FlowProcessException {
+        return process(muleContext, flowName, input, null);
+    }
+
+    /**
+     * Process a flow based on given parameters.
+     *
+     * @param muleContext the mule context
+     * @param flowName    the name of the flow to be executed
+     * @param input       input data to be used as payload
+     * @param properties  properties to be uset on message payload {@link MuleFlowProcessReturn}
+     * @return an instance of {@link org.mule.api.MuleEvent} wrapped by
+     * @throws IllegalArgumentException if {@code flowName} is empty or null
+     * @throws FlowNotFoundException    if {@code flowName} is not registered or found on mule context
+     * @throws ConfigurationException   if can't configure properly and cereate a {@link MuleMessage}
+     * @throws FlowProcessException     if some problem occurs on flow execution
+     */
+    public static synchronized MuleFlowProcessReturn process(final MuleContext muleContext, final String flowName, final Object input, Map<String, Object> properties)
+            throws IllegalArgumentException, FlowNotFoundException, ConfigurationException, FlowProcessException {
         checkNotEmpty(flowName, "flowName");
-        checkNotNull(input, "input");
+
         if (muleContext != null && muleContext.isStarted()) {
             final FlowConstruct flow = muleContext.getRegistry().lookupFlowConstruct(flowName);
             if (flow == null) {
-                throw new RuntimeException("Flow not found");
+                throw new FlowNotFoundException("Flow not found");
             }
             if (flow.getMessageProcessorChain().getMessageProcessors().size() == 0) {
-                return;
+                return nullFlowReturn;
             }
             InboundEndpoint source = null;
             MuleMessageFactory messageFactory = null;
@@ -109,6 +262,8 @@ public final class Mule {
                     messageFactory = source.getConnector().createMuleMessageFactory();
                 } catch (CreateException e) {
                 }
+            } else {
+                flow.getStatistics().setEnabled(false);
             }
 
             MuleMessage message = null;
@@ -126,24 +281,29 @@ public final class Mule {
                     try {
                         message = new DefaultMuleMessageFactory(muleContext).create(input, null);
                     } catch (Exception e1) {
-                        throw new RuntimeException("Can't create message.", e);
+                        throw new ConfigurationException("Can't create message.", e);
                     }
                 }
                 if (message == null) {
-                    throw new RuntimeException("Can't create message.", e);
+                    throw new ConfigurationException("Can't create message.", e);
                 }
+            }
+
+            if (properties != null) {
+                message.addProperties(new HashMap<String, Object>(properties), PropertyScope.OUTBOUND);
             }
 
             try {
                 DefaultMuleEvent muleEvent = new DefaultMuleEvent(message, source, new DefaultMuleSession(flow, muleContext));
                 if (source == null) {
-                    muleEvent.setTimeout(1);
+                    muleEvent.setTimeout(0);
                 }
-                flow.getMessageProcessorChain().process(muleEvent);
+                return new MuleFlowProcessReturnImpl(flow.getMessageProcessorChain().process(muleEvent));
             } catch (MuleException e) {
-                throw new RuntimeException("Error during flow process.", e);
+                throw new FlowProcessException("Error during flow process.", e);
             }
         }
+        return nullFlowReturn;
     }
 
 }

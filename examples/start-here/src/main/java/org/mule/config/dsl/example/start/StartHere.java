@@ -7,7 +7,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.dsl.examples;
+package org.mule.config.dsl.example.start;
 
 import org.mule.api.MuleException;
 import org.mule.config.dsl.AbstractModule;

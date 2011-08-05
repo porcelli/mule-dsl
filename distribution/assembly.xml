@@ -12,8 +12,8 @@
 	
 	<fileSets>
 		<fileSet>
-			<directory>../example</directory>
-			<outputDirectory>example</outputDirectory>
+			<directory>../examples</directory>
+			<outputDirectory>examples</outputDirectory>
 			<excludes>
 				<exclude>target/**</exclude>
 			</excludes>

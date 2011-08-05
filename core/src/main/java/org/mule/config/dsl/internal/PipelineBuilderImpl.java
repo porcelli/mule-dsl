@@ -61,8 +61,12 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
      * {@inheritDoc}
      */
     @Override
-    public <B> InvokeBuilder<P> invoke(final B obj) throws NullPointerException {
+    public <B> InvokeBuilder<P> invoke(final B obj) throws NullPointerException, IllegalArgumentException {
         checkNotNull(obj, "obj");
+        if (obj instanceof MessageProcessor){
+            throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
+        }
+
         if (parentScope != null) {
             return parentScope.invoke(obj);
         }
@@ -76,7 +80,7 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
      * {@inheritDoc}
      */
     @Override
-    public <B> InvokeBuilder<P> invoke(final Class<B> clazz) throws NullPointerException {
+    public <B> InvokeBuilder<P> invoke(final Class<B> clazz) throws NullPointerException, IllegalArgumentException {
         return invoke(clazz, Scope.PROTOTYPE);
     }
 
@@ -84,9 +88,14 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
      * {@inheritDoc}
      */
     @Override
-    public <B> InvokeBuilder<P> invoke(final Class<B> clazz, final Scope scope) throws NullPointerException {
+    public <B> InvokeBuilder<P> invoke(final Class<B> clazz, final Scope scope) throws NullPointerException, IllegalArgumentException {
         checkNotNull(clazz, "clazz");
         checkNotNull(scope, "scope");
+
+        if (MessageProcessor.class.isAssignableFrom(clazz)){
+            throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
+        }
+
         if (parentScope != null) {
             return parentScope.invoke(clazz, scope);
         }
@@ -164,6 +173,36 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
         checkNotNull(classpathRef, "classpathRef");
 
         return executeScript(lang.toString(), classpathRef);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <MP extends MessageProcessor> P process(Class<MP> clazz) throws NullPointerException {
+        checkNotNull(clazz, "clazz");
+
+        if (parentScope != null) {
+            return parentScope.process(clazz);
+        }
+
+        processorList.add(new InvokeBuilderImpl<P>(getThis(), clazz));
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <MP extends MessageProcessor> P process(MP obj) throws NullPointerException {
+        checkNotNull(obj, "obj");
+
+        if (parentScope != null) {
+            return parentScope.process(obj);
+        }
+
+        processorList.add(new InvokeBuilderImpl<P>(getThis(), obj));
+        return getThis();
     }
 
     /**

@@ -12,6 +12,8 @@ package org.mule.config.dsl.internal.util;
 import org.mule.config.dsl.ConfigurationException;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -54,6 +56,34 @@ public class PrivateAccessorHack {
             throw new ConfigurationException("Field '" + fieldName + "' not found.", e);
         } catch (IllegalAccessException e) {
             throw new ConfigurationException("Can't set field '" + fieldName + "' value.", e);
+        }
+    }
+
+    /**
+     * Executes a private method based on given params.
+     *
+     * @param type       the type to query the method
+     * @param object     the object to run the type against
+     * @param methodName the method name to be executed
+     * @throws IllegalArgumentException if {@code methodName} param is null or empty
+     * @throws NullPointerException     if {@code type} or {@code object} params are null
+     * @throws ConfigurationException   if method not found or unable to access it
+     */
+    public static void executeHiddenMethod(final Class<?> type, final Object object, final String methodName) throws IllegalArgumentException, NullPointerException, ConfigurationException {
+        checkNotNull(type, "type");
+        checkNotNull(object, "object");
+        checkNotEmpty(methodName, "methodName");
+
+        try {
+            Method m = type.getDeclaredMethod(methodName);
+            m.setAccessible(true);
+            m.invoke(object);
+        } catch (NoSuchMethodException e) {
+            throw new ConfigurationException("Method '" + methodName + "' not found.", e);
+        } catch (IllegalAccessException e) {
+            throw new ConfigurationException("Can't invoke method '" + methodName + "' value.", e);
+        } catch (InvocationTargetException e) {
+            throw new ConfigurationException("Can't invoke method '" + methodName + "' value.", e);
         }
     }
 

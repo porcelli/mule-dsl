@@ -18,7 +18,7 @@ import org.mule.module.scripting.filter.ScriptFilter;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
 
 /**
- * Holds scripting related expression evaluators definitions and expose them as static methods.
+ * Holds script related expression evaluators definitions and expose them as static methods.
  *
  * @author porcelli
  */
@@ -28,10 +28,10 @@ public final class ScriptingExpr {
     }
 
     /**
-     * Returns a new regex evaluator expression based on given parameter.
+     * Returns a new groovy evaluator expression based on given parameter.
      *
-     * @param expr the regex expression
-     * @return the regex expression evaluator
+     * @param expr the groovy expression
+     * @return the groovy expression evaluator
      * @throws IllegalArgumentException if {@code expr} param is null or empty
      */
     public static GroovyExpressionEvaluatorDefinition groovy(final String expr) throws IllegalArgumentException {
@@ -40,7 +40,7 @@ public final class ScriptingExpr {
     }
 
     /**
-     * String expression evaluator definition.
+     * Groovy expression evaluator definition.
      *
      * @author porcelli
      * @see org.mule.config.dsl.ExpressionEvaluatorDefinition

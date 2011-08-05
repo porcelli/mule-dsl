@@ -151,8 +151,12 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
      * {@inheritDoc}
      */
     @Override
-    public <B> InvokeBuilder<InnerWhenChoiceBuilder<P>> invoke(final B obj) throws NullPointerException {
+    public <B> InvokeBuilder<InnerWhenChoiceBuilder<P>> invoke(final B obj) throws NullPointerException, IllegalArgumentException {
         checkNotNull(obj, "obj");
+        if (obj instanceof MessageProcessor){
+            throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
+        }
+
         final InvokeBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new InvokeBuilderImpl<InnerWhenChoiceBuilder<P>>(this, obj);
         pipeline.addBuilder(builder);
 
@@ -163,8 +167,12 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
      * {@inheritDoc}
      */
     @Override
-    public <B> InvokeBuilder<InnerWhenChoiceBuilder<P>> invoke(final Class<B> clazz) throws NullPointerException {
+    public <B> InvokeBuilder<InnerWhenChoiceBuilder<P>> invoke(final Class<B> clazz) throws NullPointerException, IllegalArgumentException {
         checkNotNull(clazz, "clazz");
+        if (MessageProcessor.class.isAssignableFrom(clazz)){
+            throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
+        }
+
         final InvokeBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new InvokeBuilderImpl<InnerWhenChoiceBuilder<P>>(this, clazz, Scope.PROTOTYPE);
         pipeline.addBuilder(builder);
 
@@ -175,9 +183,14 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
      * {@inheritDoc}
      */
     @Override
-    public <B> InvokeBuilder<InnerWhenChoiceBuilder<P>> invoke(final Class<B> clazz, final Scope scope) throws NullPointerException {
+    public <B> InvokeBuilder<InnerWhenChoiceBuilder<P>> invoke(final Class<B> clazz, final Scope scope) throws NullPointerException, IllegalArgumentException {
         checkNotNull(clazz, "clazz");
         checkNotNull(scope, "scope");
+
+        if (clazz.isAssignableFrom(MessageProcessor.class)){
+            throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
+        }
+
         final InvokeBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new InvokeBuilderImpl<InnerWhenChoiceBuilder<P>>(this, clazz, scope);
         pipeline.addBuilder(builder);
 
@@ -244,6 +257,24 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     @Override
     public InnerWhenChoiceBuilder<P> executeScript(ScriptLanguage lang, AbstractModule.ClasspathBuilder classpathRef) throws NullPointerException {
         pipeline.executeScript(lang, classpathRef);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <MP extends MessageProcessor> InnerWhenChoiceBuilder<P> process(Class<MP> clazz) throws NullPointerException {
+        pipeline.process(clazz);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <MP extends MessageProcessor> InnerWhenChoiceBuilder<P> process(MP obj) throws NullPointerException {
+        pipeline.process(obj);
         return this;
     }
 
@@ -587,8 +618,12 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
          * {@inheritDoc}
          */
         @Override
-        public <B> InvokeBuilder<OtherwiseChoiceBuilder<P>> invoke(final B obj) throws NullPointerException {
+        public <B> InvokeBuilder<OtherwiseChoiceBuilder<P>> invoke(final B obj) throws NullPointerException, IllegalArgumentException {
             checkNotNull(obj, "obj");
+            if (obj instanceof MessageProcessor){
+                throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
+            }
+
             final InvokeBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new InvokeBuilderImpl<OtherwiseChoiceBuilder<P>>(this, obj);
             pipeline.addBuilder(builder);
 
@@ -599,8 +634,12 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
          * {@inheritDoc}
          */
         @Override
-        public <B> InvokeBuilder<OtherwiseChoiceBuilder<P>> invoke(final Class<B> clazz) throws NullPointerException {
+        public <B> InvokeBuilder<OtherwiseChoiceBuilder<P>> invoke(final Class<B> clazz) throws NullPointerException, IllegalArgumentException {
             checkNotNull(clazz, "clazz");
+            if (MessageProcessor.class.isAssignableFrom(clazz)){
+                throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
+            }
+
             final InvokeBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new InvokeBuilderImpl<OtherwiseChoiceBuilder<P>>(this, clazz, Scope.PROTOTYPE);
             pipeline.addBuilder(builder);
 
@@ -611,9 +650,14 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
          * {@inheritDoc}
          */
         @Override
-        public <B> InvokeBuilder<OtherwiseChoiceBuilder<P>> invoke(final Class<B> clazz, final Scope scope) throws NullPointerException {
+        public <B> InvokeBuilder<OtherwiseChoiceBuilder<P>> invoke(final Class<B> clazz, final Scope scope) throws NullPointerException, IllegalArgumentException {
             checkNotNull(clazz, "clazz");
             checkNotNull(scope, "scope");
+
+            if (clazz.isAssignableFrom(MessageProcessor.class)){
+                throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
+            }
+
             final InvokeBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new InvokeBuilderImpl<OtherwiseChoiceBuilder<P>>(this, clazz, scope);
             pipeline.addBuilder(builder);
 
@@ -680,6 +724,24 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         @Override
         public OtherwiseChoiceBuilder<P> executeScript(ScriptLanguage lang, AbstractModule.ClasspathBuilder classpathRef) throws NullPointerException {
             ChoiceRouterBuilderImpl.this.executeScript(lang, classpathRef);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public <MP extends MessageProcessor> OtherwiseChoiceBuilder<P> process(Class<MP> clazz) throws NullPointerException {
+            ChoiceRouterBuilderImpl.this.process(clazz);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public <MP extends MessageProcessor> OtherwiseChoiceBuilder<P> process(MP obj) throws NullPointerException {
+            ChoiceRouterBuilderImpl.this.process(obj);
             return this;
         }
 

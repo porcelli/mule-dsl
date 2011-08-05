@@ -24,7 +24,7 @@ import java.util.Iterator;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-public class TestProcess {
+public class TestProcessUsingMPBuilder {
 
     @Test
     public void simpleProcess() {
@@ -74,7 +74,7 @@ public class TestProcess {
             public void configure() {
                 flow("Receiver")
                         .from("file:///Users/porcelli/test")
-                        .process(null);
+                        .process((MessageProcessorDefinition) null);
             }
         });
     }

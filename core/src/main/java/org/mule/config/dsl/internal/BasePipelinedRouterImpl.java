@@ -117,8 +117,13 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
      * {@inheritDoc}
      */
     @Override
-    public <B> InvokeBuilder<P> invoke(final B obj) throws NullPointerException {
+    public <B> InvokeBuilder<P> invoke(final B obj) throws NullPointerException, IllegalArgumentException {
         checkNotNull(obj, "obj");
+
+        if (obj instanceof MessageProcessor){
+            throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
+        }
+
         final InvokeBuilderImpl<P> builder = new InvokeBuilderImpl<P>(getThis(), obj);
         pipeline.addBuilder(builder);
 
@@ -129,8 +134,13 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
      * {@inheritDoc}
      */
     @Override
-    public <B> InvokeBuilder<P> invoke(final Class<B> clazz) throws NullPointerException {
+    public <B> InvokeBuilder<P> invoke(final Class<B> clazz) throws NullPointerException, IllegalArgumentException {
         checkNotNull(clazz, "clazz");
+
+        if (MessageProcessor.class.isAssignableFrom(clazz)){
+            throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
+        }
+
         final InvokeBuilderImpl<P> builder = new InvokeBuilderImpl<P>(getThis(), clazz, Scope.PROTOTYPE);
         pipeline.addBuilder(builder);
 
@@ -141,9 +151,14 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
      * {@inheritDoc}
      */
     @Override
-    public <B> InvokeBuilder<P> invoke(final Class<B> clazz, final Scope scope) throws NullPointerException {
+    public <B> InvokeBuilder<P> invoke(final Class<B> clazz, final Scope scope) throws NullPointerException, IllegalArgumentException {
         checkNotNull(clazz, "clazz");
         checkNotNull(scope, "scope");
+
+        if (clazz.isAssignableFrom(MessageProcessor.class)){
+            throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
+        }
+
         final InvokeBuilderImpl<P> builder = new InvokeBuilderImpl<P>(getThis(), clazz, scope);
         pipeline.addBuilder(builder);
 
@@ -210,6 +225,24 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
     @Override
     public P executeScript(ScriptLanguage lang, AbstractModule.ClasspathBuilder classpathRef) throws NullPointerException {
         pipeline.executeScript(lang, classpathRef);
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <MP extends MessageProcessor> P process(Class<MP> clazz) throws NullPointerException {
+        pipeline.process(clazz);
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <MP extends MessageProcessor> P process(MP obj) throws NullPointerException {
+        pipeline.process(obj);
         return getThis();
     }
 

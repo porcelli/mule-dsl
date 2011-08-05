@@ -75,6 +75,19 @@ public class InvokeBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBui
 
     /**
      * @param parentScope the parent scope, null is allowed
+     * @param clazz       the type to be invoked, Mule will instantiate it at runtime
+     * @throws NullPointerException if {@code clazz} param is null
+     */
+    public InvokeBuilderImpl(final P parentScope, final Class<?> clazz) throws NullPointerException {
+        super(parentScope);
+        this.clazz = checkNotNull(clazz, "clazz");
+        this.scope = Scope.PROTOTYPE;
+        this.obj = null;
+        this.builder = null;
+    }
+
+    /**
+     * @param parentScope the parent scope, null is allowed
      * @param obj         the object to be invoked
      * @throws NullPointerException if {@code obj} param is null
      */

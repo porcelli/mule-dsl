@@ -28,6 +28,7 @@ import java.util.Map;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.mule.config.dsl.internal.GuiceRegistry.GUICE_INJECTOR_REF;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.internal.util.PrivateAccessorHack.executeHiddenMethod;
 import static org.mule.config.dsl.internal.util.PrivateAccessorHack.setPrivateFieldValue;
 
 /**
@@ -94,6 +95,7 @@ public class MuleContextBuilder implements org.mule.config.dsl.Builder {
 
                 if (entry.getValue() instanceof Connector) {
                     setPrivateFieldValue(AbstractConnector.class, entry.getValue(), "muleContext", muleContext);
+                    executeHiddenMethod(AbstractConnector.class, entry.getValue(), "updateCachedNotificationHandler");
                     muleContext.getRegistry().registerConnector((Connector) entry.getValue());
                 } else if (entry.getValue() instanceof Agent) {
                     muleContext.getRegistry().registerAgent((Agent) entry.getValue());

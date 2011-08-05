@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mule.dsl</groupId>
     <artifactId>mule-dsl</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.6</version>
 	<packaging>pom</packaging>
 	<name>Mule DSL</name>
 	
@@ -48,7 +48,7 @@
                 <artifactId>mule-core</artifactId>
                 <version>${mule.version}</version>
             </dependency>
-            <!-- modules -->
+            <!-- core modules -->
             <dependency>
                 <groupId>org.mule.modules</groupId>
                 <artifactId>mule-module-scripting</artifactId>
@@ -57,6 +57,12 @@
             <dependency>
                 <groupId>org.mule.modules</groupId>
                 <artifactId>mule-module-json</artifactId>
+                <version>${mule.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mule.modules</groupId>
+                <artifactId>mule-module-cxf</artifactId>
                 <version>${mule.version}</version>
             </dependency>
 
@@ -92,7 +98,7 @@
                 <version>1.1-SNAPSHOT</version>
 	        </dependency>
 
-            <!-- test dependencies -->
+            <!-- transport related dependencies -->
             <dependency>
                 <groupId>org.mule.transports</groupId>
                 <artifactId>mule-transport-file</artifactId>
@@ -105,7 +111,7 @@
             </dependency>
             <dependency>
                 <groupId>org.mule.transports</groupId>
-                <artifactId>mule-transport-http</artifactId>
+                <artifactId>mule-transport-email</artifactId>
                 <version>${mule.version}</version>
             </dependency>
             <!-- test frameworks -->

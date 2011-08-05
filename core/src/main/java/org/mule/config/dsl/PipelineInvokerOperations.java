@@ -9,6 +9,8 @@
 
 package org.mule.config.dsl;
 
+import org.mule.api.processor.MessageProcessor;
+
 /**
  * Interface that defines all component invokes related operations.
  *
@@ -25,20 +27,22 @@ public interface PipelineInvokerOperations<P extends PipelineBuilder<P>> {
      *
      * @param obj the object to be invoked
      * @return the executor builder
-     * @throws NullPointerException if {@code obj} param is null
+     * @throws NullPointerException     if {@code obj} param is null
+     * @throws IllegalArgumentException if {@code obj} is an instance of {@link MessageProcessor}
      * @see org.mule.model.resolvers.ReflectionEntryPointResolver
      */
-    <B> InvokeBuilder<P> invoke(B obj) throws NullPointerException;
+    <B> InvokeBuilder<P> invoke(B obj) throws NullPointerException, IllegalArgumentException;
 
     /**
      * Invokes the most appropriate {@code clazz}'s method.
      *
      * @param clazz the class type to be invoked, Mule will instantiate an object at runtime
      * @return the executor builder
-     * @throws NullPointerException if {@code clazz} param is null
+     * @throws NullPointerException     if {@code clazz} param is null
+     * @throws IllegalArgumentException if {@code clazz} is assignable from a {@link MessageProcessor}
      * @see org.mule.model.resolvers.ReflectionEntryPointResolver
      */
-    <B> InvokeBuilder<P> invoke(Class<B> clazz) throws NullPointerException;
+    <B> InvokeBuilder<P> invoke(Class<B> clazz) throws NullPointerException, IllegalArgumentException;
 
     /**
      * Invokes the most appropriate {@code clazz}'s method.
@@ -46,11 +50,11 @@ public interface PipelineInvokerOperations<P extends PipelineBuilder<P>> {
      * @param clazz the class type to be invoked, Mule will instantiate it at runtime
      * @param scope the scope that type should be lifeclycled by Mule
      * @return the executor builder
-     * @throws NullPointerException if {@code clazz} or {@code scope} params are null
+     * @throws NullPointerException     if {@code clazz} or {@code scope} params are null
+     * @throws IllegalArgumentException if {@code clazz} is assignable from a {@link MessageProcessor}
      * @see org.mule.model.resolvers.ReflectionEntryPointResolver
      */
-    <B> InvokeBuilder<P> invoke(Class<B> clazz, Scope scope) throws NullPointerException;
-
+    <B> InvokeBuilder<P> invoke(Class<B> clazz, Scope scope) throws NullPointerException, IllegalArgumentException;
 
     /**
      * Executes a flow.
@@ -124,6 +128,28 @@ public interface PipelineInvokerOperations<P extends PipelineBuilder<P>> {
      * @throws NullPointerException if {@code lang} or {@code classpathRef} params are null or empty
      */
     P executeScript(ScriptLanguage lang, AbstractModule.ClasspathBuilder classpathRef) throws NullPointerException;
+
+    /* custom MP */
+
+    /**
+     * Executes the message processor.
+     *
+     * @param clazz the message processor type to be processed, Mule will instantiate an object at runtime
+     * @return the parameterized builder
+     * @throws NullPointerException if {@code clazz} param is null
+     * @see org.mule.api.processor.MessageProcessor
+     */
+    <MP extends MessageProcessor> P process(Class<MP> clazz) throws NullPointerException;
+
+    /**
+     * Executes the message processor.
+     *
+     * @param obj the message processor instance
+     * @return the parameterized builder
+     * @throws NullPointerException if {@code obj} param is null
+     * @see org.mule.api.processor.MessageProcessor
+     */
+    <MP extends MessageProcessor> P process(MP obj) throws NullPointerException;
 
     /* typed MP builder */
 
