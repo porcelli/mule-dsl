@@ -150,20 +150,4 @@ public interface PipelineInvokerOperations<P extends PipelineBuilder<P>> {
      * @see org.mule.api.processor.MessageProcessor
      */
     <MP extends MessageProcessor> P process(MP obj) throws NullPointerException;
-
-    /* typed MP builder */
-
-    /**
-     * Executes the message processor.
-     *
-     * @param messageProcessor the message processor definition instance
-     * @return the parameterized builder
-     * @throws NullPointerException     if {@code process} param is null
-     * @throws IllegalArgumentException if can't build the given {@code process}
-     * @see MessageProcessorDefinition
-     * @see org.mule.api.processor.MessageProcessor
-     * @see Definition
-     */
-    P process(MessageProcessorDefinition messageProcessor) throws NullPointerException, IllegalArgumentException;
-
 }

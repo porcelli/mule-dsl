@@ -15,7 +15,6 @@
 
     <modules>
         <module>core</module>
-        <module>connectors</module>
 		<module>distribution</module>
         <module>examples</module>
     </modules>

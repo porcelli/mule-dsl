@@ -45,15 +45,6 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
      * {@inheritDoc}
      */
     @Override
-    public P process(final MessageProcessorDefinition messageProcessor) throws NullPointerException, IllegalArgumentException {
-        pipeline.process(messageProcessor);
-        return getThis();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public P log() {
         pipeline.log();
         return getThis();

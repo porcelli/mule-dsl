@@ -282,15 +282,6 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
      * {@inheritDoc}
      */
     @Override
-    public InnerWhenChoiceBuilder<P> process(final MessageProcessorDefinition messageProcessor) throws NullPointerException, IllegalArgumentException {
-        pipeline.process(messageProcessor);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public InnerWhenChoiceBuilder<P> send(final String uri) throws IllegalArgumentException {
         pipeline.send(uri);
         return this;
@@ -742,15 +733,6 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         @Override
         public <MP extends MessageProcessor> OtherwiseChoiceBuilder<P> process(MP obj) throws NullPointerException {
             ChoiceRouterBuilderImpl.this.process(obj);
-            return this;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public OtherwiseChoiceBuilder<P> process(final MessageProcessorDefinition messageProcessor) throws NullPointerException, IllegalArgumentException {
-            ChoiceRouterBuilderImpl.this.process(messageProcessor);
             return this;
         }
 

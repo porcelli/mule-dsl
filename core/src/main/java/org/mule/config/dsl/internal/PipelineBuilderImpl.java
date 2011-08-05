@@ -222,25 +222,6 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
         return getThis();
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public P process(final MessageProcessorDefinition messageProcessor) throws NullPointerException, IllegalArgumentException {
-        checkNotNull(messageProcessor, "messageProcessor");
-        if (parentScope != null) {
-            return parentScope.process(messageProcessor);
-        }
-
-        if (!(messageProcessor instanceof Builder)) {
-            throw new IllegalArgumentException("Can't build this message processor definition.");
-        }
-
-        processorList.add((Builder<MessageProcessor>) messageProcessor);
-        return getThis();
-    }
-
     /**
      * {@inheritDoc}
      */
