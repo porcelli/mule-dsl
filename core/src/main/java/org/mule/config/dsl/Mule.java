@@ -36,8 +36,8 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkContentsNotNu
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
 
 /**
- * {@code Mule} is a simple utility class that helps users
- * interact with Mule DSL.
+ * {@code Mule} is the entry point to Mule DSL. Creates {@link MuleContext} from
+ * {@link Module}s and also allows user's directly invoke defined flows.
  *
  * @author porcelli
  */
@@ -50,7 +50,7 @@ public final class Mule {
     private static MuleFlowProcessReturnImpl nullFlowReturn = new MuleFlowProcessReturnImpl(null);
 
     /**
-     * Utility method that creates a {@link MuleContext} based on given modules.
+     * Creates a {@link MuleContext} for the given set of modules.
      *
      * @param modules array of non-null {@link Module}s
      * @return the mule context properly configured, but not started
@@ -87,7 +87,8 @@ public final class Mule {
     }
 
     /**
-     * Utility method that creates and starts {@link MuleContext} based on given modules.
+     *
+     * Creates and starts {@link MuleContext} for the given set of modules.
      * <p/>
      * Using this method user's don't need interact directly with {@link MuleContext}, it's up to
      * {@link Mule} class handle it.
@@ -111,7 +112,7 @@ public final class Mule {
     }
 
     /**
-     * Utility method that stops mule context.
+     * Stops mule context.
      *
      * @throws FailedToStopException if can't stop mule context
      */
@@ -120,7 +121,7 @@ public final class Mule {
     }
 
     /**
-     * Utility method that checks if mule is started.
+     * Checks if mule is started.
      *
      * @return true if started, otherwise false
      */
@@ -133,7 +134,7 @@ public final class Mule {
 
 
     /**
-     * Utility method that stops the given mule context.
+     * Stops the given mule context.
      *
      * @param muleContext the mule context
      * @throws FailedToStopException if can't stop mule context
@@ -305,5 +306,4 @@ public final class Mule {
         }
         return nullFlowReturn;
     }
-
 }
