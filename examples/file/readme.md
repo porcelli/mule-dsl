@@ -68,11 +68,11 @@ To execute the flow passing a file, we just create it and use it as payload, as 
 	out.write("MY SIMPLE AD-HOC FILE!".getBytes()); //set some content
 	out.close(); //close
 
-	Mule.process("multipleFileMove", tempFile); //executes the flow using tempFile as payload
+	myMule.flow("multipleFileMove").process(tempFile); //executes the flow using tempFile as payload
 ```
 
 You can also set a string as payload as follows:
 
 ```java
-	Mule.process("multipleFileMove", "SOME DIRECT STRING CONTENT!"); //executes the flow using a string as payload
+	myMule.flow("multipleFileMove").process("SOME DIRECT STRING CONTENT!"); //executes the flow using a string as payload
 ```

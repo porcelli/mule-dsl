@@ -33,7 +33,7 @@ To hold all those properties, we'll create a `Map<String, Object>` and fill it, 
 And finally, to invoke the flow, all we need is call the `process` method of `Mule` class:
 
 ```java
-	Mule.process("SendEmail", mailContent, properties);
+    myMule.flow("SendEmail").process(mailContent, properties);
 ```
 
 Note that you can change this example to use your own smtp server, all you need to do is remove the line that starts the fake server (line 30) and set your smtp server details (lines 35-38).

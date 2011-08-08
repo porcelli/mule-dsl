@@ -13,7 +13,7 @@ Example that executes a stock quote rest service and them transform its return i
 In this example we define a flow that is expected to be executed directly from source code using the `Mule` class, and expect as its parameter (payload) the stock symbol, as follows:
 
 ```java
-	StockQuote quote = Mule.process("GetQuote", "IBM").getPayload(StockQuote.class);
+	StockQuote quote = myMule.flow("GetQuote").process("IBM").getPayloadAs(StockQuote.class);
 ```
 
 Now let's understand how we build the flow to execute it. First we had to transform the payload to the format expected by the service, to execute this transformation we use a simple expression:
@@ -105,7 +105,7 @@ Next step all we need is execute the previous example flow ("TweetStockQuote") a
 Note that we're re-using a flow that, in this case, isn't defined in the same module. And to enable it we must start Mule passing both modules as arguments, as show here:
 
 ```java
-	Mule.startMuleContext(new StockQuotesRestServiceModule(), new StockQuotesModule());
+	new Mule(new StockQuotesRestServiceModule(), new StockQuotesModule()).start();
 ```
 
 To test this example you should start the java code and, on your web browser, open some of these URLs:
