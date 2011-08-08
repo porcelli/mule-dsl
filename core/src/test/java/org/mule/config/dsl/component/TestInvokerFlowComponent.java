@@ -20,7 +20,7 @@ public class TestInvokerFlowComponent extends BaseComponentTests {
 
     public TestInvokerFlowComponent() {
         try {
-            this.muleContext = Mule.newMuleContext(new AbstractModule() {
+            this.muleContext = new Mule(new AbstractModule() {
                 @Override
                 public void configure() {
                     flow("Receiver")
@@ -33,7 +33,7 @@ public class TestInvokerFlowComponent extends BaseComponentTests {
                             .log();
 
                 }
-            });
+            }).advanced().muleContext();
 
         } catch (final Exception e) {
             fail("Can't initialize muleContext.", e);

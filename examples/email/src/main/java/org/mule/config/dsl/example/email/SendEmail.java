@@ -30,7 +30,8 @@ public class SendEmail {
     public static void main(String... args) throws MuleException {
         final int port = 6060; //defines fake mail port
         EmbeddedMailServer.start(port);  // start fake mail server
-        Mule.startMuleContext(new MyEmailModule()); // start mule
+        Mule myMule = new Mule(new MyEmailModule()); //creates a Mule instance
+        myMule.start(); // start mule
 
         final Map<String, Object> properties = new HashMap<String, Object>(); //map that holds message properties
 
@@ -43,7 +44,7 @@ public class SendEmail {
         properties.put("address", "mule_users@company.com"); //email address to send to
         final String mailContent = "Send emails direct from Mule DSL!"; //email content
 
-        Mule.process("SendEmail", mailContent, properties); //executes flow passing as arguments the mailContent alongside message properties
+        myMule.flow("SendEmail").process(mailContent, properties); //executes flow passing as arguments the mailContent alongside message properties
     }
 
     /**

@@ -27,7 +27,7 @@ public interface MuleFlowProcessReturn {
      * @return the payload typed
      * @throws ClassCastException if can't cast payload to expected type
      */
-    <T> T getPayload(Class<T> type) throws ClassCastException;
+    <T> T getPayloadAs(Class<T> type) throws ClassCastException;
 
     /**
      * Returns the payload

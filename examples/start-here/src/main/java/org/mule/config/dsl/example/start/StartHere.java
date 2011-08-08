@@ -16,7 +16,7 @@ import org.mule.config.dsl.Mule;
 public class StartHere {
 
     public static void main(String... args) throws MuleException {
-        Mule.startMuleContext(new MyModule());
+        new Mule(new MyModule()).start();
     }
 
     public static class MyModule extends AbstractModule {

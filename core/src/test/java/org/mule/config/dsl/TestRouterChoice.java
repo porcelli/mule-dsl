@@ -36,7 +36,7 @@ public class TestRouterChoice {
 
     @Test
     public void simpleChoice() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -48,7 +48,7 @@ public class TestRouterChoice {
                                 .echo()
                         .endChoice();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -112,7 +112,7 @@ public class TestRouterChoice {
 
         @Test
     public void simpleChoiceWithInnerChoiceOnWhen() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+            final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -134,7 +134,7 @@ public class TestRouterChoice {
                                 .endChoice()
                         .endChoice();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -263,7 +263,7 @@ public class TestRouterChoice {
     }
     @Test
     public void simpleChoiceWithoutOtherwise() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -273,7 +273,7 @@ public class TestRouterChoice {
                                 .log()
                         .endChoice();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -325,7 +325,7 @@ public class TestRouterChoice {
 
     @Test
     public void simpleChoiceWithSend() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -342,7 +342,7 @@ public class TestRouterChoice {
                                 .send("file:///Users/porcelli/out5")
                         .endChoice();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -424,7 +424,7 @@ public class TestRouterChoice {
 
     @Test
     public void simpleChoiceWithSendWithoutOtherwise() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -438,7 +438,7 @@ public class TestRouterChoice {
                                 .send("file:///Users/porcelli/out3")
                         .endChoice();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 

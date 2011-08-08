@@ -17,9 +17,8 @@ import static org.mule.config.dsl.expression.CoreExpr.regex;
 
 public class TestSyntaxRouterAll {
 
-//    @Test
     public void allRouterTest() {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

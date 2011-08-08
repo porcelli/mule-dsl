@@ -29,7 +29,7 @@ public class TestGlobalFilter {
 
     @Test
     public void globalReferenceTypeUsingVariable() throws MuleException, InterruptedException {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -39,7 +39,7 @@ public class TestGlobalFilter {
                         .from("file:///Users/porcelli/test")
                         .filterWith(myFilter);
             }
-        });
+        }).advanced().muleContext();
 
         {
             assertThat(muleContext.getRegistry().lookupObject("test")).isNotNull().isInstanceOf(MessageFilter.class);
@@ -84,7 +84,7 @@ public class TestGlobalFilter {
 
     @Test
     public void globalReferenceTypeUsingStringRef() throws MuleException, InterruptedException {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -94,7 +94,7 @@ public class TestGlobalFilter {
                         .from("file:///Users/porcelli/test")
                         .filterWith("test");
             }
-        });
+        }).advanced().muleContext();
 
         {
             assertThat(muleContext.getRegistry().lookupObject("test")).isNotNull().isInstanceOf(MessageFilter.class);
@@ -141,7 +141,7 @@ public class TestGlobalFilter {
     public void globalReferenceInstanceUsingVariable() throws MuleException, InterruptedException {
         final MyFilter filter = new MyFilter();
 
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -151,7 +151,7 @@ public class TestGlobalFilter {
                         .from("file:///Users/porcelli/test")
                         .filterWith(myFilter);
             }
-        });
+        }).advanced().muleContext();
 
         {
             assertThat(muleContext.getRegistry().lookupObject("test")).isNotNull().isInstanceOf(MessageFilter.class);
@@ -198,7 +198,7 @@ public class TestGlobalFilter {
     public void globalReferenceInstanceUsingStringRef() throws MuleException, InterruptedException {
         final MyFilter filter = new MyFilter();
 
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -208,7 +208,7 @@ public class TestGlobalFilter {
                         .from("file:///Users/porcelli/test")
                         .filterWith("test");
             }
-        });
+        }).advanced().muleContext();
 
         {
             assertThat(muleContext.getRegistry().lookupObject("test")).isNotNull().isInstanceOf(MessageFilter.class);
@@ -255,7 +255,7 @@ public class TestGlobalFilter {
     public void globalReferenceInstanceUsingVariableByInjector() throws MuleException, InterruptedException {
         final MyFilter filter = new MyFilter();
 
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -267,7 +267,7 @@ public class TestGlobalFilter {
 
                 bind(MyFilter.class).toInstance(filter);
             }
-        });
+        }).advanced().muleContext();
 
         {
             assertThat(muleContext.getRegistry().lookupObject("test")).isNotNull().isInstanceOf(MessageFilter.class);
@@ -314,7 +314,7 @@ public class TestGlobalFilter {
     public void globalReferenceInstanceUsingStringRefByInjector() throws MuleException, InterruptedException {
         final MyFilter filter = new MyFilter();
 
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -326,7 +326,7 @@ public class TestGlobalFilter {
 
                 bind(MyFilter.class).toInstance(filter);
             }
-        });
+        }).advanced().muleContext();
 
         {
             assertThat(muleContext.getRegistry().lookupObject("test")).isNotNull().isInstanceOf(MessageFilter.class);
@@ -371,7 +371,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalDefinitionConstructor() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -386,7 +386,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalDefinitionType() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 filter().with((Class<Filter>) null);
@@ -396,7 +396,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalDefinitionInstance() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 filter().with((Filter) null);
@@ -406,7 +406,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingStringRef() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -418,7 +418,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingUnboundVariable() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 final FilterDefinition myFilter = new FilterDefinitionImpl<MyFilter>("test", MyFilter.class);
@@ -432,7 +432,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingNullVariable() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 final FilterDefinition myFilter = null;
@@ -446,7 +446,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingNullStringRef() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -458,7 +458,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void testDuplicatedFilters() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
 

@@ -12,7 +12,7 @@ package org.mule.config.dsl;
 import org.mule.config.i18n.Message;
 
 /**
- * Thrown from {@link Mule#startMuleContext(Module...)} when can't
+ * Thrown from {@link Mule#start(Module...)} when can't
  * start the mule context.
  *
  * @author porcelli

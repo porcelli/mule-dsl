@@ -219,7 +219,7 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule im
      * @see org.mule.api.construct.FlowConstruct
      */
     public FlowBuilder flow() {
-        return flow(newName("Flow"));
+        return flow(newName("Flows"));
     }
 
     /**

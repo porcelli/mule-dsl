@@ -29,14 +29,14 @@ public class TestInvokeStringNamedMethod {
     @Test
     public void simpleObjectNamed() {
         final Simple mySimple = new Simple();
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .invoke(mySimple).methodName("invoke");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -80,14 +80,14 @@ public class TestInvokeStringNamedMethod {
 
     @Test
     public void simpleTypeNamed() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .invoke(Simple.class).methodName("invoke");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -135,7 +135,7 @@ public class TestInvokeStringNamedMethod {
     public void simpleInjectedNamed() {
         final Simple2 mySimple2 = new Simple2(null);
 
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -144,7 +144,7 @@ public class TestInvokeStringNamedMethod {
 
                 bind(Simple2.class).toInstance(mySimple2);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -192,14 +192,14 @@ public class TestInvokeStringNamedMethod {
     @Test
     public void simpleObjectNamedAnnotationWithDefaultArgs() {
         final Simple mySimple = new Simple();
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .invoke(mySimple).methodName("invoke").withoutArgs();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -243,14 +243,14 @@ public class TestInvokeStringNamedMethod {
 
     @Test
     public void simpleTypeNamedAnnotationWithDefaultArgs() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .invoke(Simple.class).methodName("invoke").withoutArgs();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -298,7 +298,7 @@ public class TestInvokeStringNamedMethod {
     public void simpleInjectedNamedAnnotationWithDefaultArgs() {
         final Simple2 mySimple2 = new Simple2(null);
 
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -307,7 +307,7 @@ public class TestInvokeStringNamedMethod {
 
                 bind(Simple2.class).toInstance(mySimple2);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -354,14 +354,14 @@ public class TestInvokeStringNamedMethod {
     @Test
     public void simpleObjectNamedAnnotationWithArgs() {
         final Simple mySimple = new Simple();
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .invoke(mySimple).methodName("invoke2").args(payload());
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -407,14 +407,14 @@ public class TestInvokeStringNamedMethod {
 
     @Test
     public void simpleTypeNamedAnnotationWithArgs() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .invoke(Simple.class).methodName("invoke2").args(payload());
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -464,7 +464,7 @@ public class TestInvokeStringNamedMethod {
     public void simpleInjectedNamedAnnotationWithArgs() {
         final Simple2 mySimple2 = new Simple2(null);
 
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -473,7 +473,7 @@ public class TestInvokeStringNamedMethod {
 
                 bind(Simple2.class).toInstance(mySimple2);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 

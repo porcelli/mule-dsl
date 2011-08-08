@@ -22,17 +22,17 @@ public class TestRegisterIntoCatalog {
     @Test
     public void simpleRegisterObject() throws Exception {
         final Object x = new Object();
-        MuleContext context = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 register("sometehing", x);
             }
-        });
+        }).advanced().muleContext();
 
-        Object wrongLookupX = context.getRegistry().lookupObject("Sometehing");
+        Object wrongLookupX = muleContext.getRegistry().lookupObject("Sometehing");
         assertThat(wrongLookupX).isNull();
 
-        Object lookupX = context.getRegistry().lookupObject("sometehing");
+        Object lookupX = muleContext.getRegistry().lookupObject("sometehing");
         assertThat(lookupX).isNotNull().isEqualTo(x);
     }
 
@@ -40,16 +40,16 @@ public class TestRegisterIntoCatalog {
     public void simpleRegisterConnector() throws Exception {
         final FileConnector connector = new FileConnector(null);
         connector.setRecursive(false);
-        MuleContext context = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 register("connector", connector);
             }
-        });
-        Object wrongLookup = context.getRegistry().lookupObject("Connector");
+        }).advanced().muleContext();
+        Object wrongLookup = muleContext.getRegistry().lookupObject("Connector");
         assertThat(wrongLookup).isNull();
 
-        Object lookupConnector = context.getRegistry().lookupObject("connector");
+        Object lookupConnector = muleContext.getRegistry().lookupObject("connector");
         assertThat(lookupConnector).isNotNull().isInstanceOf(FileConnector.class).isEqualTo(connector);
         FileConnector fileConnector = (FileConnector) lookupConnector;
 
@@ -61,16 +61,16 @@ public class TestRegisterIntoCatalog {
         final FileConnector connector = new FileConnector(null);
         connector.setName("MYNAMEDCONNECTOR");
         connector.setRecursive(false);
-        MuleContext context = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 register("connector", connector);
             }
-        });
-        Object wrongLookup = context.getRegistry().lookupObject("connector");
+        }).advanced().muleContext();
+        Object wrongLookup = muleContext.getRegistry().lookupObject("connector");
         assertThat(wrongLookup).isNull();
 
-        Object lookupConnector = context.getRegistry().lookupObject("MYNAMEDCONNECTOR");
+        Object lookupConnector = muleContext.getRegistry().lookupObject("MYNAMEDCONNECTOR");
         assertThat(lookupConnector).isNotNull().isInstanceOf(FileConnector.class).isEqualTo(connector);
         FileConnector fileConnector = (FileConnector) lookupConnector;
 
@@ -94,16 +94,16 @@ public class TestRegisterIntoCatalog {
         };
 
         namedObject.setName("MYNAMEDOBJ");
-        MuleContext context = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 register("namedObj", namedObject);
             }
-        });
-        Object wrongLookup = context.getRegistry().lookupObject("NamedObj");
+        }).advanced().muleContext();
+        Object wrongLookup = muleContext.getRegistry().lookupObject("NamedObj");
         assertThat(wrongLookup).isNull();
 
-        Object lookupConnector = context.getRegistry().lookupObject("namedObj");
+        Object lookupConnector = muleContext.getRegistry().lookupObject("namedObj");
         assertThat(lookupConnector).isNotNull().isInstanceOf(NamedObject.class).isEqualTo(namedObject);
 
         assertThat(((NamedObject) lookupConnector).getName()).isEqualTo("MYNAMEDOBJ");
@@ -113,38 +113,38 @@ public class TestRegisterIntoCatalog {
     public void simpleRegisterMuleContextAwareObject() throws Exception {
         final MyContextAwareType myAwareObj = new MyContextAwareType();
 
-        MuleContext context = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 register("namedXXX", myAwareObj);
             }
-        });
-        Object wrongLookup = context.getRegistry().lookupObject("NamedXXX");
+        }).advanced().muleContext();
+        Object wrongLookup = muleContext.getRegistry().lookupObject("NamedXXX");
         assertThat(wrongLookup).isNull();
 
-        Object lookupConnector = context.getRegistry().lookupObject("namedXXX");
+        Object lookupConnector = muleContext.getRegistry().lookupObject("namedXXX");
         assertThat(lookupConnector).isNotNull().isInstanceOf(MyContextAwareType.class).isEqualTo(myAwareObj);
 
-        assertThat(((MyContextAwareType) lookupConnector).getContext()).isNotNull().isInstanceOf(MuleContext.class).isEqualTo(context);
+        assertThat(((MyContextAwareType) lookupConnector).getContext()).isNotNull().isInstanceOf(MuleContext.class).isEqualTo(muleContext);
     }
 
     @Test
     public void simpleRegisterMuleContextAwareAndNamedObject() throws Exception {
         final MyCompleteType myCompleteObj = new MyCompleteType();
 
-        MuleContext context = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 register("completeXXX", myCompleteObj);
             }
-        });
-        Object wrongLookup = context.getRegistry().lookupObject("CompleteXXX");
+        }).advanced().muleContext();
+        Object wrongLookup = muleContext.getRegistry().lookupObject("CompleteXXX");
         assertThat(wrongLookup).isNull();
 
-        Object lookupConnector = context.getRegistry().lookupObject("completeXXX");
+        Object lookupConnector = muleContext.getRegistry().lookupObject("completeXXX");
         assertThat(lookupConnector).isNotNull().isInstanceOf(MyCompleteType.class).isEqualTo(myCompleteObj);
 
-        assertThat(((MyCompleteType) lookupConnector).getContext()).isNotNull().isInstanceOf(MuleContext.class).isEqualTo(context);
+        assertThat(((MyCompleteType) lookupConnector).getContext()).isNotNull().isInstanceOf(MuleContext.class).isEqualTo(muleContext);
         assertThat(((MyCompleteType) lookupConnector).getName()).isNotNull().isEqualTo("completeXXX");
     }
 
@@ -153,25 +153,26 @@ public class TestRegisterIntoCatalog {
         final MyCompleteType myCompleteObj = new MyCompleteType();
         myCompleteObj.setName("MY_NAME");
 
-        MuleContext context = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 register("completeXXX", myCompleteObj);
             }
-        });
-        Object wrongLookup = context.getRegistry().lookupObject("CompleteXXX");
+        }).advanced().muleContext();
+
+        Object wrongLookup = muleContext.getRegistry().lookupObject("CompleteXXX");
         assertThat(wrongLookup).isNull();
 
-        Object lookupConnector = context.getRegistry().lookupObject("completeXXX");
+        Object lookupConnector = muleContext.getRegistry().lookupObject("completeXXX");
         assertThat(lookupConnector).isNotNull().isInstanceOf(MyCompleteType.class).isEqualTo(myCompleteObj);
 
-        assertThat(((MyCompleteType) lookupConnector).getContext()).isNotNull().isInstanceOf(MuleContext.class).isEqualTo(context);
+        assertThat(((MyCompleteType) lookupConnector).getContext()).isNotNull().isInstanceOf(MuleContext.class).isEqualTo(muleContext);
         assertThat(((MyCompleteType) lookupConnector).getName()).isNotNull().isEqualTo("MY_NAME");
     }
 
     @Test(expected = RuntimeException.class)
     public void testDuplicateRegister() throws Exception {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 register("sometehing", new Object());

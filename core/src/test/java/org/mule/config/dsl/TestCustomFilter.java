@@ -28,14 +28,14 @@ public class TestCustomFilter {
 
     @Test
     public void customFilterByType() throws MuleException, InterruptedException {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .filterWith(MyFilter.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -72,14 +72,14 @@ public class TestCustomFilter {
 
     @Test
     public void customFilterByInstance() throws MuleException, InterruptedException {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .filterWith(new MyFilter());
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -118,7 +118,7 @@ public class TestCustomFilter {
     public void customFilterByInjector() throws MuleException, InterruptedException {
         final MyFilter filter = new MyFilter();
 
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -127,7 +127,7 @@ public class TestCustomFilter {
 
                 bind(MyFilter.class).toInstance(filter);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -164,14 +164,14 @@ public class TestCustomFilter {
 
     @Test
     public void customFilterByReflection() throws MuleException, InterruptedException {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .filterWith(MyFilter.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -208,7 +208,7 @@ public class TestCustomFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidConstructor() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -220,7 +220,7 @@ public class TestCustomFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidTypeNull() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -232,7 +232,7 @@ public class TestCustomFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidInstanceNull() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

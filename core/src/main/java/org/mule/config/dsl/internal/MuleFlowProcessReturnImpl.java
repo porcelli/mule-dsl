@@ -35,7 +35,7 @@ public class MuleFlowProcessReturnImpl implements MuleFlowProcessReturn {
      * {@inheritDoc}
      */
     @Override
-    public <T> T getPayload(Class<T> type) throws ClassCastException {
+    public <T> T getPayloadAs(Class<T> type) throws ClassCastException {
         if (event == null) {
             return null;
         }

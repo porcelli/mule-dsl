@@ -29,7 +29,7 @@ public class TestRouterAsync {
 
     @Test
     public void simpleAsync() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -39,7 +39,7 @@ public class TestRouterAsync {
                             .echo()
                         .endAsync();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -98,7 +98,7 @@ public class TestRouterAsync {
 
     @Test
     public void simpleAsyncNesting() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -111,7 +111,7 @@ public class TestRouterAsync {
                             .echo()
                         .endAsync();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 

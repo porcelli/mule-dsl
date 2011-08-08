@@ -18,7 +18,8 @@ import javax.mail.PasswordAuthentication;
 import java.util.HashMap;
 import java.util.Map;
 
-/**                             s
+/**
+ * s
  * Example that shows how to configure and execute a
  * Mule DSL flow to send emails using GMAIL SMTP server.
  * <p/>
@@ -33,14 +34,15 @@ public class SendEmailUsingGMail {
     private static final String SEND_MAIL_TO = "me@example.com";
 
     public static void main(String... args) throws MuleException {
-        Mule.startMuleContext(new MyGmailModule()); //start mule
+        Mule myMule = new Mule(new MyGmailModule()); //creates a Mule instance
+        myMule.start(); //start mule
 
         final Map<String, Object> properties = new HashMap<String, Object>(); //map that holds message properties
         properties.put("subject", "Look this new Mule cool feature!"); //email subject
         properties.put("address", SEND_MAIL_TO); //email address to send to
         final String mailContent = "Email content here"; //email content
 
-        Mule.process("SendEmail", mailContent, properties); //executes flow passing as arguments the mailContent alongside message properties
+        myMule.flow("SendEmail").process(mailContent, properties); //executes flow passing as arguments the mailContent alongside message properties
     }
 
     /**

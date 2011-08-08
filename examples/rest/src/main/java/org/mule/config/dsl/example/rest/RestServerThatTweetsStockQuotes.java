@@ -27,7 +27,7 @@ import org.mule.config.dsl.example.rest.module.StockQuotesRestServiceModule;
 public class RestServerThatTweetsStockQuotes {
 
     public static void main(String... args) throws MuleException {
-        Mule.startMuleContext(new StockQuotesRestServiceModule(), new StockQuotesModule());
+        new Mule(new StockQuotesRestServiceModule(), new StockQuotesModule()).start();
     }
 
 }

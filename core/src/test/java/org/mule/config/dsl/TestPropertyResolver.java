@@ -9,14 +9,6 @@
 
 package org.mule.config.dsl;
 
-import static org.fest.assertions.Assertions.assertThat;
-
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
-
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -29,11 +21,19 @@ import org.mule.component.SimpleCallableJavaComponent;
 import org.mule.config.dsl.component.ExtendedLogComponent;
 import org.mule.construct.SimpleFlowConstruct;
 
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+
+import static org.fest.assertions.Assertions.assertThat;
+
 public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void classpathResolverNotFound() throws Exception {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -49,7 +49,7 @@ public class TestPropertyResolver {
 
     @Test
     public void classpathSimpleInboundLogAndOutbound() throws Exception {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -60,7 +60,7 @@ public class TestPropertyResolver {
                         .log("message here: ${my.app.name}!")
                         .send("file://${out.folder.path}");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -118,7 +118,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNotFound() throws Exception {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -134,7 +134,7 @@ public class TestPropertyResolver {
 
     @Test
     public void fileSimpleInboundLogAndOutbound() throws Exception {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -145,7 +145,7 @@ public class TestPropertyResolver {
                         .log("message here: ${my.app.name}!")
                         .send("file://${out.folder.path}");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -204,7 +204,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void inputStreamResolverNotFound() throws Exception {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -220,7 +220,7 @@ public class TestPropertyResolver {
 
     @Test
     public void inputStreamSimpleInboundLogAndOutbound() throws Exception {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -231,7 +231,7 @@ public class TestPropertyResolver {
                         .log("message here: ${my.app.name}!")
                         .send("file://${out.folder.path}");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -289,7 +289,7 @@ public class TestPropertyResolver {
 
     @Test
     public void inputMapInboundLogAndOutbound() throws Exception {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -305,7 +305,7 @@ public class TestPropertyResolver {
                         .log("message here: ${my.app.name}!")
                         .send("file://${out.folder.path}");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -363,7 +363,7 @@ public class TestPropertyResolver {
 
     @Test
     public void inputPropertiesInboundLogAndOutbound() throws Exception {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -379,7 +379,7 @@ public class TestPropertyResolver {
                         .log("message here: ${my.app.name}!")
                         .send("file://${out.folder.path}");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -437,7 +437,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNullInputStream() throws Exception {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -453,7 +453,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNullMap() throws Exception {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -469,7 +469,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNullProperties() throws Exception {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -485,7 +485,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNullClasspathBuilder() throws Exception {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -501,7 +501,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNullFileRefBuilder() throws Exception {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
 

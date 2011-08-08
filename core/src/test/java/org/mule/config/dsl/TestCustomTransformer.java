@@ -9,8 +9,6 @@
 
 package org.mule.config.dsl;
 
-import static org.fest.assertions.Assertions.assertThat;
-
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -24,18 +22,20 @@ import org.mule.api.transformer.TransformerException;
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.transformer.AbstractTransformer;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 public class TestCustomTransformer {
 
     @Test
     public void customTransformerByType() throws MuleException, InterruptedException {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .transformWith(MyTransformer.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -68,7 +68,7 @@ public class TestCustomTransformer {
 
     @Test
     public void customTransformerByInstance() throws MuleException, InterruptedException {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -76,7 +76,7 @@ public class TestCustomTransformer {
                         .from("file:///Users/porcelli/test")
                         .transformWith(new MyTransformer());
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -111,7 +111,7 @@ public class TestCustomTransformer {
     public void customTransformerByInjector() throws MuleException, InterruptedException {
         final MyTransformer transformer = new MyTransformer();
 
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -120,7 +120,7 @@ public class TestCustomTransformer {
 
                 bind(MyTransformer.class).toInstance(transformer);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -153,14 +153,14 @@ public class TestCustomTransformer {
 
     @Test
     public void customTransformerByReflection() throws MuleException, InterruptedException {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .transformWith(MyTransformer.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -193,7 +193,7 @@ public class TestCustomTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidConstructor() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -205,7 +205,7 @@ public class TestCustomTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidTypeNull() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -217,7 +217,7 @@ public class TestCustomTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidInstanceNull() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

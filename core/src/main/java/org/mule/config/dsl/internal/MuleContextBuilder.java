@@ -136,7 +136,7 @@ public class MuleContextBuilder implements org.mule.config.dsl.Builder {
                 try {
                     muleContext.getRegistry().registerFlowConstruct(flow);
                 } catch (final MuleException e) {
-                    throw new ConfigurationException("Failed to configure a Flow.", e);
+                    throw new ConfigurationException("Failed to configure a Flows.", e);
                 }
             }
         }

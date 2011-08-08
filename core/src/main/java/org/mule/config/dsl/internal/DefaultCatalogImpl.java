@@ -63,7 +63,7 @@ public class DefaultCatalogImpl implements Catalog {
     public FlowBuilder newFlow(final String flowName) throws IllegalArgumentException {
         checkNotEmpty(flowName, "flowName");
         if (flows.containsKey(flowName)) {
-            throw new IllegalArgumentException("Flow name already registered.");
+            throw new IllegalArgumentException("Flows name already registered.");
         }
 
         final FlowBuilderImpl fb = new FlowBuilderImpl(flowName);

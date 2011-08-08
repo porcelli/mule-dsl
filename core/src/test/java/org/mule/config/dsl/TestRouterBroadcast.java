@@ -29,7 +29,7 @@ public class TestRouterBroadcast {
 
     @Test
     public void simpleBroadcast() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -39,7 +39,7 @@ public class TestRouterBroadcast {
                             .echo()
                         .endBroadcast();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -89,7 +89,7 @@ public class TestRouterBroadcast {
 
     @Test
     public void simpleBroadcastNesting() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -102,7 +102,7 @@ public class TestRouterBroadcast {
                             .echo()
                         .endBroadcast();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -162,7 +162,7 @@ public class TestRouterBroadcast {
 
     @Test
     public void simpleBroadcastWithSend() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -171,7 +171,7 @@ public class TestRouterBroadcast {
                             .send("file:///Users/porcelli/out", ExchangePattern.ONE_WAY)
                         .endBroadcast();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -207,7 +207,7 @@ public class TestRouterBroadcast {
 
     @Test
     public void simpleBroadcastWithInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -219,7 +219,7 @@ public class TestRouterBroadcast {
 
                 bind(Simple.class).to(Simple2.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 

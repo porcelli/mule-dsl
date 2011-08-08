@@ -28,7 +28,7 @@ public class TestExecuteFlow {
 
     @Test
     public void simpleExecuteFlow() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("Receiver")
@@ -39,7 +39,7 @@ public class TestExecuteFlow {
                         .send("file:///Users/porcelli/out");
 
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(2);
         Iterator<FlowConstruct> flowIterator = muleContext.getRegistry().lookupFlowConstructs().iterator();
@@ -102,7 +102,7 @@ public class TestExecuteFlow {
 
     @Test(expected = RuntimeException.class)
     public void simpleExecuteFlowEmpty() {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("Receiver")
@@ -114,7 +114,7 @@ public class TestExecuteFlow {
 
     @Test(expected = RuntimeException.class)
     public void simpleExecuteFlowNull() {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("Receiver")

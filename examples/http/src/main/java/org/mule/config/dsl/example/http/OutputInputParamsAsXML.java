@@ -26,7 +26,7 @@ import static org.mule.config.dsl.expression.ScriptingExpr.groovy;
 public class OutputInputParamsAsXML {
 
     public static void main(String... args) throws MuleException {
-        Mule.startMuleContext(new AbstractModule() {
+        Mule myMule = new Mule(new AbstractModule() { //creates a new mule instance using an anonymous inner AbstractModule based class
             @Override
             protected void configure() {
                 flow("OutputParamsAsXML")
@@ -38,5 +38,7 @@ public class OutputInputParamsAsXML {
                             .put("Content-Type", "text/xml"); //sets the output content-type to xml
             }
         });
+
+        myMule.start(); //start mule
     }
 }

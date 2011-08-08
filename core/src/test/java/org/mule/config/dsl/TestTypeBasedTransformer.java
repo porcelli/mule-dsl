@@ -9,10 +9,6 @@
 
 package org.mule.config.dsl;
 
-import static org.fest.assertions.Assertions.assertThat;
-
-import java.util.Iterator;
-
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -24,18 +20,22 @@ import org.mule.api.transformer.Transformer;
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.transformer.types.SimpleDataType;
 
+import java.util.Iterator;
+
+import static org.fest.assertions.Assertions.assertThat;
+
 public class TestTypeBasedTransformer {
 
     @Test
     public void simpleToString() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .transformTo(String.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -72,7 +72,7 @@ public class TestTypeBasedTransformer {
 
     @Test
     public void simpleChainToStringToByteArray() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -80,7 +80,7 @@ public class TestTypeBasedTransformer {
                         .transformTo(String.class)
                         .transformTo(byte[].class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 

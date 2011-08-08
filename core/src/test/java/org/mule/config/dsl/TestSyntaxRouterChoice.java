@@ -14,7 +14,7 @@ import static org.mule.config.dsl.expression.CoreExpr.string;
 public class TestSyntaxRouterChoice {
 
     public void choiceRouterTest() {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

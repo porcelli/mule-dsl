@@ -25,7 +25,7 @@ public class TestInvokeCustomMP {
             }
         };
 
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -33,38 +33,11 @@ public class TestInvokeCustomMP {
                         .invoke(mp);
             }
         });
-
-//        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
-//
-//        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
-//
-//        assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-//        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-//
-//        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
-//
-//        assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
-//
-//        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
-//
-//        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-//
-//        assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
-//
-//        assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
-//
-//        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-//
-//        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
-//
-//        final MessageProcessor invokeProcessor = iterator.next();
-//
-//        assertThat(invokeProcessor).isEqualTo(mp);
     }
 
     @Test(expected = RuntimeException.class)
     public void simpleCustomMPClazz() {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -72,39 +45,12 @@ public class TestInvokeCustomMP {
                         .invoke(MyCustomMP.class);
             }
         });
-
-//        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
-//
-//        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
-//
-//        assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-//        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-//
-//        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
-//
-//        assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
-//
-//        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
-//
-//        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-//
-//        assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
-//
-//        assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
-//
-//        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-//
-//        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
-//
-//        final MessageProcessor invokeProcessor = iterator.next();
-//
-//        assertThat(invokeProcessor).isNotNull().isInstanceOf(MyCustomMP.class);
     }
 
     @Test(expected = RuntimeException.class)
     public void simpleCustomMPClazz2() {
         final MyCustomMP myCustomMP = new MyCustomMP();
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -112,35 +58,6 @@ public class TestInvokeCustomMP {
                         .invoke(myCustomMP);
             }
         });
-
-//        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
-//
-//        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
-//
-//        assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-//        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-//
-//        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
-//
-//        assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
-//
-//        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
-//
-//        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-//
-//        assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
-//
-//        assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
-//
-//        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-//
-//        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
-//
-//        final MessageProcessor invokeProcessor = iterator.next();
-//
-//        assertThat(invokeProcessor).isNotNull().isInstanceOf(MyCustomMP.class);
-//
-//        assertThat(invokeProcessor).isEqualTo(myCustomMP);
     }
 
     public static class MyCustomMP implements MessageProcessor {

@@ -29,7 +29,7 @@ public class TestRouterRoundRobin {
 
     @Test
     public void simpleRoundRobin() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -39,7 +39,7 @@ public class TestRouterRoundRobin {
                             .echo()
                         .endRoundRobin();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -89,7 +89,7 @@ public class TestRouterRoundRobin {
 
     @Test
     public void simpleRoundRobinNesting() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -102,7 +102,7 @@ public class TestRouterRoundRobin {
                             .echo()
                         .endRoundRobin();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -162,7 +162,7 @@ public class TestRouterRoundRobin {
 
     @Test
     public void simpleRoundRobinWithSend() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -171,7 +171,7 @@ public class TestRouterRoundRobin {
                             .send("file:///Users/porcelli/out", ExchangePattern.ONE_WAY)
                         .endRoundRobin();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -207,7 +207,7 @@ public class TestRouterRoundRobin {
 
     @Test
     public void simpleRoundRobinWithInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -219,7 +219,7 @@ public class TestRouterRoundRobin {
 
                 bind(Simple.class).to(Simple2.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 

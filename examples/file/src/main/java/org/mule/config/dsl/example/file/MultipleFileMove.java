@@ -25,7 +25,7 @@ import org.mule.config.dsl.Mule;
 public class MultipleFileMove {
 
     public static void main(String... args) throws MuleException {
-        Mule.startMuleContext(new AbstractModule() { //start mule using an anonymous inner AbstractModule based class
+        Mule myMule = new Mule(new AbstractModule() { //creates a new mule instance using an anonymous inner AbstractModule based class
             @Override
             protected void configure() {
                 propertyResolver(classpath("path-resource.properties")); //set property resolver resource from classpath
@@ -40,5 +40,7 @@ public class MultipleFileMove {
                         .endBroadcast();
             }
         });
+
+        myMule.start(); //start mule
     }
 }

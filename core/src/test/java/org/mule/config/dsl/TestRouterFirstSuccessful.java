@@ -29,7 +29,7 @@ public class TestRouterFirstSuccessful {
 
     @Test
     public void simpleFirstSuccessful() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -39,7 +39,7 @@ public class TestRouterFirstSuccessful {
                             .echo()
                         .endFirstSuccessful();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -89,7 +89,7 @@ public class TestRouterFirstSuccessful {
 
     @Test
     public void simpleFirstSuccessfulNesting() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -102,7 +102,7 @@ public class TestRouterFirstSuccessful {
                             .echo()
                         .endFirstSuccessful();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -162,7 +162,7 @@ public class TestRouterFirstSuccessful {
 
     @Test
     public void simpleFirstSuccessfulWithSend() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -171,7 +171,7 @@ public class TestRouterFirstSuccessful {
                             .send("file:///Users/porcelli/out", ExchangePattern.ONE_WAY)
                         .endFirstSuccessful();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -207,7 +207,7 @@ public class TestRouterFirstSuccessful {
 
     @Test
     public void simpleFirstSuccessfulWithInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -219,7 +219,7 @@ public class TestRouterFirstSuccessful {
 
                 bind(Simple.class).to(Simple2.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 

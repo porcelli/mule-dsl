@@ -33,14 +33,14 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleObjectInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .invoke(new Simple2());
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -79,7 +79,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleChainObjectInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -87,7 +87,7 @@ public class TestInvokeSimple {
                         .invoke(new Simple2())
                         .invoke(new Simple3());
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -135,14 +135,14 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleCallableObjectInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .invoke(new SimpleCallable());
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -181,7 +181,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleChainCallableObjectInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -189,7 +189,7 @@ public class TestInvokeSimple {
                         .invoke(new SimpleCallable())
                         .invoke(new SimpleCallable());
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -238,14 +238,14 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleCallableClassInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .invoke(SimpleCallable.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -283,7 +283,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleCallableClassInjectedInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -292,7 +292,7 @@ public class TestInvokeSimple {
 
                 bind(ComplexCallable.class).toInstance(new ComplexCallable(null));
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -330,7 +330,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleChainCallableClassInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -338,7 +338,7 @@ public class TestInvokeSimple {
                         .invoke(SimpleCallable.class)
                         .invoke(SimpleCallable.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -386,14 +386,14 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleClassInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .invoke(Simple2.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -432,7 +432,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleChainClassInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -440,7 +440,7 @@ public class TestInvokeSimple {
                         .invoke(Simple2.class)
                         .invoke(Simple3.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -488,14 +488,14 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleClassPrototypeInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .invoke(Complex2.class, PROTOTYPE);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -534,7 +534,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleChainClassPrototypeInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -542,7 +542,7 @@ public class TestInvokeSimple {
                         .invoke(Complex2.class, PROTOTYPE)
                         .invoke(Complex2.class, PROTOTYPE);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -590,14 +590,14 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleClassSingletonInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .invoke(Complex2.class, SINGLETON);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -636,7 +636,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleChainClassSingletonInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -644,7 +644,7 @@ public class TestInvokeSimple {
                         .invoke(Complex2.class, SINGLETON)
                         .invoke(Complex2.class, SINGLETON);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -693,7 +693,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleClassGuiceProvidedInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -702,7 +702,7 @@ public class TestInvokeSimple {
 
                 bind(Simple.class).to(Simple2.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -741,7 +741,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleChainGuiceClassInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -751,7 +751,7 @@ public class TestInvokeSimple {
 
                 bind(Simple.class).to(Simple2.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -800,7 +800,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleClassGuiceSingletonProvidedInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -809,7 +809,7 @@ public class TestInvokeSimple {
 
                 bind(Simple.class).to(Simple2.class).in(Singleton.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -848,7 +848,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleChainGuiceSingletonClassInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -858,7 +858,7 @@ public class TestInvokeSimple {
 
                 bind(Simple.class).to(Simple2.class).in(Singleton.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -906,7 +906,7 @@ public class TestInvokeSimple {
 
     @Test
     public void complexChainInvoke() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -920,7 +920,7 @@ public class TestInvokeSimple {
 
                 bind(Simple.class).to(Simple2.class).in(Singleton.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 

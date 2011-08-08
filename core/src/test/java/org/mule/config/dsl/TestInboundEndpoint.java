@@ -9,10 +9,6 @@
 
 package org.mule.config.dsl;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mule.config.dsl.ExchangePattern.ONE_WAY;
-import static org.mule.config.dsl.ExchangePattern.REQUEST_RESPONSE;
-
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -23,17 +19,21 @@ import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.source.MessageSource;
 import org.mule.construct.SimpleFlowConstruct;
 
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mule.config.dsl.ExchangePattern.ONE_WAY;
+import static org.mule.config.dsl.ExchangePattern.REQUEST_RESPONSE;
+
 public class TestInboundEndpoint {
 
 
     @Test
     public void simpleInbound() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow").from("file:///Users/porcelli/test");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -59,13 +59,13 @@ public class TestInboundEndpoint {
 
     @Test
     public void simpleOneWayInbound() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test", ONE_WAY);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -91,7 +91,7 @@ public class TestInboundEndpoint {
 
     @Test(expected = RuntimeException.class)
     public void simpleRequestResponseInbound() throws InitialisationException, ConfigurationException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

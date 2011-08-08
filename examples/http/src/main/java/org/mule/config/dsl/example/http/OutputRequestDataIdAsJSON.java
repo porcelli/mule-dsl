@@ -28,7 +28,7 @@ import static org.mule.config.dsl.expression.ScriptingExpr.groovy;
 public class OutputRequestDataIdAsJSON {
 
     public static void main(String... args) throws MuleException {
-        Mule.startMuleContext(new AbstractModule() {
+        Mule myMule = new Mule(new AbstractModule() { //creates a new mule instance using an anonymous inner AbstractModule based class
             @Override
             protected void configure() {
                 flow("FormatOutputFlow")
@@ -43,5 +43,7 @@ public class OutputRequestDataIdAsJSON {
                             .put("Content-Type", "application/json"); //sets the output content-type to json
             }
         });
+
+        myMule.start(); //start mule
     }
 }

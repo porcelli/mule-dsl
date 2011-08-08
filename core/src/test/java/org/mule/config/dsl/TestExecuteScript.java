@@ -28,14 +28,14 @@ public class TestExecuteScript {
 
     @Test
     public void simpleExecuteScript() throws MuleException, InterruptedException {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .executeScript(ScriptLanguage.GROOVY, "println \"$payload Received\"");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
         Iterator<FlowConstruct> flowIterator = muleContext.getRegistry().lookupFlowConstructs().iterator();
@@ -75,14 +75,14 @@ public class TestExecuteScript {
 
     @Test
     public void simpleExecuteScriptLang() throws MuleException, InterruptedException {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .executeScript("groovy", "println \"$payload Received\"");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
         Iterator<FlowConstruct> flowIterator = muleContext.getRegistry().lookupFlowConstructs().iterator();
@@ -122,14 +122,14 @@ public class TestExecuteScript {
 
     @Test
     public void simpleExecuteScriptLangClasspath() throws MuleException, InterruptedException {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .executeScript("groovy", classpath("test.groovy"));
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
         Iterator<FlowConstruct> flowIterator = muleContext.getRegistry().lookupFlowConstructs().iterator();
@@ -169,14 +169,14 @@ public class TestExecuteScript {
 
     @Test
     public void simpleExecuteScriptLangFile() throws MuleException, InterruptedException {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .executeScript("groovy", file("./src/test/resources/test.groovy"));
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
         Iterator<FlowConstruct> flowIterator = muleContext.getRegistry().lookupFlowConstructs().iterator();
@@ -216,7 +216,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleNull() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -228,7 +228,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleEmpty() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -240,7 +240,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleNull2() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -252,7 +252,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleEmpty2() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -264,7 +264,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleNull3() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -276,7 +276,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleEmpty3() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -288,7 +288,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleNull4() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -300,7 +300,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleEmpty4() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -312,7 +312,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleNull5() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -324,7 +324,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleNull6() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

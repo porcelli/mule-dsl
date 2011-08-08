@@ -61,7 +61,7 @@ public class InvokerFlowComponent implements MessageProcessor {
 
         FlowConstruct flow = event.getMuleContext().getRegistry().lookupFlowConstruct(flowName);
         if (flow == null) {
-            throw new FlowConstructInvalidException(MessageFactory.createStaticMessage("Flow not found."));
+            throw new FlowConstructInvalidException(MessageFactory.createStaticMessage("Flows not found."));
         }
 
         return ((MessageProcessor) flow).process(event);

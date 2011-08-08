@@ -27,16 +27,16 @@ import static org.mule.config.dsl.expression.CoreExpr.string;
 public class AdvancedFileMove {
 
     public static void main(String... args) throws MuleException {
-        Mule.startMuleContext(new AbstractModule() {  //start mule using an anonymous inner AbstractModule based class
+        Mule myMule = new Mule(new AbstractModule() { //creates a new mule instance using an anonymous inner AbstractModule based class
             @Override
             protected void configure() {
                 propertyResolver(classpath("path-resource.properties")); //set property resolver resource from classpath
 
                 flow("myAdvancedFileMove")
                         .from("file://${in.folder.path}") // source folder
-                        .transformTo(String.class) //transform file to String
-                        .transform(string("**changed**\n#[payload]\n**changed**")) //modify the payload
-                        .transformTo(byte[].class) // convert payload to byte[]
+                            .transformTo(String.class) //transform file to String
+                            .transform(string("**changed**\n#[payload]\n**changed**")) //modify the payload
+                            .transformTo(byte[].class) // convert payload to byte[]
                         .messageProperties()
                             .put("filename", string("changed-#[header:originalFilename]")) //set filename, based on original
                         .broadcast() //broadcast the payload to
@@ -46,5 +46,7 @@ public class AdvancedFileMove {
                         .endBroadcast();
             }
         });
+
+        myMule.start(); //start mule
     }
 }

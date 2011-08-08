@@ -33,7 +33,7 @@ import static org.mule.config.dsl.expression.ScriptingExpr.groovy;
 public class DirectFlowAndMutippleFileMove {
 
     public static void main(String... args) throws MuleException, IOException {
-        Mule.startMuleContext(new AbstractModule() { //start mule using an anonymous inner AbstractModule based class
+        Mule myMule = new Mule(new AbstractModule() { //creates a new mule instance using an anonymous inner AbstractModule based class
             @Override
             protected void configure() {
                 propertyResolver(classpath("path-resource.properties")); //set property resolver resource from classpath
@@ -52,12 +52,14 @@ public class DirectFlowAndMutippleFileMove {
             }
         });
 
+        myMule.start(); //start mule
+
         File tempFile = File.createTempFile("some", "temp.txt"); //creates a temp file
         FileOutputStream out = new FileOutputStream(tempFile); //use FileOutputStream to write into it
         out.write("MY SIMPLE AD-HOC FILE!".getBytes()); //set some content
         out.close(); //close
 
-        Mule.process("multipleFileMove", tempFile); //executes the flow using tempFile as payload
-        Mule.process("multipleFileMove", "SOME DIRECT STRING CONTENT!"); //executes the flow using a string as payload
+        myMule.flow("multipleFileMove").process(tempFile); //executes the flow using tempFile as payload
+        myMule.flow("multipleFileMove").process("SOME DIRECT STRING CONTENT!"); //executes the flow using a string as payload
     }
 }

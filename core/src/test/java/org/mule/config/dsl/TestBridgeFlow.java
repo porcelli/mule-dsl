@@ -30,14 +30,14 @@ public class TestBridgeFlow {
 
     @Test
     public void simpleBridge() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .send("file:///Users/porcelli/out");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -75,7 +75,7 @@ public class TestBridgeFlow {
 
     @Test
     public void simpleEchoBridge() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -83,7 +83,7 @@ public class TestBridgeFlow {
                         .echo()
                         .send("file:///Users/porcelli/out");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -130,7 +130,7 @@ public class TestBridgeFlow {
 
     @Test
     public void simpleServiceBridgeObjectInstance() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 final SimpleCallable myCallable = new SimpleCallable();
@@ -141,7 +141,7 @@ public class TestBridgeFlow {
                         .send("file:///Users/porcelli/out", ExchangePattern.ONE_WAY)
                         .send("file:///Users/porcelli/out2", ExchangePattern.ONE_WAY);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
@@ -202,7 +202,7 @@ public class TestBridgeFlow {
 
     @Test(expected = RuntimeException.class)
     public void testDucplicatedFlows() {
-        Mule.newMuleContext(new AbstractModule() {
+        new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 final SimpleCallable myCallable = new SimpleCallable();

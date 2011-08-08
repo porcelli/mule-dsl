@@ -31,7 +31,7 @@ public class TestExpressionFilter {
 
     @Test
     public void testChainFilterExpression() {
-        final MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = new Mule(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -39,7 +39,7 @@ public class TestExpressionFilter {
                         .filter(wildcard("foo*"))
                         .filter(string("'some text here'"));
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
