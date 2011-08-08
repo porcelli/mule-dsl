@@ -21,7 +21,7 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
  * Internal class that builds a {@link AutoTransformer} based on given type.
  *
  * @author porcelli
- * @see {@link org.mule.config.dsl.PipelineBuilder#transformTo(Class)}
+ * @see org.mule.config.dsl.PipelineBuilder#transformTo(Class)
  */
 public class TypeBasedTransformerBuilderImpl<T> implements Builder<AutoTransformer> {
 

@@ -21,7 +21,7 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
  * Internal class that wraps a {@link PayloadTypeFilter} inside a {@link MessageFilter}.
  *
  * @author porcelli
- * @see {@link org.mule.config.dsl.PipelineBuilder#filterBy(Class)}
+ * @see org.mule.config.dsl.PipelineBuilder#filterBy(Class)
  */
 public class TypeBasedFilterBuilderImpl implements Builder<MessageFilter> {
 
