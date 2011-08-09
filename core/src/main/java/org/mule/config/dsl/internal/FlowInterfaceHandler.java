@@ -87,7 +87,7 @@ public class FlowInterfaceHandler {
      * Process a flow based on given parameters.
      *
      * @param input      input data to be used as payload
-     * @param properties properties to be uset on message payload {@link org.mule.config.dsl.MuleFlowProcessReturn}
+     * @param properties properties to be used on message payload {@link org.mule.config.dsl.MuleFlowProcessReturn}
      * @return an instance of {@link org.mule.api.MuleEvent} wrapped by
      * @throws IllegalArgumentException if {@code flowName} is empty or null
      * @throws org.mule.config.dsl.FlowNotFoundException

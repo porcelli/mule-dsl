@@ -24,8 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkContentsNotNull;
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
+import static org.mule.config.dsl.internal.util.Preconditions.*;
 
 /**
  * {@code Mule} is the entry point to Mule DSL. Creates {@link MuleContext} from
@@ -39,16 +38,16 @@ public final class Mule {
     private final MuleAdvancedConfig advancedConfig;
     private final Map<String, FlowInterfaceHandler> flowCache;
 
-    public static Mule newInstance(final Module... modules){
-        return new Mule(modules);
-    }
-
     /**
+     * Creates a new {@link Mule} for the given set of modules.
+     *
      * @param modules array of non-null {@link Module}s
+     * @return a new instance properly configured, but not started
      * @throws NullPointerException     if any of given {@code modules} is null
      * @throws IllegalArgumentException if {@code modules} is empty
+     * @throws ConfigurationException   if something unexpected happens during configuration
      */
-    private Mule(final Module... modules) throws NullPointerException, IllegalArgumentException {
+    public static Mule newInstance(final Module... modules) throws NullPointerException, IllegalArgumentException, ConfigurationException {
         checkContentsNotNull(modules, "modules");
         if (modules.length < 1) {
             throw new IllegalArgumentException("At least one module should be provided.");
@@ -72,8 +71,17 @@ public final class Mule {
             muleContextBuilder = new MuleContextBuilder(myCatalog, null);
         }
 
-        this.muleContext = muleContextBuilder.build();
-        this.advancedConfig = new MuleAdvancedConfig(muleContext);
+        return new Mule(muleContextBuilder.build());
+    }
+
+    /**
+     * @param muleContext an already configured mule context
+     * @throws NullPointerException     if any of given {@code modules} is null
+     * @throws IllegalArgumentException if {@code modules} is empty
+     */
+    private Mule(final MuleContext muleContext) {
+        this.muleContext = checkNotNull(muleContext, "muleContext");
+        this.advancedConfig = new MuleAdvancedConfig(this.muleContext);
         this.flowCache = new HashMap<String, FlowInterfaceHandler>();
     }
 
@@ -102,7 +110,7 @@ public final class Mule {
      * @throws FailedToStopException if can't stop mule context
      */
     public synchronized Mule stop() throws FailedToStopException {
-        if (muleContext != null && muleContext.isStarted()) {
+        if (isStarted()) {
             try {
                 muleContext.stop();
             } catch (final MuleException e) {
