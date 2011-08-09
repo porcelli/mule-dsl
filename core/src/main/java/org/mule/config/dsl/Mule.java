@@ -39,14 +39,17 @@ public final class Mule {
     private final MuleAdvancedConfig advancedConfig;
     private final Map<String, FlowInterfaceHandler> flowCache;
 
+    public static Mule newInstance(final Module... modules){
+        return new Mule(modules);
+    }
+
     /**
      * @param modules array of non-null {@link Module}s
      * @throws NullPointerException     if any of given {@code modules} is null
      * @throws IllegalArgumentException if {@code modules} is empty
      */
-    public Mule(final Module... modules) throws NullPointerException, IllegalArgumentException {
+    private Mule(final Module... modules) throws NullPointerException, IllegalArgumentException {
         checkContentsNotNull(modules, "modules");
-
         if (modules.length < 1) {
             throw new IllegalArgumentException("At least one module should be provided.");
         }

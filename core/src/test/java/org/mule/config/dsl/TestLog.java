@@ -31,7 +31,7 @@ public class TestLog {
 
     @Test
     public void simpleLog() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -84,7 +84,7 @@ public class TestLog {
 
     @Test
     public void simpleLogChain() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -158,7 +158,7 @@ public class TestLog {
 
     @Test
     public void simpleLogJustLevel() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -210,7 +210,7 @@ public class TestLog {
 
     @Test
     public void simpleLogJustLevelChain() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -284,7 +284,7 @@ public class TestLog {
 
     @Test
     public void simpleLogJustMessage() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -337,7 +337,7 @@ public class TestLog {
 
     @Test
     public void simpleLogJustMessageChain() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -412,7 +412,7 @@ public class TestLog {
 
     @Test
     public void simpleLogMessageAndLevel() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -466,7 +466,7 @@ public class TestLog {
 
     @Test
     public void simpleLogMessageAndLevelChain() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -542,7 +542,7 @@ public class TestLog {
 
     @Test
     public void expressionLogJustMessage() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -597,7 +597,7 @@ public class TestLog {
 
     @Test
     public void expressionLogJustMessageChain() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -676,7 +676,7 @@ public class TestLog {
 
     @Test
     public void expressionLogMessageAndLevel() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -732,7 +732,7 @@ public class TestLog {
 
     @Test
     public void expressionLogMessageAndLevelChain() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

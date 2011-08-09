@@ -27,7 +27,7 @@ public class TestSimpleServiceFlow {
 
     @Test
     public void simpleService() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

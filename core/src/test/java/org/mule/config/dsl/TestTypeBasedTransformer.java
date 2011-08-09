@@ -28,7 +28,7 @@ public class TestTypeBasedTransformer {
 
     @Test
     public void simpleToString() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -72,7 +72,7 @@ public class TestTypeBasedTransformer {
 
     @Test
     public void simpleChainToStringToByteArray() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

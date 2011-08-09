@@ -33,7 +33,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void classpathResolverNotFound() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -49,7 +49,7 @@ public class TestPropertyResolver {
 
     @Test
     public void classpathSimpleInboundLogAndOutbound() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -118,7 +118,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNotFound() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -134,7 +134,7 @@ public class TestPropertyResolver {
 
     @Test
     public void fileSimpleInboundLogAndOutbound() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -204,7 +204,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void inputStreamResolverNotFound() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -220,7 +220,7 @@ public class TestPropertyResolver {
 
     @Test
     public void inputStreamSimpleInboundLogAndOutbound() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -289,7 +289,7 @@ public class TestPropertyResolver {
 
     @Test
     public void inputMapInboundLogAndOutbound() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -363,7 +363,7 @@ public class TestPropertyResolver {
 
     @Test
     public void inputPropertiesInboundLogAndOutbound() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -437,7 +437,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNullInputStream() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -453,7 +453,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNullMap() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -469,7 +469,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNullProperties() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -485,7 +485,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNullClasspathBuilder() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -501,7 +501,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNullFileRefBuilder() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 

@@ -28,7 +28,7 @@ public class TestExecuteScript {
 
     @Test
     public void simpleExecuteScript() throws MuleException, InterruptedException {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -75,7 +75,7 @@ public class TestExecuteScript {
 
     @Test
     public void simpleExecuteScriptLang() throws MuleException, InterruptedException {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -122,7 +122,7 @@ public class TestExecuteScript {
 
     @Test
     public void simpleExecuteScriptLangClasspath() throws MuleException, InterruptedException {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -169,7 +169,7 @@ public class TestExecuteScript {
 
     @Test
     public void simpleExecuteScriptLangFile() throws MuleException, InterruptedException {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -216,7 +216,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleNull() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -228,7 +228,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleEmpty() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -240,7 +240,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleNull2() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -252,7 +252,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleEmpty2() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -264,7 +264,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleNull3() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -276,7 +276,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleEmpty3() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -288,7 +288,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleNull4() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -300,7 +300,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleEmpty4() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -312,7 +312,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleNull5() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -324,7 +324,7 @@ public class TestExecuteScript {
 
     @Test(expected = RuntimeException.class)
     public void simpleNull6() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

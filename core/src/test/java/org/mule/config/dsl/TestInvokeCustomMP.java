@@ -25,7 +25,7 @@ public class TestInvokeCustomMP {
             }
         };
 
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -37,7 +37,7 @@ public class TestInvokeCustomMP {
 
     @Test(expected = RuntimeException.class)
     public void simpleCustomMPClazz() {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -50,7 +50,7 @@ public class TestInvokeCustomMP {
     @Test(expected = RuntimeException.class)
     public void simpleCustomMPClazz2() {
         final MyCustomMP myCustomMP = new MyCustomMP();
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

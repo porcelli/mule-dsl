@@ -29,7 +29,7 @@ public class TestExpressionTransform {
 
     @Test
     public void testSimpleExpressionTransform() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -81,7 +81,7 @@ public class TestExpressionTransform {
 
     @Test
     public void testChainExpressionTransform() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

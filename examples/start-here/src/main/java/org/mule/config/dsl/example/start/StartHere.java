@@ -16,7 +16,9 @@ import org.mule.config.dsl.Mule;
 public class StartHere {
 
     public static void main(String... args) throws MuleException {
-        new Mule(new MyModule()).start();
+        Mule mule = Mule.newInstance(new MyModule());
+
+        mule.start();
     }
 
     public static class MyModule extends AbstractModule {

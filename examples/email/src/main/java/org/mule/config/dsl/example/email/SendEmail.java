@@ -30,7 +30,7 @@ public class SendEmail {
     public static void main(String... args) throws MuleException {
         final int port = 6060; //defines fake mail port
         EmbeddedMailServer.start(port);  // start fake mail server
-        Mule myMule = new Mule(new MyEmailModule()); //creates a Mule instance
+        Mule myMule = Mule.newInstance(new MyEmailModule()); //creates a Mule instance
         myMule.start(); // start mule
 
         final Map<String, Object> properties = new HashMap<String, Object>(); //map that holds message properties

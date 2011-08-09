@@ -29,7 +29,7 @@ public class TestRouterBroadcast {
 
     @Test
     public void simpleBroadcast() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -89,7 +89,7 @@ public class TestRouterBroadcast {
 
     @Test
     public void simpleBroadcastNesting() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -162,7 +162,7 @@ public class TestRouterBroadcast {
 
     @Test
     public void simpleBroadcastWithSend() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -207,7 +207,7 @@ public class TestRouterBroadcast {
 
     @Test
     public void simpleBroadcastWithInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

@@ -28,7 +28,7 @@ public class TestCustomTransformer {
 
     @Test
     public void customTransformerByType() throws MuleException, InterruptedException {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -68,7 +68,7 @@ public class TestCustomTransformer {
 
     @Test
     public void customTransformerByInstance() throws MuleException, InterruptedException {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -111,7 +111,7 @@ public class TestCustomTransformer {
     public void customTransformerByInjector() throws MuleException, InterruptedException {
         final MyTransformer transformer = new MyTransformer();
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -153,7 +153,7 @@ public class TestCustomTransformer {
 
     @Test
     public void customTransformerByReflection() throws MuleException, InterruptedException {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -193,7 +193,7 @@ public class TestCustomTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidConstructor() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -205,7 +205,7 @@ public class TestCustomTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidTypeNull() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -217,7 +217,7 @@ public class TestCustomTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidInstanceNull() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

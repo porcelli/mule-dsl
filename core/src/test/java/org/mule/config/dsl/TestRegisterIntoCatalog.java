@@ -22,7 +22,7 @@ public class TestRegisterIntoCatalog {
     @Test
     public void simpleRegisterObject() throws Exception {
         final Object x = new Object();
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 register("sometehing", x);
@@ -40,7 +40,7 @@ public class TestRegisterIntoCatalog {
     public void simpleRegisterConnector() throws Exception {
         final FileConnector connector = new FileConnector(null);
         connector.setRecursive(false);
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 register("connector", connector);
@@ -61,7 +61,7 @@ public class TestRegisterIntoCatalog {
         final FileConnector connector = new FileConnector(null);
         connector.setName("MYNAMEDCONNECTOR");
         connector.setRecursive(false);
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 register("connector", connector);
@@ -94,7 +94,7 @@ public class TestRegisterIntoCatalog {
         };
 
         namedObject.setName("MYNAMEDOBJ");
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 register("namedObj", namedObject);
@@ -113,7 +113,7 @@ public class TestRegisterIntoCatalog {
     public void simpleRegisterMuleContextAwareObject() throws Exception {
         final MyContextAwareType myAwareObj = new MyContextAwareType();
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 register("namedXXX", myAwareObj);
@@ -132,7 +132,7 @@ public class TestRegisterIntoCatalog {
     public void simpleRegisterMuleContextAwareAndNamedObject() throws Exception {
         final MyCompleteType myCompleteObj = new MyCompleteType();
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 register("completeXXX", myCompleteObj);
@@ -153,7 +153,7 @@ public class TestRegisterIntoCatalog {
         final MyCompleteType myCompleteObj = new MyCompleteType();
         myCompleteObj.setName("MY_NAME");
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 register("completeXXX", myCompleteObj);
@@ -172,7 +172,7 @@ public class TestRegisterIntoCatalog {
 
     @Test(expected = RuntimeException.class)
     public void testDuplicateRegister() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 register("sometehing", new Object());

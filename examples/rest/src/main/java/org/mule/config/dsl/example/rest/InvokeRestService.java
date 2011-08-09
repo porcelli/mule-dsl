@@ -24,7 +24,7 @@ import org.mule.config.dsl.example.rest.module.StockQuotesModule;
 public class InvokeRestService {
 
     public static void main(String... args) throws MuleException {
-        Mule myMule = new Mule(new StockQuotesModule());
+        Mule myMule = Mule.newInstance(new StockQuotesModule());
 
         StockQuote quote = myMule.flow("GetQuote").process("IBM").getPayloadAs(StockQuote.class);
         System.out.println(quote);

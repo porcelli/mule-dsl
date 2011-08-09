@@ -20,7 +20,7 @@ public class TestInvokerFlowComponent extends BaseComponentTests {
 
     public TestInvokerFlowComponent() {
         try {
-            this.muleContext = new Mule(new AbstractModule() {
+            this.muleContext = Mule.newInstance(new AbstractModule() {
                 @Override
                 public void configure() {
                     flow("Receiver")

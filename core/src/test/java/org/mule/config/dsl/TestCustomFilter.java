@@ -28,7 +28,7 @@ public class TestCustomFilter {
 
     @Test
     public void customFilterByType() throws MuleException, InterruptedException {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -72,7 +72,7 @@ public class TestCustomFilter {
 
     @Test
     public void customFilterByInstance() throws MuleException, InterruptedException {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -118,7 +118,7 @@ public class TestCustomFilter {
     public void customFilterByInjector() throws MuleException, InterruptedException {
         final MyFilter filter = new MyFilter();
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -164,7 +164,7 @@ public class TestCustomFilter {
 
     @Test
     public void customFilterByReflection() throws MuleException, InterruptedException {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -208,7 +208,7 @@ public class TestCustomFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidConstructor() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -220,7 +220,7 @@ public class TestCustomFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidTypeNull() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -232,7 +232,7 @@ public class TestCustomFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidInstanceNull() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

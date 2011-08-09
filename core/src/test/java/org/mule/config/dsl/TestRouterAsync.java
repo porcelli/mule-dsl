@@ -29,7 +29,7 @@ public class TestRouterAsync {
 
     @Test
     public void simpleAsync() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -98,7 +98,7 @@ public class TestRouterAsync {
 
     @Test
     public void simpleAsyncNesting() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

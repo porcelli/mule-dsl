@@ -105,7 +105,7 @@ Next step all we need is execute the previous example flow ("TweetStockQuote") a
 Note that we're re-using a flow that, in this case, isn't defined in the same module. And to enable it we must start Mule passing both modules as arguments, as show here:
 
 ```java
-	new Mule(new StockQuotesRestServiceModule(), new StockQuotesModule()).start();
+	Mule.newInstance(new StockQuotesRestServiceModule(), new StockQuotesModule()).start();
 ```
 
 To test this example you should start the java code and, on your web browser, open some of these URLs:

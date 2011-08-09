@@ -29,7 +29,7 @@ public class TestTypeBasedFilter {
 
     @Test
     public void testSimpleFilterBy() throws MuleException, InterruptedException {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -80,7 +80,7 @@ public class TestTypeBasedFilter {
 
     @Test
     public void testFilterByWithPromitiveType() throws MuleException, InterruptedException {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -131,7 +131,7 @@ public class TestTypeBasedFilter {
 
     @Test(expected = RuntimeException.class)
     public void testFilterByNull() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

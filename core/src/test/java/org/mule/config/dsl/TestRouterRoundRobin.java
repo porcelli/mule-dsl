@@ -29,7 +29,7 @@ public class TestRouterRoundRobin {
 
     @Test
     public void simpleRoundRobin() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -89,7 +89,7 @@ public class TestRouterRoundRobin {
 
     @Test
     public void simpleRoundRobinNesting() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -162,7 +162,7 @@ public class TestRouterRoundRobin {
 
     @Test
     public void simpleRoundRobinWithSend() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -207,7 +207,7 @@ public class TestRouterRoundRobin {
 
     @Test
     public void simpleRoundRobinWithInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

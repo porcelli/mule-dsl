@@ -36,7 +36,7 @@ public class TestRouterChoice {
 
     @Test
     public void simpleChoice() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -112,7 +112,7 @@ public class TestRouterChoice {
 
         @Test
     public void simpleChoiceWithInnerChoiceOnWhen() {
-            final MuleContext muleContext = new Mule(new AbstractModule() {
+            final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -263,7 +263,7 @@ public class TestRouterChoice {
     }
     @Test
     public void simpleChoiceWithoutOtherwise() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -325,7 +325,7 @@ public class TestRouterChoice {
 
     @Test
     public void simpleChoiceWithSend() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -424,7 +424,7 @@ public class TestRouterChoice {
 
     @Test
     public void simpleChoiceWithSendWithoutOtherwise() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

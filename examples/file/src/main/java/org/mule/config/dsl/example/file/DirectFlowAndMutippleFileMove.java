@@ -33,7 +33,7 @@ import static org.mule.config.dsl.expression.ScriptingExpr.groovy;
 public class DirectFlowAndMutippleFileMove {
 
     public static void main(String... args) throws MuleException, IOException {
-        Mule myMule = new Mule(new AbstractModule() { //creates a new mule instance using an anonymous inner AbstractModule based class
+        Mule myMule = Mule.newInstance(new AbstractModule() { //creates a new mule instance using an anonymous inner AbstractModule based class
             @Override
             protected void configure() {
                 propertyResolver(classpath("path-resource.properties")); //set property resolver resource from classpath

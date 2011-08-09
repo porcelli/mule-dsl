@@ -28,7 +28,7 @@ public class TestEcho {
 
     @Test
     public void simpleEcho() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -78,7 +78,7 @@ public class TestEcho {
 
     @Test
     public void simpleEchoChain() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

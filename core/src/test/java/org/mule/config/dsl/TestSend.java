@@ -27,7 +27,7 @@ public class TestSend {
 
     @Test
     public void simpleBridge() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -72,7 +72,7 @@ public class TestSend {
 
     @Test
     public void simpleEchoBridge() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

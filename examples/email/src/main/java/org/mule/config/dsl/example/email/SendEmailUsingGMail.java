@@ -34,7 +34,7 @@ public class SendEmailUsingGMail {
     private static final String SEND_MAIL_TO = "me@example.com";
 
     public static void main(String... args) throws MuleException {
-        Mule myMule = new Mule(new MyGmailModule()); //creates a Mule instance
+        Mule myMule = Mule.newInstance(new MyGmailModule()); //creates a Mule instance
         myMule.start(); //start mule
 
         final Map<String, Object> properties = new HashMap<String, Object>(); //map that holds message properties

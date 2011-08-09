@@ -29,7 +29,7 @@ public class TestGlobalFilter {
 
     @Test
     public void globalReferenceTypeUsingVariable() throws MuleException, InterruptedException {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -84,7 +84,7 @@ public class TestGlobalFilter {
 
     @Test
     public void globalReferenceTypeUsingStringRef() throws MuleException, InterruptedException {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -141,7 +141,7 @@ public class TestGlobalFilter {
     public void globalReferenceInstanceUsingVariable() throws MuleException, InterruptedException {
         final MyFilter filter = new MyFilter();
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -198,7 +198,7 @@ public class TestGlobalFilter {
     public void globalReferenceInstanceUsingStringRef() throws MuleException, InterruptedException {
         final MyFilter filter = new MyFilter();
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -255,7 +255,7 @@ public class TestGlobalFilter {
     public void globalReferenceInstanceUsingVariableByInjector() throws MuleException, InterruptedException {
         final MyFilter filter = new MyFilter();
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -314,7 +314,7 @@ public class TestGlobalFilter {
     public void globalReferenceInstanceUsingStringRefByInjector() throws MuleException, InterruptedException {
         final MyFilter filter = new MyFilter();
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -371,7 +371,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalDefinitionConstructor() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -386,7 +386,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalDefinitionType() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 filter().with((Class<Filter>) null);
@@ -396,7 +396,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalDefinitionInstance() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 filter().with((Filter) null);
@@ -406,7 +406,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingStringRef() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -418,7 +418,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingUnboundVariable() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 final FilterDefinition myFilter = new FilterDefinitionImpl<MyFilter>("test", MyFilter.class);
@@ -432,7 +432,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingNullVariable() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 final FilterDefinition myFilter = null;
@@ -446,7 +446,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingNullStringRef() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -458,7 +458,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void testDuplicatedFilters() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 

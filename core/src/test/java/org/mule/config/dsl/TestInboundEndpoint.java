@@ -28,7 +28,7 @@ public class TestInboundEndpoint {
 
     @Test
     public void simpleInbound() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow").from("file:///Users/porcelli/test");
@@ -59,7 +59,7 @@ public class TestInboundEndpoint {
 
     @Test
     public void simpleOneWayInbound() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -91,7 +91,7 @@ public class TestInboundEndpoint {
 
     @Test(expected = RuntimeException.class)
     public void simpleRequestResponseInbound() throws InitialisationException, ConfigurationException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

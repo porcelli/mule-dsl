@@ -33,7 +33,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleObjectInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -79,7 +79,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleChainObjectInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -135,7 +135,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleCallableObjectInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -181,7 +181,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleChainCallableObjectInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -238,7 +238,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleCallableClassInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -283,7 +283,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleCallableClassInjectedInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -330,7 +330,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleChainCallableClassInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -386,7 +386,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleClassInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -432,7 +432,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleChainClassInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -488,7 +488,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleClassPrototypeInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -534,7 +534,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleChainClassPrototypeInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -590,7 +590,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleClassSingletonInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -636,7 +636,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleChainClassSingletonInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -693,7 +693,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleClassGuiceProvidedInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -741,7 +741,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleChainGuiceClassInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -800,7 +800,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleClassGuiceSingletonProvidedInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -848,7 +848,7 @@ public class TestInvokeSimple {
 
     @Test
     public void simpleChainGuiceSingletonClassInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -906,7 +906,7 @@ public class TestInvokeSimple {
 
     @Test
     public void complexChainInvoke() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

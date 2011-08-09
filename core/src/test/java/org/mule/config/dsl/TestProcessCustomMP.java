@@ -35,7 +35,7 @@ public class TestProcessCustomMP {
             }
         };
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -74,7 +74,7 @@ public class TestProcessCustomMP {
 
     @Test
     public void simpleCustomMPClazz() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -114,7 +114,7 @@ public class TestProcessCustomMP {
     @Test
     public void simpleCustomMPClazz2() {
         final MyCustomMP myCustomMP = new MyCustomMP();
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

@@ -28,7 +28,7 @@ public class TestExecuteFlow {
 
     @Test
     public void simpleExecuteFlow() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("Receiver")
@@ -102,7 +102,7 @@ public class TestExecuteFlow {
 
     @Test(expected = RuntimeException.class)
     public void simpleExecuteFlowEmpty() {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("Receiver")
@@ -114,7 +114,7 @@ public class TestExecuteFlow {
 
     @Test(expected = RuntimeException.class)
     public void simpleExecuteFlowNull() {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("Receiver")

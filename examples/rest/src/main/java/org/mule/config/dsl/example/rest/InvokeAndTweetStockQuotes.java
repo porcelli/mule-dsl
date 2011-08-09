@@ -22,7 +22,7 @@ import org.mule.config.dsl.example.rest.module.StockQuotesModule;
 public class InvokeAndTweetStockQuotes {
 
     public static void main(String... args) throws MuleException {
-        Mule myMule = new Mule(new StockQuotesModule());
+        Mule myMule = Mule.newInstance(new StockQuotesModule());
         myMule.flow("TweetStockQuote").process("IBM");
     }
 

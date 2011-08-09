@@ -30,7 +30,7 @@ public class TestBridgeFlow {
 
     @Test
     public void simpleBridge() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -75,7 +75,7 @@ public class TestBridgeFlow {
 
     @Test
     public void simpleEchoBridge() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -130,7 +130,7 @@ public class TestBridgeFlow {
 
     @Test
     public void simpleServiceBridgeObjectInstance() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 final SimpleCallable myCallable = new SimpleCallable();
@@ -202,7 +202,7 @@ public class TestBridgeFlow {
 
     @Test(expected = RuntimeException.class)
     public void testDucplicatedFlows() {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 final SimpleCallable myCallable = new SimpleCallable();

@@ -35,7 +35,7 @@ public class TestInvokeNamedMethod {
     @Test
     public void simpleObjectNamedAnnotation() {
         final Simple mySimple = new Simple();
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -86,7 +86,7 @@ public class TestInvokeNamedMethod {
 
     @Test
     public void simpleTypeNamedAnnotation() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -141,7 +141,7 @@ public class TestInvokeNamedMethod {
     public void simpleInjectedNamedAnnotation() {
         final Simple2 mySimple2 = new Simple2(null);
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -198,7 +198,7 @@ public class TestInvokeNamedMethod {
     @Test
     public void simpleObjectNamedAnnotationWithDefaultArgs() {
         final Simple mySimple = new Simple();
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -249,7 +249,7 @@ public class TestInvokeNamedMethod {
 
     @Test
     public void simpleTypeNamedAnnotationWithDefaultArgs() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -304,7 +304,7 @@ public class TestInvokeNamedMethod {
     public void simpleInjectedNamedAnnotationWithDefaultArgs() {
         final Simple2 mySimple2 = new Simple2(null);
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -360,7 +360,7 @@ public class TestInvokeNamedMethod {
     @Test
     public void simpleObjectNamedAnnotationWithArgs() {
         final Simple mySimple = new Simple();
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -413,7 +413,7 @@ public class TestInvokeNamedMethod {
 
     @Test
     public void simpleTypeNamedAnnotationWithArgs() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -470,7 +470,7 @@ public class TestInvokeNamedMethod {
     public void simpleInjectedNamedAnnotationWithArgs() {
         final Simple2 mySimple2 = new Simple2(null);
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -528,7 +528,7 @@ public class TestInvokeNamedMethod {
     @Test
     public void simpleObjectTypedAnnotation() {
         final Complex myComplex = new Complex();
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -579,7 +579,7 @@ public class TestInvokeNamedMethod {
 
     @Test
     public void simpleTypeTypedAnnotation() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -634,7 +634,7 @@ public class TestInvokeNamedMethod {
     public void simpleInjectedTypedAnnotation() {
         final Complex2 myComplex2 = new Complex2(null);
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -691,7 +691,7 @@ public class TestInvokeNamedMethod {
     @Test
     public void simpleObjectTypedAnnotationWithDefaultArgs() {
         final Complex myComplex = new Complex();
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -742,7 +742,7 @@ public class TestInvokeNamedMethod {
 
     @Test
     public void simpleTypeTypedAnnotationWithDefaultArgs() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -797,7 +797,7 @@ public class TestInvokeNamedMethod {
     public void simpleInjectedTypedAnnotationWithDefaultArgs() {
         final Complex2 myComplex2 = new Complex2(null);
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -853,7 +853,7 @@ public class TestInvokeNamedMethod {
     @Test
     public void simpleObjectTypedAnnotationWithArgs() {
         final Complex myComplex = new Complex();
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -906,7 +906,7 @@ public class TestInvokeNamedMethod {
 
     @Test
     public void simpleTypeTypedAnnotationWithArgs() {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -963,7 +963,7 @@ public class TestInvokeNamedMethod {
     public void simpleInjectedTypedAnnotationWithArgs() {
         final Complex2 myComplex2 = new Complex2(null);
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

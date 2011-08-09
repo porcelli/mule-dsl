@@ -22,7 +22,7 @@ public class TestInvokeExpectedErrors {
 
     @Test(expected = RuntimeException.class)
     public void nullCallable() {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -34,7 +34,7 @@ public class TestInvokeExpectedErrors {
 
     @Test(expected = RuntimeException.class)
     public void nullObject() {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -46,7 +46,7 @@ public class TestInvokeExpectedErrors {
 
     @Test(expected = RuntimeException.class)
     public void nullType() {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -58,7 +58,7 @@ public class TestInvokeExpectedErrors {
 
     @Test(expected = RuntimeException.class)
     public void methodArgNull() {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -70,7 +70,7 @@ public class TestInvokeExpectedErrors {
 
     @Test(expected = RuntimeException.class)
     public void methodArgNull2() {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -82,7 +82,7 @@ public class TestInvokeExpectedErrors {
 
     @Test(expected = RuntimeException.class)
     public void methodArgsExpected() {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -94,7 +94,7 @@ public class TestInvokeExpectedErrors {
 
     @Test(expected = RuntimeException.class)
     public void methodArgsExpectedTyped() {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -106,7 +106,7 @@ public class TestInvokeExpectedErrors {
 
     @Test(expected = RuntimeException.class)
     public void cantFindAnnotationTyped() {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -118,7 +118,7 @@ public class TestInvokeExpectedErrors {
 
     @Test(expected = RuntimeException.class)
     public void cantFindAnnotation() {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -130,7 +130,7 @@ public class TestInvokeExpectedErrors {
 
     @Test(expected = RuntimeException.class)
     public void methodAndArgsDontMatch() {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -142,7 +142,7 @@ public class TestInvokeExpectedErrors {
 
     @Test(expected = RuntimeException.class)
     public void methodAndArgsDontMatch2() {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

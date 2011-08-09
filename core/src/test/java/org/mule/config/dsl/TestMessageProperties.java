@@ -30,7 +30,7 @@ public class TestMessageProperties {
 
     @Test
     public void simpleManipulation() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -87,7 +87,7 @@ public class TestMessageProperties {
 
     @Test
     public void placeholderManipulation() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 propertyResolver(classpath("test-resource.properties"));
@@ -146,7 +146,7 @@ public class TestMessageProperties {
 
     @Test
     public void expressionManipulation() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -203,7 +203,7 @@ public class TestMessageProperties {
 
     @Test
     public void expressionAndPlaceholderManipulation() throws Exception {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 propertyResolver(classpath("test-resource.properties"));
@@ -262,7 +262,7 @@ public class TestMessageProperties {
 
     @Test(expected = RuntimeException.class)
     public void testNullOnPut1() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -275,7 +275,7 @@ public class TestMessageProperties {
 
     @Test(expected = RuntimeException.class)
     public void testNullOnPut2() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -289,7 +289,7 @@ public class TestMessageProperties {
 
     @Test(expected = RuntimeException.class)
     public void testNullOnPut3() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -302,7 +302,7 @@ public class TestMessageProperties {
 
     @Test(expected = RuntimeException.class)
     public void testNullOnPut4() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -316,7 +316,7 @@ public class TestMessageProperties {
 
     @Test(expected = RuntimeException.class)
     public void testNullOnPut5() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -329,7 +329,7 @@ public class TestMessageProperties {
 
     @Test(expected = RuntimeException.class)
     public void testEmptyOnPut1() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -342,7 +342,7 @@ public class TestMessageProperties {
 
     @Test(expected = RuntimeException.class)
     public void testEmptyOnPut2() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -355,7 +355,7 @@ public class TestMessageProperties {
 
     @Test(expected = RuntimeException.class)
     public void testNullOnRename1() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -368,7 +368,7 @@ public class TestMessageProperties {
 
     @Test(expected = RuntimeException.class)
     public void testNullOnRename2() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -382,7 +382,7 @@ public class TestMessageProperties {
 
     @Test(expected = RuntimeException.class)
     public void testNullOnRename3() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -395,7 +395,7 @@ public class TestMessageProperties {
 
     @Test(expected = RuntimeException.class)
     public void testNullOnRename4() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -409,7 +409,7 @@ public class TestMessageProperties {
 
     @Test(expected = RuntimeException.class)
     public void testNullOnRename5() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -422,7 +422,7 @@ public class TestMessageProperties {
 
     @Test(expected = RuntimeException.class)
     public void testEmptyOnRename1() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -435,7 +435,7 @@ public class TestMessageProperties {
 
     @Test(expected = RuntimeException.class)
     public void testEmptyOnRename2() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -448,7 +448,7 @@ public class TestMessageProperties {
 
     @Test(expected = RuntimeException.class)
     public void testEmptyOnRename3() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -461,7 +461,7 @@ public class TestMessageProperties {
 
     @Test(expected = RuntimeException.class)
     public void testNullOnRemove() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -474,7 +474,7 @@ public class TestMessageProperties {
 
     @Test(expected = RuntimeException.class)
     public void testEmptyOnRemove() throws Exception {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

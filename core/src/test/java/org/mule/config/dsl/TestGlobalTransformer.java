@@ -29,7 +29,7 @@ public class TestGlobalTransformer {
 
     @Test
     public void globalReferenceTypeUsingVariable() throws MuleException, InterruptedException {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -74,7 +74,7 @@ public class TestGlobalTransformer {
 
     @Test
     public void globalReferenceTypeUsingStringRef() throws MuleException, InterruptedException {
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -121,7 +121,7 @@ public class TestGlobalTransformer {
     public void globalReferenceInstanceUsingVariable() throws MuleException, InterruptedException {
         final MyTransformer transformer = new MyTransformer();
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -168,7 +168,7 @@ public class TestGlobalTransformer {
     public void globalReferenceInstanceUsingStringRef() throws MuleException, InterruptedException {
         final MyTransformer transformer = new MyTransformer();
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -215,7 +215,7 @@ public class TestGlobalTransformer {
     public void globalReferenceInstanceUsingVariableByInjector() throws MuleException, InterruptedException {
         final MyTransformer transformer = new MyTransformer();
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -264,7 +264,7 @@ public class TestGlobalTransformer {
     public void globalReferenceInstanceUsingStringRefByInjector() throws MuleException, InterruptedException {
         final MyTransformer transformer = new MyTransformer();
 
-        final MuleContext muleContext = new Mule(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -311,7 +311,7 @@ public class TestGlobalTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalDefinitionConstructor() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -326,7 +326,7 @@ public class TestGlobalTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalDefinitionType() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 transformer().with((Class<Transformer>) null);
@@ -336,7 +336,7 @@ public class TestGlobalTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalDefinitionInstance() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 transformer().with((Transformer) null);
@@ -346,7 +346,7 @@ public class TestGlobalTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingStringRef() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -358,7 +358,7 @@ public class TestGlobalTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingUnboundVariable() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 final TransformerDefinition myTransformer = new TransformerDefinitionImpl<MyTransformer>("test", MyTransformer.class);
@@ -372,7 +372,7 @@ public class TestGlobalTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingNullVariable() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 final TransformerDefinition myTransformer = null;
@@ -386,7 +386,7 @@ public class TestGlobalTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingNullStringRef() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -398,7 +398,7 @@ public class TestGlobalTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidDuplicateGlobalDefinition() throws MuleException, InterruptedException {
-        new Mule(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
