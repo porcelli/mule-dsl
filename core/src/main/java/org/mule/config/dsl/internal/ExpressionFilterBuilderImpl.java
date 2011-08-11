@@ -9,45 +9,50 @@
 
 package org.mule.config.dsl.internal;
 
-import com.google.inject.Injector;
-import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
-import org.mule.config.dsl.expression.CoreExpr;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
-import org.mule.config.expression.ExpressionFilterParser;
+import org.mule.api.processor.MessageProcessor;
+import org.mule.api.routing.filter.Filter;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.routing.MessageFilter;
 import org.mule.routing.filters.ExpressionFilter;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-public class ExpressionFilterBuilderImpl implements Builder<MessageFilter> {
+/**
+ * Internal class that wraps a {@link ExpressionFilter} inside a {@link MessageFilter}.
+ *
+ * @author porcelli
+ * @see org.mule.config.dsl.PipelineBuilder#filter(org.mule.config.dsl.ExpressionEvaluatorDefinition)
+ */
+public class ExpressionFilterBuilderImpl implements Builder<MessageProcessor> {
 
-    private final Object objExpr;
+    private final ExpressionEvaluatorDefinition objExpr;
 
-    public ExpressionFilterBuilderImpl(Object expr) {
+    /**
+     * @param expr the expression evaluator definition
+     * @throws NullPointerException if {@code expr} param is null
+     */
+    public ExpressionFilterBuilderImpl(final ExpressionEvaluatorDefinition expr) throws NullPointerException {
         this.objExpr = checkNotNull(expr, "expr");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public MessageFilter build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
-        final MessageFilter messageFilter;
-        if (objExpr instanceof CoreExpr.GenericExpressionFilterEvaluatorBuilder) {
-            final ExpressionFilterParser parser = new ExpressionFilterParser();
-            try {
-                messageFilter = new MessageFilter(parser.parseFilterString(placeholder.replace(((CoreExpr.GenericExpressionFilterEvaluatorBuilder) objExpr).getExpression())));
-            } catch (DefaultMuleException e) {
-                //todo handle propert
-                throw new RuntimeException(e);
-            }
-        } else if (objExpr instanceof ExpressionEvaluatorBuilder) {
-            ExpressionEvaluatorBuilder expr = (ExpressionEvaluatorBuilder) objExpr;
-            messageFilter = new MessageFilter(new ExpressionFilter(expr.getEvaluator(), placeholder.replace(expr.getExpression())));
-        } else {
-            //TODO impl
-            throw new RuntimeException();
+    public MessageProcessor build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
+        Filter filter = objExpr.getFilter(muleContext, placeholder);
+        if (filter == null) {
+            return new MessageFilter(new ExpressionFilter(objExpr.getEvaluator(), placeholder.replace(objExpr.getExpression())));
+        } else if (filter instanceof MessageProcessor) {
+            return (MessageProcessor) filter;
         }
 
-        return messageFilter;
+        return new MessageFilter(filter);
     }
 }

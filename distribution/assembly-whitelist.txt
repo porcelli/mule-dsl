@@ -1,6 +1,6 @@
 /mule-dsl-${productVersion}
-/mule-dsl-${productVersion}/example
-/mule-dsl-${productVersion}/example/+
+/mule-dsl-${productVersion}/examples
+/mule-dsl-${productVersion}/examples/+
 
 # dsl
 /mule-dsl-${productVersion}/lib/commons-discovery-0.5.jar

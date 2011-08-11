@@ -9,6 +9,19 @@
 
 package org.mule.config.dsl;
 
+/**
+ * Defines how and when java componenets are instantiated.
+ *
+ * @author porcelli
+ * @see <a href="http://www.mulesoft.org/documentation/display/MULE3USER/Object+Scopes">More about Mule DSL Modules</a>
+ */
 public enum Scope {
-    PROTOTYPE, SINGLETON
+    /**
+     * A new instance of the class every time it is referenced. This is the default scope.
+     */
+    PROTOTYPE,
+    /**
+     * Only one instance of the class.
+     */
+    SINGLETON
 }

@@ -27,27 +27,27 @@ public class TestSimpleServiceFlow {
 
     @Test
     public void simpleService() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .execute(SimpleCallable.class);
+                        .invoke(SimpleCallable.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -57,11 +57,11 @@ public class TestSimpleServiceFlow {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(JavaComponent.class);
 
-        JavaComponent component = (JavaComponent) processor;
+        final JavaComponent component = (JavaComponent) processor;
 
         assertThat(component.getObjectType()).isEqualTo(SimpleCallable.class);
 
@@ -71,7 +71,7 @@ public class TestSimpleServiceFlow {
     public static class SimpleCallable implements Callable {
 
         @Override
-        public Object onCall(MuleEventContext muleEventContext) throws Exception {
+        public Object onCall(final MuleEventContext muleEventContext) throws Exception {
             System.out.println("here...");
             return null;
         }

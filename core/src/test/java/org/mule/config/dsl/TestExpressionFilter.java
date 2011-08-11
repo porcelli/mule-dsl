@@ -19,88 +19,40 @@ import org.mule.api.source.MessageSource;
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.routing.MessageFilter;
 import org.mule.routing.filters.ExpressionFilter;
+import org.mule.routing.filters.WildcardFilter;
 
 import java.util.Iterator;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mule.config.dsl.expression.CoreExpr.generic;
 import static org.mule.config.dsl.expression.CoreExpr.string;
+import static org.mule.config.dsl.expression.CoreExpr.wildcard;
 
 public class TestExpressionFilter {
 
     @Test
-    public void testSimpleFilterExpression() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
-            @Override
-            public void configure() {
-                flow("MyFlow")
-                        .from("file:///Users/porcelli/test")
-                        .filter(generic("#[wildcard:foo*]"));
-            }
-        });
-
-        assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
-
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
-
-        assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
-
-        assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
-
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
-
-        assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-
-        assertThat(inboundEndpoint.getProtocol()).isNotNull().isEqualTo("file");
-
-        assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
-
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
-
-        MessageProcessor filterProcessor = iterator.next();
-
-        assertThat(filterProcessor).isNotNull().isInstanceOf(MessageFilter.class);
-
-        MessageFilter filter = (MessageFilter) filterProcessor;
-
-        assertThat(filter.getFilter()).isInstanceOf(ExpressionFilter.class);
-
-        ExpressionFilter exprFilter = (ExpressionFilter) filter.getFilter();
-
-        assertThat(exprFilter.getExpression()).isEqualTo("foo*");
-        assertThat(exprFilter.getEvaluator()).isEqualTo("wildcard");
-        assertThat(exprFilter.getCustomEvaluator()).isNull();
-    }
-
-    @Test
     public void testChainFilterExpression() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .filter(generic("#[wildcard:foo*]"))
+                        .filter(wildcard("foo*"))
                         .filter(string("'some text here'"));
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -110,31 +62,29 @@ public class TestExpressionFilter {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor filterProcessor = iterator.next();
+        final MessageProcessor filterProcessor = iterator.next();
 
         assertThat(filterProcessor).isNotNull().isInstanceOf(MessageFilter.class);
 
-        MessageFilter filter = (MessageFilter) filterProcessor;
+        final MessageFilter filter = (MessageFilter) filterProcessor;
 
-        assertThat(filter.getFilter()).isInstanceOf(ExpressionFilter.class);
+        assertThat(filter.getFilter()).isInstanceOf(WildcardFilter.class);
 
-        ExpressionFilter exprFilter = (ExpressionFilter) filter.getFilter();
+        final WildcardFilter exprFilter = (WildcardFilter) filter.getFilter();
 
-        assertThat(exprFilter.getExpression()).isEqualTo("foo*");
-        assertThat(exprFilter.getEvaluator()).isEqualTo("wildcard");
-        assertThat(exprFilter.getCustomEvaluator()).isNull();
+        assertThat(exprFilter.getPattern()).isEqualTo("foo*");
 
-        MessageProcessor filterProcessor2 = iterator.next();
+        final MessageProcessor filterProcessor2 = iterator.next();
 
         assertThat(filterProcessor2).isNotNull().isInstanceOf(MessageFilter.class);
 
-        MessageFilter filter2 = (MessageFilter) filterProcessor2;
+        final MessageFilter filter2 = (MessageFilter) filterProcessor2;
 
         assertThat(filter2.getFilter()).isInstanceOf(ExpressionFilter.class);
 
-        ExpressionFilter exprFilter2 = (ExpressionFilter) filter2.getFilter();
+        final ExpressionFilter exprFilter2 = (ExpressionFilter) filter2.getFilter();
 
         assertThat(exprFilter2.getExpression()).isEqualTo("'some text here'");
         assertThat(exprFilter2.getEvaluator()).isEqualTo("string");

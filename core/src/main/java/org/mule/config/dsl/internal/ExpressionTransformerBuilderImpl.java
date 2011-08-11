@@ -9,10 +9,10 @@
 
 package org.mule.config.dsl.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
+import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.expression.ExpressionConfig;
 import org.mule.expression.transformers.ExpressionArgument;
 import org.mule.expression.transformers.ExpressionTransformer;
@@ -20,18 +20,34 @@ import org.mule.expression.transformers.ExpressionTransformer;
 import static org.mule.config.dsl.internal.util.NameGenerator.newName;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-public class ExpressionTransformerBuilderImpl<E extends ExpressionEvaluatorBuilder> implements Builder<ExpressionTransformer> {
+/**
+ * Internal class that builds a {@link ExpressionTransformer} using a given {@link ExpressionEvaluatorDefinition}.
+ *
+ * @author porcelli
+ * @see org.mule.config.dsl.PipelineBuilder#transform(org.mule.config.dsl.ExpressionEvaluatorDefinition)
+ */
+public class ExpressionTransformerBuilderImpl<E extends ExpressionEvaluatorDefinition> implements Builder<ExpressionTransformer> {
 
     private final E expr;
 
-    public ExpressionTransformerBuilderImpl(E expr) {
+    /**
+     * @param expr the expression evalutor definition
+     * @throws NullPointerException if {@code expr} param is null
+     */
+    public ExpressionTransformerBuilderImpl(final E expr) throws NullPointerException {
         this.expr = checkNotNull(expr, "expr");
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public ExpressionTransformer build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
-        ExpressionTransformer transformer = new ExpressionTransformer();
+    public ExpressionTransformer build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
+        final ExpressionTransformer transformer = new ExpressionTransformer();
         transformer.addArgument(new ExpressionArgument(newName("expr"),
                 new ExpressionConfig(placeholder.replace(expr.getExpression()),
                         expr.getEvaluator(),

@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.mule.dsl</groupId>
-		<artifactId>dsl-parent</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<artifactId>mule-dsl</artifactId>
+		<version>0.6</version>
 	</parent>
 	<groupId>org.mule.dsl</groupId>
 	<artifactId>dsl-distribution</artifactId>
 	<packaging>pom</packaging>
-	<name>Mule DSL distribution</name>
+	<name>Mule DSL Distribution</name>
 	
 	<dependencies>
 		<dependency>

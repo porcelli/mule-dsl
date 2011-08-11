@@ -16,28 +16,52 @@ import org.mule.config.dsl.LogLevel;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
+/**
+ * Extentds {@link SimpleLogComponent} enabling the use of a custom string based message.
+ *
+ * @author porcelli
+ */
 public class ExtendedLogComponent extends SimpleLogComponent {
     private static final Log logger = LogFactory.getLog(ExtendedLogComponent.class);
 
     private final String message;
 
-    public ExtendedLogComponent(String message, LogLevel level) {
+    /**
+     * @param message the message to be logged
+     * @param level   the log level
+     * @throws NullPointerException if {@code message} or {@code level} param are null
+     */
+    public ExtendedLogComponent(final String message, final LogLevel level) throws NullPointerException {
         super(level);
-
         this.message = checkNotNull(message, "message");
     }
 
+    /**
+     * Logs the message and returns the original message.
+     *
+     * @param context the mule context
+     * @return the original message
+     * @throws Exception if the event fails to process properly.
+     */
     @Override
-    public Object onCall(MuleEventContext context) throws Exception {
+    public Object onCall(final MuleEventContext context) throws Exception {
         log(message);
         return context.getMessage();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Log getLogger() {
         return logger;
     }
 
+    /**
+     * Getter of the message
+     *
+     * @return the message
+     */
     public String getMessage() {
         return message;
     }

@@ -19,7 +19,7 @@ import org.mule.api.processor.MessageProcessorChain;
 import org.mule.api.source.MessageSource;
 import org.mule.component.SimpleCallableJavaComponent;
 import org.mule.component.simple.EchoComponent;
-import org.mule.config.dsl.hack.PrivateAccessor;
+import org.mule.config.dsl.internal.util.PrivateAccessorHack;
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.processor.AsyncDelegateMessageProcessor;
 
@@ -29,7 +29,7 @@ public class TestRouterAsync {
 
     @Test
     public void simpleAsync() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -39,21 +39,21 @@ public class TestRouterAsync {
                             .echo()
                         .endAsync();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -64,21 +64,21 @@ public class TestRouterAsync {
             assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
         }
 
-        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(AsyncDelegateMessageProcessor.class);
 
         {
-            AsyncDelegateMessageProcessor asyncRouter = (AsyncDelegateMessageProcessor) processor;
+            final AsyncDelegateMessageProcessor asyncRouter = (AsyncDelegateMessageProcessor) processor;
 
-            MessageProcessorChain chain = (MessageProcessorChain) PrivateAccessor.getPrivateFieldValue(asyncRouter, "delegate");
+            final MessageProcessorChain chain = (MessageProcessorChain) PrivateAccessorHack.getPrivateFieldValue(asyncRouter, "delegate");
 
             assertThat(chain.getMessageProcessors()).isNotEmpty().hasSize(2);
 
             {
                 assertThat(chain.getMessageProcessors().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-                SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) chain.getMessageProcessors().get(0);
+                final SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) chain.getMessageProcessors().get(0);
 
                 assertThat(echo.getObjectType()).isEqualTo(EchoComponent.class);
 
@@ -87,7 +87,7 @@ public class TestRouterAsync {
             {
                 assertThat(chain.getMessageProcessors().get(1)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-                SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) chain.getMessageProcessors().get(1);
+                final SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) chain.getMessageProcessors().get(1);
 
                 assertThat(echo.getObjectType()).isEqualTo(EchoComponent.class);
 
@@ -98,7 +98,7 @@ public class TestRouterAsync {
 
     @Test
     public void simpleAsyncNesting() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -111,20 +111,20 @@ public class TestRouterAsync {
                             .echo()
                         .endAsync();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -134,21 +134,21 @@ public class TestRouterAsync {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(AsyncDelegateMessageProcessor.class);
 
         {
-            AsyncDelegateMessageProcessor asyncRouter = (AsyncDelegateMessageProcessor) processor;
+            final AsyncDelegateMessageProcessor asyncRouter = (AsyncDelegateMessageProcessor) processor;
 
-            MessageProcessorChain chain = (MessageProcessorChain) PrivateAccessor.getPrivateFieldValue(asyncRouter, "delegate");
+            final MessageProcessorChain chain = (MessageProcessorChain) PrivateAccessorHack.getPrivateFieldValue(asyncRouter, "delegate");
 
             assertThat(chain.getMessageProcessors()).isNotEmpty().hasSize(3);
 
             {
                 assertThat(chain.getMessageProcessors().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-                SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) chain.getMessageProcessors().get(0);
+                final SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) chain.getMessageProcessors().get(0);
 
                 assertThat(echo.getObjectType()).isEqualTo(EchoComponent.class);
 
@@ -158,16 +158,16 @@ public class TestRouterAsync {
             {
                 assertThat(chain.getMessageProcessors().get(1)).isNotNull().isInstanceOf(AsyncDelegateMessageProcessor.class);
 
-                AsyncDelegateMessageProcessor innerAsync = (AsyncDelegateMessageProcessor) chain.getMessageProcessors().get(1);
+                final AsyncDelegateMessageProcessor innerAsync = (AsyncDelegateMessageProcessor) chain.getMessageProcessors().get(1);
 
-                MessageProcessorChain innerChain = (MessageProcessorChain) PrivateAccessor.getPrivateFieldValue(innerAsync, "delegate");
+                final MessageProcessorChain innerChain = (MessageProcessorChain) PrivateAccessorHack.getPrivateFieldValue(innerAsync, "delegate");
 
                 assertThat(innerChain.getMessageProcessors()).isNotEmpty().hasSize(1);
 
                 {
                     assertThat(innerChain.getMessageProcessors().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-                    SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) innerChain.getMessageProcessors().get(0);
+                    final SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) innerChain.getMessageProcessors().get(0);
 
                     assertThat(echo.getObjectType()).isEqualTo(EchoComponent.class);
 
@@ -179,7 +179,7 @@ public class TestRouterAsync {
             {
                 assertThat(chain.getMessageProcessors().get(2)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-                SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) chain.getMessageProcessors().get(2);
+                final SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) chain.getMessageProcessors().get(2);
 
                 assertThat(echo.getObjectType()).isEqualTo(EchoComponent.class);
 

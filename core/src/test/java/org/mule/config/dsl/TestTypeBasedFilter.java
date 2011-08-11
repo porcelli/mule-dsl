@@ -29,28 +29,28 @@ public class TestTypeBasedFilter {
 
     @Test
     public void testSimpleFilterBy() throws MuleException, InterruptedException {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .filterBy(String.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -61,18 +61,18 @@ public class TestTypeBasedFilter {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor filterProcessor = iterator.next();
+            final MessageProcessor filterProcessor = iterator.next();
 
             assertThat(filterProcessor).isNotNull().isInstanceOf(MessageFilter.class);
 
-            MessageFilter filter = (MessageFilter) filterProcessor;
+            final MessageFilter filter = (MessageFilter) filterProcessor;
 
             assertThat(filter.getFilter()).isInstanceOf(PayloadTypeFilter.class);
 
-            PayloadTypeFilter typeFilter = (PayloadTypeFilter) filter.getFilter();
+            final PayloadTypeFilter typeFilter = (PayloadTypeFilter) filter.getFilter();
 
             assertThat(typeFilter.getExpectedType()).isEqualTo(String.class);
         }
@@ -80,28 +80,28 @@ public class TestTypeBasedFilter {
 
     @Test
     public void testFilterByWithPromitiveType() throws MuleException, InterruptedException {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .filterBy(int.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -112,18 +112,18 @@ public class TestTypeBasedFilter {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
         {
-            MessageProcessor filterProcessor = iterator.next();
+            final MessageProcessor filterProcessor = iterator.next();
 
             assertThat(filterProcessor).isNotNull().isInstanceOf(MessageFilter.class);
 
-            MessageFilter filter = (MessageFilter) filterProcessor;
+            final MessageFilter filter = (MessageFilter) filterProcessor;
 
             assertThat(filter.getFilter()).isInstanceOf(PayloadTypeFilter.class);
 
-            PayloadTypeFilter typeFilter = (PayloadTypeFilter) filter.getFilter();
+            final PayloadTypeFilter typeFilter = (PayloadTypeFilter) filter.getFilter();
 
             assertThat(typeFilter.getExpectedType()).isEqualTo(int.class);
         }
@@ -131,7 +131,7 @@ public class TestTypeBasedFilter {
 
     @Test(expected = RuntimeException.class)
     public void testFilterByNull() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")

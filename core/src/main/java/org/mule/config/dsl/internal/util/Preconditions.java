@@ -12,7 +12,9 @@ package org.mule.config.dsl.internal.util;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
 /**
- * Wrapper class for com.google.inject.internal.Preconditions
+ * Support class adapted from com.google.inject.internal.Preconditions
+ *
+ * @author porcelli
  */
 public class Preconditions {
 
@@ -28,7 +30,7 @@ public class Preconditions {
      *                     be converted to a string using {@link String#valueOf(Object)}
      * @throws IllegalStateException if {@code expression} is false
      */
-    public static void checkState(boolean expression, Object errorMessage) {
+    public static void checkState(final boolean expression, final Object errorMessage) throws IllegalStateException {
         if (!expression) {
             throw new IllegalStateException(String.valueOf(errorMessage));
         }
@@ -44,7 +46,7 @@ public class Preconditions {
      * @return the non-null reference that was validated
      * @throws NullPointerException if {@code reference} is null
      */
-    public static <T> T checkNotNull(T reference, Object errorMessage) {
+    public static <T> T checkNotNull(final T reference, final Object errorMessage) throws NullPointerException {
         if (reference == null) {
             throw new NullPointerException(String.valueOf(errorMessage));
         }
@@ -53,17 +55,40 @@ public class Preconditions {
 
 
     /**
-     * Assert that this parameter is not empty. It trims the parameter to see if have any valid data on that.
-     * <p/>
-     * TODO improve docs
+     * Ensures that a string reference passed as a parameter to the calling
+     * method is not null or empty.
+     *
+     * @param reference    an string reference
+     * @param errorMessage the exception message to use if the check fails; will
+     *                     be converted to a string using {@link String#valueOf(Object)}
+     * @return the non-null reference that was validated
+     * @throws IllegalArgumentException if {@code reference} is null or empty
      */
     public static String checkNotEmpty(final String reference,
-                                       final Object errorMessage) {
+                                       final Object errorMessage) throws IllegalArgumentException {
         if (isEmpty(reference)) {
             throw new IllegalArgumentException(String.valueOf(errorMessage));
         }
         return reference;
 
+    }
+
+    /**
+     * Ensures that the array reference passed as a parameter to the calling
+     * method is not null as well it's content.
+     *
+     * @param reference    an array reference
+     * @param errorMessage the exception message to use if the check fails; will
+     *                     be converted to a string using {@link String#valueOf(Object)}
+     * @return the non-null reference that was validated
+     * @throws NullPointerException if {@code reference} is null or any of its elements
+     */
+    public static <T> T[] checkContentsNotNull(final T[] reference, final Object errorMessage) throws NullPointerException {
+        checkNotNull(reference, errorMessage);
+        for (final Object element : reference) {
+            checkNotNull(element, errorMessage);
+        }
+        return reference;
     }
 
 }

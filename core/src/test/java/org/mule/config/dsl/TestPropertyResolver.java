@@ -33,7 +33,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void classpathResolverNotFound() throws Exception {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -49,7 +49,7 @@ public class TestPropertyResolver {
 
     @Test
     public void classpathSimpleInboundLogAndOutbound() throws Exception {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -60,20 +60,20 @@ public class TestPropertyResolver {
                         .log("message here: ${my.app.name}!")
                         .send("file://${out.folder.path}");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -83,31 +83,31 @@ public class TestPropertyResolver {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = iterator.next();
+        final MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logProcessor;
+        final SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logProcessor;
 
         assertThat(log.getObjectType()).isEqualTo(ExtendedLogComponent.class);
 
         assertThat(log.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        ExtendedLogComponent log1 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
-        ExtendedLogComponent log2 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
+        final ExtendedLogComponent log1 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
+        final ExtendedLogComponent log2 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
 
         assertThat(log1 == log2).isEqualTo(true);
 
         assertThat(log1.getLevel()).isEqualTo(LogLevel.INFO);
         assertThat(log1.getMessage()).isEqualTo("message here: My App cool name!");
 
-        MessageProcessor processor = iterator.next();
+        final MessageProcessor processor = iterator.next();
 
         assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
 
-        OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+        final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
 
         assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -118,7 +118,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNotFound() throws Exception {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -134,7 +134,7 @@ public class TestPropertyResolver {
 
     @Test
     public void fileSimpleInboundLogAndOutbound() throws Exception {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -145,20 +145,20 @@ public class TestPropertyResolver {
                         .log("message here: ${my.app.name}!")
                         .send("file://${out.folder.path}");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -168,31 +168,31 @@ public class TestPropertyResolver {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = iterator.next();
+        final MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logProcessor;
+        final SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logProcessor;
 
         assertThat(log.getObjectType()).isEqualTo(ExtendedLogComponent.class);
 
         assertThat(log.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        ExtendedLogComponent log1 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
-        ExtendedLogComponent log2 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
+        final ExtendedLogComponent log1 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
+        final ExtendedLogComponent log2 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
 
         assertThat(log1 == log2).isEqualTo(true);
 
         assertThat(log1.getLevel()).isEqualTo(LogLevel.INFO);
         assertThat(log1.getMessage()).isEqualTo("message here: My App cool name!");
 
-        MessageProcessor processor = iterator.next();
+        final MessageProcessor processor = iterator.next();
 
         assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
 
-        OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+        final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
 
         assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -204,7 +204,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void inputStreamResolverNotFound() throws Exception {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -220,7 +220,7 @@ public class TestPropertyResolver {
 
     @Test
     public void inputStreamSimpleInboundLogAndOutbound() throws Exception {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -231,20 +231,20 @@ public class TestPropertyResolver {
                         .log("message here: ${my.app.name}!")
                         .send("file://${out.folder.path}");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -254,31 +254,31 @@ public class TestPropertyResolver {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = iterator.next();
+        final MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logProcessor;
+        final SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logProcessor;
 
         assertThat(log.getObjectType()).isEqualTo(ExtendedLogComponent.class);
 
         assertThat(log.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        ExtendedLogComponent log1 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
-        ExtendedLogComponent log2 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
+        final ExtendedLogComponent log1 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
+        final ExtendedLogComponent log2 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
 
         assertThat(log1 == log2).isEqualTo(true);
 
         assertThat(log1.getLevel()).isEqualTo(LogLevel.INFO);
         assertThat(log1.getMessage()).isEqualTo("message here: My App cool name!");
 
-        MessageProcessor processor = iterator.next();
+        final MessageProcessor processor = iterator.next();
 
         assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
 
-        OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+        final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
 
         assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -289,11 +289,11 @@ public class TestPropertyResolver {
 
     @Test
     public void inputMapInboundLogAndOutbound() throws Exception {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
-                Map<String, String> properties = new HashMap<String, String>();
+                final Map<String, String> properties = new HashMap<String, String>();
                 properties.put("my.app.name", "My App cool name");
                 properties.put("in.folder.path", "/Users/porcelli/test");
                 properties.put("out.folder.path", "/Users/porcelli/out");
@@ -305,20 +305,20 @@ public class TestPropertyResolver {
                         .log("message here: ${my.app.name}!")
                         .send("file://${out.folder.path}");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -328,31 +328,31 @@ public class TestPropertyResolver {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = iterator.next();
+        final MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logProcessor;
+        final SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logProcessor;
 
         assertThat(log.getObjectType()).isEqualTo(ExtendedLogComponent.class);
 
         assertThat(log.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        ExtendedLogComponent log1 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
-        ExtendedLogComponent log2 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
+        final ExtendedLogComponent log1 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
+        final ExtendedLogComponent log2 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
 
         assertThat(log1 == log2).isEqualTo(true);
 
         assertThat(log1.getLevel()).isEqualTo(LogLevel.INFO);
         assertThat(log1.getMessage()).isEqualTo("message here: My App cool name!");
 
-        MessageProcessor processor = iterator.next();
+        final MessageProcessor processor = iterator.next();
 
         assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
 
-        OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+        final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
 
         assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -363,11 +363,11 @@ public class TestPropertyResolver {
 
     @Test
     public void inputPropertiesInboundLogAndOutbound() throws Exception {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
-                Properties properties = new Properties();
+                final Properties properties = new Properties();
                 properties.setProperty("my.app.name", "My App cool name");
                 properties.setProperty("in.folder.path", "/Users/porcelli/test");
                 properties.setProperty("out.folder.path", "/Users/porcelli/out");
@@ -379,20 +379,20 @@ public class TestPropertyResolver {
                         .log("message here: ${my.app.name}!")
                         .send("file://${out.folder.path}");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -402,31 +402,31 @@ public class TestPropertyResolver {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = iterator.next();
+        final MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logProcessor;
+        final SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logProcessor;
 
         assertThat(log.getObjectType()).isEqualTo(ExtendedLogComponent.class);
 
         assertThat(log.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        ExtendedLogComponent log1 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
-        ExtendedLogComponent log2 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
+        final ExtendedLogComponent log1 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
+        final ExtendedLogComponent log2 = (ExtendedLogComponent) log.getObjectFactory().getInstance(null);
 
         assertThat(log1 == log2).isEqualTo(true);
 
         assertThat(log1.getLevel()).isEqualTo(LogLevel.INFO);
         assertThat(log1.getMessage()).isEqualTo("message here: My App cool name!");
 
-        MessageProcessor processor = iterator.next();
+        final MessageProcessor processor = iterator.next();
 
         assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
 
-        OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+        final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
 
         assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -437,7 +437,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNullInputStream() throws Exception {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -453,7 +453,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNullMap() throws Exception {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -469,7 +469,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNullProperties() throws Exception {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -485,7 +485,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNullClasspathBuilder() throws Exception {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -501,7 +501,7 @@ public class TestPropertyResolver {
 
     @Test(expected = RuntimeException.class)
     public void fileResolverNullFileRefBuilder() throws Exception {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 

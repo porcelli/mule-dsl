@@ -28,28 +28,28 @@ public class TestCustomTransformer {
 
     @Test
     public void customTransformerByType() throws MuleException, InterruptedException {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .transformWith(MyTransformer.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -61,14 +61,14 @@ public class TestCustomTransformer {
         }
 
         {
-            MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
             assertThat(processor).isNotNull().isInstanceOf(MyTransformer.class);
         }
     }
 
     @Test
     public void customTransformerByInstance() throws MuleException, InterruptedException {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -76,21 +76,21 @@ public class TestCustomTransformer {
                         .from("file:///Users/porcelli/test")
                         .transformWith(new MyTransformer());
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -102,7 +102,7 @@ public class TestCustomTransformer {
         }
 
         {
-            MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
             assertThat(processor).isNotNull().isInstanceOf(MyTransformer.class);
         }
     }
@@ -111,7 +111,7 @@ public class TestCustomTransformer {
     public void customTransformerByInjector() throws MuleException, InterruptedException {
         final MyTransformer transformer = new MyTransformer();
 
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -120,21 +120,21 @@ public class TestCustomTransformer {
 
                 bind(MyTransformer.class).toInstance(transformer);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -146,35 +146,35 @@ public class TestCustomTransformer {
         }
 
         {
-            MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
             assertThat(processor).isNotNull().isInstanceOf(MyTransformer.class).isEqualTo(transformer);
         }
     }
 
     @Test
     public void customTransformerByReflection() throws MuleException, InterruptedException {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .transformWith(MyTransformer.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -186,14 +186,14 @@ public class TestCustomTransformer {
         }
 
         {
-            MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
             assertThat(processor).isNotNull().isInstanceOf(MyTransformer.class);
         }
     }
 
     @Test(expected = RuntimeException.class)
     public void invalidConstructor() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -205,7 +205,7 @@ public class TestCustomTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidTypeNull() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -217,7 +217,7 @@ public class TestCustomTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidInstanceNull() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -229,18 +229,18 @@ public class TestCustomTransformer {
 
     public static class MyTransformer extends AbstractTransformer {
         @Override
-        protected Object doTransform(Object o, String s) throws TransformerException {
+        protected Object doTransform(final Object o, final String s) throws TransformerException {
             return "MY TRANSFORMED TEXT";
         }
     }
 
     public static class MyComplexTransformer extends AbstractTransformer {
 
-        public MyComplexTransformer(String none) {
+        public MyComplexTransformer(final String none) {
         }
 
         @Override
-        protected Object doTransform(Object o, String s) throws TransformerException {
+        protected Object doTransform(final Object o, final String s) throws TransformerException {
             return "MY TRANSFORMED TEXT";
         }
     }

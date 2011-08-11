@@ -9,124 +9,160 @@
 
 package org.mule.config.dsl.expression;
 
+import org.mule.api.MuleContext;
 import org.mule.api.routing.filter.Filter;
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.routing.filters.RegExFilter;
 import org.mule.routing.filters.WildcardFilter;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
 
+/**
+ * Holds all core expression evaluators definitions and expose them as static methods.
+ *
+ * @author porcelli
+ */
 public final class CoreExpr {
+
+    private static final PayloadExpressionEvaluatorDefinition payloadExpr = new PayloadExpressionEvaluatorDefinition();
 
     private CoreExpr() {
     }
 
-    public static GenericExpressionFilterEvaluatorBuilder generic(String expr) {
-        return new GenericExpressionFilterEvaluatorBuilder(expr);
+    /**
+     * Returns the payload expression evaluator.
+     *
+     * @return the payload expression evaluator
+     */
+    public static PayloadExpressionEvaluatorDefinition payload() {
+        return payloadExpr;
     }
 
-    public static PayloadExpressionEvaluatorBuilder payload() {
-        return new PayloadExpressionEvaluatorBuilder();
+    /**
+     * Returns a new regex evaluator expression based on given parameter.
+     *
+     * @param expr the regex expression
+     * @return the regex expression evaluator
+     * @throws IllegalArgumentException if {@code expr} param is null or empty
+     */
+    public static RegExExpressionEvaluatorDefinition regex(final String expr) throws IllegalArgumentException {
+        checkNotEmpty(expr, "expr");
+        return new RegExExpressionEvaluatorDefinition(expr);
     }
 
-    public static RegExExpressionEvaluatorBuilder regex(String expr) {
-        return new RegExExpressionEvaluatorBuilder(expr);
+    /**
+     * Returns a new string evaluator expression based on given parameter.
+     *
+     * @param expr the string expression
+     * @return the string expression evaluator
+     * @throws IllegalArgumentException if {@code expr} param is null or empty
+     */
+    public static StringExpressionEvaluatorDefinition string(final String expr) throws IllegalArgumentException {
+        checkNotEmpty(expr, "expr");
+        return new StringExpressionEvaluatorDefinition(expr);
     }
 
-    public static StringExpressionEvaluatorBuilder string(String expr) {
-        return new StringExpressionEvaluatorBuilder(expr);
+    /**
+     * Returns a new wildcard evaluator expression based on given parameter.
+     *
+     * @param expr the wildcard expression
+     * @return the wildcard expression evaluator
+     * @throws IllegalArgumentException if {@code expr} param is null or empty
+     */
+    public static WildcardExpressionEvaluatorDefinition wildcard(final String expr) throws IllegalArgumentException {
+        checkNotEmpty(expr, "expr");
+        return new WildcardExpressionEvaluatorDefinition(expr);
     }
 
-    public static WildcardExpressionEvaluatorBuilder wildcard(String expr) {
-        return new WildcardExpressionEvaluatorBuilder(expr);
-    }
-
-    public static class GenericExpressionFilterEvaluatorBuilder extends BaseEvaluatorBuilder {
-        private static final String EVALUATOR = "generic-filter";
-
-        public GenericExpressionFilterEvaluatorBuilder(String expression) {
-            super(EVALUATOR, expression, null);
-        }
-    }
-
-    public static class PayloadExpressionEvaluatorBuilder extends BaseEvaluatorBuilder implements ExpressionEvaluatorBuilder {
+    /**
+     * Payload expression evaluator definition.
+     *
+     * @author porcelli
+     * @see org.mule.config.dsl.ExpressionEvaluatorDefinition
+     */
+    public static class PayloadExpressionEvaluatorDefinition extends BaseEvaluatorDefinition {
         private static final String EVALUATOR = "payload";
 
-        public PayloadExpressionEvaluatorBuilder() {
+        /**
+         * Constructor
+         */
+        private PayloadExpressionEvaluatorDefinition() {
             super(EVALUATOR, null, null);
         }
     }
 
-    public static class RegExExpressionEvaluatorBuilder extends BaseEvaluatorBuilder implements ExpressionEvaluatorBuilder {
+    /**
+     * RegEx expression evaluator definition.
+     *
+     * @author porcelli
+     * @see org.mule.config.dsl.ExpressionEvaluatorDefinition
+     */
+    public static class RegExExpressionEvaluatorDefinition extends BaseEvaluatorDefinition {
         private static final String EVALUATOR = "regex";
 
-        public RegExExpressionEvaluatorBuilder(String expression) {
+        /**
+         * Constructor
+         *
+         * @param expression the regex expression
+         */
+        private RegExExpressionEvaluatorDefinition(final String expression) {
             super(EVALUATOR, expression, null);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public Filter getFilter(PropertyPlaceholder placeholder) {
-            return new RegExFilter(placeholder.replace(getExpression()));
+        public Filter getFilter(final MuleContext muleContext, final PropertyPlaceholder placeholder) {
+            return new RegExFilter(getExpression(placeholder));
         }
     }
 
-    public static class WildcardExpressionEvaluatorBuilder extends BaseEvaluatorBuilder implements ExpressionEvaluatorBuilder {
+    /**
+     * Wildcard expression evaluator definition.
+     *
+     * @author porcelli
+     * @see org.mule.config.dsl.ExpressionEvaluatorDefinition
+     */
+    public static class WildcardExpressionEvaluatorDefinition extends BaseEvaluatorDefinition {
         private static final String EVALUATOR = "wildcard";
 
-        public WildcardExpressionEvaluatorBuilder(String expression) {
+        /**
+         * Constructor
+         *
+         * @param expression the wildcard expression
+         */
+        private WildcardExpressionEvaluatorDefinition(final String expression) {
             super(EVALUATOR, expression, null);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public Filter getFilter(PropertyPlaceholder placeholder) {
-            return new WildcardFilter(placeholder.replace(getExpression()));
+        public Filter getFilter(final MuleContext muleContext, final PropertyPlaceholder placeholder) {
+            return new WildcardFilter(getExpression(placeholder));
         }
     }
 
-    public static class StringExpressionEvaluatorBuilder extends BaseEvaluatorBuilder implements ExpressionEvaluatorBuilder {
+    /**
+     * String expression evaluator definition.
+     *
+     * @author porcelli
+     * @see org.mule.config.dsl.ExpressionEvaluatorDefinition
+     */
+    public static class StringExpressionEvaluatorDefinition extends BaseEvaluatorDefinition {
         private static final String EVALUATOR = "string";
 
-        public StringExpressionEvaluatorBuilder(String expression) {
+        /**
+         * Constructor
+         *
+         * @param expression the string expression
+         */
+        private StringExpressionEvaluatorDefinition(final String expression) {
             super(EVALUATOR, expression, null);
         }
     }
 
-
-    public static abstract class BaseEvaluatorBuilder {
-        private final String evaluator;
-        private final String expression;
-        private final String customEvaluator;
-
-        public BaseEvaluatorBuilder(String evaluator, String expression, String customEvaluator) {
-            this.evaluator = checkNotNull(evaluator, "evaluator");
-            this.expression = expression;
-            this.customEvaluator = customEvaluator;
-        }
-
-        public String getEvaluator() {
-            return evaluator;
-        }
-
-        public String getCustomEvaluator() {
-            return customEvaluator;
-        }
-
-        public String getExpression() {
-            return expression;
-        }
-
-        @Override
-        public String toString() {
-            if (expression == null) {
-                return "#[" + evaluator + "]";
-            }
-            return "#[" + evaluator + ":" + expression + "]";
-        }
-
-        public Filter getFilter(PropertyPlaceholder placeholder) {
-            return null;
-        }
-    }
 
 }

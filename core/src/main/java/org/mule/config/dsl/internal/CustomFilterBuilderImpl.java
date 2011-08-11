@@ -9,49 +9,80 @@
 
 package org.mule.config.dsl.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.routing.filter.Filter;
+import org.mule.config.dsl.ConfigurationException;
 import org.mule.config.dsl.FilterDefinition;
-import org.mule.config.dsl.internal.util.InjectorUtil;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.routing.MessageFilter;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
+/**
+ * Internal class that wraps a given {@link Filter} inside a {@link MessageFilter}.
+ *
+ * @author porcelli
+ * @see org.mule.config.dsl.PipelineBuilder#filterWith(Class)
+ * @see org.mule.config.dsl.PipelineBuilder#filterWith(org.mule.api.routing.filter.Filter)
+ * @see org.mule.config.dsl.PipelineBuilder#filterWith(org.mule.config.dsl.FilterDefinition)
+ * @see org.mule.config.dsl.PipelineBuilder#filterWith(String)
+ */
 public class CustomFilterBuilderImpl<F extends Filter> implements Builder<MessageFilter> {
 
     private final Class<F> clazz;
     private final F obj;
     private final String registryRef;
 
-    public CustomFilterBuilderImpl(Class<F> clazz) {
+    /**
+     * @param clazz a filter type
+     * @throws NullPointerException if {@code clazz} param is null
+     */
+    public CustomFilterBuilderImpl(final Class<F> clazz) {
         this.clazz = checkNotNull(clazz, "clazz");
         this.obj = null;
         this.registryRef = null;
     }
 
-    public CustomFilterBuilderImpl(F obj) {
+    /**
+     * @param obj a filter object instance
+     * @throws NullPointerException if {@code obj} param is null
+     */
+    public CustomFilterBuilderImpl(final F obj) throws NullPointerException {
         this.obj = checkNotNull(obj, "obj");
         this.clazz = null;
         this.registryRef = null;
     }
 
-    public CustomFilterBuilderImpl(FilterDefinition<F> objRef) {
-        this.registryRef = checkNotEmpty(objRef.getName(), "objRef");
+    /**
+     * @param objRef the object reference of a global defined filter
+     * @throws NullPointerException     if {@code objRef} param is null
+     * @throws IllegalArgumentException if {@code objRef.getName()} param is empty or null
+     */
+    public CustomFilterBuilderImpl(final FilterDefinition objRef) throws NullPointerException, IllegalArgumentException {
+        checkNotNull(objRef, "objRef");
+        this.registryRef = checkNotEmpty(objRef.getName(), "objRef.name");
         this.obj = null;
         this.clazz = null;
     }
 
-    public CustomFilterBuilderImpl(String ref) {
+    /**
+     * @param ref the name reference of a global defined filter
+     * @throws IllegalArgumentException if {@code ref} param is null
+     */
+    public CustomFilterBuilderImpl(final String ref) throws IllegalArgumentException {
         this.registryRef = checkNotEmpty(ref, "ref");
         this.obj = null;
         this.clazz = null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public MessageFilter build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public MessageFilter build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
 
         if (registryRef != null) {
             return muleContext.getRegistry().lookupObject(registryRef);
@@ -61,15 +92,14 @@ public class CustomFilterBuilderImpl<F extends Filter> implements Builder<Messag
             return new MessageFilter(obj);
         }
 
-        if (InjectorUtil.hasProvider(injector, clazz)) {
-            return new MessageFilter(injector.getInstance(clazz));
-        }
-
         try {
-            return new MessageFilter(clazz.newInstance());
-        } catch (Exception e) {
-            //TODO handle here
-            throw new RuntimeException(e);
+            Filter filter = muleContext.getRegistry().lookupObject(clazz);
+            if (filter == null) {
+                throw new ConfigurationException("Failed to configure a CustomFilter.");
+            }
+            return new MessageFilter(filter);
+        } catch (final Exception e) {
+            throw new ConfigurationException("Failed to configure a CustomFilter.", e);
         }
     }
 }

@@ -29,33 +29,33 @@ public class TestGlobalTransformer {
 
     @Test
     public void globalReferenceTypeUsingVariable() throws MuleException, InterruptedException {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
-                TransformerDefinition<MyTransformer> myTransformer = transformer("test").with(MyTransformer.class);
+                final TransformerDefinition myTransformer = transformer("test").with(MyTransformer.class);
 
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .transformWith(myTransformer);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupTransformer("test")).isNotNull().isInstanceOf(MyTransformer.class);
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -67,14 +67,14 @@ public class TestGlobalTransformer {
         }
 
         {
-            MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
             assertThat(processor).isNotNull().isInstanceOf(MyTransformer.class);
         }
     }
 
     @Test
     public void globalReferenceTypeUsingStringRef() throws MuleException, InterruptedException {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -84,23 +84,23 @@ public class TestGlobalTransformer {
                         .from("file:///Users/porcelli/test")
                         .transformWith("test");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupTransformer("test")).isNotNull().isInstanceOf(MyTransformer.class);
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -112,7 +112,7 @@ public class TestGlobalTransformer {
         }
 
         {
-            MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
             assertThat(processor).isNotNull().isInstanceOf(MyTransformer.class);
         }
     }
@@ -121,33 +121,33 @@ public class TestGlobalTransformer {
     public void globalReferenceInstanceUsingVariable() throws MuleException, InterruptedException {
         final MyTransformer transformer = new MyTransformer();
 
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
-                TransformerDefinition<MyTransformer> myTransformer = transformer("test").with(transformer);
+                final TransformerDefinition myTransformer = transformer("test").with(transformer);
 
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .transformWith(myTransformer);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupTransformer("test")).isNotNull().isInstanceOf(MyTransformer.class);
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -159,7 +159,7 @@ public class TestGlobalTransformer {
         }
 
         {
-            MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
             assertThat(processor).isNotNull().isInstanceOf(MyTransformer.class).isEqualTo(transformer);
         }
     }
@@ -168,7 +168,7 @@ public class TestGlobalTransformer {
     public void globalReferenceInstanceUsingStringRef() throws MuleException, InterruptedException {
         final MyTransformer transformer = new MyTransformer();
 
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -178,23 +178,23 @@ public class TestGlobalTransformer {
                         .from("file:///Users/porcelli/test")
                         .transformWith("test");
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupTransformer("test")).isNotNull().isInstanceOf(MyTransformer.class);
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -206,7 +206,7 @@ public class TestGlobalTransformer {
         }
 
         {
-            MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
             assertThat(processor).isNotNull().isInstanceOf(MyTransformer.class).isEqualTo(transformer);
         }
     }
@@ -215,11 +215,11 @@ public class TestGlobalTransformer {
     public void globalReferenceInstanceUsingVariableByInjector() throws MuleException, InterruptedException {
         final MyTransformer transformer = new MyTransformer();
 
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
-                TransformerDefinition<MyTransformer> myTransformer = transformer("test").with(MyTransformer.class);
+                final TransformerDefinition myTransformer = transformer("test").with(MyTransformer.class);
 
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
@@ -227,23 +227,23 @@ public class TestGlobalTransformer {
 
                 bind(MyTransformer.class).toInstance(transformer);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupTransformer("test")).isNotNull().isInstanceOf(MyTransformer.class);
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -255,7 +255,7 @@ public class TestGlobalTransformer {
         }
 
         {
-            MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
             assertThat(processor).isNotNull().isInstanceOf(MyTransformer.class).isEqualTo(transformer);
         }
     }
@@ -264,7 +264,7 @@ public class TestGlobalTransformer {
     public void globalReferenceInstanceUsingStringRefByInjector() throws MuleException, InterruptedException {
         final MyTransformer transformer = new MyTransformer();
 
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -276,23 +276,23 @@ public class TestGlobalTransformer {
 
                 bind(MyTransformer.class).toInstance(transformer);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupTransformer("test")).isNotNull().isInstanceOf(MyTransformer.class);
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -304,14 +304,14 @@ public class TestGlobalTransformer {
         }
 
         {
-            MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
             assertThat(processor).isNotNull().isInstanceOf(MyTransformer.class).isEqualTo(transformer);
         }
     }
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalDefinitionConstructor() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -326,7 +326,7 @@ public class TestGlobalTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalDefinitionType() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 transformer().with((Class<Transformer>) null);
@@ -336,7 +336,7 @@ public class TestGlobalTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalDefinitionInstance() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 transformer().with((Transformer) null);
@@ -346,7 +346,7 @@ public class TestGlobalTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingStringRef() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -358,10 +358,10 @@ public class TestGlobalTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingUnboundVariable() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
-                TransformerDefinition<MyTransformer> myTransformer = new TransformerDefinitionImpl<MyTransformer>("test", MyTransformer.class);
+                final TransformerDefinition myTransformer = new TransformerDefinitionImpl<MyTransformer>("test", MyTransformer.class);
 
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
@@ -372,10 +372,10 @@ public class TestGlobalTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingNullVariable() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
-                TransformerDefinition<MyTransformer> myTransformer = null;
+                final TransformerDefinition myTransformer = null;
 
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
@@ -386,7 +386,7 @@ public class TestGlobalTransformer {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingNullStringRef() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -396,21 +396,39 @@ public class TestGlobalTransformer {
         });
     }
 
+    @Test(expected = RuntimeException.class)
+    public void invalidDuplicateGlobalDefinition() throws MuleException, InterruptedException {
+        Mule.newInstance(new AbstractModule() {
+            @Override
+            public void configure() {
+
+                transformer("test").with(MyTransformer.class);
+
+                transformer("test").with(MyTransformer.class);
+
+                flow("MyFlow")
+                        .from("file:///Users/porcelli/test")
+                        .filterWith("test");
+            }
+        });
+    }
+
+
     public static class MyTransformer extends AbstractTransformer {
 
         @Override
-        protected Object doTransform(Object o, String s) throws TransformerException {
+        protected Object doTransform(final Object o, final String s) throws TransformerException {
             return "MY TRANSFORMED TEXT";
         }
     }
 
     public static class MyComplexTransformer extends AbstractTransformer {
 
-        public MyComplexTransformer(String none) {
+        public MyComplexTransformer(final String none) {
         }
 
         @Override
-        protected Object doTransform(Object o, String s) throws TransformerException {
+        protected Object doTransform(final Object o, final String s) throws TransformerException {
             return "MY TRANSFORMED TEXT";
         }
     }

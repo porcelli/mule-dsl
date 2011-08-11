@@ -14,7 +14,7 @@ import static org.mule.config.dsl.expression.CoreExpr.string;
 public class TestSyntaxRouterChoice {
 
     public void choiceRouterTest() {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -31,6 +31,9 @@ public class TestSyntaxRouterChoice {
                                         .echo()
                                 .endChoice()
                                 .echo()
+                                .messageProperties()
+                                    .put(null, null)
+                                    .remove(null)
                                 .echo()
                             .when(string(""))
                                 .echo()
@@ -41,7 +44,7 @@ public class TestSyntaxRouterChoice {
                         .endChoice();
 
                 flow("MyFlow2")
-                        .execute((Class<?>)null)
+                        .invoke((Class<?>) null)
                         .choice()
                             .when(string(""))
                                 .echo()
@@ -52,6 +55,10 @@ public class TestSyntaxRouterChoice {
                                         .echo()
                                     .otherwise()
                                         .echo()
+                                        .messageProperties()
+                                            .put(null, null)
+                                            .remove(null)
+                                        .endMessageProperties()
                                 .endChoice()
                                 .echo()
                                 .echo()
@@ -64,7 +71,7 @@ public class TestSyntaxRouterChoice {
                         .endChoice();
 
                 flow("MyFlow2")
-                        .execute((Class<?>)null)
+                        .invoke((Class<?>) null)
                         .choice()
                             .when(string(""))
                                 .echo()

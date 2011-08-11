@@ -9,49 +9,71 @@
 
 package org.mule.config.dsl.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
+import org.mule.config.dsl.ConfigurationException;
 import org.mule.config.dsl.FirstSuccessfulRouterBuilder;
 import org.mule.config.dsl.PipelineBuilder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.routing.FirstSuccessful;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
+/**
+ * Internal implementation of {@link org.mule.config.dsl.FirstSuccessfulRouterBuilder} interfaces that,
+ * based on its internal state, builds a {@link FirstSuccessful}.
+ *
+ * @author porcelli
+ * @see org.mule.config.dsl.PipelineBuilder#firstSuccessful()
+ */
 public class FirstSuccessfulRouterBuilderImpl<P extends PipelineBuilder<P>> extends BasePipelinedRouterImpl<FirstSuccessfulRouterBuilder<P>> implements FirstSuccessfulRouterBuilder<P>, Builder<FirstSuccessful> {
 
     private final P parentScope;
 
-    public FirstSuccessfulRouterBuilderImpl(P parentScope) {
+    /**
+     * @param parentScope the parent scope
+     * @throws NullPointerException if {@code parentScope} param is null
+     */
+    public FirstSuccessfulRouterBuilderImpl(final P parentScope) throws NullPointerException {
         super();
         this.parentScope = checkNotNull(parentScope, "parentScope");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public P endFirstSuccessful() {
         return parentScope;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected FirstSuccessfulRouterBuilder<P> getThis() {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public FirstSuccessful build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
-        if (!pipeline.isProcessorListEmpty()) {
+    public FirstSuccessful build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
+        if (!pipeline.isBuilderListEmpty()) {
             try {
-                FirstSuccessful router = new FirstSuccessful();
+                final FirstSuccessful router = new FirstSuccessful();
                 router.setMuleContext(muleContext);
-                router.setRoutes(pipeline.buildProcessorList(muleContext, injector, placeholder));
+                router.setRoutes(pipeline.buildMessageProcessorList(muleContext, placeholder));
                 return router;
-            } catch (MuleException e) {
-                //TODO handle
-                throw new RuntimeException(e);
+            } catch (final MuleException e) {
+                throw new ConfigurationException("Failed to configure a FirstSuccessful.", e);
             }
         }
 
-        throw new RuntimeException();
+        throw new IllegalStateException("Router is empty, it's necessary to have at least one operation inside it.");
     }
 }

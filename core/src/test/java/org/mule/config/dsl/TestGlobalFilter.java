@@ -29,39 +29,39 @@ public class TestGlobalFilter {
 
     @Test
     public void globalReferenceTypeUsingVariable() throws MuleException, InterruptedException {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
-                FilterDefinition<MyFilter> myFilter = filter("test").with(MyFilter.class);
+                final FilterDefinition myFilter = filter("test").with(MyFilter.class);
 
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .filterWith(myFilter);
             }
-        });
+        }).advanced().muleContext();
 
         {
             assertThat(muleContext.getRegistry().lookupObject("test")).isNotNull().isInstanceOf(MessageFilter.class);
 
-            MessageFilter messageFilter = muleContext.getRegistry().lookupObject("test");
+            final MessageFilter messageFilter = muleContext.getRegistry().lookupObject("test");
 
             assertThat(messageFilter.getFilter()).isInstanceOf(MyFilter.class);
         }
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -73,10 +73,10 @@ public class TestGlobalFilter {
         }
 
         {
-            MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
             assertThat(processor).isNotNull().isInstanceOf(MessageFilter.class);
 
-            MessageFilter messageFilter = (MessageFilter) processor;
+            final MessageFilter messageFilter = (MessageFilter) processor;
 
             assertThat(messageFilter.getFilter()).isInstanceOf(MyFilter.class);
         }
@@ -84,7 +84,7 @@ public class TestGlobalFilter {
 
     @Test
     public void globalReferenceTypeUsingStringRef() throws MuleException, InterruptedException {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -94,29 +94,29 @@ public class TestGlobalFilter {
                         .from("file:///Users/porcelli/test")
                         .filterWith("test");
             }
-        });
+        }).advanced().muleContext();
 
         {
             assertThat(muleContext.getRegistry().lookupObject("test")).isNotNull().isInstanceOf(MessageFilter.class);
 
-            MessageFilter messageFilter = muleContext.getRegistry().lookupObject("test");
+            final MessageFilter messageFilter = muleContext.getRegistry().lookupObject("test");
 
             assertThat(messageFilter.getFilter()).isInstanceOf(MyFilter.class);
         }
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -128,10 +128,10 @@ public class TestGlobalFilter {
         }
 
         {
-            MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
             assertThat(processor).isNotNull().isInstanceOf(MessageFilter.class);
 
-            MessageFilter messageFilter = (MessageFilter) processor;
+            final MessageFilter messageFilter = (MessageFilter) processor;
 
             assertThat(messageFilter.getFilter()).isInstanceOf(MyFilter.class);
         }
@@ -141,39 +141,39 @@ public class TestGlobalFilter {
     public void globalReferenceInstanceUsingVariable() throws MuleException, InterruptedException {
         final MyFilter filter = new MyFilter();
 
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
-                FilterDefinition<MyFilter> myFilter = filter("test").with(filter);
+                final FilterDefinition myFilter = filter("test").with(filter);
 
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .filterWith(myFilter);
             }
-        });
+        }).advanced().muleContext();
 
         {
             assertThat(muleContext.getRegistry().lookupObject("test")).isNotNull().isInstanceOf(MessageFilter.class);
 
-            MessageFilter messageFilter = muleContext.getRegistry().lookupObject("test");
+            final MessageFilter messageFilter = muleContext.getRegistry().lookupObject("test");
 
             assertThat(messageFilter.getFilter()).isInstanceOf(MyFilter.class);
         }
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -185,10 +185,10 @@ public class TestGlobalFilter {
         }
 
         {
-            MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
             assertThat(processor).isNotNull().isInstanceOf(MessageFilter.class);
 
-            MessageFilter messageFilter = (MessageFilter) processor;
+            final MessageFilter messageFilter = (MessageFilter) processor;
 
             assertThat(messageFilter.getFilter()).isInstanceOf(MyFilter.class).isEqualTo(filter);
         }
@@ -198,7 +198,7 @@ public class TestGlobalFilter {
     public void globalReferenceInstanceUsingStringRef() throws MuleException, InterruptedException {
         final MyFilter filter = new MyFilter();
 
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -208,29 +208,29 @@ public class TestGlobalFilter {
                         .from("file:///Users/porcelli/test")
                         .filterWith("test");
             }
-        });
+        }).advanced().muleContext();
 
         {
             assertThat(muleContext.getRegistry().lookupObject("test")).isNotNull().isInstanceOf(MessageFilter.class);
 
-            MessageFilter messageFilter = muleContext.getRegistry().lookupObject("test");
+            final MessageFilter messageFilter = muleContext.getRegistry().lookupObject("test");
 
             assertThat(messageFilter.getFilter()).isInstanceOf(MyFilter.class);
         }
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -242,10 +242,10 @@ public class TestGlobalFilter {
         }
 
         {
-            MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
             assertThat(processor).isNotNull().isInstanceOf(MessageFilter.class);
 
-            MessageFilter messageFilter = (MessageFilter) processor;
+            final MessageFilter messageFilter = (MessageFilter) processor;
 
             assertThat(messageFilter.getFilter()).isInstanceOf(MyFilter.class).isEqualTo(filter);
         }
@@ -255,11 +255,11 @@ public class TestGlobalFilter {
     public void globalReferenceInstanceUsingVariableByInjector() throws MuleException, InterruptedException {
         final MyFilter filter = new MyFilter();
 
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
-                FilterDefinition<MyFilter> myFilter = filter("test").with(MyFilter.class);
+                final FilterDefinition myFilter = filter("test").with(MyFilter.class);
 
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
@@ -267,29 +267,29 @@ public class TestGlobalFilter {
 
                 bind(MyFilter.class).toInstance(filter);
             }
-        });
+        }).advanced().muleContext();
 
         {
             assertThat(muleContext.getRegistry().lookupObject("test")).isNotNull().isInstanceOf(MessageFilter.class);
 
-            MessageFilter messageFilter = muleContext.getRegistry().lookupObject("test");
+            final MessageFilter messageFilter = muleContext.getRegistry().lookupObject("test");
 
             assertThat(messageFilter.getFilter()).isInstanceOf(MyFilter.class);
         }
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -301,10 +301,10 @@ public class TestGlobalFilter {
         }
 
         {
-            MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
             assertThat(processor).isNotNull().isInstanceOf(MessageFilter.class);
 
-            MessageFilter messageFilter = (MessageFilter) processor;
+            final MessageFilter messageFilter = (MessageFilter) processor;
 
             assertThat(messageFilter.getFilter()).isInstanceOf(MyFilter.class).isEqualTo(filter);
         }
@@ -314,7 +314,7 @@ public class TestGlobalFilter {
     public void globalReferenceInstanceUsingStringRefByInjector() throws MuleException, InterruptedException {
         final MyFilter filter = new MyFilter();
 
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -326,29 +326,29 @@ public class TestGlobalFilter {
 
                 bind(MyFilter.class).toInstance(filter);
             }
-        });
+        }).advanced().muleContext();
 
         {
             assertThat(muleContext.getRegistry().lookupObject("test")).isNotNull().isInstanceOf(MessageFilter.class);
 
-            MessageFilter messageFilter = muleContext.getRegistry().lookupObject("test");
+            final MessageFilter messageFilter = muleContext.getRegistry().lookupObject("test");
 
             assertThat(messageFilter.getFilter()).isInstanceOf(MyFilter.class);
         }
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
         {
-            MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-            InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+            final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
             assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -360,10 +360,10 @@ public class TestGlobalFilter {
         }
 
         {
-            MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
             assertThat(processor).isNotNull().isInstanceOf(MessageFilter.class);
 
-            MessageFilter messageFilter = (MessageFilter) processor;
+            final MessageFilter messageFilter = (MessageFilter) processor;
 
             assertThat(messageFilter.getFilter()).isInstanceOf(MyFilter.class);
         }
@@ -371,7 +371,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalDefinitionConstructor() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
 
@@ -386,7 +386,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalDefinitionType() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 filter().with((Class<Filter>) null);
@@ -396,7 +396,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalDefinitionInstance() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 filter().with((Filter) null);
@@ -406,7 +406,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingStringRef() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -418,10 +418,10 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingUnboundVariable() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
-                FilterDefinition<MyFilter> myFilter = new FilterDefinitionImpl<MyFilter>("test", MyFilter.class);
+                final FilterDefinition myFilter = new FilterDefinitionImpl<MyFilter>("test", MyFilter.class);
 
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
@@ -432,10 +432,10 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingNullVariable() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
-                FilterDefinition<MyFilter> myFilter = null;
+                final FilterDefinition myFilter = null;
 
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
@@ -446,7 +446,7 @@ public class TestGlobalFilter {
 
     @Test(expected = RuntimeException.class)
     public void invalidGlobalReferenceUsingNullStringRef() throws MuleException, InterruptedException {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -456,22 +456,40 @@ public class TestGlobalFilter {
         });
     }
 
+    @Test(expected = RuntimeException.class)
+    public void testDuplicatedFilters() throws MuleException, InterruptedException {
+        Mule.newInstance(new AbstractModule() {
+            @Override
+            public void configure() {
+
+                filter("test").with(MyFilter.class);
+
+                filter("test").with(MyFilter.class);
+
+                flow("MyFlow")
+                        .from("file:///Users/porcelli/test")
+                        .filterWith("test");
+            }
+        });
+    }
+
+
     public static class MyFilter implements Filter {
 
         @Override
-        public boolean accept(MuleMessage muleMessage) {
+        public boolean accept(final MuleMessage muleMessage) {
             return false;
         }
     }
 
     public static class MyComplexFilter implements Filter {
 
-        public MyComplexFilter(String none) {
+        public MyComplexFilter(final String none) {
 
         }
 
         @Override
-        public boolean accept(MuleMessage muleMessage) {
+        public boolean accept(final MuleMessage muleMessage) {
             return false;
         }
     }

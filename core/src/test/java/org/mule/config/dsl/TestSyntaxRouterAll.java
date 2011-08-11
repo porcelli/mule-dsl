@@ -17,9 +17,8 @@ import static org.mule.config.dsl.expression.CoreExpr.regex;
 
 public class TestSyntaxRouterAll {
 
-//    @Test
     public void allRouterTest() {
-        Mule.newMuleContext(new AbstractModule() {
+        Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -38,16 +37,13 @@ public class TestSyntaxRouterAll {
                                         .endChoice()
                             .endChoice()
 
-
-
-
                         .broadcast()
                             .echo()
                                 .broadcast()
                                     .echo()
                                         .broadcast()
                                             .echo()
-                                            .execute((Class<?>) null, SINGLETON)
+                                            .invoke((Class<?>) null, SINGLETON)
                                             .send(null, ONE_WAY)
                                         .endBroadcast()
                                         .broadcast()
@@ -90,18 +86,18 @@ public class TestSyntaxRouterAll {
                     .endBroadcast();
 
                 flow("MyFlow3")
-                        .execute((Class<?>) null)
+                        .invoke((Class<?>) null)
                         .echo()
                         .broadcast()
-                            .execute((Callable) null).withDefaultArg()
+                            .invoke((Callable) null).withDefaultArg()
                         .endBroadcast();
 
                 flow("MyFlow4")
                         .send(null)
                         .echo()
                         .broadcast()
-                            .execute((Callable) null)
-                            .execute(String.class).withDefaultArg()
+                            .invoke((Callable) null)
+                            .invoke(String.class).withDefaultArg()
                         .endBroadcast();
             }
         });

@@ -9,11 +9,17 @@
 
 package org.mule.config.dsl;
 
-import org.mule.api.routing.filter.Filter;
+/**
+ * Interface that holds the global filter definition.
+ *
+ * @author porcelli
+ */
+public interface FilterDefinition extends Definition {
 
-public interface FilterDefinition<F extends Filter> {
-
+    /**
+     * Getter of global filter name
+     *
+     * @return the global filter name
+     */
     String getName();
-
-    Class<F> getType();
 }

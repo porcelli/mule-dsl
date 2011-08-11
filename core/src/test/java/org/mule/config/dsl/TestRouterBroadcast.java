@@ -29,7 +29,7 @@ public class TestRouterBroadcast {
 
     @Test
     public void simpleBroadcast() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -39,20 +39,20 @@ public class TestRouterBroadcast {
                             .echo()
                         .endBroadcast();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -62,17 +62,17 @@ public class TestRouterBroadcast {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(MulticastingRouter.class);
 
-        MulticastingRouter multicastingRouter = (MulticastingRouter) processor;
+        final MulticastingRouter multicastingRouter = (MulticastingRouter) processor;
 
         assertThat(multicastingRouter.getRoutes()).isNotEmpty().hasSize(2);
 
         assertThat(multicastingRouter.getRoutes().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent echo1 = (SimpleCallableJavaComponent) multicastingRouter.getRoutes().get(0);
+        final SimpleCallableJavaComponent echo1 = (SimpleCallableJavaComponent) multicastingRouter.getRoutes().get(0);
 
         assertThat(echo1.getObjectType()).isEqualTo(EchoComponent.class);
 
@@ -80,7 +80,7 @@ public class TestRouterBroadcast {
 
         assertThat(multicastingRouter.getRoutes().get(1)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) multicastingRouter.getRoutes().get(1);
+        final SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) multicastingRouter.getRoutes().get(1);
 
         assertThat(echo2.getObjectType()).isEqualTo(EchoComponent.class);
 
@@ -89,7 +89,7 @@ public class TestRouterBroadcast {
 
     @Test
     public void simpleBroadcastNesting() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -102,20 +102,20 @@ public class TestRouterBroadcast {
                             .echo()
                         .endBroadcast();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -125,17 +125,17 @@ public class TestRouterBroadcast {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(MulticastingRouter.class);
 
-        MulticastingRouter multicastingRouter = (MulticastingRouter) processor;
+        final MulticastingRouter multicastingRouter = (MulticastingRouter) processor;
 
         assertThat(multicastingRouter.getRoutes()).isNotEmpty().hasSize(3);
 
         assertThat(multicastingRouter.getRoutes().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent echo1 = (SimpleCallableJavaComponent) multicastingRouter.getRoutes().get(0);
+        final SimpleCallableJavaComponent echo1 = (SimpleCallableJavaComponent) multicastingRouter.getRoutes().get(0);
 
         assertThat(echo1.getObjectType()).isEqualTo(EchoComponent.class);
 
@@ -144,7 +144,7 @@ public class TestRouterBroadcast {
 
         assertThat(multicastingRouter.getRoutes().get(1)).isNotNull().isInstanceOf(MulticastingRouter.class);
 
-        MulticastingRouter innerAll = (MulticastingRouter) multicastingRouter.getRoutes().get(1);
+        final MulticastingRouter innerAll = (MulticastingRouter) multicastingRouter.getRoutes().get(1);
 
         assertThat(innerAll.getRoutes()).isNotEmpty().hasSize(1);
 
@@ -153,7 +153,7 @@ public class TestRouterBroadcast {
 
         assertThat(multicastingRouter.getRoutes().get(2)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) multicastingRouter.getRoutes().get(2);
+        final SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) multicastingRouter.getRoutes().get(2);
 
         assertThat(echo2.getObjectType()).isEqualTo(EchoComponent.class);
 
@@ -162,7 +162,7 @@ public class TestRouterBroadcast {
 
     @Test
     public void simpleBroadcastWithSend() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -171,20 +171,20 @@ public class TestRouterBroadcast {
                             .send("file:///Users/porcelli/out", ExchangePattern.ONE_WAY)
                         .endBroadcast();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -194,11 +194,11 @@ public class TestRouterBroadcast {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(MulticastingRouter.class);
 
-        MulticastingRouter multicastingRouter = (MulticastingRouter) processor;
+        final MulticastingRouter multicastingRouter = (MulticastingRouter) processor;
 
         assertThat(multicastingRouter.getRoutes()).isNotEmpty().hasSize(1);
 
@@ -206,33 +206,33 @@ public class TestRouterBroadcast {
     }
 
     @Test
-    public void simpleBroadcastWithExecute() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+    public void simpleBroadcastWithInvoke() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .broadcast()
-                            .execute(Simple.class, Scope.PROTOTYPE)
-                            .execute(Simple.class, Scope.PROTOTYPE).withDefaultArg()
+                            .invoke(Simple.class, Scope.PROTOTYPE)
+                            .invoke(Simple.class, Scope.PROTOTYPE).withDefaultArg()
                         .endBroadcast();
 
                 bind(Simple.class).to(Simple2.class);
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -242,11 +242,11 @@ public class TestRouterBroadcast {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(MulticastingRouter.class);
 
-        MulticastingRouter multicastingRouter = (MulticastingRouter) processor;
+        final MulticastingRouter multicastingRouter = (MulticastingRouter) processor;
 
         assertThat(multicastingRouter.getRoutes()).isNotEmpty().hasSize(2);
 
@@ -260,7 +260,8 @@ public class TestRouterBroadcast {
     }
 
     public static class Simple2 implements Simple {
-        public void execute(String string) {
+        @Override
+		public void execute(final String string) {
             System.out.println("SIMPLE 2! : " + string);
         }
     }

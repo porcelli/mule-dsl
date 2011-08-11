@@ -28,27 +28,27 @@ public class TestEcho {
 
     @Test
     public void simpleEcho() throws Exception {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .echo();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -58,27 +58,27 @@ public class TestEcho {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor logProcessor = iterator.next();
+        final MessageProcessor logProcessor = iterator.next();
 
         assertThat(logProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) logProcessor;
+        final SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) logProcessor;
 
         assertThat(echo.getObjectType()).isEqualTo(EchoComponent.class);
 
         assertThat(echo.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        EchoComponent echo1 = (EchoComponent) echo.getObjectFactory().getInstance(null);
-        EchoComponent echo2 = (EchoComponent) echo.getObjectFactory().getInstance(null);
+        final EchoComponent echo1 = (EchoComponent) echo.getObjectFactory().getInstance(null);
+        final EchoComponent echo2 = (EchoComponent) echo.getObjectFactory().getInstance(null);
 
         assertThat(echo1 == echo2).isEqualTo(true);
     }
 
     @Test
     public void simpleEchoChain() throws Exception {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -86,20 +86,20 @@ public class TestEcho {
                         .echo()
                         .echo();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -109,35 +109,35 @@ public class TestEcho {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor echoProcessor = iterator.next();
+        final MessageProcessor echoProcessor = iterator.next();
 
         assertThat(echoProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) echoProcessor;
+        final SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) echoProcessor;
 
         assertThat(echo.getObjectType()).isEqualTo(EchoComponent.class);
 
         assertThat(echo.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        EchoComponent echo_1 = (EchoComponent) echo.getObjectFactory().getInstance(null);
-        EchoComponent echo_2 = (EchoComponent) echo.getObjectFactory().getInstance(null);
+        final EchoComponent echo_1 = (EchoComponent) echo.getObjectFactory().getInstance(null);
+        final EchoComponent echo_2 = (EchoComponent) echo.getObjectFactory().getInstance(null);
 
         assertThat(echo_1 == echo_2).isEqualTo(true);
 
-        MessageProcessor echoProcessor2 = iterator.next();
+        final MessageProcessor echoProcessor2 = iterator.next();
 
         assertThat(echoProcessor2).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent log2 = (SimpleCallableJavaComponent) echoProcessor2;
+        final SimpleCallableJavaComponent log2 = (SimpleCallableJavaComponent) echoProcessor2;
 
         assertThat(log2.getObjectType()).isEqualTo(EchoComponent.class);
 
         assertThat(log2.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        EchoComponent echo2_1 = (EchoComponent) log2.getObjectFactory().getInstance(null);
-        EchoComponent echo2_2 = (EchoComponent) log2.getObjectFactory().getInstance(null);
+        final EchoComponent echo2_1 = (EchoComponent) log2.getObjectFactory().getInstance(null);
+        final EchoComponent echo2_2 = (EchoComponent) log2.getObjectFactory().getInstance(null);
 
         assertThat(echo2_1 == echo2_2).isEqualTo(true);
 

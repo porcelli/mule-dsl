@@ -30,13 +30,13 @@ import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mule.config.dsl.expression.CoreExpr.wildcard;
-import static org.mule.config.dsl.hack.PrivateAccessor.getPrivateFieldValue;
+import static org.mule.config.dsl.internal.util.PrivateAccessorHack.getPrivateFieldValue;
 
 public class TestRouterChoice {
 
     @Test
     public void simpleChoice() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -48,20 +48,20 @@ public class TestRouterChoice {
                                 .echo()
                         .endChoice();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -71,27 +71,27 @@ public class TestRouterChoice {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(ChoiceRouter.class);
 
-        MessageProcessor otherwiseProcessor = (MessageProcessor) getPrivateFieldValue((ChoiceRouter) processor, "defaultProcessor");
+        final MessageProcessor otherwiseProcessor = (MessageProcessor) getPrivateFieldValue(processor, "defaultProcessor");
 
         assertThat(otherwiseProcessor).isNotNull().isInstanceOf(MessageProcessorChain.class);
 
-        MessageProcessorChain echoChain = (MessageProcessorChain) otherwiseProcessor;
+        final MessageProcessorChain echoChain = (MessageProcessorChain) otherwiseProcessor;
 
         assertThat(echoChain.getMessageProcessors()).isNotEmpty().hasSize(1);
 
         assertThat(echoChain.getMessageProcessors().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) echoChain.getMessageProcessors().get(0);
+        final SimpleCallableJavaComponent echo = (SimpleCallableJavaComponent) echoChain.getMessageProcessors().get(0);
 
         assertThat(echo.getObjectType()).isEqualTo(EchoComponent.class);
 
         assertThat(echo.getObjectFactory().isSingleton()).isEqualTo(true);
 
-        List<MessageProcessorFilterPair> whenList = (List<MessageProcessorFilterPair>) getPrivateFieldValue((ChoiceRouter) processor, "conditionalMessageProcessors");
+        final List<MessageProcessorFilterPair> whenList = (List<MessageProcessorFilterPair>) getPrivateFieldValue(processor, "conditionalMessageProcessors");
 
         assertThat(whenList).isNotNull().isNotEmpty().hasSize(1);
 
@@ -99,11 +99,11 @@ public class TestRouterChoice {
 
         assertThat(whenList.get(0).getMessageProcessor()).isNotNull().isInstanceOf(MessageProcessorChain.class);
 
-        MessageProcessorChain echoChain2 = (MessageProcessorChain) whenList.get(0).getMessageProcessor();
+        final MessageProcessorChain echoChain2 = (MessageProcessorChain) whenList.get(0).getMessageProcessor();
 
         assertThat(echoChain2.getMessageProcessors().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) echoChain2.getMessageProcessors().get(0);
+        final SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) echoChain2.getMessageProcessors().get(0);
 
         assertThat(echo2.getObjectType()).isEqualTo(SimpleLogComponent.class);
 
@@ -112,7 +112,7 @@ public class TestRouterChoice {
 
         @Test
     public void simpleChoiceWithInnerChoiceOnWhen() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+            final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -134,20 +134,20 @@ public class TestRouterChoice {
                                 .endChoice()
                         .endChoice();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -157,40 +157,40 @@ public class TestRouterChoice {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(ChoiceRouter.class);
 
-        MessageProcessor otherwiseProcessor = (MessageProcessor) getPrivateFieldValue((ChoiceRouter) processor, "defaultProcessor");
+        final MessageProcessor otherwiseProcessor = (MessageProcessor) getPrivateFieldValue(processor, "defaultProcessor");
 
         assertThat(otherwiseProcessor).isNotNull().isInstanceOf(MessageProcessorChain.class);
 
-        MessageProcessorChain echoChain = (MessageProcessorChain) otherwiseProcessor;
+        final MessageProcessorChain echoChain = (MessageProcessorChain) otherwiseProcessor;
 
         assertThat(echoChain.getMessageProcessors()).isNotEmpty().hasSize(1);
 
         {//test on inner choice inside otherwise
             assertThat(echoChain.getMessageProcessors().get(0)).isNotNull().isInstanceOf(ChoiceRouter.class);
 
-            ChoiceRouter innerChoiceOnOtherwise = (ChoiceRouter) echoChain.getMessageProcessors().get(0);
+            final ChoiceRouter innerChoiceOnOtherwise = (ChoiceRouter) echoChain.getMessageProcessors().get(0);
 
-            MessageProcessor otherwiseOnInnerChoiceOtherwiseProcessor = (MessageProcessor) getPrivateFieldValue((ChoiceRouter) innerChoiceOnOtherwise, "defaultProcessor");
+            final MessageProcessor otherwiseOnInnerChoiceOtherwiseProcessor = (MessageProcessor) getPrivateFieldValue(innerChoiceOnOtherwise, "defaultProcessor");
 
             assertThat(otherwiseOnInnerChoiceOtherwiseProcessor).isNotNull().isInstanceOf(MessageProcessorChain.class);
 
-            MessageProcessorChain echoChainOnInnerChoiceOtherwise = (MessageProcessorChain) otherwiseOnInnerChoiceOtherwiseProcessor;
+            final MessageProcessorChain echoChainOnInnerChoiceOtherwise = (MessageProcessorChain) otherwiseOnInnerChoiceOtherwiseProcessor;
 
             assertThat(echoChainOnInnerChoiceOtherwise.getMessageProcessors()).isNotEmpty().hasSize(1);
 
             assertThat(echoChainOnInnerChoiceOtherwise.getMessageProcessors().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-            SimpleCallableJavaComponent echoOnInnerChoiceOtherwise = (SimpleCallableJavaComponent) echoChainOnInnerChoiceOtherwise.getMessageProcessors().get(0);
+            final SimpleCallableJavaComponent echoOnInnerChoiceOtherwise = (SimpleCallableJavaComponent) echoChainOnInnerChoiceOtherwise.getMessageProcessors().get(0);
 
             assertThat(echoOnInnerChoiceOtherwise.getObjectType()).isEqualTo(EchoComponent.class);
 
             assertThat(echoOnInnerChoiceOtherwise.getObjectFactory().isSingleton()).isEqualTo(true);
 
-            List<MessageProcessorFilterPair> whenListOnInnerChoiceOtherwise = (List<MessageProcessorFilterPair>) getPrivateFieldValue((ChoiceRouter) innerChoiceOnOtherwise, "conditionalMessageProcessors");
+            final List<MessageProcessorFilterPair> whenListOnInnerChoiceOtherwise = (List<MessageProcessorFilterPair>) getPrivateFieldValue(innerChoiceOnOtherwise, "conditionalMessageProcessors");
 
             assertThat(whenListOnInnerChoiceOtherwise).isNotNull().isNotEmpty().hasSize(1);
 
@@ -198,11 +198,11 @@ public class TestRouterChoice {
 
             assertThat(whenListOnInnerChoiceOtherwise.get(0).getMessageProcessor()).isNotNull().isInstanceOf(MessageProcessorChain.class);
 
-            MessageProcessorChain logChain = (MessageProcessorChain) whenListOnInnerChoiceOtherwise.get(0).getMessageProcessor();
+            final MessageProcessorChain logChain = (MessageProcessorChain) whenListOnInnerChoiceOtherwise.get(0).getMessageProcessor();
 
             assertThat(logChain.getMessageProcessors().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-            SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logChain.getMessageProcessors().get(0);
+            final SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logChain.getMessageProcessors().get(0);
 
             assertThat(log.getObjectType()).isEqualTo(SimpleLogComponent.class);
 
@@ -210,7 +210,7 @@ public class TestRouterChoice {
         }
 
 
-        List<MessageProcessorFilterPair> whenList = (List<MessageProcessorFilterPair>) getPrivateFieldValue((ChoiceRouter) processor, "conditionalMessageProcessors");
+        final List<MessageProcessorFilterPair> whenList = (List<MessageProcessorFilterPair>) getPrivateFieldValue(processor, "conditionalMessageProcessors");
 
         assertThat(whenList).isNotNull().isNotEmpty().hasSize(1);
 
@@ -218,30 +218,30 @@ public class TestRouterChoice {
 
         assertThat(whenList.get(0).getMessageProcessor()).isNotNull().isInstanceOf(MessageProcessorChain.class);
 
-        MessageProcessorChain chain2 = (MessageProcessorChain) whenList.get(0).getMessageProcessor();
+        final MessageProcessorChain chain2 = (MessageProcessorChain) whenList.get(0).getMessageProcessor();
 
         {//test on inner choice inside when
             assertThat(chain2.getMessageProcessors().get(0)).isNotNull().isInstanceOf(ChoiceRouter.class);
 
-            ChoiceRouter innerChoiceOnWhen = (ChoiceRouter) chain2.getMessageProcessors().get(0);
+            final ChoiceRouter innerChoiceOnWhen = (ChoiceRouter) chain2.getMessageProcessors().get(0);
 
-            MessageProcessor otherwiseOnInnerChoiceWhenProcessor = (MessageProcessor) getPrivateFieldValue((ChoiceRouter) innerChoiceOnWhen, "defaultProcessor");
+            final MessageProcessor otherwiseOnInnerChoiceWhenProcessor = (MessageProcessor) getPrivateFieldValue(innerChoiceOnWhen, "defaultProcessor");
 
             assertThat(otherwiseOnInnerChoiceWhenProcessor).isNotNull().isInstanceOf(MessageProcessorChain.class);
 
-            MessageProcessorChain echoChainOnInnerChoiceOtherwise = (MessageProcessorChain) otherwiseOnInnerChoiceWhenProcessor;
+            final MessageProcessorChain echoChainOnInnerChoiceOtherwise = (MessageProcessorChain) otherwiseOnInnerChoiceWhenProcessor;
 
             assertThat(echoChainOnInnerChoiceOtherwise.getMessageProcessors()).isNotEmpty().hasSize(1);
 
             assertThat(echoChainOnInnerChoiceOtherwise.getMessageProcessors().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-            SimpleCallableJavaComponent echoOnInnerChoiceOtherwise = (SimpleCallableJavaComponent) echoChainOnInnerChoiceOtherwise.getMessageProcessors().get(0);
+            final SimpleCallableJavaComponent echoOnInnerChoiceOtherwise = (SimpleCallableJavaComponent) echoChainOnInnerChoiceOtherwise.getMessageProcessors().get(0);
 
             assertThat(echoOnInnerChoiceOtherwise.getObjectType()).isEqualTo(SimpleLogComponent.class);
 
             assertThat(echoOnInnerChoiceOtherwise.getObjectFactory().isSingleton()).isEqualTo(true);
 
-            List<MessageProcessorFilterPair> whenListOnInnerChoiceOtherwise = (List<MessageProcessorFilterPair>) getPrivateFieldValue((ChoiceRouter) innerChoiceOnWhen, "conditionalMessageProcessors");
+            final List<MessageProcessorFilterPair> whenListOnInnerChoiceOtherwise = (List<MessageProcessorFilterPair>) getPrivateFieldValue(innerChoiceOnWhen, "conditionalMessageProcessors");
 
             assertThat(whenListOnInnerChoiceOtherwise).isNotNull().isNotEmpty().hasSize(1);
 
@@ -249,11 +249,11 @@ public class TestRouterChoice {
 
             assertThat(whenListOnInnerChoiceOtherwise.get(0).getMessageProcessor()).isNotNull().isInstanceOf(MessageProcessorChain.class);
 
-            MessageProcessorChain logChain = (MessageProcessorChain) whenListOnInnerChoiceOtherwise.get(0).getMessageProcessor();
+            final MessageProcessorChain logChain = (MessageProcessorChain) whenListOnInnerChoiceOtherwise.get(0).getMessageProcessor();
 
             assertThat(logChain.getMessageProcessors().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-            SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logChain.getMessageProcessors().get(0);
+            final SimpleCallableJavaComponent log = (SimpleCallableJavaComponent) logChain.getMessageProcessors().get(0);
 
             assertThat(log.getObjectType()).isEqualTo(EchoComponent.class);
 
@@ -263,7 +263,7 @@ public class TestRouterChoice {
     }
     @Test
     public void simpleChoiceWithoutOtherwise() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -273,20 +273,20 @@ public class TestRouterChoice {
                                 .log()
                         .endChoice();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -296,15 +296,15 @@ public class TestRouterChoice {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(ChoiceRouter.class);
 
-        MessageProcessor otherwiseProcessor = (MessageProcessor) getPrivateFieldValue((ChoiceRouter) processor, "defaultProcessor");
+        final MessageProcessor otherwiseProcessor = (MessageProcessor) getPrivateFieldValue(processor, "defaultProcessor");
 
         assertThat(otherwiseProcessor).isNull();
 
-        List<MessageProcessorFilterPair> whenList = (List<MessageProcessorFilterPair>) getPrivateFieldValue((ChoiceRouter) processor, "conditionalMessageProcessors");
+        final List<MessageProcessorFilterPair> whenList = (List<MessageProcessorFilterPair>) getPrivateFieldValue(processor, "conditionalMessageProcessors");
 
         assertThat(whenList).isNotNull().isNotEmpty().hasSize(1);
 
@@ -312,11 +312,11 @@ public class TestRouterChoice {
 
         assertThat(whenList.get(0).getMessageProcessor()).isNotNull().isInstanceOf(MessageProcessorChain.class);
 
-        MessageProcessorChain echoChain2 = (MessageProcessorChain) whenList.get(0).getMessageProcessor();
+        final MessageProcessorChain echoChain2 = (MessageProcessorChain) whenList.get(0).getMessageProcessor();
 
         assertThat(echoChain2.getMessageProcessors().get(0)).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) echoChain2.getMessageProcessors().get(0);
+        final SimpleCallableJavaComponent echo2 = (SimpleCallableJavaComponent) echoChain2.getMessageProcessors().get(0);
 
         assertThat(echo2.getObjectType()).isEqualTo(SimpleLogComponent.class);
 
@@ -325,7 +325,7 @@ public class TestRouterChoice {
 
     @Test
     public void simpleChoiceWithSend() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -342,20 +342,20 @@ public class TestRouterChoice {
                                 .send("file:///Users/porcelli/out5")
                         .endChoice();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -365,27 +365,27 @@ public class TestRouterChoice {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(ChoiceRouter.class);
 
-        MessageProcessor otherwiseProcessor = (MessageProcessor) getPrivateFieldValue((ChoiceRouter) processor, "defaultProcessor");
+        final MessageProcessor otherwiseProcessor = (MessageProcessor) getPrivateFieldValue(processor, "defaultProcessor");
 
         assertThat(otherwiseProcessor).isNotNull().isInstanceOf(MessageProcessorChain.class);
 
-        MessageProcessorChain echoChain = (MessageProcessorChain) otherwiseProcessor;
+        final MessageProcessorChain echoChain = (MessageProcessorChain) otherwiseProcessor;
 
         assertThat(echoChain.getMessageProcessors()).isNotEmpty().hasSize(2);
 
         assertThat(echoChain.getMessageProcessors().get(0)).isNotNull().isInstanceOf(OutboundEndpoint.class);
-        OutboundEndpoint outbound4 = (OutboundEndpoint) echoChain.getMessageProcessors().get(0);
+        final OutboundEndpoint outbound4 = (OutboundEndpoint) echoChain.getMessageProcessors().get(0);
         assertThat(outbound4.getAddress()).isEqualTo("file:///Users/porcelli/out4");
 
         assertThat(echoChain.getMessageProcessors().get(1)).isNotNull().isInstanceOf(OutboundEndpoint.class);
-        OutboundEndpoint outbound5 = (OutboundEndpoint) echoChain.getMessageProcessors().get(1);
+        final OutboundEndpoint outbound5 = (OutboundEndpoint) echoChain.getMessageProcessors().get(1);
         assertThat(outbound5.getAddress()).isEqualTo("file:///Users/porcelli/out5");
 
-        List<MessageProcessorFilterPair> whenList = (List<MessageProcessorFilterPair>) getPrivateFieldValue((ChoiceRouter) processor, "conditionalMessageProcessors");
+        final List<MessageProcessorFilterPair> whenList = (List<MessageProcessorFilterPair>) getPrivateFieldValue(processor, "conditionalMessageProcessors");
 
         assertThat(whenList).isNotNull().isNotEmpty().hasSize(2);
 
@@ -395,14 +395,14 @@ public class TestRouterChoice {
 
         assertThat(whenList.get(0).getMessageProcessor()).isNotNull().isInstanceOf(MessageProcessorChain.class);
 
-        MessageProcessorChain whenChain2 = (MessageProcessorChain) whenList.get(0).getMessageProcessor();
+        final MessageProcessorChain whenChain2 = (MessageProcessorChain) whenList.get(0).getMessageProcessor();
 
         assertThat(whenChain2.getMessageProcessors().get(0)).isNotNull().isInstanceOf(OutboundEndpoint.class);
-        OutboundEndpoint outbound = (OutboundEndpoint) whenChain2.getMessageProcessors().get(0);
+        final OutboundEndpoint outbound = (OutboundEndpoint) whenChain2.getMessageProcessors().get(0);
         assertThat(outbound.getAddress()).isEqualTo("file:///Users/porcelli/out");
 
         assertThat(whenChain2.getMessageProcessors().get(1)).isNotNull().isInstanceOf(OutboundEndpoint.class);
-        OutboundEndpoint outbound1 = (OutboundEndpoint) whenChain2.getMessageProcessors().get(1);
+        final OutboundEndpoint outbound1 = (OutboundEndpoint) whenChain2.getMessageProcessors().get(1);
         assertThat(outbound1.getAddress()).isEqualTo("file:///Users/porcelli/out1");
 
         assertThat(whenList.get(1).getFilter()).isNotNull().isInstanceOf(WildcardFilter.class);
@@ -411,20 +411,20 @@ public class TestRouterChoice {
 
         assertThat(whenList.get(1).getMessageProcessor()).isNotNull().isInstanceOf(MessageProcessorChain.class);
 
-        MessageProcessorChain whenChain3 = (MessageProcessorChain) whenList.get(1).getMessageProcessor();
+        final MessageProcessorChain whenChain3 = (MessageProcessorChain) whenList.get(1).getMessageProcessor();
 
         assertThat(whenChain3.getMessageProcessors().get(0)).isNotNull().isInstanceOf(OutboundEndpoint.class);
-        OutboundEndpoint outbound2 = (OutboundEndpoint) whenChain3.getMessageProcessors().get(0);
+        final OutboundEndpoint outbound2 = (OutboundEndpoint) whenChain3.getMessageProcessors().get(0);
         assertThat(outbound2.getAddress()).isEqualTo("file:///Users/porcelli/out2");
 
         assertThat(whenChain3.getMessageProcessors().get(1)).isNotNull().isInstanceOf(OutboundEndpoint.class);
-        OutboundEndpoint outbound3 = (OutboundEndpoint) whenChain3.getMessageProcessors().get(1);
+        final OutboundEndpoint outbound3 = (OutboundEndpoint) whenChain3.getMessageProcessors().get(1);
         assertThat(outbound3.getAddress()).isEqualTo("file:///Users/porcelli/out3");
     }
 
     @Test
     public void simpleChoiceWithSendWithoutOtherwise() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -438,20 +438,20 @@ public class TestRouterChoice {
                                 .send("file:///Users/porcelli/out3")
                         .endChoice();
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -461,11 +461,11 @@ public class TestRouterChoice {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(ChoiceRouter.class);
 
-        List<MessageProcessorFilterPair> whenList = (List<MessageProcessorFilterPair>) getPrivateFieldValue((ChoiceRouter) processor, "conditionalMessageProcessors");
+        final List<MessageProcessorFilterPair> whenList = (List<MessageProcessorFilterPair>) getPrivateFieldValue(processor, "conditionalMessageProcessors");
 
         assertThat(whenList).isNotNull().isNotEmpty().hasSize(2);
 
@@ -475,14 +475,14 @@ public class TestRouterChoice {
 
         assertThat(whenList.get(0).getMessageProcessor()).isNotNull().isInstanceOf(MessageProcessorChain.class);
 
-        MessageProcessorChain whenChain2 = (MessageProcessorChain) whenList.get(0).getMessageProcessor();
+        final MessageProcessorChain whenChain2 = (MessageProcessorChain) whenList.get(0).getMessageProcessor();
 
         assertThat(whenChain2.getMessageProcessors().get(0)).isNotNull().isInstanceOf(OutboundEndpoint.class);
-        OutboundEndpoint outbound = (OutboundEndpoint) whenChain2.getMessageProcessors().get(0);
+        final OutboundEndpoint outbound = (OutboundEndpoint) whenChain2.getMessageProcessors().get(0);
         assertThat(outbound.getAddress()).isEqualTo("file:///Users/porcelli/out");
 
         assertThat(whenChain2.getMessageProcessors().get(1)).isNotNull().isInstanceOf(OutboundEndpoint.class);
-        OutboundEndpoint outbound1 = (OutboundEndpoint) whenChain2.getMessageProcessors().get(1);
+        final OutboundEndpoint outbound1 = (OutboundEndpoint) whenChain2.getMessageProcessors().get(1);
         assertThat(outbound1.getAddress()).isEqualTo("file:///Users/porcelli/out1");
 
         assertThat(whenList.get(1).getFilter()).isNotNull().isInstanceOf(WildcardFilter.class);
@@ -491,14 +491,14 @@ public class TestRouterChoice {
 
         assertThat(whenList.get(1).getMessageProcessor()).isNotNull().isInstanceOf(MessageProcessorChain.class);
 
-        MessageProcessorChain whenChain3 = (MessageProcessorChain) whenList.get(1).getMessageProcessor();
+        final MessageProcessorChain whenChain3 = (MessageProcessorChain) whenList.get(1).getMessageProcessor();
 
         assertThat(whenChain3.getMessageProcessors().get(0)).isNotNull().isInstanceOf(OutboundEndpoint.class);
-        OutboundEndpoint outbound2 = (OutboundEndpoint) whenChain3.getMessageProcessors().get(0);
+        final OutboundEndpoint outbound2 = (OutboundEndpoint) whenChain3.getMessageProcessors().get(0);
         assertThat(outbound2.getAddress()).isEqualTo("file:///Users/porcelli/out2");
 
         assertThat(whenChain3.getMessageProcessors().get(1)).isNotNull().isInstanceOf(OutboundEndpoint.class);
-        OutboundEndpoint outbound3 = (OutboundEndpoint) whenChain3.getMessageProcessors().get(1);
+        final OutboundEndpoint outbound3 = (OutboundEndpoint) whenChain3.getMessageProcessors().get(1);
         assertThat(outbound3.getAddress()).isEqualTo("file:///Users/porcelli/out3");
     }
 }

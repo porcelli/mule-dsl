@@ -9,17 +9,30 @@
 
 package org.mule.config.dsl.internal.util;
 
-import org.mule.config.dsl.ExpressionEvaluatorBuilder;
+import org.mule.config.dsl.ExpressionEvaluatorDefinition;
+import org.mule.config.dsl.PropertyPlaceholder;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Utility class to handle expression based args list.
+ *
+ * @author porcelli
+ */
 public final class ExpressionArgsUtil {
     private ExpressionArgsUtil() {
     }
 
-    public static List<String> toListOfStrings(ExpressionEvaluatorBuilder... args) {
+    /**
+     * Converts the given expression evaluator arryay to a list of strings.
+     *
+     * @param placeholder the property placeholder
+     * @param args        the array to be converted to string list
+     * @return the list of strings, an empty list if input is null
+     */
+    public static List<String> toListOfStrings(final PropertyPlaceholder placeholder, final ExpressionEvaluatorDefinition... args) {
 
         if (args == null) {
             return Collections.emptyList();
@@ -27,8 +40,8 @@ public final class ExpressionArgsUtil {
 
         final List<String> resultList = new LinkedList<String>();
 
-        for (ExpressionEvaluatorBuilder arg : args) {
-            resultList.add(arg.toString());
+        for (final ExpressionEvaluatorDefinition arg : args) {
+            resultList.add(arg.toString(placeholder));
         }
 
         return resultList;

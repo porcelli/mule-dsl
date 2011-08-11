@@ -9,60 +9,83 @@
 
 package org.mule.config.dsl.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.routing.filter.Filter;
+import org.mule.config.dsl.ConfigurationException;
 import org.mule.config.dsl.FilterDefinition;
-import org.mule.config.dsl.internal.util.InjectorUtil;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
+import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.routing.MessageFilter;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-public class FilterDefinitionImpl<F extends Filter> implements FilterDefinition<F>, Builder<MessageFilter> {
+/**
+ * Internal implementation of {@link org.mule.config.dsl.FilterDefinition} interface that, based on its internal state,
+ * builds a {@link MessageFilter} to be registered as a global filter.
+ *
+ * @author porcelli
+ * @see org.mule.config.dsl.AbstractModule#filter()
+ * @see org.mule.config.dsl.AbstractModule#filter(String)
+ * @see org.mule.config.dsl.Catalog#newFilter(String)
+ */
+public class FilterDefinitionImpl<F extends Filter> implements FilterDefinition, Builder<MessageFilter> {
 
     private final String name;
     private final Class<F> clazz;
     private final F obj;
 
-    public FilterDefinitionImpl(String name, Class<F> clazz) {
+    /**
+     * @param name  the global filter name
+     * @param clazz the filter type, Mule will instantiate it at runtime
+     * @throws IllegalArgumentException if {@code name} param is empty or null
+     * @throws NullPointerException     if {@code clazz} param is null
+     */
+    public FilterDefinitionImpl(final String name, final Class<F> clazz) throws IllegalArgumentException, NullPointerException {
         this.name = checkNotEmpty(name, "name");
         this.clazz = checkNotNull(clazz, "clazz");
         this.obj = null;
     }
 
-    public FilterDefinitionImpl(String name, F obj) {
+    /**
+     * @param name the global filter name
+     * @param obj  the filter object
+     * @throws IllegalArgumentException if {@code name} param is empty or null
+     * @throws NullPointerException     if {@code obj} param is null
+     */
+    public FilterDefinitionImpl(final String name, final F obj) {
         this.name = checkNotEmpty(name, "name");
         this.obj = checkNotNull(obj, "obj");
         this.clazz = (Class<F>) obj.getClass();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return name;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Class<F> getType() {
-        return clazz;
-    }
+    public MessageFilter build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
 
-    @Override
-    public MessageFilter build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
         if (obj != null) {
             return new MessageFilter(obj);
         }
 
-        if (InjectorUtil.hasProvider(injector, clazz)) {
-            return new MessageFilter(injector.getInstance(clazz));
-        }
-
         try {
-            return new MessageFilter(clazz.newInstance());
-        } catch (Exception e) {
-            //TODO handle here
-            throw new RuntimeException(e);
+            Filter filter = muleContext.getRegistry().lookupObject(clazz);
+            if (filter == null) {
+                throw new ConfigurationException("Failed to configure a Global FilterDefinition.");
+            }
+            return new MessageFilter(filter);
+        } catch (final Exception e) {
+            throw new ConfigurationException("Failed to configure a Global FilterDefinition.", e);
         }
     }
 }

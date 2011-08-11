@@ -13,6 +13,7 @@ import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleEventContext;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleEventContext;
 import org.mule.context.DefaultMuleContextFactory;
 import org.mule.model.seda.SedaService;
@@ -26,7 +27,7 @@ public abstract class BaseComponentTests {
     public BaseComponentTests() {
         try {
             this.muleContext = new DefaultMuleContextFactory().createMuleContext();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             fail("Can't initialize muleContext.", e);
         }
     }
@@ -36,8 +37,13 @@ public abstract class BaseComponentTests {
     }
 
 
-    protected MuleEventContext getEventContext(Object messageContent) {
-        return new DefaultMuleEventContext(new DefaultMuleEvent(new DefaultMuleMessage(messageContent, muleContext), null, new DefaultMuleSession(new SedaService(muleContext), muleContext)));
+    protected MuleEventContext getEventContext(final Object messageContent) {
+        return new DefaultMuleEventContext(getEvent(messageContent));
     }
+
+    protected MuleEvent getEvent(final Object messageContent) {
+        return new DefaultMuleEvent(new DefaultMuleMessage(messageContent, muleContext), null, new DefaultMuleSession(new SedaService(muleContext), muleContext));
+    }
+
 
 }

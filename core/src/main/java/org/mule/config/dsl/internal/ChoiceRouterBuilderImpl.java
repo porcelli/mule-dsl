@@ -9,15 +9,12 @@
 
 package org.mule.config.dsl.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
 import org.mule.config.dsl.*;
 import org.mule.config.dsl.ChoiceRouterBuilder.InnerWhenChoiceBuilder;
-import org.mule.config.dsl.expression.CoreExpr.GenericExpressionFilterEvaluatorBuilder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
 import org.mule.routing.ChoiceRouter;
 
 import java.util.ArrayList;
@@ -27,277 +24,508 @@ import java.util.List;
 import static org.mule.config.dsl.internal.util.MessageProcessorUtil.buildProcessorChain;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements ChoiceRouterBuilder<P>, InnerWhenChoiceBuilder<P>, Builder<ChoiceRouter>, MessageProcessorListBuilder {
+/**
+ * Internal implementation of {@link org.mule.config.dsl.ChoiceRouterBuilder} and {@link InnerWhenChoiceBuilder}
+ * interfaces that, based on its internal state, builds a {@link ChoiceRouter}.
+ *
+ * @author porcelli
+ * @see org.mule.config.dsl.PipelineBuilder#choice()
+ */
+public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements ChoiceRouterBuilder<P>, InnerWhenChoiceBuilder<P>, Builder<ChoiceRouter>, MessageProcessorBuilderList {
 
     private final P parentScope;
     private final PipelineBuilderImpl<P> pipeline;
     private final LinkedList<Route> choiceElements;
 
-    private ExpressionEvaluatorBuilder lastWhenExpr = null;
+    private ExpressionEvaluatorDefinition lastWhenExpr = null;
 
-    ChoiceRouterBuilderImpl(P parentScope) {
+    /**
+     * @param parentScope the parent scope
+     * @throws NullPointerException if {@code parentScope} param is null
+     */
+    ChoiceRouterBuilderImpl(final P parentScope) {
         this.parentScope = checkNotNull(parentScope, "parentScope");
         this.pipeline = new PipelineBuilderImpl<P>(null);
         this.choiceElements = new LinkedList<Route>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <E extends ExpressionEvaluatorBuilder> InnerWhenChoiceBuilder<P> when(E expr) {
+    public <E extends ExpressionEvaluatorDefinition> InnerWhenChoiceBuilder<P> when(final E expr) throws NullPointerException {
         if (lastWhenExpr != null) {
-            choiceElements.add(new Route(lastWhenExpr, pipeline.getProcessorList()));
-            pipeline.getProcessorList().clear();
+            choiceElements.add(new Route(lastWhenExpr, pipeline.getBuilders()));
+            pipeline.getBuilders().clear();
         }
         lastWhenExpr = checkNotNull(expr, "expr");
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OtherwiseChoiceBuilder<P> otherwise() {
         if (lastWhenExpr != null) {
-            choiceElements.add(new Route(lastWhenExpr, pipeline.getProcessorList()));
-            pipeline.getProcessorList().clear();
+            choiceElements.add(new Route(lastWhenExpr, pipeline.getBuilders()));
+            pipeline.getBuilders().clear();
         }
         lastWhenExpr = null;
 
         return new OtherwiseChoiceBuilderImpl<P>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public P endChoice() {
         return parentScope;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public InnerWhenChoiceBuilder<P> log() {
         pipeline.log();
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public InnerWhenChoiceBuilder<P> log(LogLevel level) {
+    public InnerWhenChoiceBuilder<P> log(final LogLevel level) throws NullPointerException {
         pipeline.log(level);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public InnerWhenChoiceBuilder<P> log(String message) {
+    public InnerWhenChoiceBuilder<P> log(final String message) throws IllegalArgumentException {
         pipeline.log(message);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public InnerWhenChoiceBuilder<P> log(String message, LogLevel level) {
+    public InnerWhenChoiceBuilder<P> log(final String message, final LogLevel level) throws IllegalArgumentException, NullPointerException {
         pipeline.log(message, level);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <E extends ExpressionEvaluatorBuilder> InnerWhenChoiceBuilder<P> log(E expr) {
+    public <E extends ExpressionEvaluatorDefinition> InnerWhenChoiceBuilder<P> log(final E expr) throws NullPointerException {
         pipeline.log(expr);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <E extends ExpressionEvaluatorBuilder> InnerWhenChoiceBuilder<P> log(E expr, LogLevel level) {
+    public <E extends ExpressionEvaluatorDefinition> InnerWhenChoiceBuilder<P> log(final E expr, final LogLevel level) throws NullPointerException {
         pipeline.log(expr, level);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public InnerWhenChoiceBuilder<P> echo() {
         pipeline.echo();
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public ExecutorBuilder<InnerWhenChoiceBuilder<P>> execute(Object obj) {
-        ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>>(this, obj);
-        pipeline.addToProcessorList(builder);
+    public <B> InvokeBuilder<InnerWhenChoiceBuilder<P>> invoke(final B obj) throws NullPointerException, IllegalArgumentException {
+        checkNotNull(obj, "obj");
+        if (obj instanceof MessageProcessor){
+            throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
+        }
+
+        final InvokeBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new InvokeBuilderImpl<InnerWhenChoiceBuilder<P>>(this, obj);
+        pipeline.addBuilder(builder);
 
         return builder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public ExecutorBuilder<InnerWhenChoiceBuilder<P>> execute(Class<?> clazz) {
-        ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>>(this, clazz);
-        pipeline.addToProcessorList(builder);
+    public <B> InvokeBuilder<InnerWhenChoiceBuilder<P>> invoke(final Class<B> clazz) throws NullPointerException, IllegalArgumentException {
+        checkNotNull(clazz, "clazz");
+        if (MessageProcessor.class.isAssignableFrom(clazz)){
+            throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
+        }
+
+        final InvokeBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new InvokeBuilderImpl<InnerWhenChoiceBuilder<P>>(this, clazz, Scope.PROTOTYPE);
+        pipeline.addBuilder(builder);
 
         return builder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public ExecutorBuilder<InnerWhenChoiceBuilder<P>> execute(Class<?> clazz, Scope scope) {
-        ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new ExecutorBuilderImpl<InnerWhenChoiceBuilder<P>>(this, clazz, scope);
-        pipeline.addToProcessorList(builder);
+    public <B> InvokeBuilder<InnerWhenChoiceBuilder<P>> invoke(final Class<B> clazz, final Scope scope) throws NullPointerException, IllegalArgumentException {
+        checkNotNull(clazz, "clazz");
+        checkNotNull(scope, "scope");
+
+        if (clazz.isAssignableFrom(MessageProcessor.class)){
+            throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
+        }
+
+        final InvokeBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new InvokeBuilderImpl<InnerWhenChoiceBuilder<P>>(this, clazz, scope);
+        pipeline.addBuilder(builder);
 
         return builder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public InnerWhenChoiceBuilder<P> send(String uri) {
+    public InnerWhenChoiceBuilder<P> executeFlow(String flowName) throws IllegalArgumentException {
+        pipeline.executeFlow(flowName);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerWhenChoiceBuilder<P> executeScript(String lang, String script) throws IllegalArgumentException {
+        pipeline.executeScript(lang, script);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerWhenChoiceBuilder<P> executeScript(String lang, AbstractModule.FileRefBuilder fileRef) throws IllegalArgumentException, NullPointerException {
+        pipeline.executeScript(lang, fileRef);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerWhenChoiceBuilder<P> executeScript(String lang, AbstractModule.ClasspathBuilder classpathRef) throws IllegalArgumentException, NullPointerException {
+        pipeline.executeScript(lang, classpathRef);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerWhenChoiceBuilder<P> executeScript(ScriptLanguage lang, String script) throws NullPointerException, IllegalArgumentException {
+        pipeline.executeScript(lang, script);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerWhenChoiceBuilder<P> executeScript(ScriptLanguage lang, AbstractModule.FileRefBuilder fileRef) throws NullPointerException {
+        pipeline.executeScript(lang, fileRef);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerWhenChoiceBuilder<P> executeScript(ScriptLanguage lang, AbstractModule.ClasspathBuilder classpathRef) throws NullPointerException {
+        pipeline.executeScript(lang, classpathRef);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <MP extends MessageProcessor> InnerWhenChoiceBuilder<P> process(Class<MP> clazz) throws NullPointerException {
+        pipeline.process(clazz);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <MP extends MessageProcessor> InnerWhenChoiceBuilder<P> process(MP obj) throws NullPointerException {
+        pipeline.process(obj);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerWhenChoiceBuilder<P> send(final String uri) throws IllegalArgumentException {
         pipeline.send(uri);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public InnerWhenChoiceBuilder<P> send(String uri, ExchangePattern pattern) {
+    public InnerWhenChoiceBuilder<P> send(final String uri, final ExchangePattern pattern) throws IllegalArgumentException {
         pipeline.send(uri, pattern);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <E extends ExpressionEvaluatorBuilder> InnerWhenChoiceBuilder<P> transform(E expr) {
+    public <E extends ExpressionEvaluatorDefinition> InnerWhenChoiceBuilder<P> transform(final E expr) throws NullPointerException {
         pipeline.transform(expr);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <T> InnerWhenChoiceBuilder<P> transformTo(Class<T> clazz) {
+    public <T> InnerWhenChoiceBuilder<P> transformTo(final Class<T> clazz) throws NullPointerException {
         pipeline.transformTo(clazz);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <T extends Transformer> InnerWhenChoiceBuilder<P> transformWith(Class<T> clazz) {
+    public <T extends Transformer> InnerWhenChoiceBuilder<P> transformWith(final Class<T> clazz) throws NullPointerException {
         pipeline.transformWith(clazz);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <T extends Transformer> InnerWhenChoiceBuilder<P> transformWith(T obj) {
+    public <T extends Transformer> InnerWhenChoiceBuilder<P> transformWith(final T obj) throws NullPointerException {
         pipeline.transformWith(obj);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <T extends Transformer> InnerWhenChoiceBuilder<P> transformWith(TransformerDefinition<T> obj) {
+    public InnerWhenChoiceBuilder<P> transformWith(final TransformerDefinition obj) throws NullPointerException {
         pipeline.transformWith(obj);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public InnerWhenChoiceBuilder<P> transformWith(String ref) {
+    public InnerWhenChoiceBuilder<P> transformWith(final String ref) {
         pipeline.transformWith(ref);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public InnerWhenChoiceBuilder<P> filter(GenericExpressionFilterEvaluatorBuilder expr) {
+    public <E extends ExpressionEvaluatorDefinition> InnerWhenChoiceBuilder<P> filter(final E expr) throws NullPointerException {
         pipeline.filter(expr);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <E extends ExpressionEvaluatorBuilder> InnerWhenChoiceBuilder<P> filter(E expr) {
-        pipeline.filter(expr);
-        return this;
-    }
-
-    @Override
-    public <T> InnerWhenChoiceBuilder<P> filterBy(Class<T> clazz) {
+    public <T> InnerWhenChoiceBuilder<P> filterBy(final Class<T> clazz) throws NullPointerException {
         pipeline.filterBy(clazz);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <F extends Filter> InnerWhenChoiceBuilder<P> filterWith(Class<F> clazz) {
+    public <F extends Filter> InnerWhenChoiceBuilder<P> filterWith(final Class<F> clazz) throws NullPointerException {
         pipeline.filterWith(clazz);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <F extends Filter> InnerWhenChoiceBuilder<P> filterWith(F obj) {
+    public <F extends Filter> InnerWhenChoiceBuilder<P> filterWith(final F obj) throws NullPointerException {
         pipeline.filterWith(obj);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public <F extends Filter> InnerWhenChoiceBuilder<P> filterWith(FilterDefinition<F> obj) {
+    public InnerWhenChoiceBuilder<P> filterWith(final FilterDefinition obj) throws NullPointerException {
         pipeline.filterWith(obj);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public InnerWhenChoiceBuilder<P> filterWith(String ref) {
+    public InnerWhenChoiceBuilder<P> filterWith(final String ref) throws IllegalArgumentException {
         pipeline.filterWith(ref);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MessagePropertiesBuilder<InnerWhenChoiceBuilder<P>> messageProperties() {
+        final MessagePropertiesBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new MessagePropertiesBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
+        pipeline.addBuilder(builder);
+
+        return builder;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BroadcastRouterBuilder<InnerWhenChoiceBuilder<P>> broadcast() {
-        BroadcastRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new BroadcastRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
-        pipeline.addToProcessorList(builder);
+        final BroadcastRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new BroadcastRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
+        pipeline.addBuilder(builder);
 
         return builder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ChoiceRouterBuilder<InnerWhenChoiceBuilder<P>> choice() {
-        ChoiceRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new ChoiceRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
-        pipeline.addToProcessorList(builder);
+        final ChoiceRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new ChoiceRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
+        pipeline.addBuilder(builder);
 
         return builder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AsyncRouterBuilder<InnerWhenChoiceBuilder<P>> async() {
-        AsyncRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new AsyncRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
-        pipeline.addToProcessorList(builder);
+        final AsyncRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new AsyncRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
+        pipeline.addBuilder(builder);
 
         return builder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public FirstSuccessfulRouterBuilder<InnerWhenChoiceBuilder<P>> firstSuccessful() {
-        FirstSuccessfulRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new FirstSuccessfulRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
-        pipeline.addToProcessorList(builder);
+        final FirstSuccessfulRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new FirstSuccessfulRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
+        pipeline.addBuilder(builder);
 
         return builder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RoundRobinRouterBuilder<InnerWhenChoiceBuilder<P>> roundRobin() {
-        RoundRobinRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new RoundRobinRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
-        pipeline.addToProcessorList(builder);
+        final RoundRobinRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new RoundRobinRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
+        pipeline.addBuilder(builder);
 
         return builder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void addToProcessorList(Builder<?> builder) {
-        pipeline.addToProcessorList(builder);
+    public void addBuilder(final Builder<? extends MessageProcessor> builder) throws NullPointerException {
+        checkNotNull(builder, "builder");
+        pipeline.addBuilder(builder);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public List<MessageProcessor> buildProcessorList(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
-        return pipeline.buildProcessorList(muleContext, injector, placeholder);
+    public List<MessageProcessor> buildMessageProcessorList(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+        return pipeline.buildMessageProcessorList(muleContext, placeholder);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean isProcessorListEmpty() {
-        return pipeline.isProcessorListEmpty();
+    public boolean isBuilderListEmpty() {
+        return pipeline.isBuilderListEmpty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public List<Builder<?>> getProcessorList() {
-        return pipeline.getProcessorList();
+    public List<Builder<? extends MessageProcessor>> getBuilders() {
+        return pipeline.getBuilders();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public ChoiceRouter build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
+    public ChoiceRouter build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
         if (lastWhenExpr != null) {
-            choiceElements.add(new Route(lastWhenExpr, pipeline.getProcessorList()));
-            pipeline.getProcessorList().clear();
-        } else if (pipeline.getProcessorList().size() > 0) {
-            choiceElements.add(new Route(null, pipeline.getProcessorList()));
+            choiceElements.add(new Route(lastWhenExpr, pipeline.getBuilders()));
+            pipeline.getBuilders().clear();
+        } else if (pipeline.getBuilders().size() > 0) {
+            choiceElements.add(new Route(null, pipeline.getBuilders()));
         }
 
-        ChoiceRouter choiceRouter = new ChoiceRouter();
-        for (Route activeRoute : choiceElements) {
+        final ChoiceRouter choiceRouter = new ChoiceRouter();
+        for (final Route activeRoute : choiceElements) {
             if (activeRoute.getExpr() != null) {
-                choiceRouter.addRoute(buildProcessorChain(activeRoute.getProcessorList(), muleContext, injector, placeholder), activeRoute.getExpr().getFilter(placeholder));
+                choiceRouter.addRoute(buildProcessorChain(activeRoute.getProcessorList(), muleContext, placeholder), activeRoute.getExpr().getFilter(muleContext, placeholder));
             } else {
-                choiceRouter.setDefaultRoute(buildProcessorChain(activeRoute.getProcessorList(), muleContext, injector, placeholder));
+                choiceRouter.setDefaultRoute(buildProcessorChain(activeRoute.getProcessorList(), muleContext, placeholder));
             }
         }
 
@@ -305,224 +533,439 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     }
 
     public class OtherwiseChoiceBuilderImpl<P extends PipelineBuilder<P>> implements OtherwiseChoiceBuilder<P> {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         @SuppressWarnings("unchecked")
         public P endChoice() {
             return (P) parentScope;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public OtherwiseChoiceBuilder<P> log() {
             ChoiceRouterBuilderImpl.this.log();
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public OtherwiseChoiceBuilder<P> log(LogLevel level) {
+        public OtherwiseChoiceBuilder<P> log(final LogLevel level) throws NullPointerException {
             ChoiceRouterBuilderImpl.this.log(level);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public OtherwiseChoiceBuilder<P> log(String message) {
+        public OtherwiseChoiceBuilder<P> log(final String message) throws IllegalArgumentException {
             ChoiceRouterBuilderImpl.this.log(message);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public OtherwiseChoiceBuilder<P> log(String message, LogLevel level) {
+        public OtherwiseChoiceBuilder<P> log(final String message, final LogLevel level) throws IllegalArgumentException, NullPointerException {
             ChoiceRouterBuilderImpl.this.log(message, level);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public <E extends ExpressionEvaluatorBuilder> OtherwiseChoiceBuilder<P> log(E expr) {
+        public <E extends ExpressionEvaluatorDefinition> OtherwiseChoiceBuilder<P> log(final E expr) throws NullPointerException {
             ChoiceRouterBuilderImpl.this.log(expr);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public <E extends ExpressionEvaluatorBuilder> OtherwiseChoiceBuilder<P> log(E expr, LogLevel level) {
+        public <E extends ExpressionEvaluatorDefinition> OtherwiseChoiceBuilder<P> log(final E expr, final LogLevel level) throws NullPointerException {
             ChoiceRouterBuilderImpl.this.log(expr, level);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public OtherwiseChoiceBuilder<P> echo() {
             ChoiceRouterBuilderImpl.this.echo();
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public ExecutorBuilder<OtherwiseChoiceBuilder<P>> execute(Object obj) {
-            ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>>(this, obj);
-            pipeline.addToProcessorList(builder);
+        public <B> InvokeBuilder<OtherwiseChoiceBuilder<P>> invoke(final B obj) throws NullPointerException, IllegalArgumentException {
+            checkNotNull(obj, "obj");
+            if (obj instanceof MessageProcessor){
+                throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
+            }
+
+            final InvokeBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new InvokeBuilderImpl<OtherwiseChoiceBuilder<P>>(this, obj);
+            pipeline.addBuilder(builder);
 
             return builder;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public ExecutorBuilder<OtherwiseChoiceBuilder<P>> execute(Class<?> clazz) {
-            ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>>(this, clazz);
-            pipeline.addToProcessorList(builder);
+        public <B> InvokeBuilder<OtherwiseChoiceBuilder<P>> invoke(final Class<B> clazz) throws NullPointerException, IllegalArgumentException {
+            checkNotNull(clazz, "clazz");
+            if (MessageProcessor.class.isAssignableFrom(clazz)){
+                throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
+            }
+
+            final InvokeBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new InvokeBuilderImpl<OtherwiseChoiceBuilder<P>>(this, clazz, Scope.PROTOTYPE);
+            pipeline.addBuilder(builder);
 
             return builder;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public ExecutorBuilder<OtherwiseChoiceBuilder<P>> execute(Class<?> clazz, Scope scope) {
-            ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ExecutorBuilderImpl<OtherwiseChoiceBuilder<P>>(this, clazz, scope);
-            pipeline.addToProcessorList(builder);
+        public <B> InvokeBuilder<OtherwiseChoiceBuilder<P>> invoke(final Class<B> clazz, final Scope scope) throws NullPointerException, IllegalArgumentException {
+            checkNotNull(clazz, "clazz");
+            checkNotNull(scope, "scope");
+
+            if (clazz.isAssignableFrom(MessageProcessor.class)){
+                throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
+            }
+
+            final InvokeBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new InvokeBuilderImpl<OtherwiseChoiceBuilder<P>>(this, clazz, scope);
+            pipeline.addBuilder(builder);
 
             return builder;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public OtherwiseChoiceBuilder<P> send(String uri) {
+        public OtherwiseChoiceBuilder<P> executeFlow(String flowName) throws IllegalArgumentException {
+            ChoiceRouterBuilderImpl.this.executeFlow(flowName);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public OtherwiseChoiceBuilder<P> executeScript(String lang, String script) throws IllegalArgumentException {
+            ChoiceRouterBuilderImpl.this.executeScript(lang, script);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public OtherwiseChoiceBuilder<P> executeScript(String lang, AbstractModule.FileRefBuilder fileRef) throws IllegalArgumentException, NullPointerException {
+            ChoiceRouterBuilderImpl.this.executeScript(lang, fileRef);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public OtherwiseChoiceBuilder<P> executeScript(String lang, AbstractModule.ClasspathBuilder classpathRef) throws IllegalArgumentException, NullPointerException {
+            ChoiceRouterBuilderImpl.this.executeScript(lang, classpathRef);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public OtherwiseChoiceBuilder<P> executeScript(ScriptLanguage lang, String script) throws NullPointerException, IllegalArgumentException {
+            ChoiceRouterBuilderImpl.this.executeScript(lang, script);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public OtherwiseChoiceBuilder<P> executeScript(ScriptLanguage lang, AbstractModule.FileRefBuilder fileRef) throws NullPointerException {
+            ChoiceRouterBuilderImpl.this.executeScript(lang, fileRef);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public OtherwiseChoiceBuilder<P> executeScript(ScriptLanguage lang, AbstractModule.ClasspathBuilder classpathRef) throws NullPointerException {
+            ChoiceRouterBuilderImpl.this.executeScript(lang, classpathRef);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public <MP extends MessageProcessor> OtherwiseChoiceBuilder<P> process(Class<MP> clazz) throws NullPointerException {
+            ChoiceRouterBuilderImpl.this.process(clazz);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public <MP extends MessageProcessor> OtherwiseChoiceBuilder<P> process(MP obj) throws NullPointerException {
+            ChoiceRouterBuilderImpl.this.process(obj);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public OtherwiseChoiceBuilder<P> send(final String uri) throws IllegalArgumentException {
             ChoiceRouterBuilderImpl.this.send(uri);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public OtherwiseChoiceBuilder<P> send(String uri, ExchangePattern pattern) {
+        public OtherwiseChoiceBuilder<P> send(final String uri, final ExchangePattern pattern) throws IllegalArgumentException {
             ChoiceRouterBuilderImpl.this.send(uri, pattern);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public <E extends ExpressionEvaluatorBuilder> OtherwiseChoiceBuilder<P> transform(E expr) {
+        public <E extends ExpressionEvaluatorDefinition> OtherwiseChoiceBuilder<P> transform(final E expr) throws NullPointerException {
             ChoiceRouterBuilderImpl.this.transform(expr);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public <T> OtherwiseChoiceBuilder<P> transformTo(Class<T> clazz) {
+        public <T> OtherwiseChoiceBuilder<P> transformTo(final Class<T> clazz) throws NullPointerException {
             ChoiceRouterBuilderImpl.this.transformTo(clazz);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public <T extends Transformer> OtherwiseChoiceBuilder<P> transformWith(Class<T> clazz) {
+        public <T extends Transformer> OtherwiseChoiceBuilder<P> transformWith(final Class<T> clazz) throws NullPointerException {
             ChoiceRouterBuilderImpl.this.transformWith(clazz);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public <T extends Transformer> OtherwiseChoiceBuilder<P> transformWith(T obj) {
+        public <T extends Transformer> OtherwiseChoiceBuilder<P> transformWith(final T obj) throws NullPointerException {
             ChoiceRouterBuilderImpl.this.transformWith(obj);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public <T extends Transformer> OtherwiseChoiceBuilder<P> transformWith(TransformerDefinition<T> obj) {
+        public OtherwiseChoiceBuilder<P> transformWith(final TransformerDefinition obj) throws NullPointerException {
             ChoiceRouterBuilderImpl.this.transformWith(obj);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public OtherwiseChoiceBuilder<P> transformWith(String ref) {
+        public OtherwiseChoiceBuilder<P> transformWith(final String ref) {
             ChoiceRouterBuilderImpl.this.transformWith(ref);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public OtherwiseChoiceBuilder<P> filter(GenericExpressionFilterEvaluatorBuilder expr) {
+        public <E extends ExpressionEvaluatorDefinition> OtherwiseChoiceBuilder<P> filter(final E expr) throws NullPointerException {
             ChoiceRouterBuilderImpl.this.filter(expr);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public <E extends ExpressionEvaluatorBuilder> OtherwiseChoiceBuilder<P> filter(E expr) {
-            ChoiceRouterBuilderImpl.this.filter(expr);
-            return this;
-        }
-
-        @Override
-        public <T> OtherwiseChoiceBuilder<P> filterBy(Class<T> clazz) {
+        public <T> OtherwiseChoiceBuilder<P> filterBy(final Class<T> clazz) throws NullPointerException {
             ChoiceRouterBuilderImpl.this.filterBy(clazz);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public <F extends Filter> OtherwiseChoiceBuilder<P> filterWith(Class<F> clazz) {
+        public <F extends Filter> OtherwiseChoiceBuilder<P> filterWith(final Class<F> clazz) throws NullPointerException {
             ChoiceRouterBuilderImpl.this.filterWith(clazz);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public <F extends Filter> OtherwiseChoiceBuilder<P> filterWith(F obj) {
+        public <F extends Filter> OtherwiseChoiceBuilder<P> filterWith(final F obj) throws NullPointerException {
             ChoiceRouterBuilderImpl.this.filterWith(obj);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public <F extends Filter> OtherwiseChoiceBuilder<P> filterWith(FilterDefinition<F> obj) {
+        public OtherwiseChoiceBuilder<P> filterWith(final FilterDefinition obj) throws NullPointerException {
             ChoiceRouterBuilderImpl.this.filterWith(obj);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public OtherwiseChoiceBuilder<P> filterWith(String ref) {
+        public OtherwiseChoiceBuilder<P> filterWith(final String ref) throws IllegalArgumentException {
             ChoiceRouterBuilderImpl.this.filterWith(ref);
             return this;
         }
 
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public MessagePropertiesBuilder<OtherwiseChoiceBuilder<P>> messageProperties() {
+            final MessagePropertiesBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new MessagePropertiesBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
+            pipeline.addBuilder(builder);
+
+            return builder;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public BroadcastRouterBuilder<OtherwiseChoiceBuilder<P>> broadcast() {
-            BroadcastRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new BroadcastRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
-            pipeline.addToProcessorList(builder);
+            final BroadcastRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new BroadcastRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
+            pipeline.addBuilder(builder);
 
             return builder;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public ChoiceRouterBuilder<OtherwiseChoiceBuilder<P>> choice() {
-            ChoiceRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ChoiceRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
-            pipeline.addToProcessorList(builder);
+            final ChoiceRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new ChoiceRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
+            pipeline.addBuilder(builder);
 
             return builder;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public AsyncRouterBuilder<OtherwiseChoiceBuilder<P>> async() {
-            AsyncRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new AsyncRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
-            pipeline.addToProcessorList(builder);
+            final AsyncRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new AsyncRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
+            pipeline.addBuilder(builder);
 
             return builder;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public FirstSuccessfulRouterBuilder<OtherwiseChoiceBuilder<P>> firstSuccessful() {
-            FirstSuccessfulRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new FirstSuccessfulRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
-            pipeline.addToProcessorList(builder);
+            final FirstSuccessfulRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new FirstSuccessfulRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
+            pipeline.addBuilder(builder);
 
             return builder;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public RoundRobinRouterBuilder<OtherwiseChoiceBuilder<P>> roundRobin() {
-            RoundRobinRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new RoundRobinRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
-            pipeline.addToProcessorList(builder);
+            final RoundRobinRouterBuilderImpl<OtherwiseChoiceBuilder<P>> builder = new RoundRobinRouterBuilderImpl<OtherwiseChoiceBuilder<P>>(this);
+            pipeline.addBuilder(builder);
 
             return builder;
         }
     }
 
+    /**
+     * Utility value class to store a list of message builders
+     * associated to a choice route (when's or otherwise).
+     *
+     * @author porcelli
+     */
     private static class Route {
-        final ExpressionEvaluatorBuilder expr;
+        final ExpressionEvaluatorDefinition expr;
 
-        final List<Builder<?>> processorList;
+        final List<Builder<? extends MessageProcessor>> processorList;
 
-        Route(ExpressionEvaluatorBuilder expr, List<Builder<?>> processorList) {
+        /**
+         * @param expr          the expression evaluator definition, null is allowed
+         * @param processorList the message processor builder list
+         * @throws NullPointerException if {@code processorList} param is null
+         */
+        Route(final ExpressionEvaluatorDefinition expr, final List<Builder<? extends MessageProcessor>> processorList) throws NullPointerException {
+            checkNotNull(processorList, "processorList");
             this.expr = expr;
-            this.processorList = new ArrayList<Builder<?>>(processorList);
+            this.processorList = new ArrayList<Builder<? extends MessageProcessor>>(processorList);
         }
 
-        ExpressionEvaluatorBuilder getExpr() {
+        /**
+         * Getter of expression evaluator definition
+         *
+         * @return the expression evaluator definition
+         */
+        ExpressionEvaluatorDefinition getExpr() {
             return expr;
         }
 
-        List<Builder<?>> getProcessorList() {
+        /**
+         * Getter of message processor builder list
+         *
+         * @return the message processor builder list
+         */
+        List<Builder<? extends MessageProcessor>> getProcessorList() {
             return processorList;
         }
     }

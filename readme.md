@@ -1,39 +1,29 @@
-# Background
+# Description
 
-A subset of developers getting started with integration are looking to solve a specific problem and do so by integrating a little bit of integration code into their application. They don’t want to invest in an ESB server and a separate runtime and managing everything through external XML configuration, which can be very verbose. Open Source projects like [Spring Integration](http://www.springsource.org/spring-integration) and [Apache Camel](http://camel.apache.org/), already offer a more fluid way of doing this in code and as a result, these developers are migrating towards those solutions even though they may eventually need something more complete like Mule ESB. 
+Mule is a lightweight java-based enterprise service bus (ESB) and integration platform that allows developers connect their applications together quickly and easily, enabling them to exchange data. Mule also provides an extensive out-of-the-box set of components that covers most common integration scenarios and, in complement, enables users create and use their own components (basically POJOs).
 
-Today the only practical way of using Mule is via the Mule XML configuration mechanism which leverages spring custom namespace authoring.  This configuration mechanism is very powerful and with the introduction of flow is now much simpler and intuitive but it’s not necessarily the best choice for everyone or every use case.
+Until now, to setup and wire those components to build an integration solution, users had to create an external XML configuration file, which is a very powerful mechanism but not necessarily the best choice for everyone or every use case.
 
-By making an internal DSL available we cater for those that prefer programmatic configuration as well as ensure we are not left behind as other competing integration products push this their own DSL’s.  The primary reason though, is to open up the use of Mule to new usage scenarios and therefore increase adoption.
+Mule DSL provides an alternative to XML, offering a simple and easy to use java based Domain Specific Language that helps users configure their integration flows. This project relies on Google Guice framework, given users all the power of a programmatic DI framework to configure their flow dependencies, a similar approach of Mule ESB with XML configuration file that relies on Spring Framework.
 
-# Mule DSL Goals
+Here is a small Mule DSL code snippet that shows how easy is to build a flow:
 
-To implement an internal Domain Specific Language (DSL) in Java that allows users to configure Mule ESB programmatically. The following characteristics are expected from the DSL:
+```java
+public static void main(String... args) throws MuleException {
+    Mule myMule = Mule.newInstance(new AbstractModule() {
+        @Override
+        protected void configure() {
+            flow("SimpleFilePollAndMove")
+                    .from("file:///opt/my_app/in") // source folder
+                    .send("file:///opt/other_app/in"); //destiny folder
+        }
+    });
 
- - Easy to write, read and learn
- - Hard to misuse
- - Extensible
- - Take advantage of IDE auto-complete
- - Avoid the use of Strings to reference domain objects
- - Impact as little as possible the actual codebase
- - Use the most modern techniques to build its structure
+    myMule.start(); //start mule
+}
+```
 
-# Scope and Boundaries
-
-The expected DSL has its focus on Mule Community Edition (CE) and should cover:
-
- - Basic Mule Configuration (config attributes and default threading profiles)
- - Global Transformers, Filters, Processors and Processor Chains.
- - Connectors and Endpoints (both global generic endpoints and inbound/outbound specific endpoint).
- - Flows
- - Configuration Patterns (?)
-
-Its also clear that its out of the this initial scope the following:
-
- - Services
- - Globally defined Interceptor-stacks
- - Component Interceptors, Bindings, and less common Entry-point resolvers
- - Enterprise Edition module, MuleForge Projects and Cloud Connectors
+The above example just bridges files, polling the source folder and moving every file from there to the destiny.
 
 # Documentation
 

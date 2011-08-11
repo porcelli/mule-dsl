@@ -14,10 +14,25 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotates {@link Module}s assigning to them a human readable name and optionally a description as well.
+ *
+ * @author porcelli
+ */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ModuleInfo {
+    /**
+     * Human readable {@link Module}'s name
+     *
+     * @return the module name
+     */
     String name();
 
+    /**
+     * An extended {@link Module}'s description
+     *
+     * @return the module description
+     */
     String description() default "";
 }

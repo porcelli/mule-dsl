@@ -16,18 +16,35 @@ import org.mule.config.dsl.LogLevel;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
+
+/**
+ * Extents core {@link LogComponent} and enables define a log level.
+ *
+ * @author porcelli
+ */
 public class SimpleLogComponent extends LogComponent {
     private static final Log logger = LogFactory.getLog(SimpleLogComponent.class);
 
     private final LogLevel level;
 
-    public SimpleLogComponent(LogLevel level) {
+    /**
+     * @param level the log level
+     * @throws NullPointerException if {@code level} param is null
+     */
+    public SimpleLogComponent(final LogLevel level) throws NullPointerException {
         super();
         this.level = checkNotNull(level, "level");
     }
 
+    /**
+     * Logs the given message using defined level.
+     *
+     * @param message the message to be logged
+     * @throws NullPointerException if {@code message} param is null
+     */
     @Override
-    public void log(String message) {
+    public void log(final String message) {
+        checkNotNull(message, "message");
         switch (level) {
             case FATAL:
                 if (getLogger().isFatalEnabled()) {
@@ -56,10 +73,20 @@ public class SimpleLogComponent extends LogComponent {
         }
     }
 
+    /**
+     * Getter of internal logger.
+     *
+     * @return the logger
+     */
     public Log getLogger() {
         return logger;
     }
 
+    /**
+     * Getter of log level.
+     *
+     * @return the log level
+     */
     public LogLevel getLevel() {
         return level;
     }

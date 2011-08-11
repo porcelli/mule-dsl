@@ -29,27 +29,27 @@ public class TestExpressionTransform {
 
     @Test
     public void testSimpleExpressionTransform() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
                         .transform(string("'JUST #[mule:message.payload()] COOL!'"));
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -59,19 +59,19 @@ public class TestExpressionTransform {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor transformerProcessor = iterator.next();
+        final MessageProcessor transformerProcessor = iterator.next();
 
         assertThat(transformerProcessor).isNotNull().isInstanceOf(ExpressionTransformer.class);
 
-        ExpressionTransformer transformer = (ExpressionTransformer) transformerProcessor;
+        final ExpressionTransformer transformer = (ExpressionTransformer) transformerProcessor;
 
         assertThat(transformer.getArguments()).isNotEmpty().hasSize(1);
 
         assertThat(transformer.getArguments().get(0)).isNotNull().isInstanceOf(ExpressionArgument.class);
 
-        ExpressionArgument argument = transformer.getArguments().get(0);
+        final ExpressionArgument argument = transformer.getArguments().get(0);
 
         assertThat(argument.getExpression()).isEqualTo("'JUST #[mule:message.payload()] COOL!'");
         assertThat(argument.getEvaluator()).isEqualTo("string");
@@ -81,7 +81,7 @@ public class TestExpressionTransform {
 
     @Test
     public void testChainExpressionTransform() {
-        MuleContext muleContext = Mule.newMuleContext(new AbstractModule() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
                 flow("MyFlow")
@@ -89,20 +89,20 @@ public class TestExpressionTransform {
                         .transform(string("'JUST #[mule:message.payload()] COOL!'"))
                         .transform(string("'JUST2 #[mule:message.payload()] COOL!'"));
             }
-        });
+        }).advanced().muleContext();
 
         assertThat(muleContext.getRegistry().lookupFlowConstructs()).isNotEmpty().hasSize(1);
 
-        FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
+        final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
         assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
 
-        MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
-        InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
+        final InboundEndpoint inboundEndpoint = (InboundEndpoint) messageSource;
 
         assertThat(inboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
 
@@ -112,36 +112,36 @@ public class TestExpressionTransform {
 
         assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
 
-        MessageProcessor transformerProcessor = iterator.next();
+        final MessageProcessor transformerProcessor = iterator.next();
 
         assertThat(transformerProcessor).isNotNull().isInstanceOf(ExpressionTransformer.class);
 
-        ExpressionTransformer transformer = (ExpressionTransformer) transformerProcessor;
+        final ExpressionTransformer transformer = (ExpressionTransformer) transformerProcessor;
 
         assertThat(transformer.getArguments()).isNotEmpty().hasSize(1);
 
         assertThat(transformer.getArguments().get(0)).isNotNull().isInstanceOf(ExpressionArgument.class);
 
-        ExpressionArgument argument = transformer.getArguments().get(0);
+        final ExpressionArgument argument = transformer.getArguments().get(0);
 
         assertThat(argument.getExpression()).isEqualTo("'JUST #[mule:message.payload()] COOL!'");
         assertThat(argument.getEvaluator()).isEqualTo("string");
         assertThat(argument.getCustomEvaluator()).isNull();
 
 
-        MessageProcessor transformerProcessor2 = iterator.next();
+        final MessageProcessor transformerProcessor2 = iterator.next();
 
         assertThat(transformerProcessor2).isNotNull().isInstanceOf(ExpressionTransformer.class);
 
-        ExpressionTransformer transformer2 = (ExpressionTransformer) transformerProcessor2;
+        final ExpressionTransformer transformer2 = (ExpressionTransformer) transformerProcessor2;
 
         assertThat(transformer2.getArguments()).isNotEmpty().hasSize(1);
 
         assertThat(transformer2.getArguments().get(0)).isNotNull().isInstanceOf(ExpressionArgument.class);
 
-        ExpressionArgument argument2 = transformer2.getArguments().get(0);
+        final ExpressionArgument argument2 = transformer2.getArguments().get(0);
 
         assertThat(argument2.getExpression()).isEqualTo("'JUST2 #[mule:message.payload()] COOL!'");
         assertThat(argument2.getEvaluator()).isEqualTo("string");

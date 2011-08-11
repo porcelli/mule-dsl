@@ -9,44 +9,67 @@
 
 package org.mule.config.dsl.internal;
 
-import com.google.inject.Injector;
 import org.mule.api.MuleContext;
-import org.mule.api.construct.FlowConstruct;
-import org.mule.api.source.MessageSource;
-import org.mule.config.dsl.ExchangePattern;
-import org.mule.config.dsl.FlowBuilder;
-import org.mule.config.dsl.PipelineBuilder;
-import org.mule.config.dsl.internal.util.PropertyPlaceholder;
+import org.mule.config.dsl.*;
 import org.mule.construct.SimpleFlowConstruct;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
+import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
-public class FlowBuilderImpl extends PipelineBuilderImpl<FlowBuilder> implements FlowBuilder {
+/**
+ * Internal implementation of {@link FlowBuilder} interface that, based on its internal state,
+ * builds a {@link SimpleFlowConstruct}.
+ *
+ * @author porcelli
+ * @see org.mule.config.dsl.AbstractModule#flow()
+ * @see org.mule.config.dsl.AbstractModule#flow(String)
+ */
+public class FlowBuilderImpl extends PipelineBuilderImpl<FlowBuilder> implements FlowBuilder, Builder<SimpleFlowConstruct> {
 
     private final String name;
     private InboundEndpointBuilderImpl inboundEndpointBuilder;
 
-    public FlowBuilderImpl(String name) {
+    /**
+     * @param name the flow name
+     * @throws IllegalArgumentException if {@code name} param is empty or null
+     */
+    public FlowBuilderImpl(final String name) throws IllegalArgumentException {
         super(null);
         this.name = checkNotEmpty(name, "name");
     }
 
-    public PipelineBuilder<FlowBuilder> from(String uri) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PipelineBuilder<FlowBuilder> from(final String uri) throws IllegalArgumentException {
         return from(uri, null);
     }
 
-    public PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PipelineBuilder<FlowBuilder> from(final String uri, final ExchangePattern pattern) throws IllegalArgumentException {
+        checkNotEmpty(uri, "uri");
         this.inboundEndpointBuilder = new InboundEndpointBuilderImpl(uri, pattern);
         return this;
     }
 
-    public FlowConstruct build(MuleContext muleContext, Injector injector, PropertyPlaceholder placeholder) {
-        SimpleFlowConstruct flow = new SimpleFlowConstruct(name, muleContext);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public SimpleFlowConstruct build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+
+        final SimpleFlowConstruct flow = new SimpleFlowConstruct(name, muleContext);
         if (inboundEndpointBuilder != null) {
-            flow.setMessageSource((MessageSource) inboundEndpointBuilder.build(muleContext, injector, placeholder));
+            flow.setMessageSource(inboundEndpointBuilder.build(muleContext, placeholder));
         }
-        if (!isProcessorListEmpty()) {
-            flow.setMessageProcessors(buildProcessorList(muleContext, injector, placeholder));
+        if (!isBuilderListEmpty()) {
+            flow.setMessageProcessors(buildMessageProcessorList(muleContext, placeholder));
         }
         return flow;
     }

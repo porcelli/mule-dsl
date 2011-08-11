@@ -11,11 +11,47 @@ package org.mule.config.dsl;
 
 import org.mule.api.routing.filter.Filter;
 
-public interface FilterBuilder {
+/**
+ * Builder interface to configure Global Filters.
+ *
+ * @author porcelli
+ */
+public interface FilterBuilder extends Builder {
 
+    /**
+     * Getter of global filter name
+     *
+     * @return the global filter name
+     */
     String getName();
 
-    <F extends Filter> FilterDefinition<F> with(F obj);
+    /**
+     * Sets global filter to use the given filter object.
+     *
+     * @param obj the filter instance
+     * @return the already configured filter definition
+     * @throws NullPointerException if {@code obj} param is null
+     * @see org.mule.config.dsl.AbstractModule#filter()
+     * @see org.mule.config.dsl.AbstractModule#filter(String)
+     * @see org.mule.config.dsl.Catalog#newFilter(String)
+     * @see Filter
+     * @see Builder
+     * @see Definition
+     */
+    <F extends Filter> FilterDefinition with(F obj) throws NullPointerException;
 
-    <F extends Filter> FilterDefinition<F> with(Class<F> obj);
+    /**
+     * Sets global filter to use the given filter type.
+     *
+     * @param clazz the filter type, Mule will instantiate an object at runtime
+     * @return the already configured filter definition
+     * @throws NullPointerException if {@code clazz} param is null
+     * @see org.mule.config.dsl.AbstractModule#filter()
+     * @see org.mule.config.dsl.AbstractModule#filter(String)
+     * @see org.mule.config.dsl.Catalog#newFilter(String)
+     * @see Filter
+     * @see Builder
+     * @see Definition
+     */
+    <F extends Filter> FilterDefinition with(Class<F> clazz) throws NullPointerException;
 }
