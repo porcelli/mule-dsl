@@ -21,6 +21,7 @@ public class TestSyntaxRouterAll {
         Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
+
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
 
@@ -59,7 +60,9 @@ public class TestSyntaxRouterAll {
                         			.echo()
                         		.endBroadcast()
                         		.echo()
-                        .endBroadcast();
+                        .endBroadcast()
+                        .onException(null).invoke(null).methodName(null).withoutArgs()
+                        .onException(null).invoke(null);
 
                 flow("MyFlow2")
                 	.broadcast()

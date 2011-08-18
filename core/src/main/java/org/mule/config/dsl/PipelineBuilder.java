@@ -16,6 +16,7 @@ package org.mule.config.dsl;
  */
 public interface PipelineBuilder<P extends PipelineBuilder<P>>
         extends PipelineDebugOutputOperations<P>, PipelineRouterOperations<P>, PipelineTransformerOperations<P>,
-        PipelineFilterOperations<P>, PipelineInvokerOperations<P>, PipelineOutboundEndpointOperations<P>, Builder {
+        PipelineFilterOperations<P>, PipelineInvokerOperations<P>, PipelineOutboundEndpointOperations<P>,
+        PipelineExceptionOperations, Builder {
 
 }
