@@ -28,7 +28,7 @@ public class StockQuotesRestServiceModule extends AbstractModule {
         flow("LocalRestServiceGetQuote")
                 .from("http://localhost:8080") //embedded http server that listen on 8080 port
                 .filterWith(restFilter) //filter the request using the rest filter
-                .executeFlow("TweetStockQuote") //executes the "TweetStockQuote" flow
+                .process("TweetStockQuote") //executes the "TweetStockQuote" flow
                 .transformWith(ObjectToJson.class) //transform tha payload (StockQuote instance) to json
                 .messageProperties()
                     .put("Content-Type", "application/json"); //sets the output content-type to json

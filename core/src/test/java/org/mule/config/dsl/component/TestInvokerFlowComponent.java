@@ -24,10 +24,10 @@ public class TestInvokerFlowComponent extends BaseComponentTests {
                 @Override
                 public void configure() {
                     flow("Receiver")
-                            .executeFlow("xxxx");
+                            .process("xxxx");
 
                     flow("Receiver2")
-                            .executeFlow("Dispatcher");
+                            .process("Dispatcher");
 
                     flow("Dispatcher")
                             .log();

@@ -63,7 +63,7 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
     @Override
     public <B> InvokeBuilder<P> invoke(final B obj) throws NullPointerException, IllegalArgumentException {
         checkNotNull(obj, "obj");
-        if (obj instanceof MessageProcessor){
+        if (obj instanceof MessageProcessor) {
             throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
         }
 
@@ -92,7 +92,7 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
         checkNotNull(clazz, "clazz");
         checkNotNull(scope, "scope");
 
-        if (MessageProcessor.class.isAssignableFrom(clazz)){
+        if (MessageProcessor.class.isAssignableFrom(clazz)) {
             throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
         }
 
@@ -110,12 +110,26 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
      * {@inheritDoc}
      */
     @Override
-    public P executeFlow(String flowName) throws IllegalArgumentException {
+    public P process(String flowName) throws IllegalArgumentException {
         checkNotEmpty(flowName, "flowName");
         if (parentScope != null) {
-            return parentScope.executeFlow(flowName);
+            return parentScope.process(flowName);
         }
         processorList.add(new InvokeBuilderImpl<P>(getThis(), new InvokerFlowComponent(flowName)));
+
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P process(FlowBuilder flow) throws NullPointerException {
+        checkNotNull(flow, "flow");
+        if (parentScope != null) {
+            return parentScope.process(flow);
+        }
+        processorList.add(new InvokeBuilderImpl<P>(getThis(), new InvokerFlowComponent(((FlowBuilderImpl) flow).getName())));
 
         return getThis();
     }

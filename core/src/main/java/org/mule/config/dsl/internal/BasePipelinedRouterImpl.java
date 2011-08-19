@@ -160,8 +160,17 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
      * {@inheritDoc}
      */
     @Override
-    public P executeFlow(String flowName) throws IllegalArgumentException {
-        pipeline.executeFlow(flowName);
+    public P process(String flowName) throws IllegalArgumentException {
+        pipeline.process(flowName);
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P process(FlowBuilder flow) throws NullPointerException {
+        pipeline.process(flow);
         return getThis();
     }
 

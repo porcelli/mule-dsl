@@ -57,16 +57,6 @@ public interface PipelineInvokerOperations<P extends PipelineBuilder<P>> {
     <B> InvokeBuilder<P> invoke(Class<B> clazz, Scope scope) throws NullPointerException, IllegalArgumentException;
 
     /**
-     * Executes a flow.
-     *
-     * @param flowName the flow name to be executed
-     * @return the parameterized builder
-     * @throws IllegalArgumentException if {@code flowName} param is null or empty
-     * @see org.mule.model.resolvers.ReflectionEntryPointResolver
-     */
-    P executeFlow(String flowName) throws IllegalArgumentException;
-
-    /**
      * Executes the given script and language.
      *
      * @param lang   the script language
@@ -132,6 +122,26 @@ public interface PipelineInvokerOperations<P extends PipelineBuilder<P>> {
     /* custom MP */
 
     /**
+     * Executes a flow.
+     *
+     * @param flowName the flow name to be executed
+     * @return the parameterized builder
+     * @throws IllegalArgumentException if {@code flowName} param is null or empty
+     * @see org.mule.model.resolvers.ReflectionEntryPointResolver
+     */
+    P process(String flowName) throws IllegalArgumentException;
+
+    /**
+     * Executes a flow.
+     *
+     * @param flow the flow to be executed
+     * @return the parameterized builder
+     * @throws IllegalArgumentException if {@code flow} param is null
+     * @see org.mule.model.resolvers.ReflectionEntryPointResolver
+     */
+    P process(FlowBuilder flow) throws NullPointerException;
+
+    /**
      * Executes the message processor.
      *
      * @param clazz the message processor type to be processed, Mule will instantiate an object at runtime
@@ -150,4 +160,5 @@ public interface PipelineInvokerOperations<P extends PipelineBuilder<P>> {
      * @see org.mule.api.processor.MessageProcessor
      */
     <MP extends MessageProcessor> P process(MP obj) throws NullPointerException;
+
 }

@@ -153,6 +153,30 @@ public class TestProcessCustomMP {
         assertThat(invokeProcessor).isEqualTo(myCustomMP);
     }
 
+    @Test(expected = RuntimeException.class)
+    public void simpleExecuteMPClassNull() {
+        Mule.newInstance(new AbstractModule() {
+            @Override
+            public void configure() {
+                flow("Receiver")
+                        .from("file:///Users/porcelli/test")
+                        .process((Class<MessageProcessor>) null);
+            }
+        });
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void simpleExecuteMPNull() {
+        Mule.newInstance(new AbstractModule() {
+            @Override
+            public void configure() {
+                flow("Receiver")
+                        .from("file:///Users/porcelli/test")
+                        .process((MessageProcessor) null);
+            }
+        });
+    }
+
     public static class MyCustomMP implements MessageProcessor {
 
         @Override

@@ -73,4 +73,14 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowBuilder> implements
         }
         return flow;
     }
+
+    /**
+     * Returns the flow name
+     *
+     * @return the flow name
+     */
+    public String getName() {
+        return name;
+    }
+
 }

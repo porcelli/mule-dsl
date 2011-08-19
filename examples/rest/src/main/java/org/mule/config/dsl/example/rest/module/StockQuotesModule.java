@@ -41,7 +41,7 @@ public class StockQuotesModule extends AbstractModule {
         bind(XsltTransformer.class).toInstance(xslt); //binds XsltTransformer to a specific intance
 
         flow("TweetStockQuote")
-                .executeFlow("GetQuote") //executes the `GetQuote` flow
+                .process("GetQuote") //executes the `GetQuote` flow
                 .invoke(TweetIt.class); //tweets the payload (StockQuote instance)
 
         bind(Twitter.class).toInstance(new TwitterFactory().getInstance()); //binds a twitter instance

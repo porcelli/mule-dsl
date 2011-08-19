@@ -201,8 +201,17 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
      * {@inheritDoc}
      */
     @Override
-    public InnerWhenChoiceBuilder<P> executeFlow(String flowName) throws IllegalArgumentException {
-        pipeline.executeFlow(flowName);
+    public InnerWhenChoiceBuilder<P> process(String flowName) throws IllegalArgumentException {
+        pipeline.process(flowName);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerWhenChoiceBuilder<P> process(FlowBuilder flow) throws NullPointerException {
+        pipeline.process(flow);
         return this;
     }
 
@@ -659,8 +668,17 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
          * {@inheritDoc}
          */
         @Override
-        public OtherwiseChoiceBuilder<P> executeFlow(String flowName) throws IllegalArgumentException {
-            ChoiceRouterBuilderImpl.this.executeFlow(flowName);
+        public OtherwiseChoiceBuilder<P> process(String flowName) throws IllegalArgumentException {
+            ChoiceRouterBuilderImpl.this.process(flowName);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public OtherwiseChoiceBuilder<P> process(FlowBuilder flow) throws NullPointerException {
+            ChoiceRouterBuilderImpl.this.process(flow);
             return this;
         }
 
