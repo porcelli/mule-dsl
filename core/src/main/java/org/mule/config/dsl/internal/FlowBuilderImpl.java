@@ -10,6 +10,7 @@
 package org.mule.config.dsl.internal;
 
 import org.mule.api.MuleContext;
+import org.mule.api.transport.Connector;
 import org.mule.config.dsl.*;
 import org.mule.construct.SimpleFlowConstruct;
 
@@ -43,16 +44,54 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowBuilder> implements
      */
     @Override
     public PipelineBuilder<FlowBuilder> from(final String uri) throws IllegalArgumentException {
-        return from(uri, null);
+        return from(uri, null, (String) null);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public PipelineBuilder<FlowBuilder> from(final String uri, final ExchangePattern pattern) throws IllegalArgumentException {
+    public PipelineBuilder<FlowBuilder> from(String uri, String connectorName) throws IllegalArgumentException {
         checkNotEmpty(uri, "uri");
-        this.inboundEndpointBuilder = new InboundEndpointBuilderImpl(uri, pattern);
+        checkNotEmpty(connectorName, "connectorName");
+        return from(uri, null, connectorName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <C extends Connector> PipelineBuilder<FlowBuilder> from(String uri, C connector) throws IllegalArgumentException, NullPointerException {
+        checkNotNull(connector, "connector");
+        return from(uri, null, connector);
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PipelineBuilder<FlowBuilder> from(final String uri, final ExchangePattern pattern) throws IllegalArgumentException {
+        return from(uri, pattern, (String) null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern, String connectorName) throws IllegalArgumentException {
+        checkNotEmpty(uri, "uri");
+        this.inboundEndpointBuilder = new InboundEndpointBuilderImpl(uri, pattern, connectorName);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <C extends Connector> PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern, C connector) throws IllegalArgumentException, NullPointerException {
+        checkNotEmpty(uri, "uri");
+        this.inboundEndpointBuilder = new InboundEndpointBuilderImpl(uri, pattern, connector);
         return this;
     }
 

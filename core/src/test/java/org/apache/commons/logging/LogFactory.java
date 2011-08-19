@@ -135,7 +135,7 @@ public class LogFactory {
         @Override
         public void error(final Object message, final Throwable t) {
             errorExec.add(message.toString());
-//            System.out.println("ERROR: " + message.toString());
+            System.out.println("ERROR: " + message.toString());
         }
 
         @Override

@@ -13,6 +13,7 @@ import org.mule.api.MuleContext;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
+import org.mule.api.transport.Connector;
 import org.mule.component.simple.EchoComponent;
 import org.mule.config.dsl.*;
 import org.mule.config.dsl.component.InvokerFlowComponent;
@@ -328,20 +329,59 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
      */
     @Override
     public P send(final String uri) throws IllegalArgumentException {
-        return send(uri, null);
+        return send(uri, null, (String) null);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public P send(final String uri, final ExchangePattern pattern) throws IllegalArgumentException {
+    public <C extends Connector> P send(String uri, C connector) throws IllegalArgumentException, NullPointerException {
+        return send(uri, null, connector);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P send(String uri, String connectorName) throws IllegalArgumentException {
+        return send(uri, null, connectorName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P send(final String uri, final ExchangePattern pattern) throws IllegalArgumentException, NullPointerException {
+        return send(uri, pattern, (String) null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P send(String uri, ExchangePattern pattern, String connectorName) throws IllegalArgumentException, NullPointerException {
         checkNotEmpty(uri, "uri");
         if (parentScope != null) {
             return parentScope.send(uri);
         }
 
-        processorList.add(new OutboundEndpointBuilderImpl(uri, pattern));
+        processorList.add(new OutboundEndpointBuilderImpl(uri, pattern, connectorName));
+
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <C extends Connector> P send(String uri, ExchangePattern pattern, C connector) throws IllegalArgumentException, NullPointerException {
+        checkNotEmpty(uri, "uri");
+        if (parentScope != null) {
+            return parentScope.send(uri);
+        }
+
+        processorList.add(new OutboundEndpointBuilderImpl(uri, pattern, connector));
 
         return getThis();
     }

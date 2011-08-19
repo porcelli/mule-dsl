@@ -12,6 +12,7 @@ package org.mule.config.dsl.internal;
 import org.mule.api.MuleContext;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.InboundEndpoint;
+import org.mule.api.transport.Connector;
 import org.mule.config.dsl.ConfigurationException;
 import org.mule.config.dsl.ExchangePattern;
 import org.mule.config.dsl.PropertyPlaceholder;
@@ -28,20 +29,41 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
  * @author porcelli
  * @see org.mule.config.dsl.FlowBuilder#from(String)
  * @see org.mule.config.dsl.FlowBuilder#from(String, org.mule.config.dsl.ExchangePattern)
+ * @see org.mule.config.dsl.FlowBuilder#from(String, org.mule.api.transport.Connector)
+ * @see org.mule.config.dsl.FlowBuilder#from(String, String)
+ * @see org.mule.config.dsl.FlowBuilder#from(String, org.mule.config.dsl.ExchangePattern, String)
+ * @see org.mule.config.dsl.FlowBuilder#from(String, org.mule.config.dsl.ExchangePattern, org.mule.api.transport.Connector)
  */
 public class InboundEndpointBuilderImpl implements Builder<InboundEndpoint> {
 
     private final String uri;
-    private ExchangePattern exchangePattern = null;
+    private final ExchangePattern exchangePattern;
+    private final String connectorName;
+    private Connector connector = null;
 
     /**
      * @param uri             the inbound endpoint uri
      * @param exchangePattern the exchange pattern, null is allowed
+     * @param connector       the connector, null is allowed
      * @throws IllegalArgumentException if {@code uri} param is empty or null
      */
-    public InboundEndpointBuilderImpl(final String uri, final ExchangePattern exchangePattern) throws IllegalArgumentException {
+    public InboundEndpointBuilderImpl(final String uri, final ExchangePattern exchangePattern, final Connector connector) throws IllegalArgumentException {
         this.uri = checkNotEmpty(uri, "uri");
         this.exchangePattern = exchangePattern;
+        this.connector = connector;
+        this.connectorName = null;
+    }
+
+    /**
+     * @param uri             the inbound endpoint uri
+     * @param exchangePattern the exchange pattern, null is allowed
+     * @param connectorName   the name of a global connector, null is allowed
+     * @throws IllegalArgumentException if {@code uri} param is empty or null
+     */
+    public InboundEndpointBuilderImpl(final String uri, final ExchangePattern exchangePattern, final String connectorName) {
+        this.uri = checkNotEmpty(uri, "uri");
+        this.exchangePattern = exchangePattern;
+        this.connectorName = connectorName;
     }
 
     /**
@@ -52,15 +74,23 @@ public class InboundEndpointBuilderImpl implements Builder<InboundEndpoint> {
         checkNotNull(muleContext, "muleContext");
         checkNotNull(placeholder, "placeholder");
 
+        if (connectorName != null && connectorName.trim().length() > 0) {
+            connector = muleContext.getRegistry().lookupConnector(connectorName);
+        }
+
         final EndpointBuilder internalEndpointBuilder = new EndpointURIEndpointBuilder(new URIBuilder(placeholder.replace(uri), muleContext));
         if (exchangePattern != null) {
             internalEndpointBuilder.setExchangePattern(convert(exchangePattern));
         }
 
+        if (connector != null) {
+            internalEndpointBuilder.setConnector(connector);
+        }
+
         try {
             return internalEndpointBuilder.buildInboundEndpoint();
         } catch (final Exception e) {
-            throw new ConfigurationException("Failed to configure an InboundEndpoint.", e);
+            throw new ConfigurationException("Failed to configure an Inbound Endpoint.", e);
         }
     }
 }

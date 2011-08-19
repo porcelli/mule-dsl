@@ -11,6 +11,7 @@ package org.mule.config.dsl;
 
 import org.junit.Test;
 import org.mule.api.MuleContext;
+import org.mule.api.transport.Connector;
 import org.mule.transport.AbstractConnector;
 import org.mule.transport.file.ExpressionFilenameParser;
 import org.mule.transport.file.FileConnector;
@@ -52,6 +53,16 @@ public class TestGlobalConnector {
             @Override
             public void configure() {
                 connector("connector").with(AbstractConnector.class);
+            }
+        });
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void failRegisterInterfaceClass() throws Exception {
+        Mule.newInstance(new AbstractModule() {
+            @Override
+            public void configure() {
+                connector("connector").with(Connector.class);
             }
         });
     }

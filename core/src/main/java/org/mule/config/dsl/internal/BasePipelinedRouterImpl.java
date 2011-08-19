@@ -13,6 +13,7 @@ import org.mule.api.MuleContext;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
+import org.mule.api.transport.Connector;
 import org.mule.config.dsl.*;
 
 import java.util.List;
@@ -111,7 +112,7 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
     public <B> InvokeBuilder<P> invoke(final B obj) throws NullPointerException, IllegalArgumentException {
         checkNotNull(obj, "obj");
 
-        if (obj instanceof MessageProcessor){
+        if (obj instanceof MessageProcessor) {
             throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
         }
 
@@ -128,7 +129,7 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
     public <B> InvokeBuilder<P> invoke(final Class<B> clazz) throws NullPointerException, IllegalArgumentException {
         checkNotNull(clazz, "clazz");
 
-        if (MessageProcessor.class.isAssignableFrom(clazz)){
+        if (MessageProcessor.class.isAssignableFrom(clazz)) {
             throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
         }
 
@@ -146,7 +147,7 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
         checkNotNull(clazz, "clazz");
         checkNotNull(scope, "scope");
 
-        if (clazz.isAssignableFrom(MessageProcessor.class)){
+        if (clazz.isAssignableFrom(MessageProcessor.class)) {
             throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
         }
 
@@ -259,8 +260,44 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
      * {@inheritDoc}
      */
     @Override
-    public P send(final String uri, final ExchangePattern pattern) throws IllegalArgumentException {
+    public <C extends Connector> P send(final String uri, C connector) throws IllegalArgumentException, NullPointerException {
+        pipeline.send(uri, connector);
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P send(final String uri, final String connectorName) throws IllegalArgumentException {
+        pipeline.send(uri, connectorName);
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P send(final String uri, final ExchangePattern pattern) throws IllegalArgumentException, NullPointerException {
         pipeline.send(uri, pattern);
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <C extends Connector> P send(String uri, ExchangePattern pattern, C connector) throws IllegalArgumentException, NullPointerException {
+        pipeline.send(uri, pattern, connector);
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public P send(String uri, ExchangePattern pattern, String connectorName) throws IllegalArgumentException, NullPointerException {
+        pipeline.send(uri, pattern, connectorName);
         return getThis();
     }
 

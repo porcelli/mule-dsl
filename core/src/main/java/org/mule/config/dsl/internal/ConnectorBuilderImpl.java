@@ -75,6 +75,10 @@ public class ConnectorBuilderImpl implements ConnectorBuilder, Builder<Connector
     public <C extends Connector> C with(Class<C> clazz) throws NullPointerException, ConfigurationException {
         checkNotNull(clazz, "clazz");
 
+        if (clazz.isInterface()) {
+            throw new ConfigurationException("Can't use interface.");
+        }
+
         if (Modifier.isAbstract(clazz.getModifiers())) {
             throw new ConfigurationException("Can't use an abstract class.");
         }

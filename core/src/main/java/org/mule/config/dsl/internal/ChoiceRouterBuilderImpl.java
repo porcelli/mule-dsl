@@ -13,6 +13,7 @@ import org.mule.api.MuleContext;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
+import org.mule.api.transport.Connector;
 import org.mule.config.dsl.*;
 import org.mule.config.dsl.ChoiceRouterBuilder.InnerWhenChoiceBuilder;
 import org.mule.routing.ChoiceRouter;
@@ -153,7 +154,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     @Override
     public <B> InvokeBuilder<InnerWhenChoiceBuilder<P>> invoke(final B obj) throws NullPointerException, IllegalArgumentException {
         checkNotNull(obj, "obj");
-        if (obj instanceof MessageProcessor){
+        if (obj instanceof MessageProcessor) {
             throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
         }
 
@@ -169,7 +170,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
     @Override
     public <B> InvokeBuilder<InnerWhenChoiceBuilder<P>> invoke(final Class<B> clazz) throws NullPointerException, IllegalArgumentException {
         checkNotNull(clazz, "clazz");
-        if (MessageProcessor.class.isAssignableFrom(clazz)){
+        if (MessageProcessor.class.isAssignableFrom(clazz)) {
             throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
         }
 
@@ -187,7 +188,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         checkNotNull(clazz, "clazz");
         checkNotNull(scope, "scope");
 
-        if (clazz.isAssignableFrom(MessageProcessor.class)){
+        if (clazz.isAssignableFrom(MessageProcessor.class)) {
             throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
         }
 
@@ -300,8 +301,44 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
      * {@inheritDoc}
      */
     @Override
-    public InnerWhenChoiceBuilder<P> send(final String uri, final ExchangePattern pattern) throws IllegalArgumentException {
+    public <C extends Connector> InnerWhenChoiceBuilder<P> send(String uri, C connector) throws IllegalArgumentException, NullPointerException {
+        pipeline.send(uri, connector);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerWhenChoiceBuilder<P> send(String uri, String connectorName) throws IllegalArgumentException {
+        pipeline.send(uri, connectorName);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerWhenChoiceBuilder<P> send(final String uri, final ExchangePattern pattern) throws IllegalArgumentException, NullPointerException {
         pipeline.send(uri, pattern);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <C extends Connector> InnerWhenChoiceBuilder<P> send(String uri, ExchangePattern pattern, C connector) throws IllegalArgumentException, NullPointerException {
+        pipeline.send(uri, pattern, connector);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InnerWhenChoiceBuilder<P> send(String uri, ExchangePattern pattern, String connectorName) throws IllegalArgumentException, NullPointerException {
+        pipeline.send(uri, pattern, connectorName);
         return this;
     }
 
@@ -620,7 +657,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         @Override
         public <B> InvokeBuilder<OtherwiseChoiceBuilder<P>> invoke(final B obj) throws NullPointerException, IllegalArgumentException {
             checkNotNull(obj, "obj");
-            if (obj instanceof MessageProcessor){
+            if (obj instanceof MessageProcessor) {
                 throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
             }
 
@@ -636,7 +673,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         @Override
         public <B> InvokeBuilder<OtherwiseChoiceBuilder<P>> invoke(final Class<B> clazz) throws NullPointerException, IllegalArgumentException {
             checkNotNull(clazz, "clazz");
-            if (MessageProcessor.class.isAssignableFrom(clazz)){
+            if (MessageProcessor.class.isAssignableFrom(clazz)) {
                 throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
             }
 
@@ -654,7 +691,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
             checkNotNull(clazz, "clazz");
             checkNotNull(scope, "scope");
 
-            if (clazz.isAssignableFrom(MessageProcessor.class)){
+            if (clazz.isAssignableFrom(MessageProcessor.class)) {
                 throw new IllegalArgumentException("Use `process` to execute custom MessageProcessor.");
             }
 
@@ -767,8 +804,44 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
          * {@inheritDoc}
          */
         @Override
-        public OtherwiseChoiceBuilder<P> send(final String uri, final ExchangePattern pattern) throws IllegalArgumentException {
+        public <C extends Connector> OtherwiseChoiceBuilder<P> send(String uri, C connector) throws IllegalArgumentException, NullPointerException {
+            ChoiceRouterBuilderImpl.this.send(uri, connector);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public OtherwiseChoiceBuilder<P> send(String uri, String connectorName) throws IllegalArgumentException {
+            ChoiceRouterBuilderImpl.this.send(uri, connectorName);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public OtherwiseChoiceBuilder<P> send(final String uri, final ExchangePattern pattern) throws IllegalArgumentException, NullPointerException {
             ChoiceRouterBuilderImpl.this.send(uri, pattern);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public <C extends Connector> OtherwiseChoiceBuilder<P> send(String uri, ExchangePattern pattern, C connector) throws IllegalArgumentException, NullPointerException {
+            ChoiceRouterBuilderImpl.this.send(uri, pattern, connector);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public OtherwiseChoiceBuilder<P> send(String uri, ExchangePattern pattern, String connectorName) throws IllegalArgumentException, NullPointerException {
+            ChoiceRouterBuilderImpl.this.send(uri, pattern, connectorName);
             return this;
         }
 
