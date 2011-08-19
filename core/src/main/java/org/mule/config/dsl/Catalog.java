@@ -85,4 +85,17 @@ public interface Catalog {
      */
     FilterBuilder newFilter(final String filterName) throws IllegalArgumentException;
 
+    /**
+     * Creates a global connector entry into catalog using {@code connectorName} as
+     * an unique identifier, returning an instance of a {@link ConnectorBuilder} that
+     * should be configured.
+     *
+     * @param connectorName filter name that identifies uniquely the global connector
+     * @return the connector builder to be configured
+     * @throws IllegalArgumentException if {@code connectorName} param is null, empty or already exists in catalog
+     * @see ConnectorBuilder
+     * @see org.mule.api.transport.Connector
+     */
+    ConnectorBuilder newConnector(final String connectorName) throws IllegalArgumentException;
+
 }

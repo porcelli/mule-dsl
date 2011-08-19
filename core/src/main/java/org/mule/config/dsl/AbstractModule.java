@@ -145,6 +145,38 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule im
         catalog.newRegistry(name, obj);
     }
 
+    /* global connector */
+
+    /**
+     * Declares an anonymous global connector, returning an instance of a
+     * {@link ConnectorBuilder} that should be configured.
+     *
+     * @return the connector builder to be configured
+     * @see ConnectorBuilder
+     * @see Catalog#newConnector(String)
+     * @see org.mule.api.transport.Connector
+     */
+    public ConnectorBuilder connector() {
+        return connector(newName("Connector"));
+    }
+
+    /**
+     * Declares a global connector using {@code name} as an unique
+     * identifier, returning an instance of a {@link ConnectorBuilder} that
+     * should be configured.
+     *
+     * @param name connector name that identifies it uniquely
+     * @return the connector builder to be configured
+     * @throws IllegalArgumentException if {@code name} param is null or empty
+     * @see ConnectorBuilder
+     * @see Catalog#newConnector(String)
+     * @see org.mule.api.transport.Connector
+     */
+    public ConnectorBuilder connector(final String name) throws IllegalArgumentException {
+        checkNotEmpty(name, "name");
+        return catalog.newConnector(name);
+    }
+
     /* global transformar and filters */
 
     /**

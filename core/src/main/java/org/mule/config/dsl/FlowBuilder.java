@@ -26,6 +26,10 @@ public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
      */
     PipelineBuilder<FlowBuilder> from(String uri) throws IllegalArgumentException;
 
+//    <C extends Connector> PipelineBuilder<FlowBuilder> from(String uri, C connector) throws IllegalArgumentException, NullPointerException;
+//
+//    PipelineBuilder<FlowBuilder> from(String uri, String connectorName) throws IllegalArgumentException;
+
     /**
      * Creates an inbound endpoint based on uri parameter using given exchange pattern.
      *
@@ -36,5 +40,9 @@ public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
      * @see org.mule.api.endpoint.InboundEndpoint
      */
     PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern) throws IllegalArgumentException;
+
+//    <C extends Connector> PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern, C connector) throws IllegalArgumentException, NullPointerException;
+//
+//    PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern, String connectorName) throws IllegalArgumentException;
 
 }

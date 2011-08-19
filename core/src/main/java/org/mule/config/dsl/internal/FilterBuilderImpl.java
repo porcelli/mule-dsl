@@ -45,9 +45,10 @@ public class FilterBuilderImpl implements FilterBuilder, Builder<MessageFilter> 
     }
 
     /**
-     * {@inheritDoc}
+     * Getter of global filter name
+     *
+     * @return the global filter name
      */
-    @Override
     public String getName() {
         return name;
     }

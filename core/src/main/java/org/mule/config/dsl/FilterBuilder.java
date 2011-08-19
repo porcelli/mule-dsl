@@ -19,13 +19,6 @@ import org.mule.api.routing.filter.Filter;
 public interface FilterBuilder extends Builder {
 
     /**
-     * Getter of global filter name
-     *
-     * @return the global filter name
-     */
-    String getName();
-
-    /**
      * Sets global filter to use the given filter object.
      *
      * @param obj the filter instance

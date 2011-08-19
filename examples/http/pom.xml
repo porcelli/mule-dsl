@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.mule.dsl.examples</groupId>
         <artifactId>dsl-examples</artifactId>
-        <version>0.6</version>
+        <version>0.7-SNAPSHOT</version>
     </parent>
     <artifactId>dsl-example-http</artifactId>
     <name>Mule DSL HTTP examples</name>

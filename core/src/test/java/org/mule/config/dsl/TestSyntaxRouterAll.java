@@ -60,9 +60,9 @@ public class TestSyntaxRouterAll {
                         			.echo()
                         		.endBroadcast()
                         		.echo()
-                        .endBroadcast()
-                        .onException(null).invoke(null).methodName(null).withoutArgs()
-                        .onException(null).invoke(null);
+                        .endBroadcast();
+//                        .onException(null).invoke(null).methodName(null).withoutArgs()
+//                        .onException(null).invoke(null);
 
                 flow("MyFlow2")
                 	.broadcast()

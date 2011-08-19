@@ -19,13 +19,6 @@ import org.mule.api.transformer.Transformer;
 public interface TransformerBuilder extends Builder {
 
     /**
-     * Getter of global transformer name
-     *
-     * @return the global transformer name
-     */
-    String getName();
-
-    /**
      * Sets global transformer to use the given transformer object.
      *
      * @param obj the transformer instance

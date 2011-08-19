@@ -71,6 +71,8 @@ public class MuleContextConfig {
 
             configureGlobalComponents();
 
+            configureGlobalConnectors();
+
             configureGlobalTransformers();
 
             configureGlobalFilters();
@@ -81,6 +83,21 @@ public class MuleContextConfig {
         } catch (final Exception e) {
             throw new ConfigurationException("Failed to configure mule context.", e);
         }
+    }
+
+    private void configureGlobalConnectors() {
+        for (final ConnectorBuilderImpl connectorBuilder : catalog.getGlobalConnectors().values()) {
+            final Connector connector = connectorBuilder.build(muleContext, catalog.getPropertyPlaceholder());
+            if (connector != null) {
+                try {
+                    connector.setName(connectorBuilder.getName());
+                    muleContext.getRegistry().registerConnector(connector);
+                } catch (final MuleException e) {
+                    throw new ConfigurationException("Failed to configure a Global Connector.", e);
+                }
+            }
+        }
+
     }
 
     private void configureGlobalComponents() {

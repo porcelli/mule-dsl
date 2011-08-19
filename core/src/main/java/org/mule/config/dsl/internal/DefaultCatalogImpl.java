@@ -30,6 +30,7 @@ public class DefaultCatalogImpl implements Catalog {
     private final Map<String, FlowBuilderImpl> flows;
     private final Map<String, TransformerBuilderImpl> globalTransformers;
     private final Map<String, FilterBuilderImpl> globalFilters;
+    private final Map<String, ConnectorBuilderImpl> globalConnectors;
     private final Map<String, Object> globalComponents;
     private final PropertyPlaceholder placeholder;
 
@@ -37,6 +38,7 @@ public class DefaultCatalogImpl implements Catalog {
         this.flows = new HashMap<String, FlowBuilderImpl>();
         this.globalTransformers = new HashMap<String, TransformerBuilderImpl>();
         this.globalFilters = new HashMap<String, FilterBuilderImpl>();
+        this.globalConnectors = new HashMap<String, ConnectorBuilderImpl>();
         this.globalComponents = new HashMap<String, Object>();
         this.properties = new Properties();
         this.placeholder = new PropertyPlaceholderImpl(properties);
@@ -110,6 +112,23 @@ public class DefaultCatalogImpl implements Catalog {
      * {@inheritDoc}
      */
     @Override
+    public ConnectorBuilder newConnector(final String connectorName) throws IllegalArgumentException {
+        checkNotEmpty(connectorName, "connectorName");
+
+        if (globalConnectors.containsKey(connectorName)) {
+            throw new IllegalArgumentException("Global connector name already registered.");
+        }
+
+        final ConnectorBuilderImpl cb = new ConnectorBuilderImpl(connectorName);
+        globalConnectors.put(connectorName, cb);
+
+        return cb;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void addToPropertyPlaceholder(final Properties properties) throws NullPointerException {
         checkNotNull(properties, "properties");
         this.properties.putAll(properties);
@@ -166,4 +185,8 @@ public class DefaultCatalogImpl implements Catalog {
         return unmodifiableMap(globalFilters);
     }
 
+
+    Map<String, ConnectorBuilderImpl> getGlobalConnectors() {
+        return unmodifiableMap(globalConnectors);
+    }
 }

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mule.dsl</groupId>
     <artifactId>mule-dsl</artifactId>
-    <version>0.6</version>
+    <version>0.7-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Mule DSL</name>
 
@@ -56,6 +56,12 @@
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
                 <version>2.6</version>
+            </dependency>
+            <!-- bytecode manipulation -->
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib-nodep</artifactId>
+                <version>2.2</version>
             </dependency>
             <!-- transport related dependencies -->
             <dependency>

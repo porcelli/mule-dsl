@@ -26,9 +26,9 @@ import static org.mule.config.dsl.internal.util.Preconditions.*;
  * hold global transformer configuration.
  *
  * @author porcelli
- * @see org.mule.config.dsl.AbstractModule#filter()
- * @see org.mule.config.dsl.AbstractModule#filter(String)
- * @see org.mule.config.dsl.Catalog#newFilter(String)
+ * @see org.mule.config.dsl.AbstractModule#transformer()
+ * @see org.mule.config.dsl.AbstractModule#transformer(String)
+ * @see org.mule.config.dsl.Catalog#newTransformer(String)
  */
 public class TransformerBuilderImpl implements TransformerBuilder, Builder<Transformer> {
 
@@ -44,9 +44,10 @@ public class TransformerBuilderImpl implements TransformerBuilder, Builder<Trans
     }
 
     /**
-     * {@inheritDoc}
+     * Getter of global transformer name
+     *
+     * @return the global transformer name
      */
-    @Override
     public String getName() {
         return name;
     }
