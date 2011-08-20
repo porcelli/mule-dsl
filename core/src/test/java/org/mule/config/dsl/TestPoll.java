@@ -117,9 +117,9 @@ public class TestPoll {
         final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
-                FlowBuilder fb = flow("SourceFlow").send("http://localhost:8080");
+                FlowDefinition fd = flow("SourceFlow").send("http://localhost:8080");
 
-                flow("MyFlow").poll(fb).every(10, SECONDS);
+                flow("MyFlow").poll(fd).every(10, SECONDS);
 
             }
         }).advanced().muleContext();
@@ -406,7 +406,7 @@ public class TestPoll {
             @Override
             public void configure() {
                 flow("MyFlow")
-                        .poll((FlowBuilder) null).every(10, SECONDS);
+                        .poll((FlowDefinition) null).every(10, SECONDS);
             }
         });
     }

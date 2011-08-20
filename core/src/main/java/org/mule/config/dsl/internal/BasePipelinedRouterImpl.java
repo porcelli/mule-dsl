@@ -170,7 +170,7 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
      * {@inheritDoc}
      */
     @Override
-    public P process(FlowBuilder flow) throws NullPointerException {
+    public P process(FlowDefinition flow) throws NullPointerException {
         pipeline.process(flow);
         return getThis();
     }

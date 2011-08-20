@@ -25,7 +25,7 @@ import static org.mule.config.dsl.internal.util.Preconditions.*;
  * @see org.mule.config.dsl.AbstractModule#flow()
  * @see org.mule.config.dsl.AbstractModule#flow(String)
  */
-public class FlowBuilderImpl extends PipelineBuilderImpl<FlowBuilder> implements FlowBuilder, FlowBuilder.PollBuilder, Builder<SimpleFlowConstruct> {
+public class FlowBuilderImpl extends PipelineBuilderImpl<FlowPipeline> implements FlowPipeline, FlowBuilder, FlowBuilder.PollBuilder, Builder<SimpleFlowConstruct> {
 
     private final String name;
     private InboundEndpointBuilderImpl inboundEndpointBuilder = null;
@@ -53,7 +53,7 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowBuilder> implements
      * {@inheritDoc}
      */
     @Override
-    public PipelineBuilder<FlowBuilder> from(final String uri) throws IllegalArgumentException {
+    public PipelineBuilder<FlowPipeline> from(final String uri) throws IllegalArgumentException {
         return from(uri, null, (String) null);
     }
 
@@ -61,7 +61,7 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowBuilder> implements
      * {@inheritDoc}
      */
     @Override
-    public PipelineBuilder<FlowBuilder> from(String uri, String connectorName) throws IllegalArgumentException {
+    public PipelineBuilder<FlowPipeline> from(String uri, String connectorName) throws IllegalArgumentException {
         checkNotEmpty(uri, "uri");
         checkNotEmpty(connectorName, "connectorName");
         return from(uri, null, connectorName);
@@ -71,7 +71,7 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowBuilder> implements
      * {@inheritDoc}
      */
     @Override
-    public <C extends Connector> PipelineBuilder<FlowBuilder> from(String uri, C connector) throws IllegalArgumentException, NullPointerException {
+    public <C extends Connector> PipelineBuilder<FlowPipeline> from(String uri, C connector) throws IllegalArgumentException, NullPointerException {
         checkNotNull(connector, "connector");
         return from(uri, null, connector);
     }
@@ -81,7 +81,7 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowBuilder> implements
      * {@inheritDoc}
      */
     @Override
-    public PipelineBuilder<FlowBuilder> from(final String uri, final ExchangePattern pattern) throws IllegalArgumentException {
+    public PipelineBuilder<FlowPipeline> from(final String uri, final ExchangePattern pattern) throws IllegalArgumentException {
         return from(uri, pattern, (String) null);
     }
 
@@ -89,7 +89,7 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowBuilder> implements
      * {@inheritDoc}
      */
     @Override
-    public PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern, String connectorName) throws IllegalArgumentException {
+    public PipelineBuilder<FlowPipeline> from(String uri, ExchangePattern pattern, String connectorName) throws IllegalArgumentException {
         checkNotEmpty(uri, "uri");
         this.inboundEndpointBuilder = new InboundEndpointBuilderImpl(uri, pattern, connectorName);
         return this;
@@ -99,7 +99,7 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowBuilder> implements
      * {@inheritDoc}
      */
     @Override
-    public <C extends Connector> PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern, C connector) throws IllegalArgumentException, NullPointerException {
+    public <C extends Connector> PipelineBuilder<FlowPipeline> from(String uri, ExchangePattern pattern, C connector) throws IllegalArgumentException, NullPointerException {
         checkNotEmpty(uri, "uri");
         this.inboundEndpointBuilder = new InboundEndpointBuilderImpl(uri, pattern, connector);
         return this;
@@ -129,7 +129,7 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowBuilder> implements
      * {@inheritDoc}
      */
     @Override
-    public PollBuilder poll(FlowBuilder flow) throws NullPointerException {
+    public PollBuilder poll(FlowDefinition flow) throws NullPointerException {
         checkNotNull(flow, "flow");
         this.pollBuilder = new PollBuilderImpl(((FlowBuilderImpl) flow).getName());
         return this;
@@ -149,7 +149,7 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowBuilder> implements
      * {@inheritDoc}
      */
     @Override
-    public PipelineBuilder<FlowBuilder> every(long duration, TimePeriod period) throws IllegalArgumentException, NullPointerException {
+    public PipelineBuilder<FlowPipeline> every(long duration, TimePeriod period) throws IllegalArgumentException, NullPointerException {
         checkState(duration > 0, "Duration should be higher than zero.");
         checkNotNull(period, "period");
 

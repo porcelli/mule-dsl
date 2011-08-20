@@ -105,12 +105,12 @@ public class TestProcessFlow {
         final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
             @Override
             public void configure() {
-                FlowBuilder fb = flow("Dispatcher")
+                FlowDefinition fd = flow("Dispatcher")
                         .send("file:///Users/porcelli/out");
 
                 flow("Receiver")
                         .from("file:///Users/porcelli/test")
-                        .process(fb);
+                        .process(fd);
 
             }
         }).advanced().muleContext();
@@ -203,7 +203,7 @@ public class TestProcessFlow {
             public void configure() {
                 flow("Receiver")
                         .from("file:///Users/porcelli/test")
-                        .process((FlowBuilder) null);
+                        .process((FlowDefinition) null);
             }
         });
     }

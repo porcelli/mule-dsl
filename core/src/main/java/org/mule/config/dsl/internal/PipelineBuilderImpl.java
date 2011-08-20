@@ -125,7 +125,7 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
      * {@inheritDoc}
      */
     @Override
-    public P process(FlowBuilder flow) throws NullPointerException {
+    public P process(FlowDefinition flow) throws NullPointerException {
         checkNotNull(flow, "flow");
         if (parentScope != null) {
             return parentScope.process(flow);

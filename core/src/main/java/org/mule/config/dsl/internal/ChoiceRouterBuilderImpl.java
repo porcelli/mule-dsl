@@ -211,7 +211,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
      * {@inheritDoc}
      */
     @Override
-    public InnerWhenChoiceBuilder<P> process(FlowBuilder flow) throws NullPointerException {
+    public InnerWhenChoiceBuilder<P> process(FlowDefinition flow) throws NullPointerException {
         pipeline.process(flow);
         return this;
     }
@@ -714,7 +714,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
          * {@inheritDoc}
          */
         @Override
-        public OtherwiseChoiceBuilder<P> process(FlowBuilder flow) throws NullPointerException {
+        public OtherwiseChoiceBuilder<P> process(FlowDefinition flow) throws NullPointerException {
             ChoiceRouterBuilderImpl.this.process(flow);
             return this;
         }

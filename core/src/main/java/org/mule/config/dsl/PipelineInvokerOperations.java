@@ -139,7 +139,7 @@ public interface PipelineInvokerOperations<P extends PipelineBuilder<P>> {
      * @throws IllegalArgumentException if {@code flow} param is null
      * @see org.mule.model.resolvers.ReflectionEntryPointResolver
      */
-    P process(FlowBuilder flow) throws NullPointerException;
+    P process(FlowDefinition flow) throws NullPointerException;
 
     /**
      * Executes the message processor.

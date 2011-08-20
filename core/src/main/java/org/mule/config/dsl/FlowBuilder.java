@@ -17,7 +17,7 @@ import org.mule.api.transport.Connector;
  *
  * @author porcelli
  */
-public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
+public interface FlowBuilder extends PipelineBuilder<FlowPipeline> {
 
     /**
      * Creates an URI based inbound endpoint.
@@ -27,7 +27,7 @@ public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
      * @throws IllegalArgumentException if {@code uri} is null or empty
      * @see org.mule.api.endpoint.InboundEndpoint
      */
-    PipelineBuilder<FlowBuilder> from(String uri) throws IllegalArgumentException;
+    PipelineBuilder<FlowPipeline> from(String uri) throws IllegalArgumentException;
 
     /**
      * Creates an URI based inbound endpoint using given connector.
@@ -38,7 +38,7 @@ public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
      * @throws IllegalArgumentException if {@code uri} is null or empty
      * @throws NullPointerException     if {@code connector} is null
      */
-    <C extends Connector> PipelineBuilder<FlowBuilder> from(String uri, C connector) throws IllegalArgumentException, NullPointerException;
+    <C extends Connector> PipelineBuilder<FlowPipeline> from(String uri, C connector) throws IllegalArgumentException, NullPointerException;
 
     /**
      * Creates an URI based inbound endpoint using given global connector reference.
@@ -48,7 +48,7 @@ public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
      * @return the pipeline builder
      * @throws IllegalArgumentException if {@code uri} or {@code connectorName} are null or empty
      */
-    PipelineBuilder<FlowBuilder> from(String uri, String connectorName) throws IllegalArgumentException;
+    PipelineBuilder<FlowPipeline> from(String uri, String connectorName) throws IllegalArgumentException;
 
     /**
      * Creates an URI based inbound endpoint using given exchange pattern.
@@ -59,7 +59,7 @@ public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
      * @throws IllegalArgumentException if {@code uri} is null or empty
      * @see org.mule.api.endpoint.InboundEndpoint
      */
-    PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern) throws IllegalArgumentException;
+    PipelineBuilder<FlowPipeline> from(String uri, ExchangePattern pattern) throws IllegalArgumentException;
 
     /**
      * Creates an URI based inbound endpoint using given exchange pattern and connector.
@@ -71,7 +71,7 @@ public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
      * @throws IllegalArgumentException if {@code uri} is null or empty
      * @throws NullPointerException     if {@code connector} is null
      */
-    <C extends Connector> PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern, C connector) throws IllegalArgumentException, NullPointerException;
+    <C extends Connector> PipelineBuilder<FlowPipeline> from(String uri, ExchangePattern pattern, C connector) throws IllegalArgumentException, NullPointerException;
 
     /**
      * Creates an URI based inbound endpoint using given exchange pattern and global connector reference.
@@ -82,7 +82,7 @@ public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
      * @return the pipeline builder
      * @throws IllegalArgumentException if {@code uri} or {@code connectorName} are null or empty
      */
-    PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern, String connectorName) throws IllegalArgumentException;
+    PipelineBuilder<FlowPipeline> from(String uri, ExchangePattern pattern, String connectorName) throws IllegalArgumentException;
 
     /**
      * Creates an inbound endpoint that polls given type.
@@ -109,7 +109,7 @@ public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
      * @return the poll builder
      * @throws NullPointerException if {@code flow} param is null
      */
-    PollBuilder poll(FlowBuilder flow) throws NullPointerException;
+    PollBuilder poll(FlowDefinition flow) throws NullPointerException;
 
     /**
      * Creates an inbound endpoint that polls given flow.
@@ -125,7 +125,7 @@ public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
      *
      * @author porcelli
      */
-    public static interface PollBuilder extends PipelineBuilder<FlowBuilder> {
+    public static interface PollBuilder extends PipelineBuilder<FlowPipeline> {
 
         /**
          * Sets the polling frequency based on given params.
@@ -136,6 +136,6 @@ public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
          * @throws IllegalArgumentException if {@code duration} param is less than or equal to zero
          * @throws NullPointerException     if {@code period} param is null
          */
-        PipelineBuilder<FlowBuilder> every(long duration, TimePeriod period) throws IllegalArgumentException, NullPointerException;
+        PipelineBuilder<FlowPipeline> every(long duration, TimePeriod period) throws IllegalArgumentException, NullPointerException;
     }
 }
