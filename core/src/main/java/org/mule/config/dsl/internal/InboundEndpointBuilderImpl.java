@@ -24,7 +24,7 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 /**
- * Internal class that builds, based on string based URI's, an {@link InboundEndpoint}.
+ * Internal class that builds, based on URI's, an {@link InboundEndpoint}.
  *
  * @author porcelli
  * @see org.mule.config.dsl.FlowBuilder#from(String)

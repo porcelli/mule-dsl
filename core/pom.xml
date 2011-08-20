@@ -53,6 +53,11 @@
             <artifactId>mule-transport-http</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-vm</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!-- test frameworks -->
         <dependency>
             <groupId>junit</groupId>

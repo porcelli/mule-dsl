@@ -9,6 +9,7 @@
 
 package org.mule.config.dsl;
 
+import org.mule.api.processor.MessageProcessor;
 import org.mule.api.transport.Connector;
 
 /**
@@ -83,4 +84,58 @@ public interface FlowBuilder extends PipelineBuilder<FlowBuilder> {
      */
     PipelineBuilder<FlowBuilder> from(String uri, ExchangePattern pattern, String connectorName) throws IllegalArgumentException;
 
+    /**
+     * Creates an inbound endpoint that polls given type.
+     *
+     * @param clazz the type to be polled, Mule will instantiate an object at runtime
+     * @return the poll builder
+     * @throws NullPointerException if {@code clazz} param is null
+     */
+    <MP extends MessageProcessor> PollBuilder poll(Class<MP> clazz) throws NullPointerException;
+
+    /**
+     * Creates an inbound endpoint that polls given object.
+     *
+     * @param obj the message processor instance to be polled
+     * @return the poll builder
+     * @throws NullPointerException if {@code obj} param is null
+     */
+    <MP extends MessageProcessor> PollBuilder poll(MP obj) throws NullPointerException;
+
+    /**
+     * Creates an inbound endpoint that polls given flow.
+     *
+     * @param flow the flow to be polled
+     * @return the poll builder
+     * @throws NullPointerException if {@code flow} param is null
+     */
+    PollBuilder poll(FlowBuilder flow) throws NullPointerException;
+
+    /**
+     * Creates an inbound endpoint that polls given flow.
+     *
+     * @param flowName the flow name to be polled
+     * @return the poll builder
+     * @throws NullPointerException if {@code flowName} param is null or empty
+     */
+    PollBuilder poll(String flowName) throws IllegalArgumentException;
+
+    /**
+     * Interface that extends {@link PipelineBuilder} and adds a poll related config method.
+     *
+     * @author porcelli
+     */
+    public static interface PollBuilder extends PipelineBuilder<FlowBuilder> {
+
+        /**
+         * Sets the polling frequency based on given params.
+         *
+         * @param duration the duration
+         * @param period   the time period unit
+         * @return the pipeline builder
+         * @throws IllegalArgumentException if {@code duration} param is less than or equal to zero
+         * @throws NullPointerException     if {@code period} param is null
+         */
+        PipelineBuilder<FlowBuilder> every(long duration, TimePeriod period) throws IllegalArgumentException, NullPointerException;
+    }
 }

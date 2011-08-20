@@ -132,11 +132,24 @@ public final class Mule {
         return muleContext.isStarted();
     }
 
+    /**
+     * Returns an interface that exposes some advanced data related to {@link Mule}
+     *
+     * @return interface that exposes some advanced data
+     */
     public MuleAdvancedConfig advanced() {
         return advancedConfig;
     }
 
-    public FlowInterfaceHandler flow(String name) {
+    /**
+     * Returns an interface that exposes flow related functions related to given flow name.
+     *
+     * @param name the flow name
+     * @return interface that exposes flow related functions related to given flow name
+     * @throws IllegalArgumentException if {@code name} is null or empty
+     * @throws FlowNotFoundException    if flow not found
+     */
+    public FlowInterfaceHandler flow(String name) throws IllegalArgumentException, FlowNotFoundException {
         checkNotEmpty(name, "name");
         if (!flowCache.containsKey(name)) {
             final FlowConstruct flow = muleContext.getRegistry().lookupFlowConstruct(name);
