@@ -24,9 +24,8 @@ public class TestSyntaxBasic {
                 FlowDefinition fb2 = flow("MyFlow")
                         .from((String) null).echo().echo().async().send("").send("").endAsync();
 
-//                FlowDefinition fb3 = flow("MyFlow")
-//                        .from((String) null).onException().process();
-
+                FlowDefinition fb3 = flow("MyFlow")
+                        .from((String) null).onException().process("");
             }
         });
     }

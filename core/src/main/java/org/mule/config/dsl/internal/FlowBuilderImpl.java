@@ -10,6 +10,7 @@
 package org.mule.config.dsl.internal;
 
 import org.mule.api.MuleContext;
+import org.mule.api.exception.MessagingExceptionHandler;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.transport.Connector;
 import org.mule.config.dsl.*;
@@ -25,9 +26,8 @@ import static org.mule.config.dsl.internal.util.Preconditions.*;
  * @see org.mule.config.dsl.AbstractModule#flow()
  * @see org.mule.config.dsl.AbstractModule#flow(String)
  */
-public class FlowBuilderImpl extends PipelineBuilderImpl<FlowPipeline> implements FlowPipeline, FlowBuilder, FlowBuilder.PollBuilder, Builder<SimpleFlowConstruct> {
+public class FlowBuilderImpl extends PipelineBuilderImpl<FlowPipeline> implements FlowNameAware, FlowPipeline, FlowBuilder, FlowBuilder.PollBuilder, Builder<SimpleFlowConstruct> {
 
-    private final String name;
     private InboundEndpointBuilderImpl inboundEndpointBuilder = null;
     private PollBuilderImpl pollBuilder = null;
 
@@ -36,17 +36,7 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowPipeline> implement
      * @throws IllegalArgumentException if {@code name} param is empty or null
      */
     public FlowBuilderImpl(final String name) throws IllegalArgumentException {
-        super(null);
-        this.name = checkNotEmpty(name, "name");
-    }
-
-    /**
-     * Returns the flow name
-     *
-     * @return the flow name
-     */
-    public String getName() {
-        return name;
+        super(null, name);
     }
 
     /**
@@ -131,7 +121,7 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowPipeline> implement
     @Override
     public PollBuilder poll(FlowDefinition flow) throws NullPointerException {
         checkNotNull(flow, "flow");
-        this.pollBuilder = new PollBuilderImpl(((FlowBuilderImpl) flow).getName());
+        this.pollBuilder = new PollBuilderImpl(((FlowBuilderImpl) flow).getFlowName());
         return this;
     }
 
@@ -165,7 +155,7 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowPipeline> implement
         checkNotNull(muleContext, "muleContext");
         checkNotNull(placeholder, "placeholder");
 
-        final SimpleFlowConstruct flow = new SimpleFlowConstruct(name, muleContext);
+        final SimpleFlowConstruct flow = new SimpleFlowConstruct(getFlowName(), muleContext);
         if (inboundEndpointBuilder != null) {
             flow.setMessageSource(inboundEndpointBuilder.build(muleContext, placeholder));
         } else if (pollBuilder != null) {
@@ -175,6 +165,14 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowPipeline> implement
         if (!isBuilderListEmpty()) {
             flow.setMessageProcessors(buildMessageProcessorList(muleContext, placeholder));
         }
+
+        if (exceptionHandlerList.size() > 0) {
+            for (Builder<? extends MessagingExceptionHandler> excpetionHandlerBuilder : exceptionHandlerList) {
+                flow.setExceptionListener(excpetionHandlerBuilder.build(muleContext, placeholder));
+                break;
+            }
+        }
+
         return flow;
     }
 }

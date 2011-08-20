@@ -14,11 +14,11 @@ import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.NamedObject;
 import org.mule.api.agent.Agent;
-import org.mule.api.construct.FlowConstruct;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.Connector;
 import org.mule.config.dsl.ConfigurationException;
+import org.mule.construct.SimpleFlowConstruct;
 import org.mule.routing.MessageFilter;
 import org.mule.transport.AbstractConnector;
 
@@ -154,8 +154,9 @@ public class MuleContextConfig {
     }
 
     private void configureFlows() {
+        //MessagingExceptionHandler
         for (final FlowBuilderImpl activeFlowBuilder : catalog.getFlows().values()) {
-            final FlowConstruct flow = activeFlowBuilder.build(muleContext, catalog.getPropertyPlaceholder());
+            final SimpleFlowConstruct flow = activeFlowBuilder.build(muleContext, catalog.getPropertyPlaceholder());
             if (flow != null) {
                 try {
                     muleContext.getRegistry().registerFlowConstruct(flow);

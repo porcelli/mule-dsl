@@ -19,7 +19,7 @@ import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.source.MessageSource;
-import org.mule.config.dsl.component.FlowMessageSourceWrapper;
+import org.mule.config.dsl.component.InvokerFlowComponent;
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.transport.AbstractConnector;
 import org.mule.transport.polling.MessageProcessorPollingMessageReceiver;
@@ -98,14 +98,14 @@ public class TestPoll {
                 assertThat((Long) inboundEndpoint.getProperty(AbstractConnector.PROPERTY_POLLING_FREQUENCY)).isEqualTo(SECONDS.toMillis(10));
 
                 assertThat(inboundEndpoint.getProperty(MessageProcessorPollingMessageReceiver.SOURCE_MESSAGE_PROCESSOR_PROPERTY_NAME))
-                        .isNotNull().isInstanceOf(FlowMessageSourceWrapper.class);
+                        .isNotNull().isInstanceOf(InvokerFlowComponent.class);
 
-                FlowMessageSourceWrapper flowWrapper =
-                        (FlowMessageSourceWrapper) inboundEndpoint.getProperty(MessageProcessorPollingMessageReceiver.SOURCE_MESSAGE_PROCESSOR_PROPERTY_NAME);
+                InvokerFlowComponent flowWrapper =
+                        (InvokerFlowComponent) inboundEndpoint.getProperty(MessageProcessorPollingMessageReceiver.SOURCE_MESSAGE_PROCESSOR_PROPERTY_NAME);
 
                 assertThat(flowWrapper.getFlowName()).isNotEmpty().isEqualTo("SourceFlow");
 
-                assertThat(flowWrapper.getFlow()).isNotNull();
+                assertThat(flowWrapper.getFlow(muleContext)).isNotNull();
 
                 assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
             }
@@ -177,14 +177,14 @@ public class TestPoll {
                 assertThat((Long) inboundEndpoint.getProperty(AbstractConnector.PROPERTY_POLLING_FREQUENCY)).isEqualTo(SECONDS.toMillis(10));
 
                 assertThat(inboundEndpoint.getProperty(MessageProcessorPollingMessageReceiver.SOURCE_MESSAGE_PROCESSOR_PROPERTY_NAME))
-                        .isNotNull().isInstanceOf(FlowMessageSourceWrapper.class);
+                        .isNotNull().isInstanceOf(InvokerFlowComponent.class);
 
-                FlowMessageSourceWrapper flowWrapper =
-                        (FlowMessageSourceWrapper) inboundEndpoint.getProperty(MessageProcessorPollingMessageReceiver.SOURCE_MESSAGE_PROCESSOR_PROPERTY_NAME);
+                InvokerFlowComponent flowWrapper =
+                        (InvokerFlowComponent) inboundEndpoint.getProperty(MessageProcessorPollingMessageReceiver.SOURCE_MESSAGE_PROCESSOR_PROPERTY_NAME);
 
                 assertThat(flowWrapper.getFlowName()).isNotEmpty().isEqualTo("SourceFlow");
 
-                assertThat(flowWrapper.getFlow()).isNotNull();
+                assertThat(flowWrapper.getFlow(muleContext)).isNotNull();
 
                 assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
             }
@@ -359,18 +359,18 @@ public class TestPoll {
             assertThat((Long) inboundEndpoint.getProperty(AbstractConnector.PROPERTY_POLLING_FREQUENCY)).isEqualTo(SECONDS.toMillis(10));
 
             assertThat(inboundEndpoint.getProperty(MessageProcessorPollingMessageReceiver.SOURCE_MESSAGE_PROCESSOR_PROPERTY_NAME))
-                    .isNotNull().isInstanceOf(FlowMessageSourceWrapper.class);
+                    .isNotNull().isInstanceOf(InvokerFlowComponent.class);
 
             assertThat(inboundEndpoint.getProperty(MessageProcessorPollingMessageReceiver.SOURCE_MESSAGE_PROCESSOR_PROPERTY_NAME))
-                    .isNotNull().isInstanceOf(FlowMessageSourceWrapper.class);
+                    .isNotNull().isInstanceOf(InvokerFlowComponent.class);
 
-            FlowMessageSourceWrapper flowWrapper =
-                    (FlowMessageSourceWrapper) inboundEndpoint.getProperty(MessageProcessorPollingMessageReceiver.SOURCE_MESSAGE_PROCESSOR_PROPERTY_NAME);
+            InvokerFlowComponent flowWrapper =
+                    (InvokerFlowComponent) inboundEndpoint.getProperty(MessageProcessorPollingMessageReceiver.SOURCE_MESSAGE_PROCESSOR_PROPERTY_NAME);
 
             assertThat(flowWrapper.getFlowName()).isNotEmpty().isEqualTo("NOT");
 
             try {
-                assertThat(flowWrapper.getFlow()).isNull();
+                assertThat(flowWrapper.getFlow(muleContext)).isNull();
                 fail();
             } catch (FlowNotFoundException e) {
             }

@@ -17,7 +17,7 @@ import org.mule.api.processor.MessageProcessor;
 import org.mule.config.dsl.ConfigurationException;
 import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.TimePeriod;
-import org.mule.config.dsl.component.FlowMessageSourceWrapper;
+import org.mule.config.dsl.component.InvokerFlowComponent;
 import org.mule.config.dsl.internal.util.InjectorUtil;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.endpoint.URIBuilder;
@@ -36,7 +36,7 @@ import static org.mule.config.dsl.internal.util.Preconditions.*;
  *
  * @author porcelli
  * @see org.mule.config.dsl.FlowBuilder#poll(String)
- * @see org.mule.config.dsl.FlowBuilder#poll(org.mule.config.dsl.FlowBuilder)
+ * @see org.mule.config.dsl.FlowBuilder#poll(org.mule.config.dsl.FlowDefinition)
  * @see org.mule.config.dsl.FlowBuilder#poll(org.mule.api.processor.MessageProcessor)
  * @see org.mule.config.dsl.FlowBuilder#poll(Class)
  */
@@ -115,7 +115,7 @@ public class PollBuilderImpl implements Builder<InboundEndpoint> {
                 throw new ConfigurationException("Failed to configure Poll Endpoint.", e);
             }
         } else if (flowName != null) {
-            messageProcessor = new FlowMessageSourceWrapper(muleContext, flowName);
+            messageProcessor = new InvokerFlowComponent(flowName);
         } else {
             messageProcessor = obj;
         }

@@ -10,40 +10,161 @@
 package org.mule.config.dsl.component;
 
 import org.junit.Test;
-import org.mule.api.construct.FlowConstructInvalidException;
+import org.mule.DefaultMuleEvent;
+import org.mule.DefaultMuleMessage;
+import org.mule.api.MuleContext;
+import org.mule.api.MuleEvent;
+import org.mule.api.MuleException;
+import org.mule.api.construct.FlowConstruct;
+import org.mule.api.exception.MessagingExceptionHandler;
+import org.mule.api.lifecycle.LifecycleState;
+import org.mule.api.processor.MessageProcessor;
+import org.mule.api.processor.MessageProcessorChain;
+import org.mule.api.routing.MessageInfoMapping;
 import org.mule.config.dsl.AbstractModule;
 import org.mule.config.dsl.Mule;
+import org.mule.management.stats.FlowConstructStatistics;
+import org.mule.model.seda.SedaService;
+import org.mule.session.DefaultMuleSession;
 
+import static org.fest.assertions.Assertions.assertThat;
 import static org.fest.assertions.Fail.fail;
 
-public class TestInvokerFlowComponent extends BaseComponentTests {
+public class TestInvokerFlowComponent {
 
-    public TestInvokerFlowComponent() {
+    @Test
+    public void testConfig() {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
+            @Override
+            public void configure() {
+                flow("MyFlow")
+                        .send("file:///Users/porcelli/out");
+            }
+        }).advanced().muleContext();
+        InvokerFlowComponent flowWrapper = new InvokerFlowComponent("MyFlow");
+
+        assertThat(flowWrapper.getFlowName()).isEqualTo("MyFlow");
+        assertThat(flowWrapper.getFlow(muleContext)).isNotNull();
+    }
+
+    @Test
+    public void testExec() throws MuleException {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
+            @Override
+            public void configure() {
+            }
+        }).advanced().muleContext();
+        muleContext.getRegistry().registerFlowConstruct(new MyFlorForTest());
+        InvokerFlowComponent flowWrapper = new InvokerFlowComponent("MyTEST");
+
+        assertThat(flowWrapper.getFlowName()).isEqualTo("MyTEST");
+        assertThat(flowWrapper.getFlow(muleContext)).isNotNull();
+
+        MuleEvent event = getEvent(muleContext, "A");
+        flowWrapper.process(event);
+
+        assertThat(flowWrapper.getFlow(muleContext)).isNotNull().isInstanceOf(MyFlorForTest.class);
+
+        assertThat(((MyFlorForTest) flowWrapper.getFlow(muleContext)).getEvent()).isNotNull().isEqualTo(event);
+    }
+
+    @Test
+    public void testFlowNotFound() throws MuleException {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
+            @Override
+            public void configure() {
+                flow("MyFlow")
+                        .send("file:///Users/porcelli/out");
+            }
+        }).advanced().muleContext();
+
+        InvokerFlowComponent flowWrapper = new InvokerFlowComponent("MyFlow2");
+
+        assertThat(flowWrapper.getFlowName()).isNotNull().isEqualTo("MyFlow2");
+
         try {
-            this.muleContext = Mule.newInstance(new AbstractModule() {
-                @Override
-                public void configure() {
-                    flow("Receiver")
-                            .process("xxxx");
-
-                    flow("Receiver2")
-                            .process("Dispatcher");
-
-                    flow("Dispatcher")
-                            .log();
-
-                }
-            }).advanced().muleContext();
-
-        } catch (final Exception e) {
-            fail("Can't initialize muleContext.", e);
+            flowWrapper.getFlow(muleContext);
+            fail();
+        } catch (Exception ex) {
         }
     }
 
-    @Test(expected = FlowConstructInvalidException.class)
-    public void testFlowNotFound() throws Exception {
-        final InvokerFlowComponent component = new InvokerFlowComponent("xxx");
-        component.process(getEvent("sss"));
+    @Test
+    public void testFlowNotFoundEmpty() throws MuleException {
+        final MuleContext muleContext = Mule.newInstance(new AbstractModule() {
+            @Override
+            public void configure() {
+            }
+        }).advanced().muleContext();
+
+        InvokerFlowComponent flowWrapper = new InvokerFlowComponent("MyFlow2");
+
+        assertThat(flowWrapper.getFlowName()).isNotNull().isEqualTo("MyFlow2");
+
+        try {
+            flowWrapper.getFlow(muleContext);
+            fail();
+        } catch (Exception ex) {
+        }
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testNullFlow() throws MuleException {
+        new InvokerFlowComponent(null);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testEmptyFlow() throws MuleException {
+        new InvokerFlowComponent("");
+    }
+
+    private MuleEvent getEvent(final MuleContext muleContext, final Object messageContent) {
+        return new DefaultMuleEvent(new DefaultMuleMessage(messageContent, muleContext), null, new DefaultMuleSession(new SedaService(muleContext), muleContext));
+    }
+
+    private final class MyFlorForTest implements FlowConstruct, MessageProcessor {
+
+        private MuleEvent event;
+
+        @Override
+        public String getName() {
+            return "MyTEST";
+        }
+
+        @Override
+        public MessagingExceptionHandler getExceptionListener() {
+            return null;
+        }
+
+        @Override
+        public FlowConstructStatistics getStatistics() {
+            return null;
+        }
+
+        @Override
+        public MessageInfoMapping getMessageInfoMapping() {
+            return null;
+        }
+
+        @Override
+        public MessageProcessorChain getMessageProcessorChain() {
+            return null;
+        }
+
+        @Override
+        public LifecycleState getLifecycleState() {
+            return null;
+        }
+
+        @Override
+        public MuleEvent process(MuleEvent event) throws MuleException {
+            this.event = event;
+            return null;
+        }
+
+        public MuleEvent getEvent() {
+            return event;
+        }
     }
 
     @Test(expected = NullPointerException.class)
@@ -51,17 +172,4 @@ public class TestInvokerFlowComponent extends BaseComponentTests {
         final InvokerFlowComponent component = new InvokerFlowComponent("xxx");
         component.process(null);
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullFlowNameEmpty() throws Exception {
-        new InvokerFlowComponent("");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullFlowNameNull() throws Exception {
-        new InvokerFlowComponent(null);
-    }
-
-    //TODO test real execution.. problem with endpoits for now
-
 }

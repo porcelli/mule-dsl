@@ -9,12 +9,12 @@
 
 package org.mule.config.dsl.component;
 
+import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.construct.FlowConstruct;
-import org.mule.api.construct.FlowConstructInvalidException;
 import org.mule.api.processor.MessageProcessor;
-import org.mule.config.i18n.MessageFactory;
+import org.mule.config.dsl.FlowNotFoundException;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
@@ -29,6 +29,7 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 public class InvokerFlowComponent implements MessageProcessor {
 
     private final String flowName;
+    private MessageProcessor flow;
 
     /**
      * @param flowName the name of the flow to be invoked
@@ -47,23 +48,38 @@ public class InvokerFlowComponent implements MessageProcessor {
     }
 
     /**
+     * Returns the flow.
+     * <p/>
+     * <b>Note:</b> This method queries the flow on mule context.
+     *
+     * @param muleContext the mule context
+     * @return the the flow
+     * @throws FlowNotFoundException if flow not found
+     */
+    public MessageProcessor getFlow(MuleContext muleContext) throws NullPointerException, FlowNotFoundException {
+        checkNotNull(muleContext, "muleContext");
+        if (flow == null) {
+            flow = (MessageProcessor) muleContext.getRegistry().lookupFlowConstruct(flowName);
+            if (flow == null) {
+                throw new FlowNotFoundException("Flow not found");
+            }
+        }
+        return flow;
+    }
+
+    /**
      * Invokes the given flow
      *
      * @param event the mule event
      * @return the result of invoked flow
-     * @throws FlowConstructInvalidException if flow not found
-     * @throws NullPointerException          if {@code event} param is null
-     * @throws MuleException                 if something went working during flow execution
+     * @throws FlowNotFoundException if flow not found
+     * @throws NullPointerException  if {@code event} param is null
+     * @throws MuleException         if something went working during flow execution
      */
     @Override
-    public MuleEvent process(MuleEvent event) throws MuleException, FlowConstructInvalidException, NullPointerException {
+    public MuleEvent process(MuleEvent event) throws MuleException, NullPointerException {
         checkNotNull(event, "event");
 
-        FlowConstruct flow = event.getMuleContext().getRegistry().lookupFlowConstruct(flowName);
-        if (flow == null) {
-            throw new FlowConstructInvalidException(MessageFactory.createStaticMessage("Flows not found."));
-        }
-
-        return ((MessageProcessor) flow).process(event);
+        return getFlow(event.getMuleContext()).process(event);
     }
 }

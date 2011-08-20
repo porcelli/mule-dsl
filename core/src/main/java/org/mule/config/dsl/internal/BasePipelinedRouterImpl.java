@@ -26,7 +26,7 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
  *
  * @author porcelli
  */
-public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> implements PipelineBuilder<P>, MessageProcessorBuilderList {
+public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> implements FlowNameAware, PipelineBuilder<P>, MessageProcessorBuilderList {
 
     protected final PipelineBuilderImpl<P> pipeline;
 
@@ -41,6 +41,18 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
      * @see <a href="http://www.angelikalanger.com/GenericsFAQ/FAQSections/ProgrammingIdioms.html#What is the getThis trick?">More about getThis trick</a>
      */
     protected abstract P getThis();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getFlowName() {
+        if (pipeline != null && pipeline instanceof FlowNameAware) {
+            return ((FlowNameAware) pipeline).getFlowName();
+        } else {
+            return null;
+        }
+    }
 
     /**
      * {@inheritDoc}
@@ -419,6 +431,14 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
         pipeline.addBuilder(builder);
 
         return builder;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PipelineExceptionInvokeOperations onException() {
+        return pipeline.onException();
     }
 
     /**

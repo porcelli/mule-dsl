@@ -10,6 +10,7 @@
 package org.mule.config.dsl.internal;
 
 import org.mule.api.MuleContext;
+import org.mule.api.exception.MessagingExceptionHandler;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
@@ -32,9 +33,11 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
  *
  * @author porcelli
  */
-class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuilder<P>, MessageProcessorBuilderList {
+class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuilder<P>, FlowNameAware, MessageProcessorBuilderList {
 
+    protected final String flowName;
     protected final List<Builder<? extends MessageProcessor>> processorList;
+    protected final List<Builder<? extends MessagingExceptionHandler>> exceptionHandlerList;
     protected final P parentScope;
 
     /**
@@ -42,7 +45,34 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
      */
     public PipelineBuilderImpl(final P parentScope) {
         this.processorList = new ArrayList<Builder<? extends MessageProcessor>>();
+        this.exceptionHandlerList = new ArrayList<Builder<? extends MessagingExceptionHandler>>();
         this.parentScope = parentScope;
+        if (parentScope != null && parentScope instanceof FlowNameAware) {
+            this.flowName = ((FlowNameAware) parentScope).getFlowName();
+        } else {
+            this.flowName = null;
+        }
+    }
+
+    /**
+     * @param parentScope the parent scope, null is allowed
+     * @param flowName    the flow name
+     */
+    public PipelineBuilderImpl(final P parentScope, String flowName) {
+        this.flowName = checkNotEmpty(flowName, "flowName");
+        this.processorList = new ArrayList<Builder<? extends MessageProcessor>>();
+        this.exceptionHandlerList = new ArrayList<Builder<? extends MessagingExceptionHandler>>();
+        this.parentScope = parentScope;
+    }
+
+    /**
+     * Returns the flow name
+     *
+     * @return the flow name
+     */
+    @Override
+    public String getFlowName() {
+        return flowName;
     }
 
     /**
@@ -130,7 +160,7 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
         if (parentScope != null) {
             return parentScope.process(flow);
         }
-        processorList.add(new InvokeBuilderImpl<P>(getThis(), new InvokerFlowComponent(((FlowBuilderImpl) flow).getName())));
+        processorList.add(new InvokeBuilderImpl<P>(getThis(), new InvokerFlowComponent(((FlowBuilderImpl) flow).getFlowName())));
 
         return getThis();
     }
@@ -572,6 +602,19 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
         return builder;
     }
 
+    /* error handling */
+
+    @Override
+    public PipelineExceptionInvokeOperations onException() {
+        if (parentScope != null) {
+            return parentScope.onException();
+        }
+        final PipelineExceptionOperationsBuilderImpl builder = new PipelineExceptionOperationsBuilderImpl(getThis());
+        exceptionHandlerList.add(builder);
+
+        return builder;
+    }
+
     /* routers */
 
     /**
@@ -689,5 +732,4 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
     public List<Builder<? extends MessageProcessor>> getBuilders() {
         return processorList;
     }
-
 }

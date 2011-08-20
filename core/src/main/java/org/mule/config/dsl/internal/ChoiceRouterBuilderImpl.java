@@ -32,7 +32,7 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
  * @author porcelli
  * @see org.mule.config.dsl.PipelineBuilder#choice()
  */
-public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements ChoiceRouterBuilder<P>, InnerWhenChoiceBuilder<P>, Builder<ChoiceRouter>, MessageProcessorBuilderList {
+public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements FlowNameAware, ChoiceRouterBuilder<P>, InnerWhenChoiceBuilder<P>, Builder<ChoiceRouter>, MessageProcessorBuilderList {
 
     private final P parentScope;
     private final PipelineBuilderImpl<P> pipeline;
@@ -48,6 +48,18 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         this.parentScope = checkNotNull(parentScope, "parentScope");
         this.pipeline = new PipelineBuilderImpl<P>(null);
         this.choiceElements = new LinkedList<Route>();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getFlowName() {
+        if (parentScope != null && parentScope instanceof FlowNameAware) {
+            return ((FlowNameAware) parentScope).getFlowName();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -465,6 +477,14 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
      * {@inheritDoc}
      */
     @Override
+    public PipelineExceptionInvokeOperations onException() {
+        return pipeline.onException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public BroadcastRouterBuilder<InnerWhenChoiceBuilder<P>> broadcast() {
         final BroadcastRouterBuilderImpl<InnerWhenChoiceBuilder<P>> builder = new BroadcastRouterBuilderImpl<InnerWhenChoiceBuilder<P>>(this);
         pipeline.addBuilder(builder);
@@ -578,7 +598,16 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
         return choiceRouter;
     }
 
-    public class OtherwiseChoiceBuilderImpl<P extends PipelineBuilder<P>> implements OtherwiseChoiceBuilder<P> {
+    public class OtherwiseChoiceBuilderImpl<P extends PipelineBuilder<P>> implements FlowNameAware, OtherwiseChoiceBuilder<P> {
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String getFlowName() {
+            return ChoiceRouterBuilderImpl.this.getFlowName();
+        }
+
         /**
          * {@inheritDoc}
          */
@@ -962,6 +991,14 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Ch
             pipeline.addBuilder(builder);
 
             return builder;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public PipelineExceptionInvokeOperations onException() {
+            return ChoiceRouterBuilderImpl.this.onException();
         }
 
         /**
