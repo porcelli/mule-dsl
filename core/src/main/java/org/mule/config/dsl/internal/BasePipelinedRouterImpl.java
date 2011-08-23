@@ -26,12 +26,14 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
  *
  * @author porcelli
  */
-public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> implements FlowNameAware, PipelineBuilder<P>, MessageProcessorBuilderList {
+public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>, X extends PipelineBuilder<X>> implements FlowNameAware, PipelineBuilder<P>, MessageProcessorBuilderList {
 
+    protected final X parentScope;
     protected final PipelineBuilderImpl<P> pipeline;
 
-    public BasePipelinedRouterImpl() {
-        this.pipeline = new PipelineBuilderImpl<P>(null);
+    public BasePipelinedRouterImpl(final X parentScope) {
+        this.parentScope = checkNotNull(parentScope, "parentScope");
+        this.pipeline = new PipelineBuilderImpl<P>((P) null);
     }
 
     /**
@@ -47,8 +49,8 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>> impl
      */
     @Override
     public String getFlowName() {
-        if (pipeline != null && pipeline instanceof FlowNameAware) {
-            return ((FlowNameAware) pipeline).getFlowName();
+        if (parentScope instanceof FlowNameAware) {
+            return ((FlowNameAware) parentScope).getFlowName();
         } else {
             return null;
         }

@@ -37,6 +37,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Fl
     private final P parentScope;
     private final PipelineBuilderImpl<P> pipeline;
     private final LinkedList<Route> choiceElements;
+    private final String flowName;
 
     private ExpressionEvaluatorDefinition lastWhenExpr = null;
 
@@ -46,7 +47,12 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Fl
      */
     ChoiceRouterBuilderImpl(final P parentScope) {
         this.parentScope = checkNotNull(parentScope, "parentScope");
-        this.pipeline = new PipelineBuilderImpl<P>(null);
+        if (parentScope instanceof FlowNameAware) {
+            this.flowName = ((FlowNameAware) parentScope).getFlowName();
+        } else {
+            this.flowName = null;
+        }
+        this.pipeline = new PipelineBuilderImpl<P>(flowName);
         this.choiceElements = new LinkedList<Route>();
     }
 
@@ -55,11 +61,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Fl
      */
     @Override
     public String getFlowName() {
-        if (parentScope != null && parentScope instanceof FlowNameAware) {
-            return ((FlowNameAware) parentScope).getFlowName();
-        } else {
-            return null;
-        }
+        return flowName;
     }
 
     /**

@@ -54,6 +54,11 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
         }
     }
 
+    public PipelineBuilderImpl(final String flowName) {
+        this(null, flowName);
+    }
+
+
     /**
      * @param parentScope the parent scope, null is allowed
      * @param flowName    the flow name

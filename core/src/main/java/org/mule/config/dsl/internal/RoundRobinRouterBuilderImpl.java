@@ -26,17 +26,14 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
  * @author porcelli
  * @see org.mule.config.dsl.PipelineBuilder#roundRobin()
  */
-public class RoundRobinRouterBuilderImpl<P extends PipelineBuilder<P>> extends BasePipelinedRouterImpl<RoundRobinRouterBuilder<P>> implements RoundRobinRouterBuilder<P>, Builder<RoundRobin> {
-
-    private final P parentScope;
+public class RoundRobinRouterBuilderImpl<P extends PipelineBuilder<P>> extends BasePipelinedRouterImpl<RoundRobinRouterBuilder<P>, P> implements RoundRobinRouterBuilder<P>, Builder<RoundRobin> {
 
     /**
      * @param parentScope the parent scope
      * @throws NullPointerException if {@code parentScope} param is null
      */
     public RoundRobinRouterBuilderImpl(final P parentScope) throws NullPointerException {
-        super();
-        this.parentScope = checkNotNull(parentScope, "parentScope");
+        super(parentScope);
     }
 
     /**

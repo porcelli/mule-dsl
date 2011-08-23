@@ -26,17 +26,14 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
  * @author porcelli
  * @see org.mule.config.dsl.PipelineBuilder#async()
  */
-public class AsyncRouterBuilderImpl<P extends PipelineBuilder<P>> extends BasePipelinedRouterImpl<AsyncRouterBuilder<P>> implements AsyncRouterBuilder<P>, Builder<AsyncDelegateMessageProcessor> {
-
-    private final P parentScope;
+public class AsyncRouterBuilderImpl<P extends PipelineBuilder<P>> extends BasePipelinedRouterImpl<AsyncRouterBuilder<P>, P> implements AsyncRouterBuilder<P>, Builder<AsyncDelegateMessageProcessor> {
 
     /**
      * @param parentScope the parent scope
      * @throws NullPointerException if {@code parentScope} param is null
      */
     public AsyncRouterBuilderImpl(final P parentScope) throws NullPointerException {
-        super();
-        this.parentScope = checkNotNull(parentScope, "parentScope");
+        super(parentScope);
     }
 
     /**

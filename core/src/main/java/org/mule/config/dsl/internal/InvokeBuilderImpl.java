@@ -288,7 +288,7 @@ public class InvokeBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBui
     public class InnerArgsInvokeBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderImpl<InnerArgsInvokeBuilder<P>> implements InnerArgsInvokeBuilder<P> {
 
         InnerArgsInvokeBuilderImpl() {
-            super(null);
+            super(InvokeBuilderImpl.this.getFlowName());
         }
 
         /**
