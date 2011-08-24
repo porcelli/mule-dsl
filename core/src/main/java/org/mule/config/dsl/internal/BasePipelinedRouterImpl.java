@@ -266,6 +266,15 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>, X ex
      * {@inheritDoc}
      */
     @Override
+    public P process(final MessageProcessorDefinition messageProcessor) throws NullPointerException, IllegalArgumentException {
+        pipeline.process(messageProcessor);
+        return getThis();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public P send(final String uri) throws IllegalArgumentException {
         pipeline.send(uri);
         return getThis();
