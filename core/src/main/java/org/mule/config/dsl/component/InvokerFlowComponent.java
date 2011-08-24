@@ -12,7 +12,6 @@ package org.mule.config.dsl.component;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
-import org.mule.api.construct.FlowConstruct;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.config.dsl.FlowNotFoundException;
 
@@ -21,10 +20,12 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
 
 /**
  * Simple component that lookups and invokes an already registered flow.
+ * <p/>
+ * <b>Important Note:</b> this message processor executes a lazy load of the flow to be executed.
+ * This lazy load is important due the Mule config lifecycle that, during this class instantiation,
+ * has no garantee that given flow is already registered.
  *
  * @author porcelli
- * @see FlowConstruct
- * @see org.mule.api.registry.MuleRegistry#lookupFlowConstruct(String)
  */
 public class InvokerFlowComponent implements MessageProcessor {
 

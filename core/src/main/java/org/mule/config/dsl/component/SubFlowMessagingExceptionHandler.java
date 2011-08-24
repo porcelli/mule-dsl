@@ -17,17 +17,28 @@ import org.mule.routing.filters.WildcardFilter;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
 
+/**
+ * Will execute a given flow in case of exception.
+ *
+ * @author porcelli
+ */
 public class SubFlowMessagingExceptionHandler implements MessagingExceptionHandler {
 
     private final InvokerFlowComponent flowInvoker;
 
+    /**
+     * @param flowName the flow to be executed
+     */
     public SubFlowMessagingExceptionHandler(String flowName) {
         checkNotEmpty(flowName, "flowName");
         this.flowInvoker = new InvokerFlowComponent(flowName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public MuleEvent handleException(Exception exception, MuleEvent event) {
+    public MuleEvent handleException(Exception exception, MuleEvent event) throws FlowProcessException {
         try {
             return flowInvoker.process(event);
         } catch (MuleException e) {
@@ -35,11 +46,17 @@ public class SubFlowMessagingExceptionHandler implements MessagingExceptionHandl
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public WildcardFilter getCommitTxFilter() {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public WildcardFilter getRollbackTxFilter() {
         return null;

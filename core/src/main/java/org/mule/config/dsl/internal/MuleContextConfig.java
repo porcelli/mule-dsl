@@ -85,7 +85,12 @@ public class MuleContextConfig {
         }
     }
 
-    private void configureGlobalConnectors() {
+    /**
+     * Builds and register global connectors.
+     *
+     * @throws ConfigurationException if something unexpected happens
+     */
+    private void configureGlobalConnectors() throws ConfigurationException {
         for (final ConnectorBuilderImpl connectorBuilder : catalog.getGlobalConnectors().values()) {
             final Connector connector = connectorBuilder.build(muleContext, catalog.getPropertyPlaceholder());
             if (connector != null) {
@@ -100,7 +105,12 @@ public class MuleContextConfig {
 
     }
 
-    private void configureGlobalComponents() {
+    /**
+     * Builds and register global components.
+     *
+     * @throws ConfigurationException if something unexpected happens
+     */
+    private void configureGlobalComponents() throws ConfigurationException {
         for (final Map.Entry<String, Object> entry : catalog.getComponents().entrySet()) {
             try {
                 if (entry.getValue() instanceof NamedObject && isEmpty(((NamedObject) entry.getValue()).getName())) {
@@ -126,7 +136,12 @@ public class MuleContextConfig {
         }
     }
 
-    private void configureGlobalTransformers() {
+    /**
+     * Builds and register global transformers.
+     *
+     * @throws ConfigurationException if something unexpected happens
+     */
+    private void configureGlobalTransformers() throws ConfigurationException {
         for (final TransformerBuilderImpl transformerBuilder : catalog.getGlobalTransformers().values()) {
             final Transformer transformer = transformerBuilder.build(muleContext, catalog.getPropertyPlaceholder());
             if (transformer != null) {
@@ -140,6 +155,11 @@ public class MuleContextConfig {
         }
     }
 
+    /**
+     * Builds and register global filters.
+     *
+     * @throws ConfigurationException if something unexpected happens
+     */
     private void configureGlobalFilters() {
         for (final FilterBuilderImpl filterBuilder : catalog.getGlobalFilters().values()) {
             final MessageFilter filter = filterBuilder.build(muleContext, catalog.getPropertyPlaceholder());
@@ -153,8 +173,12 @@ public class MuleContextConfig {
         }
     }
 
+    /**
+     * Builds and register flows.
+     *
+     * @throws ConfigurationException if something unexpected happens
+     */
     private void configureFlows() {
-        //MessagingExceptionHandler
         for (final FlowBuilderImpl activeFlowBuilder : catalog.getFlows().values()) {
             final SimpleFlowConstruct flow = activeFlowBuilder.build(muleContext, catalog.getPropertyPlaceholder());
             if (flow != null) {

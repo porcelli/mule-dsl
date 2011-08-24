@@ -21,12 +21,22 @@ import java.util.List;
 
 import static org.mule.config.dsl.internal.util.Preconditions.checkContentsNotNull;
 
+/**
+ * Provides the configuration entry point for loading DSL modules into Mule.
+ *
+ * @author porcelli
+ */
 public class DSLConfigurationBuilder implements ConfigurationBuilder {
 
     boolean isConfigured = false;
     final Module[] modules;
 
-    public DSLConfigurationBuilder(Module... modules) {
+    /**
+     * @param modules an array of non-null modules
+     * @throws NullPointerException     if {@code modules} param is null
+     * @throws IllegalArgumentException if {@code modules} is empty
+     */
+    public DSLConfigurationBuilder(Module... modules) throws NullPointerException, IllegalArgumentException {
         checkContentsNotNull(modules, "modules");
         if (modules.length < 1) {
             throw new IllegalArgumentException("At least one module should be provided.");
@@ -35,6 +45,9 @@ public class DSLConfigurationBuilder implements ConfigurationBuilder {
         this.modules = modules;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void configure(MuleContext muleContext) throws ConfigurationException {
         if (isConfigured) {
@@ -64,6 +77,10 @@ public class DSLConfigurationBuilder implements ConfigurationBuilder {
         isConfigured = true;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isConfigured() {
         return isConfigured;

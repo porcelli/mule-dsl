@@ -20,11 +20,19 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Utility class responsible to resolve and build type specific {@link MuleMessageFactory}s.
+ *
+ * @author porcelli
+ */
 public final class MessageFactoryUtil {
 
     private static Map<Class, Class> messageTypes = new HashMap<Class, Class>();
     private static Map<Class, Class<? extends MuleMessageFactory>> cachedMessageTypes = new HashMap<Class, Class<? extends MuleMessageFactory>>();
 
+    /**
+     * Pre-register all already know types and its message factory
+     */
     static {
         loadType(File.class, "org.mule.transport.file.FileMuleMessageFactory");
         loadType(InputStream.class, "org.mule.transport.file.FileMuleMessageFactory");
@@ -40,23 +48,13 @@ public final class MessageFactoryUtil {
     private MessageFactoryUtil() {
     }
 
-    private static void loadType(String sourceType, String messageFactoryType) {
-        try {
-            final Class clazz = Class.forName(sourceType);
-            loadType(clazz, messageFactoryType);
-        } catch (ClassNotFoundException ex) {
-        }
-    }
-
-    private static void loadType(Class sourceType, String messageFactoryType) {
-        try {
-            final Class ftpMessageFactory = Class.forName(messageFactoryType);
-            messageTypes.put(sourceType, ftpMessageFactory);
-        } catch (ClassNotFoundException ex) {
-        }
-    }
-
-
+    /**
+     * Returns the message factory associated with given payload type.
+     *
+     * @param payload     the payload
+     * @param muleContext the mule context
+     * @return the proper message factory
+     */
     public static MuleMessageFactory getMessageFactory(Object payload, MuleContext muleContext) {
         if (!cachedMessageTypes.containsKey(payload.getClass())) {
             boolean found = false;
@@ -84,4 +82,37 @@ public final class MessageFactoryUtil {
             throw new ConfigurationException("Can't create message factory.", e);
         }
     }
+
+    /**
+     * Loads and register the pair into an available map of message factories.
+     * <p/>
+     * If type or message factory is not available, it just skips it.
+     *
+     * @param type               the type
+     * @param messageFactoryType the message factory to given {@code type}
+     */
+    private static void loadType(String type, String messageFactoryType) {
+        try {
+            final Class clazz = Class.forName(type);
+            loadType(clazz, messageFactoryType);
+        } catch (ClassNotFoundException ex) {
+        }
+    }
+
+    /**
+     * Loads and register the pair into an available map of message factories.
+     * <p/>
+     * If message factory is not available, it just skips it.
+     *
+     * @param type               the clazz type
+     * @param messageFactoryType the message factory to given {@code type}
+     */
+    private static void loadType(Class<?> type, String messageFactoryType) {
+        try {
+            final Class messageFactory = Class.forName(messageFactoryType);
+            messageTypes.put(type, messageFactory);
+        } catch (ClassNotFoundException ex) {
+        }
+    }
+
 }

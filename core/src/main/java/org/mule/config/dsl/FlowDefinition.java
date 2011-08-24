@@ -9,6 +9,11 @@
 
 package org.mule.config.dsl;
 
+/**
+ * Interaces that, at mininum, represents a flow. This interface should be extended to higher interfaces and types.
+ * <p/>
+ * Other important use of this interface is to force the end of flow method chain (for now used just by {@link org.mule.config.dsl.PipelineExceptionOperations.PipelineExceptionInvokeOperations#process}).
+ */
 public interface FlowDefinition {
 
 }

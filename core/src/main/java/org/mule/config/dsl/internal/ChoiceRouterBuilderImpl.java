@@ -10,6 +10,7 @@
 package org.mule.config.dsl.internal;
 
 import org.mule.api.MuleContext;
+import org.mule.api.exception.MessagingExceptionHandler;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
@@ -32,7 +33,7 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
  * @author porcelli
  * @see org.mule.config.dsl.PipelineBuilder#choice()
  */
-public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements FlowNameAware, ChoiceRouterBuilder<P>, InnerWhenChoiceBuilder<P>, Builder<ChoiceRouter>, MessageProcessorBuilderList {
+public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements FlowNameAware, ChoiceRouterBuilder<P>, InnerWhenChoiceBuilder<P>, Builder<ChoiceRouter>, MessageProcessorBuilderList, MessagingExceptionHandlerBuilderList {
 
     private final P parentScope;
     private final PipelineBuilderImpl<P> pipeline;
@@ -480,6 +481,9 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Fl
      */
     @Override
     public PipelineExceptionInvokeOperations onException() {
+        if (parentScope != null) {
+            return parentScope.onException();
+        }
         return pipeline.onException();
     }
 
@@ -598,6 +602,57 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Fl
         }
 
         return choiceRouter;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void addExceptionBuilder(Builder<? extends MessagingExceptionHandler> builder) throws NullPointerException {
+        checkNotNull(builder, "builder");
+        if (parentScope instanceof MessagingExceptionHandlerBuilderList) {
+            ((MessagingExceptionHandlerBuilderList) parentScope).addExceptionBuilder(builder);
+        } else {
+            pipeline.addExceptionBuilder(builder);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Builder<? extends MessagingExceptionHandler>> getExceptionBuilders() {
+        if (parentScope instanceof MessagingExceptionHandlerBuilderList) {
+            return ((MessagingExceptionHandlerBuilderList) parentScope).getExceptionBuilders();
+        } else {
+            return pipeline.getExceptionBuilders();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isExceptionBuilderListEmpty() {
+        if (parentScope instanceof MessagingExceptionHandlerBuilderList) {
+            return ((MessagingExceptionHandlerBuilderList) parentScope).isExceptionBuilderListEmpty();
+        } else {
+            return pipeline.isExceptionBuilderListEmpty();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<MessagingExceptionHandler> buildExceptionHandlerList(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+        if (parentScope instanceof MessagingExceptionHandlerBuilderList) {
+            return ((MessagingExceptionHandlerBuilderList) parentScope).buildExceptionHandlerList(muleContext, placeholder);
+        } else {
+            return pipeline.buildExceptionHandlerList(muleContext, placeholder);
+        }
     }
 
     public class OtherwiseChoiceBuilderImpl<P extends PipelineBuilder<P>> implements FlowNameAware, OtherwiseChoiceBuilder<P> {

@@ -10,6 +10,7 @@
 package org.mule.config.dsl.internal;
 
 import org.mule.api.MuleContext;
+import org.mule.api.exception.MessagingExceptionHandler;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
@@ -26,7 +27,7 @@ import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
  *
  * @author porcelli
  */
-public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>, X extends PipelineBuilder<X>> implements FlowNameAware, PipelineBuilder<P>, MessageProcessorBuilderList {
+public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>, X extends PipelineBuilder<X>> implements FlowNameAware, PipelineBuilder<P>, MessageProcessorBuilderList, MessagingExceptionHandlerBuilderList {
 
     protected final X parentScope;
     protected final PipelineBuilderImpl<P> pipeline;
@@ -440,6 +441,9 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>, X ex
      */
     @Override
     public PipelineExceptionInvokeOperations onException() {
+        if (parentScope != null) {
+            return parentScope.onException();
+        }
         return pipeline.onException();
     }
 
@@ -531,5 +535,56 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>, X ex
     @Override
     public List<Builder<? extends MessageProcessor>> getBuilders() {
         return pipeline.getBuilders();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void addExceptionBuilder(Builder<? extends MessagingExceptionHandler> builder) throws NullPointerException {
+        checkNotNull(builder, "builder");
+        if (parentScope instanceof MessagingExceptionHandlerBuilderList) {
+            ((MessagingExceptionHandlerBuilderList) parentScope).addExceptionBuilder(builder);
+        } else {
+            pipeline.addExceptionBuilder(builder);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Builder<? extends MessagingExceptionHandler>> getExceptionBuilders() {
+        if (parentScope instanceof MessagingExceptionHandlerBuilderList) {
+            return ((MessagingExceptionHandlerBuilderList) parentScope).getExceptionBuilders();
+        } else {
+            return pipeline.getExceptionBuilders();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isExceptionBuilderListEmpty() {
+        if (parentScope instanceof MessagingExceptionHandlerBuilderList) {
+            return ((MessagingExceptionHandlerBuilderList) parentScope).isExceptionBuilderListEmpty();
+        } else {
+            return pipeline.isExceptionBuilderListEmpty();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<MessagingExceptionHandler> buildExceptionHandlerList(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException {
+        checkNotNull(muleContext, "muleContext");
+        checkNotNull(placeholder, "placeholder");
+        if (parentScope instanceof MessagingExceptionHandlerBuilderList) {
+            return ((MessagingExceptionHandlerBuilderList) parentScope).buildExceptionHandlerList(muleContext, placeholder);
+        } else {
+            return pipeline.buildExceptionHandlerList(muleContext, placeholder);
+        }
     }
 }

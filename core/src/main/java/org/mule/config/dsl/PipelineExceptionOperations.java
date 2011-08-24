@@ -16,8 +16,18 @@ package org.mule.config.dsl;
  */
 public interface PipelineExceptionOperations {
 
+    /**
+     * Defines a non-specific excpetion handling to current flow.
+     *
+     * @return
+     */
     PipelineExceptionInvokeOperations onException();
 
+    /**
+     * Interface that exposes all available actions related to exception handling.
+     *
+     * @author porcelli
+     */
     public static interface PipelineExceptionInvokeOperations {
 
         /**

@@ -12,6 +12,7 @@ package org.mule.config.dsl.internal;
 import com.google.inject.Injector;
 import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleContext;
+import org.mule.api.exception.MessagingExceptionHandler;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.component.DefaultJavaComponent;
@@ -26,6 +27,7 @@ import org.mule.util.ClassUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import static org.mule.config.dsl.internal.GuiceRegistry.GUICE_INJECTOR_REF;
 import static org.mule.config.dsl.internal.util.EntryPointResolverSetUtil.getDefaultResolverSet;
@@ -307,6 +309,42 @@ public class InvokeBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBui
         @SuppressWarnings("unchecked")
         public <E extends ExpressionEvaluatorDefinition> P args(final E... args) throws NullPointerException {
             return (P) InvokeBuilderImpl.this.args(args);
+        }
+
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void addExceptionBuilder(Builder<? extends MessagingExceptionHandler> builder) throws NullPointerException {
+            checkNotNull(builder, "builder");
+            InvokeBuilderImpl.this.addExceptionBuilder(builder);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public List<Builder<? extends MessagingExceptionHandler>> getExceptionBuilders() {
+            return InvokeBuilderImpl.this.getExceptionBuilders();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean isExceptionBuilderListEmpty() {
+            return InvokeBuilderImpl.this.isExceptionBuilderListEmpty();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public List<MessagingExceptionHandler> buildExceptionHandlerList(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException {
+            checkNotNull(muleContext, "muleContext");
+            checkNotNull(placeholder, "placeholder");
+            return InvokeBuilderImpl.this.buildExceptionHandlerList(muleContext, placeholder);
         }
     }
 

@@ -9,6 +9,12 @@
 
 package org.mule.config.dsl;
 
+/**
+ * Interface that exposed a flow pipeline but hiddes some methods that are just enabled
+ * as the first action of a flow (like poll and from).
+ *
+ * @author porcelli
+ */
 public interface FlowPipeline extends PipelineBuilder<FlowPipeline>, FlowDefinition {
 
 }

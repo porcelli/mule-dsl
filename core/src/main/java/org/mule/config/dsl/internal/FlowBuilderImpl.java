@@ -16,6 +16,8 @@ import org.mule.api.transport.Connector;
 import org.mule.config.dsl.*;
 import org.mule.construct.SimpleFlowConstruct;
 
+import java.util.List;
+
 import static org.mule.config.dsl.internal.util.Preconditions.*;
 
 /**
@@ -166,11 +168,9 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowPipeline> implement
             flow.setMessageProcessors(buildMessageProcessorList(muleContext, placeholder));
         }
 
-        if (exceptionHandlerList.size() > 0) {
-            for (Builder<? extends MessagingExceptionHandler> excpetionHandlerBuilder : exceptionHandlerList) {
-                flow.setExceptionListener(excpetionHandlerBuilder.build(muleContext, placeholder));
-                break;
-            }
+        if (!isExceptionBuilderListEmpty()) {
+            List<MessagingExceptionHandler> exceptionList = buildExceptionHandlerList(muleContext, placeholder);
+            flow.setExceptionListener(exceptionList.get(0));
         }
 
         return flow;
