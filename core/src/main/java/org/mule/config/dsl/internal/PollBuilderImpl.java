@@ -45,7 +45,7 @@ public class PollBuilderImpl implements Builder<InboundEndpoint> {
     private final MessageProcessor obj;
     private final Class<? extends MessageProcessor> clazz;
     private final String flowName;
-    private long frequency = 0L;
+    private long frequency = 1L;
 
     /**
      * @param obj the message processor to be polled

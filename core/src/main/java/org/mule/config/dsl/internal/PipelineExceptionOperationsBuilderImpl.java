@@ -34,6 +34,9 @@ public class PipelineExceptionOperationsBuilderImpl implements FlowNameAware, Pi
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getFlowName() {
         return currentFlowName;
