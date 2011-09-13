@@ -14,12 +14,18 @@
     </properties>
 
     <modules>
+        <module>api</module>
         <module>core</module>
-        <module>distribution</module>
+        <!-- <module>distribution</module> -->
         <module>examples</module>
     </modules>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.mule.dsl</groupId>
+                <artifactId>dsl-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.mule.dsl</groupId>
                 <artifactId>dsl-core</artifactId>

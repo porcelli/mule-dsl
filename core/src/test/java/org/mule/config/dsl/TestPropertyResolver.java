@@ -19,6 +19,8 @@ import org.mule.api.processor.MessageProcessor;
 import org.mule.api.source.MessageSource;
 import org.mule.component.SimpleCallableJavaComponent;
 import org.mule.config.dsl.component.ExtendedLogComponent;
+import org.mule.config.dsl.util.ClasspathBuilder;
+import org.mule.config.dsl.util.FileRefBuilder;
 import org.mule.construct.SimpleFlowConstruct;
 
 import java.io.InputStream;

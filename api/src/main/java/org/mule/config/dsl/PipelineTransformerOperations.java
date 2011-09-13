@@ -67,8 +67,6 @@ public interface PipelineTransformerOperations<P extends PipelineBuilder<P>> {
      * @return the parameterized builder
      * @throws NullPointerException if {@code obj} param is null
      * @see Catalog#newTransformer(String)
-     * @see org.mule.config.dsl.AbstractModule#transformer()
-     * @see org.mule.config.dsl.AbstractModule#transformer(String)
      * @see TransformerDefinition
      */
     P transformWith(TransformerDefinition obj) throws NullPointerException;
@@ -80,7 +78,6 @@ public interface PipelineTransformerOperations<P extends PipelineBuilder<P>> {
      * @return the parameterized builder
      * @throws IllegalArgumentException if {@code ref} param is null or empty
      * @see Catalog#newTransformer(String)
-     * @see org.mule.config.dsl.AbstractModule#transformer(String)
      */
     P transformWith(String ref) throws IllegalArgumentException;
 

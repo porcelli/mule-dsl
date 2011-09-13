@@ -16,19 +16,19 @@ import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.module.scripting.component.ScriptComponent;
 import org.mule.module.scripting.component.Scriptable;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotEmpty;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Internal class that builds a {@link ScriptComponentBuilder} based on given parameters.
  *
  * @author porcelli
  * @see org.mule.config.dsl.PipelineBuilder#executeScript(String, String)
- * @see org.mule.config.dsl.PipelineBuilder#executeScript(String, org.mule.config.dsl.AbstractModule.FileRefBuilder)
- * @see org.mule.config.dsl.PipelineBuilder#executeScript(String, org.mule.config.dsl.AbstractModule.ClasspathBuilder)
+ * @see org.mule.config.dsl.PipelineBuilder#executeScript(String, org.mule.config.dsl.util.FileRefBuilder)
+ * @see org.mule.config.dsl.PipelineBuilder#executeScript(String, org.mule.config.dsl.util.ClasspathBuilder)
  * @see org.mule.config.dsl.PipelineBuilder#executeScript(org.mule.config.dsl.ScriptLanguage, String)
- * @see org.mule.config.dsl.PipelineBuilder#executeScript(org.mule.config.dsl.ScriptLanguage, org.mule.config.dsl.AbstractModule.FileRefBuilder)
- * @see org.mule.config.dsl.PipelineBuilder#executeScript(org.mule.config.dsl.ScriptLanguage, org.mule.config.dsl.AbstractModule.ClasspathBuilder)
+ * @see org.mule.config.dsl.PipelineBuilder#executeScript(org.mule.config.dsl.ScriptLanguage, org.mule.config.dsl.util.FileRefBuilder)
+ * @see org.mule.config.dsl.PipelineBuilder#executeScript(org.mule.config.dsl.ScriptLanguage, org.mule.config.dsl.util.ClasspathBuilder)
  */
 public class ScriptComponentBuilder implements Builder<ScriptComponent> {
 

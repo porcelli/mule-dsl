@@ -17,6 +17,8 @@ import org.mule.api.construct.FlowConstruct;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.source.MessageSource;
+import org.mule.config.dsl.util.ClasspathBuilder;
+import org.mule.config.dsl.util.FileRefBuilder;
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.module.scripting.component.ScriptComponent;
 
@@ -245,7 +247,7 @@ public class TestExecuteScript {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .executeScript((String) null, (AbstractModule.FileRefBuilder) null);
+                        .executeScript((String) null, (FileRefBuilder) null);
             }
         });
     }
@@ -257,7 +259,7 @@ public class TestExecuteScript {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .executeScript("", (AbstractModule.FileRefBuilder) null);
+                        .executeScript("", (FileRefBuilder) null);
             }
         });
     }
@@ -317,7 +319,7 @@ public class TestExecuteScript {
             public void configure() {
                 flow("MyFlow")
                         .from("file:///Users/porcelli/test")
-                        .executeScript((ScriptLanguage) null, (AbstractModule.FileRefBuilder) null);
+                        .executeScript((ScriptLanguage) null, (FileRefBuilder) null);
             }
         });
     }

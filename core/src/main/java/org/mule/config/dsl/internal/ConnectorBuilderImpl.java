@@ -22,7 +22,7 @@ import org.mule.transport.AbstractConnector;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import static org.mule.config.dsl.internal.util.Preconditions.*;
+import static org.mule.config.dsl.util.Preconditions.*;
 import static org.mule.config.dsl.internal.util.PrivateAccessorHack.executeHiddenMethod;
 import static org.mule.config.dsl.internal.util.PrivateAccessorHack.setPrivateFieldValue;
 

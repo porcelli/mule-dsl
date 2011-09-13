@@ -7,7 +7,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.dsl.internal.util;
+package org.mule.config.dsl.util;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 

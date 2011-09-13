@@ -20,7 +20,7 @@ import org.mule.object.AbstractObjectFactory;
 
 import static org.mule.config.dsl.Scope.SINGLETON;
 import static org.mule.config.dsl.internal.GuiceRegistry.GUICE_INJECTOR_REF;
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * This is an implementation of the ObjectFactory interface which simply delegates to

@@ -12,23 +12,25 @@ package org.mule.config.dsl;
 import org.mule.config.i18n.Message;
 
 /**
- * Thrown from {@link org.mule.config.dsl.Mule#stop()} when can't
- * stop the mule context.
+ * Signals that an I/O exception of some sort has occurred.
  *
  * @author porcelli
  */
-public class FailedToStopException extends DSLException {
+public class IOException extends DSLException {
+
+    private static final long serialVersionUID = -8390893797284558707L;
+
     /**
      * * @param message the exception message
      */
-    public FailedToStopException(final Message message) {
+    public IOException(final Message message) {
         super(message);
     }
 
     /**
      * @param message the exception message
      */
-    public FailedToStopException(final String message) {
+    public IOException(final String message) {
         super(message);
     }
 
@@ -36,7 +38,7 @@ public class FailedToStopException extends DSLException {
      * @param message the exception message
      * @param cause   the exception that cause this exception to be thrown
      */
-    public FailedToStopException(final Message message, final Throwable cause) {
+    public IOException(final Message message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -44,7 +46,7 @@ public class FailedToStopException extends DSLException {
      * @param message the exception message
      * @param cause   the exception that cause this exception to be thrown
      */
-    public FailedToStopException(final String message, final Throwable cause) {
+    public IOException(final String message, final Throwable cause) {
         super(message, cause);
     }
 }

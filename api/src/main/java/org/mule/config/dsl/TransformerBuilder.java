@@ -24,8 +24,6 @@ public interface TransformerBuilder extends Builder {
      * @param obj the transformer instance
      * @return the already configured transformer definition
      * @throws NullPointerException if {@code obj} param is null
-     * @see org.mule.config.dsl.AbstractModule#transformer()
-     * @see org.mule.config.dsl.AbstractModule#transformer(String)
      * @see org.mule.config.dsl.Catalog#newTransformer(String)
      * @see Transformer
      * @see Builder
@@ -39,8 +37,6 @@ public interface TransformerBuilder extends Builder {
      * @param clazz the transformer type, Mule will instantiate an object at runtime
      * @return the already configured transformer definition
      * @throws NullPointerException if {@code clazz} param is null
-     * @see org.mule.config.dsl.AbstractModule#transformer()
-     * @see org.mule.config.dsl.AbstractModule#transformer(String)
      * @see org.mule.config.dsl.Catalog#newTransformer(String)
      * @see Transformer
      * @see Builder

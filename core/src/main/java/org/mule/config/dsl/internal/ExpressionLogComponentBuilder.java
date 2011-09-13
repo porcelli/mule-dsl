@@ -16,7 +16,7 @@ import org.mule.config.dsl.LogLevel;
 import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.component.ExpressionLogComponent;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Simple {@link ExpressionLogComponent} builder, necessary due the need to use a property plaholder on expression message.

@@ -12,7 +12,7 @@ package org.mule.config.dsl.internal.util;
 import org.mule.MessageExchangePattern;
 import org.mule.config.dsl.ExchangePattern;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Utility class that converts {@link ExchangePattern} to mule's core counterpart {@link MessageExchangePattern}.

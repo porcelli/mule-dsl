@@ -17,7 +17,7 @@ import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.spring.factories.AsyncMessageProcessorsFactoryBean;
 import org.mule.processor.AsyncDelegateMessageProcessor;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Internal implementation of {@link AsyncRouterBuilder} interface that, based on its internal state,

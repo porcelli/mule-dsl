@@ -21,7 +21,6 @@ public interface PipelineDebugOutputOperations<P extends PipelineBuilder<P>> {
      * Logs the payload content at INFO level.
      *
      * @return the parameterized builder
-     * @see org.mule.config.dsl.component.SimpleLogComponent
      */
     P log();
 
@@ -31,7 +30,6 @@ public interface PipelineDebugOutputOperations<P extends PipelineBuilder<P>> {
      * @param level the log level to use
      * @return the parameterized builder
      * @throws NullPointerException if {@code expr} param is null
-     * @see org.mule.config.dsl.component.SimpleLogComponent
      */
     P log(LogLevel level) throws NullPointerException;
 
@@ -41,7 +39,6 @@ public interface PipelineDebugOutputOperations<P extends PipelineBuilder<P>> {
      * @param message the content to be logged
      * @return the parameterized builder
      * @throws IllegalArgumentException if {@code message} param is null or empty
-     * @see org.mule.config.dsl.internal.ExtendedLogComponentBuilder
      */
     P log(String message) throws IllegalArgumentException;
 
@@ -53,7 +50,6 @@ public interface PipelineDebugOutputOperations<P extends PipelineBuilder<P>> {
      * @return the parameterized builder
      * @throws IllegalArgumentException if {@code message} param is null or empty
      * @throws NullPointerException     if {@code level} param is null
-     * @see org.mule.config.dsl.internal.ExtendedLogComponentBuilder
      */
     P log(String message, LogLevel level) throws IllegalArgumentException, NullPointerException;
 
@@ -63,7 +59,6 @@ public interface PipelineDebugOutputOperations<P extends PipelineBuilder<P>> {
      * @param expr the expression to be logged
      * @return the parameterized builder
      * @throws NullPointerException if {@code expr} param is null
-     * @see org.mule.config.dsl.internal.ExpressionLogComponentBuilder
      */
     <E extends ExpressionEvaluatorDefinition> P log(E expr) throws NullPointerException;
 
@@ -74,7 +69,6 @@ public interface PipelineDebugOutputOperations<P extends PipelineBuilder<P>> {
      * @param level the log level to use
      * @return the parameterized builder
      * @throws NullPointerException if {@code expr} or {@code level} params are null
-     * @see org.mule.config.dsl.internal.ExpressionLogComponentBuilder
      */
     <E extends ExpressionEvaluatorDefinition> P log(E expr, LogLevel level) throws NullPointerException;
 

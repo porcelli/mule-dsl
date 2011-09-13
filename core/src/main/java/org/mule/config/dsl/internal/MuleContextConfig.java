@@ -26,7 +26,7 @@ import java.util.Map;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.mule.config.dsl.internal.GuiceRegistry.GUICE_INJECTOR_REF;
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 import static org.mule.config.dsl.internal.util.PrivateAccessorHack.executeHiddenMethod;
 import static org.mule.config.dsl.internal.util.PrivateAccessorHack.setPrivateFieldValue;
 

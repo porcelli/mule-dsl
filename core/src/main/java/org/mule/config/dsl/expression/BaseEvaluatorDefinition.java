@@ -14,7 +14,7 @@ import org.mule.api.routing.filter.Filter;
 import org.mule.config.dsl.ExpressionEvaluatorDefinition;
 import org.mule.config.dsl.PropertyPlaceholder;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
+import static org.mule.config.dsl.util.Preconditions.checkNotEmpty;
 
 /**
  * Abstract class that implements most necessary infrastructure of a {@link ExpressionEvaluatorDefinition}.

@@ -15,8 +15,8 @@ import org.mule.api.MuleException;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.config.dsl.FlowNotFoundException;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotEmpty;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Simple component that lookups and invokes an already registered flow.

@@ -14,7 +14,7 @@ import org.mule.config.dsl.PropertyPlaceholder;
 
 import java.util.Properties;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Default implementation of {@link PropertyPlaceholder} interface.

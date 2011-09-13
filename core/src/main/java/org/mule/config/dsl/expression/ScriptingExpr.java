@@ -15,7 +15,7 @@ import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.module.scripting.component.Scriptable;
 import org.mule.module.scripting.filter.ScriptFilter;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
+import static org.mule.config.dsl.util.Preconditions.checkNotEmpty;
 
 /**
  * Holds script related expression evaluators definitions and expose them as static methods.

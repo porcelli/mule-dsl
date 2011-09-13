@@ -20,8 +20,8 @@ import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.endpoint.URIBuilder;
 
 import static org.mule.config.dsl.internal.util.ExchangePatternUtil.convert;
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotEmpty;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Internal class that builds, based on URI's, an {@link InboundEndpoint}.

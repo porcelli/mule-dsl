@@ -12,23 +12,22 @@ package org.mule.config.dsl;
 import org.mule.config.i18n.Message;
 
 /**
- * Thrown from {@link org.mule.config.dsl.Mule#start()} when can't
- * start the mule context.
+ * Thrown when can't stop the mule context.
  *
  * @author porcelli
  */
-public class FailedToStartException extends DSLException {
+public class FailedToStopException extends DSLException {
     /**
      * * @param message the exception message
      */
-    public FailedToStartException(final Message message) {
+    public FailedToStopException(final Message message) {
         super(message);
     }
 
     /**
      * @param message the exception message
      */
-    public FailedToStartException(final String message) {
+    public FailedToStopException(final String message) {
         super(message);
     }
 
@@ -36,7 +35,7 @@ public class FailedToStartException extends DSLException {
      * @param message the exception message
      * @param cause   the exception that cause this exception to be thrown
      */
-    public FailedToStartException(final Message message, final Throwable cause) {
+    public FailedToStopException(final Message message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -44,7 +43,7 @@ public class FailedToStartException extends DSLException {
      * @param message the exception message
      * @param cause   the exception that cause this exception to be thrown
      */
-    public FailedToStartException(final String message, final Throwable cause) {
+    public FailedToStopException(final String message, final Throwable cause) {
         super(message, cause);
     }
 }

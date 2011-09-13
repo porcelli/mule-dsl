@@ -9,20 +9,17 @@
 
 package org.mule.config.dsl;
 
-import org.apache.commons.discovery.Resource;
-import org.apache.commons.discovery.tools.ResourceUtils;
-import org.mule.util.IOUtils;
+import org.mule.config.dsl.util.ClasspathBuilder;
+import org.mule.config.dsl.util.FileRefBuilder;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 
 import static org.apache.commons.collections.MapUtils.toProperties;
 import static org.mule.config.dsl.internal.util.NameGenerator.newName;
-import static org.mule.config.dsl.internal.util.Preconditions.*;
+import static org.mule.config.dsl.util.Preconditions.*;
 
 /**
  * A support class for {@link Module}s which reduces repetition and results in
@@ -307,136 +304,6 @@ public abstract class AbstractModule extends com.google.inject.AbstractModule im
     public FileRefBuilder file(final File file) throws NullPointerException {
         checkNotNull(file, "path");
         return new FileRefBuilder(file);
-    }
-
-    /**
-     * Supporter class to expose classpath resource as an {@link InputStream}.
-     *
-     * @author porcelli
-     */
-    public static class ClasspathBuilder {
-        private final String path;
-        private InputStream content = null;
-        private String stringContent = null;
-
-        /**
-         * Constructor
-         *
-         * @param path path to classpath resource
-         * @throws IllegalArgumentException if {@code path} param is null or empty
-         */
-        private ClasspathBuilder(final String path) throws IllegalArgumentException {
-            this.path = checkNotEmpty(path, "path");
-        }
-
-        /**
-         * Getter of the input stream.
-         *
-         * @return the input stream ready to use
-         * @throws IOException if resource not found
-         * @see InputStream
-         */
-        InputStream get() throws IOException {
-            if (content == null) {
-                final Resource res = ResourceUtils.getResource(this.getClass(), path, null);
-                if (res == null) {
-                    throw new IOException("Resource not found.");
-                }
-                this.content = res.getResourceAsStream();
-            }
-            return content;
-        }
-
-        /**
-         * Getter of resource content as string
-         *
-         * @return the resource content as string
-         * @throws IOException if file not found, can't be read or it's not a file
-         * @see InputStream
-         */
-        public String getAsString() throws IOException {
-            if (stringContent == null) {
-                stringContent = IOUtils.toString(get());
-            }
-
-            return stringContent;
-        }
-    }
-
-    /**
-     * Supporter class to expose files from filesystem as an {@link InputStream}.
-     *
-     * @author porcelli
-     */
-    public static class FileRefBuilder {
-        private final File file;
-        private InputStream content = null;
-        private String stringContent = null;
-
-        /**
-         * Constructor
-         *
-         * @param path filesystem path
-         * @throws IllegalArgumentException if {@code path} param is null or empty
-         */
-        private FileRefBuilder(final String path) throws IllegalArgumentException {
-            checkNotEmpty(path, "path");
-            this.file = new File(path);
-        }
-
-        /**
-         * Constructor
-         *
-         * @param file file instance
-         * @throws NullPointerException if {@code file} param is null
-         */
-        private FileRefBuilder(final File file) throws NullPointerException {
-            this.file = checkNotNull(file, "file");
-        }
-
-        /**
-         * Getter of the input stream.
-         *
-         * @return the input stream ready to use
-         * @throws IOException if file not found, can't be read or it's not a file
-         * @see InputStream
-         */
-        InputStream get() throws IOException {
-            if (content == null) {
-                if (!file.exists()) {
-                    throw new IOException("File not found.");
-                }
-                if (!file.isFile()) {
-                    throw new IOException("It's not a file.");
-                }
-                if (!file.canRead()) {
-                    throw new IOException("Can't read file.");
-                }
-                try {
-                    this.content = new FileInputStream(file);
-                } catch (final FileNotFoundException e) {
-                    throw new IOException("File not found.", e);
-                }
-            }
-
-            return content;
-        }
-
-        /**
-         * Getter of resource content as string
-         *
-         * @return the resource content as string
-         * @throws IOException if file not found, can't be read or it's not a file
-         * @see InputStream
-         */
-        public String getAsString() throws IOException {
-            if (stringContent == null) {
-                stringContent = IOUtils.toString(get());
-            }
-
-            return stringContent;
-        }
-
     }
 
 }

@@ -32,8 +32,8 @@ import java.util.List;
 import static org.mule.config.dsl.internal.GuiceRegistry.GUICE_INJECTOR_REF;
 import static org.mule.config.dsl.internal.util.EntryPointResolverSetUtil.getDefaultResolverSet;
 import static org.mule.config.dsl.internal.util.ExpressionArgsUtil.toListOfStrings;
-import static org.mule.config.dsl.internal.util.Preconditions.checkContentsNotNull;
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkContentsNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Internal implementation of {@link org.mule.config.dsl.InvokeBuilder} interface that, based on its internal state,

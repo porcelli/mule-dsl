@@ -18,8 +18,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotEmpty;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Provides access to private members in classes.

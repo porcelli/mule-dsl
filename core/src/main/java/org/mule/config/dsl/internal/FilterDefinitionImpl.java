@@ -16,8 +16,8 @@ import org.mule.config.dsl.FilterDefinition;
 import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.routing.MessageFilter;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotEmpty;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Internal implementation of {@link org.mule.config.dsl.FilterDefinition} interface that, based on its internal state,

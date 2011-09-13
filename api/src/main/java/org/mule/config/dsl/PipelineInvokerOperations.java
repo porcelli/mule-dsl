@@ -10,6 +10,8 @@
 package org.mule.config.dsl;
 
 import org.mule.api.processor.MessageProcessor;
+import org.mule.config.dsl.util.ClasspathBuilder;
+import org.mule.config.dsl.util.FileRefBuilder;
 
 /**
  * Interface that defines all component invokes related operations.
@@ -75,7 +77,7 @@ public interface PipelineInvokerOperations<P extends PipelineBuilder<P>> {
      * @throws IllegalArgumentException if {@code lang} param is null or empty
      * @throws NullPointerException     if {@code fileRef} param is null
      */
-    P executeScript(String lang, AbstractModule.FileRefBuilder fileRef) throws IllegalArgumentException, NullPointerException;
+    P executeScript(String lang, FileRefBuilder fileRef) throws IllegalArgumentException, NullPointerException;
 
     /**
      * Executes the given script and language.
@@ -86,7 +88,7 @@ public interface PipelineInvokerOperations<P extends PipelineBuilder<P>> {
      * @throws IllegalArgumentException if {@code lang} param is null or empty
      * @throws NullPointerException     if {@code classpathRef} param is null
      */
-    P executeScript(String lang, AbstractModule.ClasspathBuilder classpathRef) throws IllegalArgumentException, NullPointerException;
+    P executeScript(String lang, ClasspathBuilder classpathRef) throws IllegalArgumentException, NullPointerException;
 
     /**
      * Executes the given script and language.
@@ -107,7 +109,7 @@ public interface PipelineInvokerOperations<P extends PipelineBuilder<P>> {
      * @return the parameterized builder
      * @throws NullPointerException if {@code lang} or {@code fileRef} params are null or empty
      */
-    P executeScript(ScriptLanguage lang, AbstractModule.FileRefBuilder fileRef) throws NullPointerException;
+    P executeScript(ScriptLanguage lang, FileRefBuilder fileRef) throws NullPointerException;
 
     /**
      * Executes the given script and language.
@@ -117,7 +119,7 @@ public interface PipelineInvokerOperations<P extends PipelineBuilder<P>> {
      * @return the parameterized builder
      * @throws NullPointerException if {@code lang} or {@code classpathRef} params are null or empty
      */
-    P executeScript(ScriptLanguage lang, AbstractModule.ClasspathBuilder classpathRef) throws NullPointerException;
+    P executeScript(ScriptLanguage lang, ClasspathBuilder classpathRef) throws NullPointerException;
 
     /* custom MP */
 

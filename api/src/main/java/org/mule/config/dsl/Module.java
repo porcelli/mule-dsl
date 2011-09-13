@@ -16,7 +16,7 @@ package org.mule.config.dsl;
  * integration related configs.
  * <p/>
  * <p>Your Module classes can use a more streamlined syntax by extending
- * {@link AbstractModule} rather than implementing this interface directly.
+ * {@code AbstractModule} rather than implementing this interface directly.
  *
  * @author porcelli
  * @see <a href="https://github.com/mulesoft/mule-dsl/wiki/Module">More about Mule DSL Modules</a>

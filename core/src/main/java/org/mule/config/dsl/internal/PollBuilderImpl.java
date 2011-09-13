@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.mule.config.dsl.internal.GuiceRegistry.GUICE_INJECTOR_REF;
-import static org.mule.config.dsl.internal.util.Preconditions.*;
+import static org.mule.config.dsl.util.Preconditions.*;
 
 /**
  * Internal class that builds an {@link InboundEndpoint} that polls a given message processor or flow.

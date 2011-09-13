@@ -16,10 +16,12 @@ import org.mule.api.routing.filter.Filter;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.Connector;
 import org.mule.config.dsl.*;
+import org.mule.config.dsl.util.ClasspathBuilder;
+import org.mule.config.dsl.util.FileRefBuilder;
 
 import java.util.List;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Abstract class that provised basic implementation to routers that provides nesting scope and
@@ -203,7 +205,7 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>, X ex
      * {@inheritDoc}
      */
     @Override
-    public P executeScript(String lang, AbstractModule.FileRefBuilder fileRef) throws IllegalArgumentException, NullPointerException {
+    public P executeScript(String lang, FileRefBuilder fileRef) throws IllegalArgumentException, NullPointerException {
         pipeline.executeScript(lang, fileRef);
         return getThis();
     }
@@ -212,7 +214,7 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>, X ex
      * {@inheritDoc}
      */
     @Override
-    public P executeScript(String lang, AbstractModule.ClasspathBuilder classpathRef) throws IllegalArgumentException, NullPointerException {
+    public P executeScript(String lang, ClasspathBuilder classpathRef) throws IllegalArgumentException, NullPointerException {
         pipeline.executeScript(lang, classpathRef);
         return getThis();
     }
@@ -230,7 +232,7 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>, X ex
      * {@inheritDoc}
      */
     @Override
-    public P executeScript(ScriptLanguage lang, AbstractModule.FileRefBuilder fileRef) throws NullPointerException {
+    public P executeScript(ScriptLanguage lang, FileRefBuilder fileRef) throws NullPointerException {
         pipeline.executeScript(lang, fileRef);
         return getThis();
     }
@@ -239,7 +241,7 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>, X ex
      * {@inheritDoc}
      */
     @Override
-    public P executeScript(ScriptLanguage lang, AbstractModule.ClasspathBuilder classpathRef) throws NullPointerException {
+    public P executeScript(ScriptLanguage lang, ClasspathBuilder classpathRef) throws NullPointerException {
         pipeline.executeScript(lang, classpathRef);
         return getThis();
     }

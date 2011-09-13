@@ -14,6 +14,6 @@ package org.mule.config.dsl;
  * <p/>
  * Other important use of this interface is to force the end of flow method chain (for now used just by {@link org.mule.config.dsl.PipelineExceptionOperations.PipelineExceptionInvokeOperations#process}).
  */
-public interface FlowDefinition {
+public interface FlowDefinition extends Definition {
 
 }

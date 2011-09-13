@@ -19,7 +19,7 @@ import org.mule.config.dsl.Module;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkContentsNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkContentsNotNull;
 
 /**
  * Provides the configuration entry point for loading DSL modules into Mule.

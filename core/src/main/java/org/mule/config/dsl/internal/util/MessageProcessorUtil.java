@@ -22,7 +22,7 @@ import org.mule.processor.chain.DefaultMessageProcessorChain;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Utility class that helps create lists of message processor or {@link MessageProcessorChain}.

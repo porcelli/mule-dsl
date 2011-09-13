@@ -17,7 +17,7 @@ import org.mule.config.dsl.FilterDefinition;
 import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.routing.MessageFilter;
 
-import static org.mule.config.dsl.internal.util.Preconditions.*;
+import static org.mule.config.dsl.util.Preconditions.*;
 
 /**
  * Internal implementation of {@link FilterBuilder} interface that, based on its internal state,

@@ -26,7 +26,7 @@ import org.mule.session.DefaultMuleSession;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Groups operations for working with flows.

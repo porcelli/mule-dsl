@@ -14,6 +14,8 @@ import static org.fest.assertions.Assertions.assertThat;
 import java.io.File;
 
 import org.junit.Test;
+import org.mule.config.dsl.util.ClasspathBuilder;
+import org.mule.config.dsl.util.FileRefBuilder;
 
 public class TestInputStreamAccessBuilders {
 
@@ -22,7 +24,7 @@ public class TestInputStreamAccessBuilders {
         new AbstractModule() {
             @Override
             protected void configure() {
-                final AbstractModule.ClasspathBuilder classpathBuilder = classpath("test-resource.properties");
+                final ClasspathBuilder classpathBuilder = classpath("test-resource.properties");
                 assertThat(classpathBuilder.get()).isNotNull();
             }
         }.configure();
@@ -33,7 +35,7 @@ public class TestInputStreamAccessBuilders {
         new AbstractModule() {
             @Override
             protected void configure() {
-                final AbstractModule.ClasspathBuilder classpathBuilder = classpath("test-does-not-exists.properties");
+                final ClasspathBuilder classpathBuilder = classpath("test-does-not-exists.properties");
                 classpathBuilder.get();
             }
         }.configure();
@@ -65,7 +67,7 @@ public class TestInputStreamAccessBuilders {
         new AbstractModule() {
             @Override
             protected void configure() {
-                final AbstractModule.FileRefBuilder fileRefBuilder = file("./src/test/resources/test-resource.properties");
+                final FileRefBuilder fileRefBuilder = file("./src/test/resources/test-resource.properties");
                 assertThat(fileRefBuilder.get()).isNotNull();
             }
         }.configure();
@@ -76,7 +78,7 @@ public class TestInputStreamAccessBuilders {
         new AbstractModule() {
             @Override
             protected void configure() {
-                final AbstractModule.FileRefBuilder fileRefBuilder = file(new File("./src/test/resources/test-resource.properties"));
+                final FileRefBuilder fileRefBuilder = file(new File("./src/test/resources/test-resource.properties"));
                 assertThat(fileRefBuilder.get()).isNotNull();
             }
         }.configure();
@@ -87,7 +89,7 @@ public class TestInputStreamAccessBuilders {
         new AbstractModule() {
             @Override
             protected void configure() {
-                final AbstractModule.FileRefBuilder fileRefBuilder = file("./src/test/resources/test-does-not-exists.properties");
+                final FileRefBuilder fileRefBuilder = file("./src/test/resources/test-does-not-exists.properties");
                 fileRefBuilder.get();
             }
         }.configure();
@@ -98,7 +100,7 @@ public class TestInputStreamAccessBuilders {
         new AbstractModule() {
             @Override
             protected void configure() {
-                final AbstractModule.FileRefBuilder fileRefBuilder = file(new File("./src/test/resources/test-does-not-exists.properties"));
+                final FileRefBuilder fileRefBuilder = file(new File("./src/test/resources/test-does-not-exists.properties"));
                 fileRefBuilder.get();
             }
         }.configure();
@@ -109,7 +111,7 @@ public class TestInputStreamAccessBuilders {
         new AbstractModule() {
             @Override
             protected void configure() {
-                final AbstractModule.FileRefBuilder fileRefBuilder = file("./src/test/resources/");
+                final FileRefBuilder fileRefBuilder = file("./src/test/resources/");
                 fileRefBuilder.get();
             }
         }.configure();
@@ -120,7 +122,7 @@ public class TestInputStreamAccessBuilders {
         new AbstractModule() {
             @Override
             protected void configure() {
-                final AbstractModule.FileRefBuilder fileRefBuilder = file(new File("./src/test/resources/"));
+                final FileRefBuilder fileRefBuilder = file(new File("./src/test/resources/"));
                 fileRefBuilder.get();
             }
         }.configure();

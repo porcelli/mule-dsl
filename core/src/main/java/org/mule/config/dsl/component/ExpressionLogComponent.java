@@ -14,8 +14,8 @@ import org.apache.commons.logging.LogFactory;
 import org.mule.api.MuleEventContext;
 import org.mule.config.dsl.LogLevel;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotEmpty;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Extentds {@link SimpleLogComponent} enabling the use of a expression based message.

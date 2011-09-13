@@ -24,7 +24,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mule.config.dsl.internal.util.Preconditions.*;
+import static org.mule.config.dsl.util.Preconditions.checkContentsNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotEmpty;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
+
 
 /**
  * {@code Mule} is the entry point to Mule DSL. Creates {@link MuleContext} from

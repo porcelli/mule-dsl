@@ -18,7 +18,7 @@ import org.mule.construct.SimpleFlowConstruct;
 
 import java.util.List;
 
-import static org.mule.config.dsl.internal.util.Preconditions.*;
+import static org.mule.config.dsl.util.Preconditions.*;
 
 /**
  * Internal implementation of {@link FlowBuilder} and {@link PollBuilder} interfaces that, based on its internal state,

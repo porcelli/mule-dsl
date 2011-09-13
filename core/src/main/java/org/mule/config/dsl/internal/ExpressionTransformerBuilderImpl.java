@@ -18,7 +18,7 @@ import org.mule.expression.transformers.ExpressionArgument;
 import org.mule.expression.transformers.ExpressionTransformer;
 
 import static org.mule.config.dsl.internal.util.NameGenerator.newName;
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Internal class that builds a {@link ExpressionTransformer} using a given {@link ExpressionEvaluatorDefinition}.

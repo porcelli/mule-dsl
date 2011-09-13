@@ -68,8 +68,6 @@ public interface PipelineFilterOperations<P extends PipelineBuilder<P>> {
      * @return the parameterized builder
      * @throws NullPointerException if {@code obj} param is null
      * @see Catalog#newFilter(String)
-     * @see AbstractModule#filter()
-     * @see org.mule.config.dsl.AbstractModule#filter(String)
      * @see FilterDefinition
      */
     P filterWith(FilterDefinition obj) throws NullPointerException;
@@ -82,7 +80,6 @@ public interface PipelineFilterOperations<P extends PipelineBuilder<P>> {
      * @return the parameterized builder
      * @throws IllegalArgumentException if {@code ref} param is null or empty
      * @see Catalog#newFilter(String)
-     * @see org.mule.config.dsl.AbstractModule#filter(String)
      */
     P filterWith(String ref) throws IllegalArgumentException;
 

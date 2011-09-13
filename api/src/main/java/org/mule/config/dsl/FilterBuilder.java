@@ -24,8 +24,6 @@ public interface FilterBuilder extends Builder {
      * @param obj the filter instance
      * @return the already configured filter definition
      * @throws NullPointerException if {@code obj} param is null
-     * @see org.mule.config.dsl.AbstractModule#filter()
-     * @see org.mule.config.dsl.AbstractModule#filter(String)
      * @see org.mule.config.dsl.Catalog#newFilter(String)
      * @see Filter
      * @see Builder
@@ -39,8 +37,6 @@ public interface FilterBuilder extends Builder {
      * @param clazz the filter type, Mule will instantiate an object at runtime
      * @return the already configured filter definition
      * @throws NullPointerException if {@code clazz} param is null
-     * @see org.mule.config.dsl.AbstractModule#filter()
-     * @see org.mule.config.dsl.AbstractModule#filter(String)
      * @see org.mule.config.dsl.Catalog#newFilter(String)
      * @see Filter
      * @see Builder

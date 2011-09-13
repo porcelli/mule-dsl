@@ -25,8 +25,6 @@ public interface ConnectorBuilder extends Builder {
      * @return connector instance to be configured
      * @throws NullPointerException   if {@code clazz} param is null
      * @throws ConfigurationException if {@code clazz} param is an abstract class or can't be created
-     * @see AbstractModule#connector()
-     * @see org.mule.config.dsl.AbstractModule#connector(String)
      * @see org.mule.config.dsl.Catalog#newConnector(String)
      * @see org.mule.api.transport.Connector
      * @see Builder

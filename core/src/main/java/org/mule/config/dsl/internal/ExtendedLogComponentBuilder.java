@@ -15,7 +15,7 @@ import org.mule.config.dsl.LogLevel;
 import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.component.ExtendedLogComponent;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Simple {@link ExtendedLogComponent} builder, necessary due the need to use a property plaholder on message.

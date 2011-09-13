@@ -17,7 +17,7 @@ import org.mule.config.dsl.PipelineBuilder;
 import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.routing.FirstSuccessful;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Internal implementation of {@link org.mule.config.dsl.FirstSuccessfulRouterBuilder} interfaces that,

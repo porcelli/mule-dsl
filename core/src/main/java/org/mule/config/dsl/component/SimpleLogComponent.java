@@ -14,7 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mule.component.simple.LogComponent;
 import org.mule.config.dsl.LogLevel;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 
 /**

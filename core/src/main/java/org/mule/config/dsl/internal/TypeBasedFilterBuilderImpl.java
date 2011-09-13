@@ -15,7 +15,7 @@ import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.routing.MessageFilter;
 import org.mule.routing.filters.PayloadTypeFilter;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotNull;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Internal class that wraps a {@link PayloadTypeFilter} inside a {@link MessageFilter}.

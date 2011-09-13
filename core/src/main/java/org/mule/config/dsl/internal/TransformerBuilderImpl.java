@@ -16,7 +16,7 @@ import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.dsl.TransformerBuilder;
 import org.mule.config.dsl.TransformerDefinition;
 
-import static org.mule.config.dsl.internal.util.Preconditions.*;
+import static org.mule.config.dsl.util.Preconditions.*;
 
 /**
  * Internal implementation of {@link TransformerBuilder} interface that, based on its internal state,

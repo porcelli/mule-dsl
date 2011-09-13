@@ -15,7 +15,7 @@ import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.routing.filters.RegExFilter;
 import org.mule.routing.filters.WildcardFilter;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
+import static org.mule.config.dsl.util.Preconditions.checkNotEmpty;
 
 /**
  * Holds all core expression evaluators definitions and expose them as static methods.

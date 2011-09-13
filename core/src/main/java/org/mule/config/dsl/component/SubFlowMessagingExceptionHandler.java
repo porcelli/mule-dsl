@@ -15,7 +15,7 @@ import org.mule.api.exception.MessagingExceptionHandler;
 import org.mule.config.dsl.FlowProcessException;
 import org.mule.routing.filters.WildcardFilter;
 
-import static org.mule.config.dsl.internal.util.Preconditions.checkNotEmpty;
+import static org.mule.config.dsl.util.Preconditions.checkNotEmpty;
 
 /**
  * Will execute a given flow in case of exception.
