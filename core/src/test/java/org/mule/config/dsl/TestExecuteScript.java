@@ -19,7 +19,7 @@ import org.mule.api.processor.MessageProcessor;
 import org.mule.api.source.MessageSource;
 import org.mule.config.dsl.util.ClasspathBuilder;
 import org.mule.config.dsl.util.FileRefBuilder;
-import org.mule.construct.SimpleFlowConstruct;
+import org.mule.construct.Flow;
 import org.mule.module.scripting.component.ScriptComponent;
 
 import java.util.Iterator;
@@ -45,9 +45,9 @@ public class TestExecuteScript {
 
         {
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -61,9 +61,9 @@ public class TestExecuteScript {
 
         }
         {
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
 
             assertThat(processor).isNotNull().isInstanceOf(ScriptComponent.class);
 
@@ -92,9 +92,9 @@ public class TestExecuteScript {
 
         {
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -108,9 +108,9 @@ public class TestExecuteScript {
 
         }
         {
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
 
             assertThat(processor).isNotNull().isInstanceOf(ScriptComponent.class);
 
@@ -139,9 +139,9 @@ public class TestExecuteScript {
 
         {
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -155,9 +155,9 @@ public class TestExecuteScript {
 
         }
         {
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
 
             assertThat(processor).isNotNull().isInstanceOf(ScriptComponent.class);
 
@@ -186,9 +186,9 @@ public class TestExecuteScript {
 
         {
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -202,9 +202,9 @@ public class TestExecuteScript {
 
         }
         {
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
 
             assertThat(processor).isNotNull().isInstanceOf(ScriptComponent.class);
 

@@ -21,7 +21,7 @@ import org.mule.component.SimpleCallableJavaComponent;
 import org.mule.config.dsl.component.ExtendedLogComponent;
 import org.mule.config.dsl.util.ClasspathBuilder;
 import org.mule.config.dsl.util.FileRefBuilder;
-import org.mule.construct.SimpleFlowConstruct;
+import org.mule.construct.Flow;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -69,9 +69,9 @@ public class TestPropertyResolver {
         final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+        assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -83,9 +83,9 @@ public class TestPropertyResolver {
 
         assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
+        assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
         final MessageProcessor logProcessor = iterator.next();
 
@@ -154,9 +154,9 @@ public class TestPropertyResolver {
         final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+        assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -168,9 +168,9 @@ public class TestPropertyResolver {
 
         assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
+        assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
         final MessageProcessor logProcessor = iterator.next();
 
@@ -240,9 +240,9 @@ public class TestPropertyResolver {
         final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+        assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -254,9 +254,9 @@ public class TestPropertyResolver {
 
         assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
+        assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
         final MessageProcessor logProcessor = iterator.next();
 
@@ -314,9 +314,9 @@ public class TestPropertyResolver {
         final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+        assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -328,9 +328,9 @@ public class TestPropertyResolver {
 
         assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
+        assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
         final MessageProcessor logProcessor = iterator.next();
 
@@ -388,9 +388,9 @@ public class TestPropertyResolver {
         final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+        assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -402,9 +402,9 @@ public class TestPropertyResolver {
 
         assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
+        assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
         final MessageProcessor logProcessor = iterator.next();
 

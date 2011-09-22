@@ -12,13 +12,13 @@ package org.mule.config.dsl.internal;
 import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
-import org.mule.api.NamedObject;
+import org.mule.api.NameableObject;
 import org.mule.api.agent.Agent;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.Connector;
 import org.mule.config.dsl.ConfigurationException;
-import org.mule.construct.SimpleFlowConstruct;
+import org.mule.construct.Flow;
 import org.mule.routing.MessageFilter;
 import org.mule.transport.AbstractConnector;
 
@@ -26,9 +26,9 @@ import java.util.Map;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.mule.config.dsl.internal.GuiceRegistry.GUICE_INJECTOR_REF;
-import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 import static org.mule.config.dsl.internal.util.PrivateAccessorHack.executeHiddenMethod;
 import static org.mule.config.dsl.internal.util.PrivateAccessorHack.setPrivateFieldValue;
+import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
 /**
  * Utility class that, based on given {@link org.mule.config.dsl.Catalog} and
@@ -113,8 +113,8 @@ public class MuleContextConfig {
     private void configureGlobalComponents() throws ConfigurationException {
         for (final Map.Entry<String, Object> entry : catalog.getComponents().entrySet()) {
             try {
-                if (entry.getValue() instanceof NamedObject && isEmpty(((NamedObject) entry.getValue()).getName())) {
-                    ((NamedObject) entry.getValue()).setName(entry.getKey());
+                if (entry.getValue() instanceof NameableObject && isEmpty(((NameableObject) entry.getValue()).getName())) {
+                    ((NameableObject) entry.getValue()).setName(entry.getKey());
                 }
 
                 if (entry.getValue() instanceof MuleContextAware) {
@@ -180,7 +180,7 @@ public class MuleContextConfig {
      */
     private void configureFlows() {
         for (final FlowBuilderImpl activeFlowBuilder : catalog.getFlows().values()) {
-            final SimpleFlowConstruct flow = activeFlowBuilder.build(muleContext, catalog.getPropertyPlaceholder());
+            final Flow flow = activeFlowBuilder.build(muleContext, catalog.getPropertyPlaceholder());
             if (flow != null) {
                 try {
                     muleContext.getRegistry().registerFlowConstruct(flow);

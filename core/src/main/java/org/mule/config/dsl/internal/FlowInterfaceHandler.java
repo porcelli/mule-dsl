@@ -10,10 +10,10 @@
 package org.mule.config.dsl.internal;
 
 import org.mule.DefaultMuleEvent;
+import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.construct.FlowConstruct;
 import org.mule.api.transport.MuleMessageFactory;
 import org.mule.api.transport.PropertyScope;
 import org.mule.config.dsl.ConfigurationException;
@@ -21,6 +21,7 @@ import org.mule.config.dsl.FlowNotFoundException;
 import org.mule.config.dsl.FlowProcessException;
 import org.mule.config.dsl.MuleFlowProcessReturn;
 import org.mule.config.dsl.internal.util.MessageFactoryUtil;
+import org.mule.construct.Flow;
 import org.mule.session.DefaultMuleSession;
 
 import java.util.HashMap;
@@ -37,10 +38,10 @@ public class FlowInterfaceHandler {
 
     private static MuleFlowProcessReturnImpl nullFlowReturn = new MuleFlowProcessReturnImpl(null);
 
-    private final FlowConstruct flow;
+    private final Flow flow;
     private final MuleContext muleContext;
 
-    public FlowInterfaceHandler(final FlowConstruct flow, final MuleContext muleContext) {
+    public FlowInterfaceHandler(final Flow flow, final MuleContext muleContext) {
         this.flow = checkNotNull(flow, "flow");
         this.muleContext = checkNotNull(muleContext, "muleContext");
     }
@@ -96,7 +97,8 @@ public class FlowInterfaceHandler {
      */
     public synchronized MuleFlowProcessReturn process(final Object input, final Map<String, Object> properties)
             throws IllegalArgumentException, FlowNotFoundException, ConfigurationException, FlowProcessException {
-        if (flow.getMessageProcessorChain().getMessageProcessors().size() == 0) {
+
+        if (flow.getMessageProcessors().size() == 0) {
             return FlowInterfaceHandler.nullFlowReturn;
         }
         final MuleMessageFactory messageFactory = MessageFactoryUtil.getMessageFactory(input, muleContext);
@@ -117,9 +119,9 @@ public class FlowInterfaceHandler {
         }
 
         try {
-            DefaultMuleEvent muleEvent = new DefaultMuleEvent(message, null, new DefaultMuleSession(flow, muleContext));
+            DefaultMuleEvent muleEvent = new DefaultMuleEvent(message, MessageExchangePattern.ONE_WAY, new DefaultMuleSession(flow, muleContext));
             muleEvent.setTimeout(0); // necessary (why?) when inbound endpoint is null
-            return new MuleFlowProcessReturnImpl(flow.getMessageProcessorChain().process(muleEvent));
+            return new MuleFlowProcessReturnImpl(flow.process(muleEvent));
         } catch (MuleException e) {
             throw new FlowProcessException("Error during flow process.", e);
         }

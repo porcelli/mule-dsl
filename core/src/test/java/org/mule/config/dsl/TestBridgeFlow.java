@@ -20,7 +20,7 @@ import org.mule.api.lifecycle.Callable;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.source.MessageSource;
 import org.mule.component.SimpleCallableJavaComponent;
-import org.mule.construct.SimpleFlowConstruct;
+import org.mule.construct.Flow;
 
 import java.util.Iterator;
 
@@ -44,9 +44,9 @@ public class TestBridgeFlow {
         final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+        assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -58,9 +58,9 @@ public class TestBridgeFlow {
 
         assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+        assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-        final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+        final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
 
         assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
 
@@ -90,9 +90,9 @@ public class TestBridgeFlow {
         final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+        assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -104,15 +104,15 @@ public class TestBridgeFlow {
 
         assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
+        assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(2);
 
-        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
         final MessageProcessor echoProcessor = iterator.next();
 
         assertThat(echoProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        ((Flow) flowConstruct).getMessageProcessors().iterator();
 
         final MessageProcessor endpointProcessor = iterator.next();
 
@@ -148,9 +148,9 @@ public class TestBridgeFlow {
         final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+        assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -162,21 +162,21 @@ public class TestBridgeFlow {
 
         assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(4);
+        assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(4);
 
-        final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
         final MessageProcessor myCallableProcessor = iterator.next();
 
         assertThat(myCallableProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        ((Flow) flowConstruct).getMessageProcessors().iterator();
 
         final MessageProcessor echoProcessor = iterator.next();
 
         assertThat(echoProcessor).isNotNull().isInstanceOf(SimpleCallableJavaComponent.class);
 
-        ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+        ((Flow) flowConstruct).getMessageProcessors().iterator();
 
         final MessageProcessor endpointProcessor = iterator.next();
 

@@ -12,8 +12,8 @@ package org.mule.config.dsl.component;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.exception.MessagingExceptionHandler;
+import org.mule.api.exception.RollbackSourceCallback;
 import org.mule.config.dsl.FlowProcessException;
-import org.mule.routing.filters.WildcardFilter;
 
 import static org.mule.config.dsl.util.Preconditions.checkNotEmpty;
 
@@ -39,26 +39,18 @@ public class SubFlowMessagingExceptionHandler implements MessagingExceptionHandl
      */
     @Override
     public MuleEvent handleException(Exception exception, MuleEvent event) throws FlowProcessException {
+        return handleException(exception, event, null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MuleEvent handleException(Exception exception, MuleEvent event, RollbackSourceCallback rollbackMethod) {
         try {
             return flowInvoker.process(event);
         } catch (MuleException e) {
             throw new FlowProcessException("Error during flow process", e);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public WildcardFilter getCommitTxFilter() {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public WildcardFilter getRollbackTxFilter() {
-        return null;
     }
 }

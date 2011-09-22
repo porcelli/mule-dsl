@@ -9,7 +9,7 @@
     <name>Mule DSL</name>
 
     <properties>
-        <mule.version>3.1.2</mule.version>
+        <mule.version>3.2.0</mule.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

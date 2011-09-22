@@ -12,6 +12,7 @@ package org.mule.config.dsl.component;
 import org.junit.Test;
 import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
+import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
@@ -19,7 +20,6 @@ import org.mule.api.construct.FlowConstruct;
 import org.mule.api.exception.MessagingExceptionHandler;
 import org.mule.api.lifecycle.LifecycleState;
 import org.mule.api.processor.MessageProcessor;
-import org.mule.api.processor.MessageProcessorChain;
 import org.mule.api.routing.MessageInfoMapping;
 import org.mule.config.dsl.AbstractModule;
 import org.mule.config.dsl.Mule;
@@ -119,7 +119,7 @@ public class TestInvokerFlowComponent {
     }
 
     private MuleEvent getEvent(final MuleContext muleContext, final Object messageContent) {
-        return new DefaultMuleEvent(new DefaultMuleMessage(messageContent, muleContext), null, new DefaultMuleSession(new SedaService(muleContext), muleContext));
+        return new DefaultMuleEvent(new DefaultMuleMessage(messageContent, muleContext), MessageExchangePattern.ONE_WAY, new DefaultMuleSession(new SedaService(muleContext), muleContext));
     }
 
     private final class MyFlorForTest implements FlowConstruct, MessageProcessor {
@@ -147,7 +147,7 @@ public class TestInvokerFlowComponent {
         }
 
         @Override
-        public MessageProcessorChain getMessageProcessorChain() {
+        public MuleContext getMuleContext() {
             return null;
         }
 

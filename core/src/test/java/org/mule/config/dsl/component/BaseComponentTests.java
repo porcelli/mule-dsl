@@ -12,6 +12,7 @@ package org.mule.config.dsl.component;
 import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleEventContext;
 import org.mule.DefaultMuleMessage;
+import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleEventContext;
@@ -42,7 +43,7 @@ public abstract class BaseComponentTests {
     }
 
     protected MuleEvent getEvent(final Object messageContent) {
-        return new DefaultMuleEvent(new DefaultMuleMessage(messageContent, muleContext), null, new DefaultMuleSession(new SedaService(muleContext), muleContext));
+        return new DefaultMuleEvent(new DefaultMuleMessage(messageContent, muleContext), MessageExchangePattern.ONE_WAY, new DefaultMuleSession(new SedaService(muleContext), muleContext));
     }
 
 

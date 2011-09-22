@@ -15,6 +15,7 @@ import org.mule.config.dsl.ConfigurationException;
 import org.mule.config.dsl.PipelineBuilder;
 import org.mule.config.dsl.PropertyPlaceholder;
 import org.mule.config.spring.factories.AsyncMessageProcessorsFactoryBean;
+import org.mule.construct.flow.DefaultFlowProcessingStrategy;
 import org.mule.processor.AsyncDelegateMessageProcessor;
 
 import static org.mule.config.dsl.util.Preconditions.checkNotNull;
@@ -57,6 +58,7 @@ public class AsyncRouterBuilderImpl<P extends PipelineBuilder<P>> extends BasePi
                 final AsyncMessageProcessorsFactoryBean factoryBean = new AsyncMessageProcessorsFactoryBean();
                 factoryBean.setMuleContext(muleContext);
                 factoryBean.setMessageProcessors(pipeline.buildMessageProcessorList(muleContext, placeholder));
+                factoryBean.setProcessingStrategy(new DefaultFlowProcessingStrategy());
                 return (AsyncDelegateMessageProcessor) factoryBean.getObject();
             } catch (final Exception e) {
                 throw new ConfigurationException("Failed to configure an AsyncDelegateMessageProcessor.", e);

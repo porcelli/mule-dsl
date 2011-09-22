@@ -17,7 +17,7 @@ import org.mule.api.construct.FlowConstruct;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.source.MessageSource;
-import org.mule.construct.SimpleFlowConstruct;
+import org.mule.construct.Flow;
 import org.mule.transport.file.FileConnector;
 import org.mule.transport.http.HttpConnector;
 
@@ -42,9 +42,9 @@ public class TestFrom {
         final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+        assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -56,7 +56,7 @@ public class TestFrom {
 
         assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
+        assertThat(((Flow) flowConstruct).getMessageProcessors()).isEmpty();
     }
 
     @Test
@@ -74,9 +74,9 @@ public class TestFrom {
         final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+        assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -88,7 +88,7 @@ public class TestFrom {
 
         assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
+        assertThat(((Flow) flowConstruct).getMessageProcessors()).isEmpty();
     }
 
     @Test
@@ -110,9 +110,9 @@ public class TestFrom {
         final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+        assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -128,7 +128,7 @@ public class TestFrom {
 
         assertThat(((FileConnector) inboundEndpoint.getConnector()).getPollingFrequency()).isEqualTo(10L);
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
+        assertThat(((Flow) flowConstruct).getMessageProcessors()).isEmpty();
     }
 
     @Test
@@ -150,9 +150,9 @@ public class TestFrom {
         final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+        assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -168,7 +168,7 @@ public class TestFrom {
 
         assertThat(((HttpConnector) inboundEndpoint.getConnector()).isKeepAlive()).isEqualTo(true);
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
+        assertThat(((Flow) flowConstruct).getMessageProcessors()).isEmpty();
     }
 
     @Test
@@ -190,9 +190,9 @@ public class TestFrom {
         final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+        assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -208,7 +208,7 @@ public class TestFrom {
 
         assertThat(((HttpConnector) inboundEndpoint.getConnector()).isKeepAlive()).isEqualTo(true);
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
+        assertThat(((Flow) flowConstruct).getMessageProcessors()).isEmpty();
     }
 
     @Test
@@ -230,9 +230,9 @@ public class TestFrom {
         final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+        assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -248,7 +248,7 @@ public class TestFrom {
 
         assertThat(((HttpConnector) inboundEndpoint.getConnector()).isKeepAlive()).isEqualTo(true);
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
+        assertThat(((Flow) flowConstruct).getMessageProcessors()).isEmpty();
     }
 
     @Test
@@ -270,9 +270,9 @@ public class TestFrom {
         final FlowConstruct flowConstruct = muleContext.getRegistry().lookupFlowConstructs().iterator().next();
 
         assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-        assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+        assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
         assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -288,7 +288,7 @@ public class TestFrom {
 
         assertThat(((FileConnector) inboundEndpoint.getConnector()).getPollingFrequency()).isEqualTo(10L);
 
-        assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
+        assertThat(((Flow) flowConstruct).getMessageProcessors()).isEmpty();
     }
 
 

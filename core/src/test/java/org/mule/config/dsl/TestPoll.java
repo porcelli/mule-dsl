@@ -20,7 +20,7 @@ import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.source.MessageSource;
 import org.mule.config.dsl.component.InvokerFlowComponent;
-import org.mule.construct.SimpleFlowConstruct;
+import org.mule.construct.Flow;
 import org.mule.transport.AbstractConnector;
 import org.mule.transport.polling.MessageProcessorPollingMessageReceiver;
 
@@ -52,36 +52,10 @@ public class TestPoll {
         {
             final FlowConstruct flowConstruct = iterator.next();
 
-            assertThat(flowConstruct.getName()).isEqualTo("SourceFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageSource()).isNull();
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-            {
-                final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-
-                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
-
-                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
-
-                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.REQUEST_RESPONSE);
-
-                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("http");
-
-                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("http://localhost:8080");
-
-            }
-        }
-
-        {
-            final FlowConstruct flowConstruct = iterator.next();
-
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
             {
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
@@ -107,7 +81,32 @@ public class TestPoll {
 
                 assertThat(flowWrapper.getFlow(muleContext)).isNotNull();
 
-                assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
+                assertThat(((Flow) flowConstruct).getMessageProcessors()).isEmpty();
+            }
+        }
+        {
+            final FlowConstruct flowConstruct = iterator.next();
+
+            assertThat(flowConstruct.getName()).isEqualTo("SourceFlow");
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
+
+            assertThat(((Flow) flowConstruct).getMessageSource()).isNull();
+
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+            {
+                final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
+
+                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.REQUEST_RESPONSE);
+
+                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("http");
+
+                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("http://localhost:8080");
+
             }
         }
     }
@@ -131,36 +130,10 @@ public class TestPoll {
         {
             final FlowConstruct flowConstruct = iterator.next();
 
-            assertThat(flowConstruct.getName()).isEqualTo("SourceFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageSource()).isNull();
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-            {
-                final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-
-                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
-
-                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
-
-                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.REQUEST_RESPONSE);
-
-                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("http");
-
-                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("http://localhost:8080");
-
-            }
-        }
-
-        {
-            final FlowConstruct flowConstruct = iterator.next();
-
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
             {
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
@@ -186,7 +159,32 @@ public class TestPoll {
 
                 assertThat(flowWrapper.getFlow(muleContext)).isNotNull();
 
-                assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
+                assertThat(((Flow) flowConstruct).getMessageProcessors()).isEmpty();
+            }
+        }
+        {
+            final FlowConstruct flowConstruct = iterator.next();
+
+            assertThat(flowConstruct.getName()).isEqualTo("SourceFlow");
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
+
+            assertThat(((Flow) flowConstruct).getMessageSource()).isNull();
+
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+            {
+                final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
+
+                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.REQUEST_RESPONSE);
+
+                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("http");
+
+                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("http://localhost:8080");
+
             }
         }
     }
@@ -210,9 +208,9 @@ public class TestPoll {
             final FlowConstruct flowConstruct = iterator.next();
 
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
             {
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
@@ -231,7 +229,7 @@ public class TestPoll {
                 assertThat(inboundEndpoint.getProperty(MessageProcessorPollingMessageReceiver.SOURCE_MESSAGE_PROCESSOR_PROPERTY_NAME))
                         .isNotNull().isInstanceOf(MyCustomMP.class).isEqualTo(mp);
 
-                assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
+                assertThat(((Flow) flowConstruct).getMessageProcessors()).isEmpty();
             }
         }
     }
@@ -254,9 +252,9 @@ public class TestPoll {
             final FlowConstruct flowConstruct = iterator.next();
 
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
             {
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
@@ -275,7 +273,7 @@ public class TestPoll {
                 assertThat(inboundEndpoint.getProperty(MessageProcessorPollingMessageReceiver.SOURCE_MESSAGE_PROCESSOR_PROPERTY_NAME))
                         .isNotNull().isInstanceOf(MyCustomMP.class);
 
-                assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
+                assertThat(((Flow) flowConstruct).getMessageProcessors()).isEmpty();
             }
         }
     }
@@ -300,9 +298,9 @@ public class TestPoll {
             final FlowConstruct flowConstruct = iterator.next();
 
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
             {
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
@@ -321,7 +319,7 @@ public class TestPoll {
                 assertThat(inboundEndpoint.getProperty(MessageProcessorPollingMessageReceiver.SOURCE_MESSAGE_PROCESSOR_PROPERTY_NAME))
                         .isNotNull().isInstanceOf(MyComplexMP.class).isEqualTo(mp);
 
-                assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
+                assertThat(((Flow) flowConstruct).getMessageProcessors()).isEmpty();
             }
         }
     }
@@ -342,7 +340,7 @@ public class TestPoll {
 
         final FlowConstruct flowConstruct = iterator.next();
 
-        final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+        final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
         {
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);

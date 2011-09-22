@@ -18,6 +18,7 @@ import org.mule.config.dsl.internal.DefaultCatalogImpl;
 import org.mule.config.dsl.internal.FlowInterfaceHandler;
 import org.mule.config.dsl.internal.MuleAdvancedConfig;
 import org.mule.config.dsl.internal.MuleContextBuilder;
+import org.mule.construct.Flow;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -159,7 +160,7 @@ public final class Mule {
             if (flow == null) {
                 flowCache.put(name, null);
             } else {
-                flowCache.put(name, new FlowInterfaceHandler(flow, muleContext));
+                flowCache.put(name, new FlowInterfaceHandler((Flow) flow, muleContext));
             }
         }
         final FlowInterfaceHandler flowProcess = flowCache.get(name);

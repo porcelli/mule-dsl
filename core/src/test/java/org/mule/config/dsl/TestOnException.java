@@ -24,7 +24,7 @@ import org.mule.component.SimpleCallableJavaComponent;
 import org.mule.config.dsl.component.InvokerMessageProcessorAdaptor;
 import org.mule.config.dsl.component.SimpleLogComponent;
 import org.mule.config.dsl.component.SubFlowMessagingExceptionHandler;
-import org.mule.construct.SimpleFlowConstruct;
+import org.mule.construct.Flow;
 import org.mule.routing.ChoiceRouter;
 import org.mule.routing.MessageProcessorFilterPair;
 import org.mule.routing.filters.RegExFilter;
@@ -60,34 +60,11 @@ public class TestOnException {
         {
             final FlowConstruct flowConstruct = flowIterator.next();
 
-            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-            {
-                final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-
-                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
-
-                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
-
-                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-
-                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
-
-                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
-            }
-        }
-
-        {
-            final FlowConstruct flowConstruct = flowIterator.next();
-
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
             {
-                final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+                final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -100,9 +77,32 @@ public class TestOnException {
                 assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/testIn");
             }
 
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isEmpty();
 
             assertThat(flowConstruct.getExceptionListener()).isNotNull().isInstanceOf(SubFlowMessagingExceptionHandler.class);
+        }
+
+        {
+            final FlowConstruct flowConstruct = flowIterator.next();
+
+            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
+
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+            {
+                final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
+
+                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
+
+                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
+            }
         }
     }
 
@@ -127,34 +127,11 @@ public class TestOnException {
         {
             final FlowConstruct flowConstruct = flowIterator.next();
 
-            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-            {
-                final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-
-                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
-
-                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
-
-                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-
-                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
-
-                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
-            }
-        }
-
-        {
-            final FlowConstruct flowConstruct = flowIterator.next();
-
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
             {
-                final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+                final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -167,9 +144,9 @@ public class TestOnException {
                 assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/testIn");
             }
 
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-            final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+            final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
             {
                 final MessageProcessor invokeProcessor = iterator.next();
@@ -186,6 +163,29 @@ public class TestOnException {
             }
             {
                 assertThat(flowConstruct.getExceptionListener()).isNotNull().isInstanceOf(SubFlowMessagingExceptionHandler.class);
+            }
+        }
+
+        {
+            final FlowConstruct flowConstruct = flowIterator.next();
+
+            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
+
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+            {
+                final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
+
+                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
+
+                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
             }
         }
     }
@@ -211,34 +211,11 @@ public class TestOnException {
         {
             final FlowConstruct flowConstruct = flowIterator.next();
 
-            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-            {
-                final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-
-                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
-
-                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
-
-                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-
-                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
-
-                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
-            }
-        }
-
-        {
-            final FlowConstruct flowConstruct = flowIterator.next();
-
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
             {
-                final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+                final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -251,9 +228,9 @@ public class TestOnException {
                 assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/testIn");
             }
 
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-            final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+            final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
             {
                 final MessageProcessor invokeProcessor = iterator.next();
@@ -270,6 +247,28 @@ public class TestOnException {
             }
             {
                 assertThat(flowConstruct.getExceptionListener()).isNotNull().isInstanceOf(SubFlowMessagingExceptionHandler.class);
+            }
+        }
+        {
+            final FlowConstruct flowConstruct = flowIterator.next();
+
+            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
+
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+            {
+                final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
+
+                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
+
+                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
             }
         }
     }
@@ -300,34 +299,11 @@ public class TestOnException {
         {
             final FlowConstruct flowConstruct = flowIterator.next();
 
-            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-            {
-                final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-
-                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
-
-                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
-
-                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-
-                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
-
-                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
-            }
-        }
-
-        {
-            final FlowConstruct flowConstruct = flowIterator.next();
-
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
             {
-                final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+                final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -340,9 +316,9 @@ public class TestOnException {
                 assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/testIn");
             }
 
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(3);
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(3);
 
-            final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+            final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
             {
                 final MessageProcessor transformerProcessor = iterator.next();
@@ -400,6 +376,29 @@ public class TestOnException {
                 {
                     assertThat(flowConstruct.getExceptionListener()).isNotNull().isInstanceOf(SubFlowMessagingExceptionHandler.class);
                 }
+            }
+        }
+
+        {
+            final FlowConstruct flowConstruct = flowIterator.next();
+
+            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
+
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+            {
+                final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
+
+                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
+
+                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
             }
         }
     }
@@ -429,34 +428,11 @@ public class TestOnException {
         {
             final FlowConstruct flowConstruct = flowIterator.next();
 
-            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-            {
-                final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-
-                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
-
-                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
-
-                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-
-                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
-
-                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
-            }
-        }
-
-        {
-            final FlowConstruct flowConstruct = flowIterator.next();
-
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
             {
-                final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+                final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -469,9 +445,9 @@ public class TestOnException {
                 assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/testIn");
             }
 
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(3);
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(3);
 
-            final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+            final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
             {
                 final MessageProcessor transformerProcessor = iterator.next();
@@ -516,6 +492,28 @@ public class TestOnException {
                 {
                     assertThat(flowConstruct.getExceptionListener()).isNotNull().isInstanceOf(SubFlowMessagingExceptionHandler.class);
                 }
+            }
+        }
+        {
+            final FlowConstruct flowConstruct = flowIterator.next();
+
+            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
+
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+            {
+                final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
+
+                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
+
+                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
             }
         }
     }
@@ -544,34 +542,11 @@ public class TestOnException {
         {
             final FlowConstruct flowConstruct = flowIterator.next();
 
-            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-            {
-                final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-
-                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
-
-                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
-
-                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-
-                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
-
-                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
-            }
-        }
-
-        {
-            final FlowConstruct flowConstruct = flowIterator.next();
-
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
             {
-                final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+                final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -584,9 +559,9 @@ public class TestOnException {
                 assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/testIn");
             }
 
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(3);
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(3);
 
-            final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+            final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
             {
                 final MessageProcessor transformerProcessor = iterator.next();
@@ -631,6 +606,28 @@ public class TestOnException {
                 {
                     assertThat(flowConstruct.getExceptionListener()).isNotNull().isInstanceOf(SubFlowMessagingExceptionHandler.class);
                 }
+            }
+        }
+        {
+            final FlowConstruct flowConstruct = flowIterator.next();
+
+            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
+
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+            {
+                final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
+
+                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
+
+                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
             }
         }
     }
@@ -660,34 +657,11 @@ public class TestOnException {
         {
             final FlowConstruct flowConstruct = flowIterator.next();
 
-            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-            {
-                final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-
-                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
-
-                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
-
-                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-
-                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
-
-                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
-            }
-        }
-
-        {
-            final FlowConstruct flowConstruct = flowIterator.next();
-
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
             {
-                final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+                final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -700,9 +674,9 @@ public class TestOnException {
                 assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/testIn");
             }
 
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(3);
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(3);
 
-            final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+            final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
             {
                 final MessageProcessor transformerProcessor = iterator.next();
@@ -762,6 +736,28 @@ public class TestOnException {
                 }
             }
         }
+        {
+            final FlowConstruct flowConstruct = flowIterator.next();
+
+            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
+
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+            {
+                final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
+
+                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
+
+                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
+            }
+        }
     }
 
     @Test
@@ -783,34 +779,11 @@ public class TestOnException {
         {
             final FlowConstruct flowConstruct = flowIterator.next();
 
-            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-            {
-                final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-
-                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
-
-                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
-
-                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-
-                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
-
-                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
-            }
-        }
-
-        {
-            final FlowConstruct flowConstruct = flowIterator.next();
-
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
             {
-                final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+                final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -823,9 +796,31 @@ public class TestOnException {
                 assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/testIn");
             }
 
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isEmpty();
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isEmpty();
 
             assertThat(flowConstruct.getExceptionListener()).isNotNull().isInstanceOf(SubFlowMessagingExceptionHandler.class);
+        }
+        {
+            final FlowConstruct flowConstruct = flowIterator.next();
+
+            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
+
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+            {
+                final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
+
+                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
+
+                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
+            }
         }
     }
 
@@ -849,34 +844,11 @@ public class TestOnException {
         {
             final FlowConstruct flowConstruct = flowIterator.next();
 
-            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-            {
-                final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-
-                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
-
-                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
-
-                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-
-                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
-
-                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
-            }
-        }
-
-        {
-            final FlowConstruct flowConstruct = flowIterator.next();
-
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
             {
-                final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+                final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -889,9 +861,9 @@ public class TestOnException {
                 assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/testIn");
             }
 
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-            final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+            final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
             {
                 final MessageProcessor invokeProcessor = iterator.next();
@@ -908,6 +880,28 @@ public class TestOnException {
             }
             {
                 assertThat(flowConstruct.getExceptionListener()).isNotNull().isInstanceOf(SubFlowMessagingExceptionHandler.class);
+            }
+        }
+        {
+            final FlowConstruct flowConstruct = flowIterator.next();
+
+            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
+
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+            {
+                final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
+
+                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
+
+                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
             }
         }
     }
@@ -932,34 +926,11 @@ public class TestOnException {
         {
             final FlowConstruct flowConstruct = flowIterator.next();
 
-            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-            {
-                final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-
-                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
-
-                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
-
-                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-
-                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
-
-                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
-            }
-        }
-
-        {
-            final FlowConstruct flowConstruct = flowIterator.next();
-
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
             {
-                final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+                final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -972,9 +943,9 @@ public class TestOnException {
                 assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/testIn");
             }
 
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-            final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+            final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
             {
                 final MessageProcessor invokeProcessor = iterator.next();
@@ -991,6 +962,28 @@ public class TestOnException {
             }
             {
                 assertThat(flowConstruct.getExceptionListener()).isNotNull().isInstanceOf(SubFlowMessagingExceptionHandler.class);
+            }
+        }
+        {
+            final FlowConstruct flowConstruct = flowIterator.next();
+
+            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
+
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+            {
+                final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
+
+                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
+
+                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
             }
         }
     }
@@ -1020,34 +1013,11 @@ public class TestOnException {
         {
             final FlowConstruct flowConstruct = flowIterator.next();
 
-            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-            {
-                final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-
-                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
-
-                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
-
-                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-
-                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
-
-                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
-            }
-        }
-
-        {
-            final FlowConstruct flowConstruct = flowIterator.next();
-
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
             {
-                final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+                final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -1060,9 +1030,9 @@ public class TestOnException {
                 assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/testIn");
             }
 
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(3);
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(3);
 
-            final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+            final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
             {
                 final MessageProcessor transformerProcessor = iterator.next();
@@ -1120,6 +1090,28 @@ public class TestOnException {
                 {
                     assertThat(flowConstruct.getExceptionListener()).isNotNull().isInstanceOf(SubFlowMessagingExceptionHandler.class);
                 }
+            }
+        }
+        {
+            final FlowConstruct flowConstruct = flowIterator.next();
+
+            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
+
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+            {
+                final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
+
+                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
+
+                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
             }
         }
     }
@@ -1148,34 +1140,11 @@ public class TestOnException {
         {
             final FlowConstruct flowConstruct = flowIterator.next();
 
-            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-            {
-                final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-
-                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
-
-                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
-
-                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-
-                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
-
-                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
-            }
-        }
-
-        {
-            final FlowConstruct flowConstruct = flowIterator.next();
-
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
             {
-                final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+                final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -1188,9 +1157,9 @@ public class TestOnException {
                 assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/testIn");
             }
 
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(3);
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(3);
 
-            final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+            final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
             {
                 final MessageProcessor transformerProcessor = iterator.next();
@@ -1235,6 +1204,28 @@ public class TestOnException {
                 {
                     assertThat(flowConstruct.getExceptionListener()).isNotNull().isInstanceOf(SubFlowMessagingExceptionHandler.class);
                 }
+            }
+        }
+        {
+            final FlowConstruct flowConstruct = flowIterator.next();
+
+            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
+
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+            {
+                final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
+
+                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
+
+                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
             }
         }
     }
@@ -1262,34 +1253,11 @@ public class TestOnException {
         {
             final FlowConstruct flowConstruct = flowIterator.next();
 
-            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-            {
-                final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-
-                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
-
-                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
-
-                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-
-                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
-
-                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
-            }
-        }
-
-        {
-            final FlowConstruct flowConstruct = flowIterator.next();
-
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
             {
-                final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+                final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -1302,9 +1270,9 @@ public class TestOnException {
                 assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/testIn");
             }
 
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(3);
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(3);
 
-            final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+            final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
             {
                 final MessageProcessor transformerProcessor = iterator.next();
@@ -1349,6 +1317,28 @@ public class TestOnException {
                 {
                     assertThat(flowConstruct.getExceptionListener()).isNotNull().isInstanceOf(SubFlowMessagingExceptionHandler.class);
                 }
+            }
+        }
+        {
+            final FlowConstruct flowConstruct = flowIterator.next();
+
+            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
+
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+            {
+                final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
+
+                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
+
+                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
             }
         }
     }
@@ -1377,34 +1367,11 @@ public class TestOnException {
         {
             final FlowConstruct flowConstruct = flowIterator.next();
 
-            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
-
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
-
-            {
-                final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
-
-                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
-
-                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
-
-                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
-
-                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
-
-                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
-            }
-        }
-
-        {
-            final FlowConstruct flowConstruct = flowIterator.next();
-
             assertThat(flowConstruct.getName()).isEqualTo("MyFlow");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
             {
-                final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+                final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
                 assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -1417,9 +1384,9 @@ public class TestOnException {
                 assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/testIn");
             }
 
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(3);
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(3);
 
-            final Iterator<MessageProcessor> iterator = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator();
+            final Iterator<MessageProcessor> iterator = ((Flow) flowConstruct).getMessageProcessors().iterator();
 
             {
                 final MessageProcessor transformerProcessor = iterator.next();
@@ -1477,6 +1444,28 @@ public class TestOnException {
                 {
                     assertThat(flowConstruct.getExceptionListener()).isNotNull().isInstanceOf(SubFlowMessagingExceptionHandler.class);
                 }
+            }
+        }
+        {
+            final FlowConstruct flowConstruct = flowIterator.next();
+
+            assertThat(flowConstruct.getName()).isEqualTo("MyErrorHandler");
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
+
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+
+            {
+                final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
+
+                assertThat(processor).isNotNull().isInstanceOf(OutboundEndpoint.class);
+
+                final OutboundEndpoint outboundEndpoint = (OutboundEndpoint) processor;
+
+                assertThat(outboundEndpoint.getExchangePattern()).isEqualTo(MessageExchangePattern.ONE_WAY);
+
+                assertThat(outboundEndpoint.getProtocol()).isNotNull().isEqualTo("VM");
+
+                assertThat(outboundEndpoint.getAddress()).isNotNull().isEqualTo("vm://err-out");
             }
         }
     }

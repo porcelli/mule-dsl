@@ -18,7 +18,7 @@ import org.mule.api.construct.FlowConstruct;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.source.MessageSource;
-import org.mule.construct.SimpleFlowConstruct;
+import org.mule.construct.Flow;
 
 import java.util.Iterator;
 
@@ -45,9 +45,9 @@ public class TestProcessMPDefinition {
             final FlowConstruct flowConstruct = flowIterator.next();
 
             assertThat(flowConstruct.getName()).isEqualTo("Receiver");
-            assertThat(flowConstruct).isInstanceOf(SimpleFlowConstruct.class);
+            assertThat(flowConstruct).isInstanceOf(Flow.class);
 
-            final MessageSource messageSource = ((SimpleFlowConstruct) flowConstruct).getMessageSource();
+            final MessageSource messageSource = ((Flow) flowConstruct).getMessageSource();
 
             assertThat(messageSource).isNotNull().isInstanceOf(InboundEndpoint.class);
 
@@ -59,9 +59,9 @@ public class TestProcessMPDefinition {
 
             assertThat(inboundEndpoint.getAddress()).isNotNull().isEqualTo("file:///Users/porcelli/test");
 
-            assertThat(((SimpleFlowConstruct) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
+            assertThat(((Flow) flowConstruct).getMessageProcessors()).isNotEmpty().hasSize(1);
 
-            final MessageProcessor processor = ((SimpleFlowConstruct) flowConstruct).getMessageProcessors().iterator().next();
+            final MessageProcessor processor = ((Flow) flowConstruct).getMessageProcessors().iterator().next();
 
             assertThat(processor).isNotNull().isInstanceOf(MyMessageProcessor.class);
         }

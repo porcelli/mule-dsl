@@ -11,6 +11,7 @@ package org.mule.config.dsl;
 
 import org.junit.Test;
 import org.mule.api.MuleContext;
+import org.mule.api.NameableObject;
 import org.mule.api.NamedObject;
 import org.mule.api.context.MuleContextAware;
 import org.mule.transport.file.FileConnector;
@@ -79,7 +80,7 @@ public class TestRegisterIntoCatalog {
 
     @Test
     public void simpleRegisterNamedObject() throws Exception {
-        final NamedObject namedObject = new NamedObject() {
+        final NameableObject namedObject = new NameableObject() {
             private String name = null;
 
             @Override
@@ -196,7 +197,7 @@ public class TestRegisterIntoCatalog {
         }
     }
 
-    private class MyCompleteType implements MuleContextAware, NamedObject {
+    private class MyCompleteType implements MuleContextAware, NameableObject {
 
         private MuleContext context;
         private String name = null;

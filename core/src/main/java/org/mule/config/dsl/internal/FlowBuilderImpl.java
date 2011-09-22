@@ -14,7 +14,7 @@ import org.mule.api.exception.MessagingExceptionHandler;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.api.transport.Connector;
 import org.mule.config.dsl.*;
-import org.mule.construct.SimpleFlowConstruct;
+import org.mule.construct.Flow;
 
 import java.util.List;
 
@@ -22,13 +22,13 @@ import static org.mule.config.dsl.util.Preconditions.*;
 
 /**
  * Internal implementation of {@link FlowBuilder} and {@link PollBuilder} interfaces that, based on its internal state,
- * builds a {@link SimpleFlowConstruct}.
+ * builds a {@link Flow}.
  *
  * @author porcelli
  * @see org.mule.config.dsl.AbstractModule#flow()
  * @see org.mule.config.dsl.AbstractModule#flow(String)
  */
-public class FlowBuilderImpl extends PipelineBuilderImpl<FlowPipeline> implements FlowNameAware, FlowPipeline, FlowBuilder, FlowBuilder.PollBuilder, Builder<SimpleFlowConstruct> {
+public class FlowBuilderImpl extends PipelineBuilderImpl<FlowPipeline> implements FlowNameAware, FlowPipeline, FlowBuilder, FlowBuilder.PollBuilder, Builder<Flow> {
 
     private InboundEndpointBuilderImpl inboundEndpointBuilder = null;
     private PollBuilderImpl pollBuilder = null;
@@ -153,11 +153,11 @@ public class FlowBuilderImpl extends PipelineBuilderImpl<FlowPipeline> implement
      * {@inheritDoc}
      */
     @Override
-    public SimpleFlowConstruct build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
+    public Flow build(final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {
         checkNotNull(muleContext, "muleContext");
         checkNotNull(placeholder, "placeholder");
 
-        final SimpleFlowConstruct flow = new SimpleFlowConstruct(getFlowName(), muleContext);
+        final Flow flow = new Flow(getFlowName(), muleContext);
         if (inboundEndpointBuilder != null) {
             flow.setMessageSource(inboundEndpointBuilder.build(muleContext, placeholder));
         } else if (pollBuilder != null) {
