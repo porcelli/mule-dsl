@@ -16,7 +16,7 @@ import org.mule.api.transport.Connector;
  *
  * @author porcelli
  */
-public interface ConnectorBuilder extends Builder {
+public interface ConnectorBuilder extends DSLBuilder {
 
     /**
      * Defines and creates the the global connector based on given type
@@ -27,7 +27,7 @@ public interface ConnectorBuilder extends Builder {
      * @throws ConfigurationException if {@code clazz} param is an abstract class or can't be created
      * @see org.mule.config.dsl.Catalog#newConnector(String)
      * @see org.mule.api.transport.Connector
-     * @see Builder
+     * @see DSLBuilder
      */
     <C extends Connector> C with(Class<C> clazz) throws NullPointerException, ConfigurationException;
 }

@@ -25,7 +25,7 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  * @see org.mule.config.dsl.PipelineBuilder#log(org.mule.config.dsl.ExpressionEvaluatorDefinition)
  * @see org.mule.config.dsl.PipelineBuilder#log(org.mule.config.dsl.ExpressionEvaluatorDefinition, org.mule.config.dsl.LogLevel)
  */
-public class ExpressionLogComponentBuilder implements Builder<ExpressionLogComponent> {
+public class ExpressionLogComponentBuilder implements DSLBuilder<ExpressionLogComponent> {
 
     private final LogLevel level;
     private final ExpressionEvaluatorDefinition message;

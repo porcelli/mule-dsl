@@ -26,7 +26,7 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  * @author porcelli
  * @see org.mule.config.dsl.PipelineBuilder#transform(org.mule.config.dsl.ExpressionEvaluatorDefinition)
  */
-public class ExpressionTransformerBuilderImpl<E extends ExpressionEvaluatorDefinition> implements Builder<ExpressionTransformer> {
+public class ExpressionTransformerBuilderImpl<E extends ExpressionEvaluatorDefinition> implements DSLBuilder<ExpressionTransformer> {
 
     private final E expr;
 

@@ -16,7 +16,7 @@ import org.mule.api.routing.filter.Filter;
  *
  * @author porcelli
  */
-public interface FilterBuilder extends Builder {
+public interface FilterBuilder extends DSLBuilder {
 
     /**
      * Sets global filter to use the given filter object.
@@ -26,7 +26,7 @@ public interface FilterBuilder extends Builder {
      * @throws NullPointerException if {@code obj} param is null
      * @see org.mule.config.dsl.Catalog#newFilter(String)
      * @see Filter
-     * @see Builder
+     * @see DSLBuilder
      * @see Definition
      */
     <F extends Filter> FilterDefinition with(F obj) throws NullPointerException;
@@ -39,7 +39,7 @@ public interface FilterBuilder extends Builder {
      * @throws NullPointerException if {@code clazz} param is null
      * @see org.mule.config.dsl.Catalog#newFilter(String)
      * @see Filter
-     * @see Builder
+     * @see DSLBuilder
      * @see Definition
      */
     <F extends Filter> FilterDefinition with(Class<F> clazz) throws NullPointerException;

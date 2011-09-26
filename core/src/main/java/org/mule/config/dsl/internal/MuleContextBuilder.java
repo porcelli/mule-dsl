@@ -12,6 +12,7 @@ package org.mule.config.dsl.internal;
 import com.google.inject.Injector;
 import org.mule.api.MuleContext;
 import org.mule.config.dsl.ConfigurationException;
+import org.mule.config.dsl.DSLBuilder;
 import org.mule.context.DefaultMuleContextFactory;
 
 import static org.mule.config.dsl.util.Preconditions.checkNotNull;
@@ -22,7 +23,7 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  *
  * @author porcelli
  */
-public class MuleContextBuilder implements org.mule.config.dsl.Builder {
+public class MuleContextBuilder implements DSLBuilder {
 
     private final DefaultCatalogImpl catalog;
     private final Injector injector;

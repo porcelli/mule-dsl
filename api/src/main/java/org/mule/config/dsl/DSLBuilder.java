@@ -19,5 +19,5 @@ package org.mule.config.dsl;
  *
  * @author porcelli
  */
-public interface Builder {
+public interface DSLBuilder {
 }

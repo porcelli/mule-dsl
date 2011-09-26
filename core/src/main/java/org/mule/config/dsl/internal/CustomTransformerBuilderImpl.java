@@ -27,7 +27,7 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  * @see org.mule.config.dsl.PipelineBuilder#transformWith(org.mule.config.dsl.TransformerDefinition)
  * @see org.mule.config.dsl.PipelineBuilder#transformWith(String)
  */
-public class CustomTransformerBuilderImpl<T extends Transformer> implements Builder<T> {
+public class CustomTransformerBuilderImpl<T extends Transformer> implements DSLBuilder<T> {
 
     private final Class<T> clazz;
     private final T obj;

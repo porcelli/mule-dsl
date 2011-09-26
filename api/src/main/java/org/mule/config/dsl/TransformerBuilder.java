@@ -16,7 +16,7 @@ import org.mule.api.transformer.Transformer;
  *
  * @author porcelli
  */
-public interface TransformerBuilder extends Builder {
+public interface TransformerBuilder extends DSLBuilder {
 
     /**
      * Sets global transformer to use the given transformer object.
@@ -26,7 +26,7 @@ public interface TransformerBuilder extends Builder {
      * @throws NullPointerException if {@code obj} param is null
      * @see org.mule.config.dsl.Catalog#newTransformer(String)
      * @see Transformer
-     * @see Builder
+     * @see DSLBuilder
      * @see Definition
      */
     <T extends Transformer> TransformerDefinition with(T obj) throws NullPointerException;
@@ -39,7 +39,7 @@ public interface TransformerBuilder extends Builder {
      * @throws NullPointerException if {@code clazz} param is null
      * @see org.mule.config.dsl.Catalog#newTransformer(String)
      * @see Transformer
-     * @see Builder
+     * @see DSLBuilder
      * @see Definition
      */
     <T extends Transformer> TransformerDefinition with(Class<T> clazz) throws NullPointerException;

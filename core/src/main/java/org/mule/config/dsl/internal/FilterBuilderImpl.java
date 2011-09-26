@@ -31,7 +31,7 @@ import static org.mule.config.dsl.util.Preconditions.*;
  * @see org.mule.config.dsl.AbstractModule#filter(String)
  * @see org.mule.config.dsl.Catalog#newFilter(String)
  */
-public class FilterBuilderImpl implements FilterBuilder, Builder<MessageFilter> {
+public class FilterBuilderImpl implements FilterBuilder, DSLBuilder<MessageFilter> {
 
     private final String name;
     private FilterDefinitionImpl<?> definition;

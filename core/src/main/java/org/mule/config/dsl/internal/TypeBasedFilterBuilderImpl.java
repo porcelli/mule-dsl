@@ -23,7 +23,7 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  * @author porcelli
  * @see org.mule.config.dsl.PipelineBuilder#filterBy(Class)
  */
-public class TypeBasedFilterBuilderImpl implements Builder<MessageFilter> {
+public class TypeBasedFilterBuilderImpl implements DSLBuilder<MessageFilter> {
 
     private final Class<?> clazz;
 

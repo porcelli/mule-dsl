@@ -14,12 +14,12 @@ import org.mule.config.dsl.ConfigurationException;
 import org.mule.config.dsl.PropertyPlaceholder;
 
 /**
- * Extends the marker interface {@link org.mule.config.dsl.Builder} and
+ * Extends the marker interface {@link org.mule.config.dsl.DSLBuilder} and
  * defines a common contract to build an element (based on parameterized type).
  *
  * @author porcelli
  */
-public interface Builder<T> extends org.mule.config.dsl.Builder {
+public interface DSLBuilder<T> extends org.mule.config.dsl.DSLBuilder {
 
     /**
      * Builds the parameterized type based on builder internal state and the given parameters.

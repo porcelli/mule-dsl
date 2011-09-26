@@ -24,7 +24,7 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  * @see org.mule.config.dsl.PipelineBuilder#log(String)
  * @see org.mule.config.dsl.PipelineBuilder#log(String, org.mule.config.dsl.LogLevel)
  */
-public class ExtendedLogComponentBuilder implements Builder<ExtendedLogComponent> {
+public class ExtendedLogComponentBuilder implements DSLBuilder<ExtendedLogComponent> {
 
     private final LogLevel level;
     private final String message;

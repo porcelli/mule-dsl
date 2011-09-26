@@ -16,7 +16,7 @@ import org.mule.api.processor.MessageProcessor;
 import org.mule.api.processor.MessageProcessorChain;
 import org.mule.config.dsl.ConfigurationException;
 import org.mule.config.dsl.PropertyPlaceholder;
-import org.mule.config.dsl.internal.Builder;
+import org.mule.config.dsl.internal.DSLBuilder;
 import org.mule.processor.chain.DefaultMessageProcessorChain;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public final class MessageProcessorUtil {
      * @return the message processor chain or null in case of {@code processorList} param is null or empty
      * @throws NullPointerException if {@code muleContext} or {@code placeholder} params are null
      */
-    public static MessageProcessorChain buildProcessorChain(final List<Builder<? extends MessageProcessor>> processorList, final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException {
+    public static MessageProcessorChain buildProcessorChain(final List<DSLBuilder<? extends MessageProcessor>> processorList, final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException {
 
         if (processorList == null || processorList.size() == 0) {
             return null;
@@ -68,7 +68,7 @@ public final class MessageProcessorUtil {
      * @return the message processor list or an empty list in case of {@code processorList} param is null or empty
      * @throws NullPointerException if {@code muleContext} or {@code placeholder} params are null
      */
-    public static List<MessageProcessor> buildProcessorList(final List<Builder<? extends MessageProcessor>> processorList, final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException {
+    public static List<MessageProcessor> buildProcessorList(final List<DSLBuilder<? extends MessageProcessor>> processorList, final MuleContext muleContext, final PropertyPlaceholder placeholder) throws NullPointerException {
         if (processorList == null || processorList.size() == 0) {
             return new ArrayList<MessageProcessor>(0);
         }
@@ -78,7 +78,7 @@ public final class MessageProcessorUtil {
 
         final List<MessageProcessor> result = new ArrayList<MessageProcessor>(processorList.size());
 
-        for (final Builder<?> activeBuilder : processorList) {
+        for (final DSLBuilder<?> activeBuilder : processorList) {
             final MessageProcessor mp = (MessageProcessor) activeBuilder.build(muleContext, placeholder);
 
             if (mp instanceof MuleContextAware) {

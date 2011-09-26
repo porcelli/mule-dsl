@@ -38,16 +38,16 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuilder<P>, FlowNameAware, MessageProcessorBuilderList, MessagingExceptionHandlerBuilderList {
 
     protected final String flowName;
-    protected final List<Builder<? extends MessageProcessor>> processorList;
-    protected final List<Builder<? extends MessagingExceptionHandler>> exceptionHandlerList;
+    protected final List<DSLBuilder<? extends MessageProcessor>> processorList;
+    protected final List<DSLBuilder<? extends MessagingExceptionHandler>> exceptionHandlerList;
     protected final P parentScope;
 
     /**
      * @param parentScope the parent scope, null is allowed
      */
     public PipelineBuilderImpl(final P parentScope) {
-        this.processorList = new ArrayList<Builder<? extends MessageProcessor>>();
-        this.exceptionHandlerList = new ArrayList<Builder<? extends MessagingExceptionHandler>>();
+        this.processorList = new ArrayList<DSLBuilder<? extends MessageProcessor>>();
+        this.exceptionHandlerList = new ArrayList<DSLBuilder<? extends MessagingExceptionHandler>>();
         this.parentScope = parentScope;
         if (parentScope != null && parentScope instanceof FlowNameAware) {
             this.flowName = ((FlowNameAware) parentScope).getFlowName();
@@ -67,8 +67,8 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
      */
     public PipelineBuilderImpl(final P parentScope, String flowName) {
         this.flowName = checkNotEmpty(flowName, "flowName");
-        this.processorList = new ArrayList<Builder<? extends MessageProcessor>>();
-        this.exceptionHandlerList = new ArrayList<Builder<? extends MessagingExceptionHandler>>();
+        this.processorList = new ArrayList<DSLBuilder<? extends MessageProcessor>>();
+        this.exceptionHandlerList = new ArrayList<DSLBuilder<? extends MessagingExceptionHandler>>();
         this.parentScope = parentScope;
     }
 
@@ -267,11 +267,11 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
             return parentScope.process(messageProcessor);
         }
 
-        if (!(messageProcessor instanceof Builder)) {
+        if (!(messageProcessor instanceof DSLBuilder)) {
             throw new IllegalArgumentException("Can't build this message processor definition.");
         }
 
-        processorList.add((Builder<MessageProcessor>) messageProcessor);
+        processorList.add((DSLBuilder<MessageProcessor>) messageProcessor);
         return getThis();
     }
 
@@ -719,7 +719,7 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
      * {@inheritDoc}
      */
     @Override
-    public void addBuilder(final Builder<? extends MessageProcessor> builder) throws NullPointerException {
+    public void addBuilder(final DSLBuilder<? extends MessageProcessor> builder) throws NullPointerException {
         checkNotNull(builder, "builder");
         processorList.add(builder);
     }
@@ -757,7 +757,7 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
      * {@inheritDoc}
      */
     @Override
-    public List<Builder<? extends MessageProcessor>> getBuilders() {
+    public List<DSLBuilder<? extends MessageProcessor>> getBuilders() {
         return processorList;
     }
 
@@ -765,7 +765,7 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
      * {@inheritDoc}
      */
     @Override
-    public void addExceptionBuilder(Builder<? extends MessagingExceptionHandler> builder) throws NullPointerException {
+    public void addExceptionBuilder(DSLBuilder<? extends MessagingExceptionHandler> builder) throws NullPointerException {
         checkNotNull(builder, "builder");
         if (parentScope != null && parentScope instanceof MessagingExceptionHandlerBuilderList) {
             ((MessagingExceptionHandlerBuilderList) parentScope).addExceptionBuilder(builder);
@@ -778,7 +778,7 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
      * {@inheritDoc}
      */
     @Override
-    public List<Builder<? extends MessagingExceptionHandler>> getExceptionBuilders() {
+    public List<DSLBuilder<? extends MessagingExceptionHandler>> getExceptionBuilders() {
         if (parentScope != null && parentScope instanceof MessagingExceptionHandlerBuilderList) {
             return ((MessagingExceptionHandlerBuilderList) parentScope).getExceptionBuilders();
         } else {
@@ -814,7 +814,7 @@ class PipelineBuilderImpl<P extends PipelineBuilder<P>> implements PipelineBuild
 
         final List<MessagingExceptionHandler> result = new ArrayList<MessagingExceptionHandler>(exceptionHandlerList.size());
 
-        for (Builder<? extends MessagingExceptionHandler> exceptionHandlerBuilder : exceptionHandlerList) {
+        for (DSLBuilder<? extends MessagingExceptionHandler> exceptionHandlerBuilder : exceptionHandlerList) {
             result.add(exceptionHandlerBuilder.build(muleContext, placeholder));
         }
 

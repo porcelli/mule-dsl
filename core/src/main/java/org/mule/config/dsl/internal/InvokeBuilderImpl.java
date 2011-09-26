@@ -49,11 +49,11 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  * @see org.mule.config.dsl.PipelineBuilder#invoke(Class)
  * @see org.mule.config.dsl.PipelineBuilder#invoke(Class, org.mule.config.dsl.Scope)
  */
-public class InvokeBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderImpl<P> implements InvokeBuilder<P>, Builder<MessageProcessor> {
+public class InvokeBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderImpl<P> implements InvokeBuilder<P>, DSLBuilder<MessageProcessor> {
 
     private Object obj;
     private final Class<?> clazz;
-    private final Builder<?> builder;
+    private final DSLBuilder<?> builder;
     private final Scope scope;
 
     private Annotation methodAnnotatedWith = null;
@@ -106,7 +106,7 @@ public class InvokeBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBui
      * @param builder     the object builder
      * @throws NullPointerException if {@code builder} param is null
      */
-    public InvokeBuilderImpl(final P parentScope, final Builder<?> builder) throws NullPointerException {
+    public InvokeBuilderImpl(final P parentScope, final DSLBuilder<?> builder) throws NullPointerException {
         super(parentScope);
         this.builder = checkNotNull(builder, "builder");
         this.scope = Scope.PROTOTYPE;
@@ -119,7 +119,7 @@ public class InvokeBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBui
      *
      * @return the component builder
      */
-    public Builder<?> getBuilder() {
+    public DSLBuilder<?> getBuilder() {
         return builder;
     }
 
@@ -316,7 +316,7 @@ public class InvokeBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBui
          * {@inheritDoc}
          */
         @Override
-        public void addExceptionBuilder(Builder<? extends MessagingExceptionHandler> builder) throws NullPointerException {
+        public void addExceptionBuilder(DSLBuilder<? extends MessagingExceptionHandler> builder) throws NullPointerException {
             checkNotNull(builder, "builder");
             InvokeBuilderImpl.this.addExceptionBuilder(builder);
         }
@@ -325,7 +325,7 @@ public class InvokeBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBui
          * {@inheritDoc}
          */
         @Override
-        public List<Builder<? extends MessagingExceptionHandler>> getExceptionBuilders() {
+        public List<DSLBuilder<? extends MessagingExceptionHandler>> getExceptionBuilders() {
             return InvokeBuilderImpl.this.getExceptionBuilders();
         }
 

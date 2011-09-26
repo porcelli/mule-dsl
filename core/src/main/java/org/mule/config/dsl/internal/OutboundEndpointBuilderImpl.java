@@ -33,7 +33,7 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  * @see org.mule.config.dsl.PipelineBuilder#send(String, org.mule.config.dsl.ExchangePattern, String)
  * @see org.mule.config.dsl.PipelineBuilder#send(String, org.mule.config.dsl.ExchangePattern, org.mule.api.transport.Connector)
  */
-public class OutboundEndpointBuilderImpl implements Builder<OutboundEndpoint> {
+public class OutboundEndpointBuilderImpl implements DSLBuilder<OutboundEndpoint> {
 
     private final String uri;
     private final ExchangePattern exchangePattern;

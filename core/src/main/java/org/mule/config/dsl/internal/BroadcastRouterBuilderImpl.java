@@ -26,7 +26,7 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  * @author porcelli
  * @see org.mule.config.dsl.PipelineBuilder#broadcast()
  */
-public class BroadcastRouterBuilderImpl<P extends PipelineBuilder<P>> extends BasePipelinedRouterImpl<BroadcastRouterBuilder<P>, P> implements BroadcastRouterBuilder<P>, Builder<MulticastingRouter> {
+public class BroadcastRouterBuilderImpl<P extends PipelineBuilder<P>> extends BasePipelinedRouterImpl<BroadcastRouterBuilder<P>, P> implements BroadcastRouterBuilder<P>, DSLBuilder<MulticastingRouter> {
 
     /**
      * @param parentScope the parent scope

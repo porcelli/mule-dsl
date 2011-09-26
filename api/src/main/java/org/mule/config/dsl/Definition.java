@@ -13,8 +13,8 @@ package org.mule.config.dsl;
  * Marker interface that denotes its extenders as an already set
  * up component (no additional configuration is possible).
  * <p/>
- * The difference between {@code Definition} and {@link Builder} is that Definition holds an already
- * set up component, in the other hand {@link Builder} has the goal to configure (using the builder pattern),
+ * The difference between {@code Definition} and {@link DSLBuilder} is that Definition holds an already
+ * set up component, in the other hand {@link DSLBuilder} has the goal to configure (using the builder pattern),
  * a component to be used. Occationally some builder may generates a {@code Definition} model.
  *
  * @author porcelli

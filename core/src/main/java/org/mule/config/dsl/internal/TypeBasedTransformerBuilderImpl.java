@@ -23,7 +23,7 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  * @author porcelli
  * @see org.mule.config.dsl.PipelineBuilder#transformTo(Class)
  */
-public class TypeBasedTransformerBuilderImpl<T> implements Builder<AutoTransformer> {
+public class TypeBasedTransformerBuilderImpl<T> implements DSLBuilder<AutoTransformer> {
 
     private final Class<T> clazz;
 

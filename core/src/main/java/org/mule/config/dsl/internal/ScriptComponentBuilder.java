@@ -30,7 +30,7 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  * @see org.mule.config.dsl.PipelineBuilder#executeScript(org.mule.config.dsl.ScriptLanguage, org.mule.config.dsl.util.FileRefBuilder)
  * @see org.mule.config.dsl.PipelineBuilder#executeScript(org.mule.config.dsl.ScriptLanguage, org.mule.config.dsl.util.ClasspathBuilder)
  */
-public class ScriptComponentBuilder implements Builder<ScriptComponent> {
+public class ScriptComponentBuilder implements DSLBuilder<ScriptComponent> {
 
     private final String language;
     private final String script;

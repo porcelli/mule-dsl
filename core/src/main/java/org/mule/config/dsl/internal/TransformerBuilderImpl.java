@@ -30,7 +30,7 @@ import static org.mule.config.dsl.util.Preconditions.*;
  * @see org.mule.config.dsl.AbstractModule#transformer(String)
  * @see org.mule.config.dsl.Catalog#newTransformer(String)
  */
-public class TransformerBuilderImpl implements TransformerBuilder, Builder<Transformer> {
+public class TransformerBuilderImpl implements TransformerBuilder, DSLBuilder<Transformer> {
 
     private final String name;
     private TransformerDefinitionImpl definition;

@@ -517,7 +517,7 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>, X ex
      * {@inheritDoc}
      */
     @Override
-    public void addBuilder(final Builder<? extends MessageProcessor> builder) throws NullPointerException {
+    public void addBuilder(final DSLBuilder<? extends MessageProcessor> builder) throws NullPointerException {
         checkNotNull(builder, "builder");
         pipeline.addBuilder(builder);
     }
@@ -544,7 +544,7 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>, X ex
      * {@inheritDoc}
      */
     @Override
-    public List<Builder<? extends MessageProcessor>> getBuilders() {
+    public List<DSLBuilder<? extends MessageProcessor>> getBuilders() {
         return pipeline.getBuilders();
     }
 
@@ -552,7 +552,7 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>, X ex
      * {@inheritDoc}
      */
     @Override
-    public void addExceptionBuilder(Builder<? extends MessagingExceptionHandler> builder) throws NullPointerException {
+    public void addExceptionBuilder(DSLBuilder<? extends MessagingExceptionHandler> builder) throws NullPointerException {
         checkNotNull(builder, "builder");
         if (parentScope instanceof MessagingExceptionHandlerBuilderList) {
             ((MessagingExceptionHandlerBuilderList) parentScope).addExceptionBuilder(builder);
@@ -565,7 +565,7 @@ public abstract class BasePipelinedRouterImpl<P extends PipelineBuilder<P>, X ex
      * {@inheritDoc}
      */
     @Override
-    public List<Builder<? extends MessagingExceptionHandler>> getExceptionBuilders() {
+    public List<DSLBuilder<? extends MessagingExceptionHandler>> getExceptionBuilders() {
         if (parentScope instanceof MessagingExceptionHandlerBuilderList) {
             return ((MessagingExceptionHandlerBuilderList) parentScope).getExceptionBuilders();
         } else {

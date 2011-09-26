@@ -34,7 +34,7 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  * @see org.mule.config.dsl.FlowBuilder#from(String, org.mule.config.dsl.ExchangePattern, String)
  * @see org.mule.config.dsl.FlowBuilder#from(String, org.mule.config.dsl.ExchangePattern, org.mule.api.transport.Connector)
  */
-public class InboundEndpointBuilderImpl implements Builder<InboundEndpoint> {
+public class InboundEndpointBuilderImpl implements DSLBuilder<InboundEndpoint> {
 
     private final String uri;
     private final ExchangePattern exchangePattern;

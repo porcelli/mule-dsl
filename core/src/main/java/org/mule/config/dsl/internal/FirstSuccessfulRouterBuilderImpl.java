@@ -26,7 +26,7 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  * @author porcelli
  * @see org.mule.config.dsl.PipelineBuilder#firstSuccessful()
  */
-public class FirstSuccessfulRouterBuilderImpl<P extends PipelineBuilder<P>> extends BasePipelinedRouterImpl<FirstSuccessfulRouterBuilder<P>, P> implements FirstSuccessfulRouterBuilder<P>, Builder<FirstSuccessful> {
+public class FirstSuccessfulRouterBuilderImpl<P extends PipelineBuilder<P>> extends BasePipelinedRouterImpl<FirstSuccessfulRouterBuilder<P>, P> implements FirstSuccessfulRouterBuilder<P>, DSLBuilder<FirstSuccessful> {
 
     /**
      * @param parentScope the parent scope

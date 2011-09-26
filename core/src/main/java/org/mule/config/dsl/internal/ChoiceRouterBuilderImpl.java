@@ -35,7 +35,7 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  * @author porcelli
  * @see org.mule.config.dsl.PipelineBuilder#choice()
  */
-public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements FlowNameAware, ChoiceRouterBuilder<P>, InnerWhenChoiceBuilder<P>, Builder<ChoiceRouter>, MessageProcessorBuilderList, MessagingExceptionHandlerBuilderList {
+public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements FlowNameAware, ChoiceRouterBuilder<P>, InnerWhenChoiceBuilder<P>, DSLBuilder<ChoiceRouter>, MessageProcessorBuilderList, MessagingExceptionHandlerBuilderList {
 
     private final P parentScope;
     private final PipelineBuilderImpl<P> pipeline;
@@ -557,7 +557,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Fl
      * {@inheritDoc}
      */
     @Override
-    public void addBuilder(final Builder<? extends MessageProcessor> builder) throws NullPointerException {
+    public void addBuilder(final DSLBuilder<? extends MessageProcessor> builder) throws NullPointerException {
         checkNotNull(builder, "builder");
         pipeline.addBuilder(builder);
     }
@@ -584,7 +584,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Fl
      * {@inheritDoc}
      */
     @Override
-    public List<Builder<? extends MessageProcessor>> getBuilders() {
+    public List<DSLBuilder<? extends MessageProcessor>> getBuilders() {
         return pipeline.getBuilders();
     }
 
@@ -619,7 +619,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Fl
      * {@inheritDoc}
      */
     @Override
-    public void addExceptionBuilder(Builder<? extends MessagingExceptionHandler> builder) throws NullPointerException {
+    public void addExceptionBuilder(DSLBuilder<? extends MessagingExceptionHandler> builder) throws NullPointerException {
         checkNotNull(builder, "builder");
         if (parentScope instanceof MessagingExceptionHandlerBuilderList) {
             ((MessagingExceptionHandlerBuilderList) parentScope).addExceptionBuilder(builder);
@@ -632,7 +632,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Fl
      * {@inheritDoc}
      */
     @Override
-    public List<Builder<? extends MessagingExceptionHandler>> getExceptionBuilders() {
+    public List<DSLBuilder<? extends MessagingExceptionHandler>> getExceptionBuilders() {
         if (parentScope instanceof MessagingExceptionHandlerBuilderList) {
             return ((MessagingExceptionHandlerBuilderList) parentScope).getExceptionBuilders();
         } else {
@@ -1143,17 +1143,17 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Fl
     private static class Route {
         final ExpressionEvaluatorDefinition expr;
 
-        final List<Builder<? extends MessageProcessor>> processorList;
+        final List<DSLBuilder<? extends MessageProcessor>> processorList;
 
         /**
          * @param expr          the expression evaluator definition, null is allowed
          * @param processorList the message processor builder list
          * @throws NullPointerException if {@code processorList} param is null
          */
-        Route(final ExpressionEvaluatorDefinition expr, final List<Builder<? extends MessageProcessor>> processorList) throws NullPointerException {
+        Route(final ExpressionEvaluatorDefinition expr, final List<DSLBuilder<? extends MessageProcessor>> processorList) throws NullPointerException {
             checkNotNull(processorList, "processorList");
             this.expr = expr;
-            this.processorList = new ArrayList<Builder<? extends MessageProcessor>>(processorList);
+            this.processorList = new ArrayList<DSLBuilder<? extends MessageProcessor>>(processorList);
         }
 
         /**
@@ -1170,7 +1170,7 @@ public class ChoiceRouterBuilderImpl<P extends PipelineBuilder<P>> implements Fl
          *
          * @return the message processor builder list
          */
-        List<Builder<? extends MessageProcessor>> getProcessorList() {
+        List<DSLBuilder<? extends MessageProcessor>> getProcessorList() {
             return processorList;
         }
     }

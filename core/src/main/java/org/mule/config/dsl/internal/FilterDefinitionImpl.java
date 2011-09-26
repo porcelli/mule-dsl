@@ -28,7 +28,7 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  * @see org.mule.config.dsl.AbstractModule#filter(String)
  * @see org.mule.config.dsl.Catalog#newFilter(String)
  */
-public class FilterDefinitionImpl<F extends Filter> implements FilterDefinition, Builder<MessageFilter> {
+public class FilterDefinitionImpl<F extends Filter> implements FilterDefinition, DSLBuilder<MessageFilter> {
 
     private final String name;
     private final Class<F> clazz;

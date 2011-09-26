@@ -16,7 +16,7 @@ import org.mule.config.dsl.PropertyPlaceholder;
 import java.util.List;
 
 /**
- * Extends the marker interface {@link org.mule.config.dsl.Builder} and
+ * Extends the marker interface {@link org.mule.config.dsl.DSLBuilder} and
  * defines a common contract to deal with the need to build multiples messaging exception handlers.
  * <p/>
  * <b>Important Note:</b> The actual version of Mule core supports only one {@link MessagingExceptionHandler}
@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @author porcelli
  */
-public interface MessagingExceptionHandlerBuilderList extends org.mule.config.dsl.Builder {
+public interface MessagingExceptionHandlerBuilderList extends org.mule.config.dsl.DSLBuilder {
 
     /**
      * Add the given builder to it's internal list of messaging exception handlers.
@@ -32,14 +32,14 @@ public interface MessagingExceptionHandlerBuilderList extends org.mule.config.ds
      * @param builder the builder to be stored
      * @throws NullPointerException if {@code builder} param is null
      */
-    void addExceptionBuilder(Builder<? extends MessagingExceptionHandler> builder) throws NullPointerException;
+    void addExceptionBuilder(DSLBuilder<? extends MessagingExceptionHandler> builder) throws NullPointerException;
 
     /**
      * Getter of messaging exception builder list
      *
      * @return the messaging exception builder list
      */
-    List<Builder<? extends MessagingExceptionHandler>> getExceptionBuilders();
+    List<DSLBuilder<? extends MessagingExceptionHandler>> getExceptionBuilders();
 
     /**
      * Checks if messaging exception builder's list is empty

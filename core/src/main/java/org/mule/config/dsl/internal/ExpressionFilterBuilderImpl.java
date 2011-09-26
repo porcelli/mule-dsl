@@ -26,7 +26,7 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  * @author porcelli
  * @see org.mule.config.dsl.PipelineBuilder#filter(org.mule.config.dsl.ExpressionEvaluatorDefinition)
  */
-public class ExpressionFilterBuilderImpl implements Builder<MessageProcessor> {
+public class ExpressionFilterBuilderImpl implements DSLBuilder<MessageProcessor> {
 
     private final ExpressionEvaluatorDefinition objExpr;
 

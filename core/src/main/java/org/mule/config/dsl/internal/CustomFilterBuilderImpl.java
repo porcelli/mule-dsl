@@ -28,7 +28,7 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  * @see org.mule.config.dsl.PipelineBuilder#filterWith(org.mule.config.dsl.FilterDefinition)
  * @see org.mule.config.dsl.PipelineBuilder#filterWith(String)
  */
-public class CustomFilterBuilderImpl<F extends Filter> implements Builder<MessageFilter> {
+public class CustomFilterBuilderImpl<F extends Filter> implements DSLBuilder<MessageFilter> {
 
     private final Class<F> clazz;
     private final F obj;

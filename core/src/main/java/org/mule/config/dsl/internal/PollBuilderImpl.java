@@ -40,7 +40,7 @@ import static org.mule.config.dsl.util.Preconditions.*;
  * @see org.mule.config.dsl.FlowBuilder#poll(org.mule.api.processor.MessageProcessor)
  * @see org.mule.config.dsl.FlowBuilder#poll(Class)
  */
-public class PollBuilderImpl implements Builder<InboundEndpoint> {
+public class PollBuilderImpl implements DSLBuilder<InboundEndpoint> {
 
     private final MessageProcessor obj;
     private final Class<? extends MessageProcessor> clazz;

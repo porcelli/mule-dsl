@@ -28,7 +28,7 @@ import static org.mule.config.dsl.util.Preconditions.checkNotNull;
  * @author porcelli
  * @see org.mule.config.dsl.PipelineBuilder#messageProperties()
  */
-public class MessagePropertiesBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderImpl<P> implements MessagePropertiesBuilder<P>, Builder<MessagePropertiesTransformer> {
+public class MessagePropertiesBuilderImpl<P extends PipelineBuilder<P>> extends PipelineBuilderImpl<P> implements MessagePropertiesBuilder<P>, DSLBuilder<MessagePropertiesTransformer> {
 
     private final List<String> removeProperties = new ArrayList<String>();
     private final Map<String, Object> putProperties = new HashMap<String, Object>();

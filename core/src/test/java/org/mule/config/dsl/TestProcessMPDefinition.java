@@ -94,7 +94,7 @@ public class TestProcessMPDefinition {
     public static class MyNullMessageProcessorDefinition implements MessageProcessorDefinition {
     }
 
-    public static class MySimpleMPMessageProcessorDefinition implements MessageProcessorDefinition, org.mule.config.dsl.internal.Builder<MyMessageProcessor> {
+    public static class MySimpleMPMessageProcessorDefinition implements MessageProcessorDefinition, org.mule.config.dsl.internal.DSLBuilder<MyMessageProcessor> {
 
         @Override
         public MyMessageProcessor build(MuleContext muleContext, PropertyPlaceholder placeholder) throws NullPointerException, ConfigurationException, IllegalStateException {

@@ -28,7 +28,7 @@ import static org.mule.config.dsl.util.Preconditions.*;
  * @see org.mule.config.dsl.AbstractModule#flow()
  * @see org.mule.config.dsl.AbstractModule#flow(String)
  */
-public class FlowBuilderImpl extends PipelineBuilderImpl<FlowPipeline> implements FlowNameAware, FlowPipeline, FlowBuilder, FlowBuilder.PollBuilder, Builder<Flow> {
+public class FlowBuilderImpl extends PipelineBuilderImpl<FlowPipeline> implements FlowNameAware, FlowPipeline, FlowBuilder, FlowBuilder.PollBuilder, DSLBuilder<Flow> {
 
     private InboundEndpointBuilderImpl inboundEndpointBuilder = null;
     private PollBuilderImpl pollBuilder = null;

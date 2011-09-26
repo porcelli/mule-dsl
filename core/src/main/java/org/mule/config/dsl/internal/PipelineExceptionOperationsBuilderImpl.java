@@ -20,7 +20,7 @@ import org.mule.config.dsl.component.SubFlowMessagingExceptionHandler;
 import static org.mule.config.dsl.util.Preconditions.checkNotEmpty;
 import static org.mule.config.dsl.util.Preconditions.checkNotNull;
 
-public class PipelineExceptionOperationsBuilderImpl implements FlowNameAware, PipelineExceptionOperations.PipelineExceptionInvokeOperations, FlowDefinition, Builder<MessagingExceptionHandler> {
+public class PipelineExceptionOperationsBuilderImpl implements FlowNameAware, PipelineExceptionOperations.PipelineExceptionInvokeOperations, FlowDefinition, DSLBuilder<MessagingExceptionHandler> {
 
     private final String currentFlowName;
     private String flowToBeExecute;

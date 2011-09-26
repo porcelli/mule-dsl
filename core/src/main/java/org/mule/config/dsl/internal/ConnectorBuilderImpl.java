@@ -35,7 +35,7 @@ import static org.mule.config.dsl.internal.util.PrivateAccessorHack.setPrivateFi
  * @see org.mule.config.dsl.AbstractModule#connector(String)
  * @see org.mule.config.dsl.Catalog#newConnector(String)
  */
-public class ConnectorBuilderImpl implements ConnectorBuilder, Builder<Connector> {
+public class ConnectorBuilderImpl implements ConnectorBuilder, DSLBuilder<Connector> {
 
     private final String name;
     private final ConnectorMethodInterceptor interceptor;
